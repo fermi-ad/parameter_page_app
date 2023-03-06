@@ -5,11 +5,23 @@ on: [push]
 jobs:
   Setup-Build-Test-Dockerize-Push:
     runs-on: ubuntu-latest
+
+    env:
+      JAVA_VERSION: "11.0"
+      FLUTTER_VERSION: "3.4.0"
+
     timeout-minutes: 2
 
     steps:
       - name: Checking out source code
         uses: actions/checkout@v2
+
+      - uses: actions/setup-java@v1
+        with:
+          java-version: $
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: $
 
       - name: Run widget test
         run: |
