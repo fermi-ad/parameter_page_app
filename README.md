@@ -1,16 +1,11 @@
-# parameter_page
+# PIP-II Parameter Page Web Application
 
-A new Flutter project.
+This is the PIP-II Parameter Page web application. 
 
-## Getting Started
+## Development Environment
 
-This project is a starting point for a Flutter application.
+TODO
 
-A few resources to get you started if this is your first Flutter project:
+## Running
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+`flutter run`
