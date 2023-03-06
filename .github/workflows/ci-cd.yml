@@ -5,7 +5,7 @@ on: [push]
 jobs:
   Setup-Build-Test-Dockerize-Push:
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 5
 
     steps:
       - name: Checking out source code
@@ -23,8 +23,12 @@ jobs:
         run: flutter pub get
 
       - name: Lint
-        run: flutter analyze
+        run: flutter analyze .
 
       - name: Run widget test
         run: |
           flutter test
+
+      - name: Build web application
+        run: |
+          flutter build web 
