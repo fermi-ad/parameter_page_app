@@ -1,21 +1,31 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const FermiApp());
+  runApp(const FermiApp(
+    title: "Parameter Page",
+    child: MyHomePage(title: 'Parameter Page'),
+  ));
 }
 
+// This is the base widget for the app. It's only purpose is to provide
+// consistent theme settings to the rest of the app. All apps using this
+// base widget will have a similar look-and-feel.
+
 class FermiApp extends StatelessWidget {
-  const FermiApp({super.key});
+  final String title;
+  final Widget child;
+
+  const FermiApp({required this.title, required this.child, super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Parameter Page',
+      title: title,
       theme: ThemeData(useMaterial3: true, primarySwatch: Colors.blue),
       darkTheme: ThemeData.dark().copyWith(useMaterial3: true),
       themeMode: ThemeMode.system,
-      home: const MyHomePage(title: 'Parameter Page'),
+      home: child,
     );
   }
 }
