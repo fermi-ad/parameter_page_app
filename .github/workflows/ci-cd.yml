@@ -35,5 +35,5 @@ jobs:
 
       - name: Build container image
         run: |
-          docker build -t parameter_page_webapp
+          docker build -t parameter_page_webapp .
   
