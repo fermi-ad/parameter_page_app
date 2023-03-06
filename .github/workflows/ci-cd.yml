@@ -1,4 +1,4 @@
-name: Continuois Integration / Continuous Delivery Workflow for the Parameter Page web application
+name: Continuous Integration / Continuous Delivery Workflow for the Parameter Page web application
 
 on: [push]
 
