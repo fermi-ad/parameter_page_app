@@ -2,7 +2,7 @@
 FROM ubuntu:20.04
 
 RUN apt-get update 
-RUN apt-get install -y libgconf-2-4 libstdc++6 fonts-droid-fallback lib32stdc++6
+RUN apt-get install -y git libgconf-2-4 libstdc++6 fonts-droid-fallback lib32stdc++6
 RUN apt-get clean
 
 # download Flutter SDK from Flutter Github repo
