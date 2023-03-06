@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 void main() {
   runApp(const FermiApp(
     title: "Parameter Page",
-    child: MyHomePage(title: 'Parameter Page'),
+    child: BaseWidget(title: 'Parameter Page'),
   ));
 }
 
@@ -30,16 +30,16 @@ class FermiApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class BaseWidget extends StatefulWidget {
+  const BaseWidget({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<BaseWidget> createState() => _BaseWidgetState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _BaseWidgetState extends State<BaseWidget> {
   int _counter = 0;
 
   void _incrementCounter() {
