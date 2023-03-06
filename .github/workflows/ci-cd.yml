@@ -19,6 +19,12 @@ jobs:
         with:
           channel: 'stable'
 
+      - name: Resolve dependencies
+        run: flutter pub get
+
+      - name: Lint
+        run: flutter analyze
+
       - name: Run widget test
         run: |
           flutter test
