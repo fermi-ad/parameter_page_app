@@ -12,10 +12,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Parameter Page',
-      theme: ThemeData(
-        useMaterial3: false,
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(useMaterial3: true, primarySwatch: Colors.blue),
+      darkTheme: ThemeData.dark().copyWith(useMaterial3: true),
+      themeMode: ThemeMode.system,
       home: const MyHomePage(title: 'Parameter Page'),
     );
   }
