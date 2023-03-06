@@ -2,7 +2,7 @@
 FROM ubuntu:20.04
 
 RUN apt-get update 
-RUN apt-get install -y git curl
+RUN apt-get install -y git curl unzip
 RUN apt-get clean
 
 # download Flutter SDK from Flutter Github repo
