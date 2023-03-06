@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const FermiApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class FermiApp extends StatelessWidget {
+  const FermiApp({super.key});
 
   // This widget is the root of your application.
   @override
