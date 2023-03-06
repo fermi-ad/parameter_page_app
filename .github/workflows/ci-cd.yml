@@ -1,0 +1,12 @@
+name: Continuois Integration / Continuous Delivery Workflow for the Parameter Page web application
+
+on: [push]
+
+jobs:
+  Setup-Build-Test-Dockerize-Push:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    steps:
+      - name: Checking out source code
+        uses: actions/checkout@v2
