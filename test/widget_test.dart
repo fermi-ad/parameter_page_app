@@ -13,7 +13,10 @@ import 'package:parameter_page/main.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(
+      const FermiApp(
+          title: "Parameter Page", child: BaseWidget(title: 'Parameter Page')),
+    );
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
