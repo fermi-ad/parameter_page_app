@@ -10,3 +10,7 @@ jobs:
     steps:
       - name: Checking out source code
         uses: actions/checkout@v2
+
+      - name: Run widget test
+        run: |
+          flutter test
