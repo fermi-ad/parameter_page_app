@@ -31,8 +31,11 @@ jobs:
       - name: Starting chromedriver
         run: |
           export DISPLAY=:99
-          chromedriver --url-base=/wd/hub &
+          chromedriver --port=4444 --url-base=/wd/hub &
           sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
+
+      - name: Running integration tests
+        run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart -d web-server
 
       - name: Build web application
         run: |
