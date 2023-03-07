@@ -18,6 +18,6 @@ spec:
     spec:
       containers:
         - name: parameter-page
-          image: adregistry.fnal.gov/applications/parameter-page:latest
+          image: adregistry.fnal.gov/applications/parameter-page:1.0.0
           ports:
             - containerPort: 80
