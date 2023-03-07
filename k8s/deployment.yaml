@@ -1,0 +1,23 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: parameter-page
+  labels:
+    app: parameter-page
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: parameter-page
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: parameter-page
+    spec:
+      containers:
+        - name: parameter-page
+          image: adregistry.fnal.gov/applications/parameter-page:1.0.0
+          ports:
+            - containerPort: 80
