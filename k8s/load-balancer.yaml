@@ -10,6 +10,6 @@ spec:
   - port: 80
     targetPort: 80
     protocol: TCP
-    nodePort: 30000
+    nodePort: 38080
   selector:
     app: parameter-page
