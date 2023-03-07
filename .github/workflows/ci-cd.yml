@@ -27,9 +27,9 @@ jobs:
 
       - name: Build web application
         run: |
-          flutter build web --base-href /app/
+          flutter build web
 
       - name: Build container image
         run: |
           docker build -t parameter_page_webapp .
-  
+
