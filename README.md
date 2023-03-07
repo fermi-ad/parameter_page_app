@@ -12,6 +12,8 @@ TODO
 
 ## Executing Integration tests (UI Tests)
 
+Get chromedriver from: https://chromedriver.chromium.org/downloads
+
 Start chromedriver on port 4444
 
 Run tests:
