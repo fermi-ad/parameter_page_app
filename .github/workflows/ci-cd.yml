@@ -1,6 +1,14 @@
 name: Continuous Integration / Continuous Delivery Workflow for the Parameter Page web application
 
-on: [push]
+on:
+  push:
+    branches:
+      - "**"
+    tags:
+      - "v*.*.*"
+  pull_request:
+    branches:
+      - "main"
 
 jobs:
   Setup-Build-Test-Dockerize-Push:
