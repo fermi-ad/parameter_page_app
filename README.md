@@ -10,7 +10,21 @@ TODO
 
 `flutter run`
 
+## Unit tests
+
+Lowest-level tests organized around classes or modules.
+
+To run:
+
+`flutter test`
+
+## Widget tests
+
+Tests at the Widget level without needing a heavy environment.
+
 ## Executing Integration tests (UI Tests)
+
+High-level tests that execute through the user inteface.  Requires chromedriver to run.
 
 Get chromedriver from: https://chromedriver.chromium.org/downloads
 
