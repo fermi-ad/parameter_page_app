@@ -22,7 +22,7 @@ To run:
 
 Tests at the Widget level without needing a heavy environment.
 
-## Executing Integration tests (UI Tests)
+## Integration tests (UI Tests)
 
 High-level tests that execute through the user inteface.  Requires chromedriver to run.
 
