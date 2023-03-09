@@ -18,7 +18,7 @@ void main() {
       _assertAppBarTitleIs('Parameter Page');
     });
 
-    testWidgets('tap increment button, counter increments by 1',
+    testWidgets('Tap increment button, counter increments by 1',
         (tester) async {
       // Given the application is running and the counter displayed is 0
       app.main();

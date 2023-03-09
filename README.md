@@ -32,6 +32,6 @@ Start chromedriver on port 4444
 
 Run tests:
 
-* In browser: `flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart -d chrome`
+* In browser: `flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/app_test.dart -d chrome`
 
-* Or headless: `flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart -d web-server`
+* Or headless: `flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/app_test.dart -d web-server`
