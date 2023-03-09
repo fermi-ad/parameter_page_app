@@ -6,25 +6,30 @@ import 'package:parameter_page/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('end-to-end test', () {
-    testWidgets('tap on the floating action button, verify counter',
+  group('Parameter Page End-to-End Tests', () {
+    testWidgets('Enter the parameter page, title is set to Parameter Page',
         (tester) async {
+      // Given the app is running
       app.main();
       await tester.pumpAndSettle();
 
-      // Verify the counter starts at 0.
+      // Then 'Parameter Page' is displayed in the title bar
+      expect(find.text('Parameter Page'), findsOneWidget);
+    });
+
+    testWidgets('tap on the floating action button, verify counter',
+        (tester) async {
+      // Given the application is running and the counter displayed is 0
+      app.main();
+      await tester.pumpAndSettle();
       expect(find.text('0'), findsOneWidget);
 
-      // Finds the floating action button to tap on.
+      // When I tap the increment button
       final Finder fab = find.byTooltip('Increment');
-
-      // Emulate a tap on the floating action button.
       await tester.tap(fab);
-
-      // Trigger a frame.
       await tester.pumpAndSettle();
 
-      // Verify the counter increments by 1.
+      // Then the counter shows...
       expect(find.text('1'), findsOneWidget);
     });
   });
