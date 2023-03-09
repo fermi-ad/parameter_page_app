@@ -17,7 +17,7 @@ void main() {
       expect(find.text('Parameter Page'), findsOneWidget);
     });
 
-    testWidgets('tap on the floating action button, verify counter',
+    testWidgets('tap increment button, counter increments by 1',
         (tester) async {
       // Given the application is running and the counter displayed is 0
       app.main();
