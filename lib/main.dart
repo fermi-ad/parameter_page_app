@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'page/page.dart';
 
 void main() {
   runApp(const FermiApp(
@@ -17,7 +18,8 @@ class FermiApp extends StatelessWidget {
 
   const FermiApp({required this.title, required this.child, super.key});
 
-  // This widget is the root of your application.
+  // Return the MaterialApp widget which will define the look-and-feel for the
+  // application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -30,49 +32,21 @@ class FermiApp extends StatelessWidget {
   }
 }
 
-class BaseWidget extends StatefulWidget {
+class BaseWidget extends StatelessWidget {
   const BaseWidget({super.key, required this.title});
 
   final String title;
 
   @override
-  State<BaseWidget> createState() => _BaseWidgetState();
-}
-
-class _BaseWidgetState extends State<BaseWidget> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+        appBar: AppBar(title: Text(title)),
+        body: const Center(
+            child: PageWidget([
+          ParamInfo("M:OUTTMP@e,02", "Outdoor temperature"),
+          ParamInfo("G:AMANDA", "Beau's favorite device"),
+          ParamInfo("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE",
+              "Example long PV"),
+        ]))); // This trailing comma makes auto-formatting nicer for build methods.
   }
 }

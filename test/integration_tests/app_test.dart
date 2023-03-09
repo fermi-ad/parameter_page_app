@@ -17,22 +17,6 @@ void main() {
       // Then 'Parameter Page' is displayed in the title bar
       _assertAppBarTitleIs('Parameter Page');
     });
-
-    testWidgets('Tap increment button, counter increments by 1',
-        (tester) async {
-      // Given the application is running and the counter displayed is 0
-      app.main();
-      await tester.pumpAndSettle();
-      expect(find.text('0'), findsOneWidget);
-
-      // When I tap the increment button
-      final Finder fab = find.byTooltip('Increment');
-      await tester.tap(fab);
-      await tester.pumpAndSettle();
-
-      // Then the counter shows...
-      expect(find.text('1'), findsOneWidget);
-    });
   });
 }
 
