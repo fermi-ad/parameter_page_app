@@ -19,14 +19,13 @@ class PageWidget extends StatelessWidget {
   Widget buildParam(double? value, String units) {
     return value == null
         ? Container()
-        : Row(
-            children: [Text(textAlign: TextAlign.end, "$value"), Text(units)]);
+        : Row(children: [Text(textAlign: TextAlign.end, "$value $units")]);
   }
 
   Widget buildRow(BuildContext buildContext, ParamInfo param) {
     return Padding(
       padding: const EdgeInsets.all(4.0),
-      child: Row(children: [
+      child: Row(key: Key("parameter_row_${param.drf}"), children: [
         Expanded(
             flex: 3,
             child: Tooltip(

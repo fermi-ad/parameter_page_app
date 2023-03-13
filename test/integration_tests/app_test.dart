@@ -36,9 +36,17 @@ void main() {
     });
 
     testWidgets(
-        'Display ACNET device with only a reading parameter, should contain parameter details with no setting value',
+        'Display ACNET device, should contain parameter details with setting and reading values',
         (tester) async {
+      // Given the test page is loaded
+      app.main();
+      await tester.pumpAndSettle();
+
       // Then the descript and reading values should be...
+      _assertParameterHasDetails("M:OUTTMP@e,02",
+          description: "Outdoor temperature",
+          settingValue: "50.0 mm",
+          readingValue: "99.0 mm");
     });
   });
 }
@@ -50,10 +58,28 @@ void _assertAppBarTitleIs(String titleIs) {
 }
 
 void _assertParametersAreOnPage(List<String> parameters) {
-  final page = find.byType(PageWidget);
   for (var parameter in parameters) {
-    final parameterFinder = find.text(parameter);
-    expect(
-        find.descendant(of: page, matching: parameterFinder), findsOneWidget);
+    expect(find.byKey(Key("parameter_row_$parameter")), findsOneWidget);
   }
+}
+
+void _assertParameterHasDetails(String parameter,
+    {required String description,
+    required String settingValue,
+    required String readingValue}) {
+  final row = find.byKey(Key("parameter_row_$parameter"));
+
+  final parameterFinder = find.text(parameter);
+  expect(find.descendant(of: row, matching: parameterFinder), findsOneWidget);
+
+  final descriptionFinder = find.text(description);
+  expect(find.descendant(of: row, matching: descriptionFinder), findsOneWidget);
+
+  final readingValueFinder = find.text(readingValue);
+  expect(
+      find.descendant(of: row, matching: readingValueFinder), findsOneWidget);
+
+  final settingValueFinder = find.text(settingValue);
+  expect(
+      find.descendant(of: row, matching: settingValueFinder), findsOneWidget);
 }
