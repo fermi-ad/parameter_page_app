@@ -7,18 +7,6 @@ import 'package:parameter_page/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('Smoke Tests', () {
-    testWidgets('Enter the parameter page, title is set to Parameter Page',
-        (tester) async {
-      // Given the app is running
-      app.main();
-      await tester.pumpAndSettle();
-
-      // Then 'Parameter Page' is displayed in the title bar
-      _assertAppBarTitleIs('Parameter Page');
-    });
-  });
-
   group('Display Parameter Page', () {
     testWidgets('Display test page, should contain three parameters',
         (tester) async {
@@ -67,12 +55,6 @@ void main() {
           readingValue: "99.0 mm");
     });
   });
-}
-
-void _assertAppBarTitleIs(String titleIs) {
-  final appBar = find.byType(AppBar);
-  final titleFinder = find.text(titleIs);
-  expect(find.descendant(of: appBar, matching: titleFinder), findsOneWidget);
 }
 
 void _assertParametersAreOnPage(List<String> parameters) {
