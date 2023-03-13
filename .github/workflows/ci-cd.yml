@@ -26,9 +26,13 @@ jobs:
       - name: Linting
         run: flutter analyze .
 
-      - name: Running unit tests & widget tests
+      - name: Running unit tests
         run: |
-          flutter test
+          flutter test test/unit_tests
+
+      - name: Running widget tests
+        run: |
+          flutter test test/widget_tests
 
       - name: Installing chromedriver (needed for Integration tests)
         uses: nanasess/setup-chromedriver@v1
