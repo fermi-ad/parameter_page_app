@@ -28,10 +28,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Then 'M:OUTTMP' should be displayed
-      final page = find.byType(PageWidget);
-      final parameterFinder = find.text("G:AMANDA");
-      expect(
-          find.descendant(of: page, matching: parameterFinder), findsOneWidget);
+      _assertParameterIsOnPage("G:AMANDA");
     });
   });
 }
@@ -40,4 +37,10 @@ void _assertAppBarTitleIs(String titleIs) {
   final appBar = find.byType(AppBar);
   final titleFinder = find.text(titleIs);
   expect(find.descendant(of: appBar, matching: titleFinder), findsOneWidget);
+}
+
+void _assertParameterIsOnPage(String parameter) {
+  final page = find.byType(PageWidget);
+  final parameterFinder = find.text("G:AMANDA");
+  expect(find.descendant(of: page, matching: parameterFinder), findsOneWidget);
 }
