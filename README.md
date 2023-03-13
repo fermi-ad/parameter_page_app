@@ -21,12 +21,18 @@ Lowest-level tests organized around classes or modules.
 To run:
 
 ```
-flutter test
+flutter test test/unit_tests
 ```
 
 ## Widget tests
 
 Tests at the Widget level without needing a heavy environment.
+
+To run:
+
+```
+flutter test test/widget_tests
+```
 
 ## Integration tests (UI Tests)
 
