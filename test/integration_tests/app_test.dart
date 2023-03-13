@@ -47,6 +47,15 @@ void main() {
           description: "Outdoor temperature",
           settingValue: "50.0 mm",
           readingValue: "99.0 mm");
+      _assertParameterHasDetails("G:AMANDA",
+          description: "Beau's favorite device",
+          settingValue: "50.0 mm",
+          readingValue: "99.0 mm");
+      _assertParameterHasDetails(
+          "PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE",
+          description: "Example long PV",
+          settingValue: "50.0 mm",
+          readingValue: "99.0 mm");
     });
   });
 }
