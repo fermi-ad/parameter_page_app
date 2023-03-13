@@ -27,8 +27,18 @@ void main() {
       app.main();
       await tester.pumpAndSettle();
 
-      // Then 'M:OUTTMP' should be displayed
-      _assertParameterIsOnPage("G:AMANDA");
+      // Then the following parameters should be displayed...
+      _assertParametersAreOnPage([
+        "M:OUTTMP@e,02",
+        "G:AMANDA",
+        "PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE"
+      ]);
+    });
+
+    testWidgets(
+        'Display ACNET device with only a reading parameter, should contain parameter details with no setting value',
+        (tester) async {
+      // Then the descript and reading values should be...
     });
   });
 }
@@ -39,8 +49,11 @@ void _assertAppBarTitleIs(String titleIs) {
   expect(find.descendant(of: appBar, matching: titleFinder), findsOneWidget);
 }
 
-void _assertParameterIsOnPage(String parameter) {
+void _assertParametersAreOnPage(List<String> parameters) {
   final page = find.byType(PageWidget);
-  final parameterFinder = find.text("G:AMANDA");
-  expect(find.descendant(of: page, matching: parameterFinder), findsOneWidget);
+  for (var parameter in parameters) {
+    final parameterFinder = find.text(parameter);
+    expect(
+        find.descendant(of: page, matching: parameterFinder), findsOneWidget);
+  }
 }
