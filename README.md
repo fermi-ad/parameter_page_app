@@ -28,7 +28,9 @@ High-level tests that execute through the user inteface.  Requires chromedriver 
 
 Get chromedriver from: https://chromedriver.chromium.org/downloads
 
-Start chromedriver on port 4444
+Start chromedriver on port 4444 (on my Windows machine I have chromedriver installed to C:\chromedriver_win32):
+
+* `C:\chromedriver_win32\chromedriver.exe --port=4444`
 
 Run tests:
 
