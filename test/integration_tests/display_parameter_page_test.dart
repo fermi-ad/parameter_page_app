@@ -32,12 +32,12 @@ void main() {
       // Then the descript and reading values should be...
       _assertParameterHasDetails("M:OUTTMP@e,02",
           description: "Outdoor temperature",
-          settingValue: "50.0 mm",
-          readingValue: "99.0 mm");
+          settingValue: "50 mm",
+          readingValue: "99 mm");
       _assertParameterHasDetails("G:AMANDA",
           description: "Beau's favorite device",
-          settingValue: "50.0 mm",
-          readingValue: "99.0 mm");
+          settingValue: "50 mm",
+          readingValue: "99 mm");
     });
 
     testWidgets(
@@ -51,8 +51,8 @@ void main() {
       _assertParameterHasDetails(
           "PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE",
           description: "Example long PV",
-          settingValue: "50.0 mm",
-          readingValue: "99.0 mm");
+          settingValue: "50 mm",
+          readingValue: "99 mm");
     });
   });
 }

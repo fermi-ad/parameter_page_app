@@ -36,7 +36,8 @@ jobs:
       - name: Starting chromedriver and executing integration tests
         run: |
           chromedriver --port=4444 &
-          flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/app_test.dart -d web-server
+          flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/smoke_test.dart -d web-server
+          flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/display_parameter_page_test.dart -d web-server
 
       - name: Building web application
         run: |
