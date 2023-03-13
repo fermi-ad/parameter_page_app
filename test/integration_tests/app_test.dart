@@ -50,6 +50,16 @@ void main() {
           description: "Beau's favorite device",
           settingValue: "50.0 mm",
           readingValue: "99.0 mm");
+    });
+
+    testWidgets(
+        "Display PV, should contain parameter details with setting and reading values",
+        (tester) async {
+      // Given the test page is loaded
+      app.main();
+      await tester.pumpAndSettle();
+
+      // Then the description and values should be...
       _assertParameterHasDetails(
           "PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE",
           description: "Example long PV",
