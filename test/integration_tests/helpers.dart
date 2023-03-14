@@ -7,6 +7,12 @@ void assertParametersAreOnPage(List<String> parameters) {
   }
 }
 
+void assertParametersAreNotOnPage(List<String> parameters) {
+  for (var parameter in parameters) {
+    expect(find.byKey(Key("parameter_row_$parameter")), findsNothing);
+  }
+}
+
 void assertParameterHasDetails(String parameter,
     {required String description,
     required String settingValue,
