@@ -17,9 +17,7 @@ void main() {
       assertParametersAreOnPage(["G:AMANDA"]);
 
       // When I attempt to delete the parameter entry but select No from the confirmation dialog...
-      await tester.tap(find.byKey(const Key("parameter_row_G:AMANDA")));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text("Cancel"));
+      await whenIDeleteParameter(tester, "G:AMANDA", confirm: false);
 
       // Then the parameter is still on the page
       assertParametersAreOnPage(["G:AMANDA"]);
@@ -32,10 +30,7 @@ void main() {
       assertParametersAreOnPage(["G:AMANDA"]);
 
       // When I delete the parameter entry...
-      await tester.tap(find.byKey(const Key("parameter_row_G:AMANDA")));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text("OK"));
-      await tester.pumpAndSettle();
+      await whenIDeleteParameter(tester, "G:AMANDA");
 
       // Then the parameter should be removed from the page
       assertParametersAreNotOnPage(["G:AMANDA"]);

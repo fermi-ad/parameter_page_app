@@ -33,3 +33,17 @@ void assertParameterHasDetails(String parameter,
   expect(
       find.descendant(of: row, matching: settingValueFinder), findsOneWidget);
 }
+
+Future<void> whenIDeleteParameter(tester, String parameter,
+    {bool confirm = true}) async {
+  await tester.tap(find.byKey(Key("parameter_row_$parameter")));
+  await tester.pumpAndSettle();
+
+  if (confirm) {
+    await tester.tap(find.text("OK"));
+  } else {
+    await tester.tap(find.text("Cancel"));
+  }
+
+  await tester.pumpAndSettle();
+}
