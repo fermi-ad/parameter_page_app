@@ -10,7 +10,6 @@ on:
 jobs:
   Setup-Build-Test-Dockerize-Push:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
 
     steps:
       - name: Checking out source code
