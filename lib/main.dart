@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'page/entry.dart';
 import 'page/page.dart';
 
 void main() {
@@ -43,10 +44,10 @@ class BaseWidget extends StatelessWidget {
         appBar: AppBar(title: Text(title)),
         body: const Center(
             child: PageWidget([
-          ParamInfo("M:OUTTMP@e,02", "Outdoor temperature"),
-          ParamInfo("G:AMANDA", "Beau's favorite device"),
-          ParamInfo("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE",
-              "Example long PV"),
+          ParameterEntry("M:OUTTMP@e,02"),
+          CommentEntry("This is our first comment!"),
+          ParameterEntry("G:AMANDA"),
+          ParameterEntry("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE"),
         ]))); // This trailing comma makes auto-formatting nicer for build methods.
   }
 }
