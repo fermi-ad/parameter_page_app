@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+void assertIsOnPage({required String comment}) {
+  expect(find.text(comment), findsOneWidget);
+}
+
 void assertParametersAreOnPage(List<String> parameters) {
   for (var parameter in parameters) {
     expect(find.byKey(Key("parameter_row_$parameter")), findsOneWidget);
@@ -46,4 +50,11 @@ Future<void> whenIDeleteParameter(tester, String parameter,
   }
 
   await tester.pumpAndSettle();
+}
+
+Future<void> whenIAddANewComment(tester, String comment) async {
+  await tester.pumpAndSettle();
+  await tester.enterText(find.byKey(const Key('add-entry-textfield')), comment);
+  await tester.testTextInput.receiveAction(TextInputAction.done);
+  await tester.pump();
 }

@@ -34,6 +34,7 @@ class _PageWidgetState extends State<PageWidget> {
           children: [
             Expanded(
                 child: TextField(
+                    key: const Key('add-entry-textfield'),
                     controller: controller,
                     onSubmitted: (value) {
                       setState(() {
