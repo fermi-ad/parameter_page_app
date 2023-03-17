@@ -36,7 +36,7 @@ flutter test test/widget_tests
 
 ## Integration tests (UI Tests)
 
-High-level tests that execute through the user inteface.  Requires chromedriver to run.
+High-level tests that execute through the user inteface.  Requires chromedriver to run.  Tests are organized into a group for each user story.
 
 Get chromedriver from: https://chromedriver.chromium.org/downloads
 
@@ -48,6 +48,8 @@ C:\chromedriver_win32\chromedriver.exe --port=4444
 
 Run tests:
 
-* In browser: `flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/app_test.dart -d chrome`
+Note: each test file needs to be invoked manually.  Replace display_parameter_page_test.dart with the test group you want to run.
 
-* Or headless: `flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/app_test.dart -d web-server`
+* In browser: `flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/display_parameter_page_test.dart -d chrome`
+
+* Or headless: `flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/display_parameter_page_test -d web-server`

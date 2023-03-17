@@ -32,11 +32,11 @@ void main() {
 
       // Then the descript and reading values should be...
       assertParameterHasDetails("M:OUTTMP@e,02",
-          description: "Outdoor temperature",
+          description: "device description",
           settingValue: "50 mm",
           readingValue: "99 mm");
       assertParameterHasDetails("G:AMANDA",
-          description: "Beau's favorite device",
+          description: "device description",
           settingValue: "50 mm",
           readingValue: "99 mm");
     });
@@ -50,7 +50,7 @@ void main() {
 
       // Then the description and values should be...
       assertParameterHasDetails("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE",
-          description: "Example long PV",
+          description: "device description",
           settingValue: "50 mm",
           readingValue: "99 mm");
     });
