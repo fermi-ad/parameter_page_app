@@ -60,6 +60,8 @@ class BaseWidget extends StatelessWidget {
           CommentEntry("This is our first comment!"),
           ParameterEntry("G:AMANDA"),
           ParameterEntry("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE"),
+          ParameterEntry("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY",
+              label: "Humidity"),
         ]))); // This trailing comma makes auto-formatting nicer for build methods.
   }
 }

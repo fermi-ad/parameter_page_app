@@ -29,22 +29,25 @@ class CommentEntry extends PageEntry {
 
 class ParameterEntry extends PageEntry {
   final String drf;
+  final String? label;
 
-  ParameterEntry(this.drf, {Key? key}) : super(key: key);
+  ParameterEntry(this.drf, {this.label, Key? key}) : super(key: key);
 
   @override
   Widget buildEntry(BuildContext context, bool editMode, bool wide) {
     return _ParameterWidget(drf, editMode, wide,
-        key: Key("parameter_row_$drf"));
+        label: label, key: Key("parameter_row_$drf"));
   }
 }
 
 class _ParameterWidget extends StatefulWidget {
   final String drf;
+  final String? label;
   final bool editMode;
   final bool wide;
 
-  const _ParameterWidget(this.drf, this.editMode, this.wide, {super.key});
+  const _ParameterWidget(this.drf, this.editMode, this.wide,
+      {this.label, super.key});
 
   @override
   _ParameterEntryState createState() => _ParameterEntryState();
@@ -85,8 +88,9 @@ class _ParameterEntryState extends State<_ParameterWidget> {
                 Expanded(
                     child: Tooltip(
                         message: widget.drf,
-                        child:
-                            Text(overflow: TextOverflow.ellipsis, widget.drf))),
+                        child: Text(
+                            overflow: TextOverflow.ellipsis,
+                            widget.label ?? widget.drf))),
                 Expanded(
                     child: Text(
                         overflow: TextOverflow.ellipsis, description ?? "")),
@@ -106,7 +110,9 @@ class _ParameterEntryState extends State<_ParameterWidget> {
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Tooltip(
                   message: widget.drf,
-                  child: Text(overflow: TextOverflow.ellipsis, widget.drf)),
+                  child: Text(
+                      overflow: TextOverflow.ellipsis,
+                      widget.label ?? widget.drf)),
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Text(
