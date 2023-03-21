@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'entry.dart';
 
 class PageWidget extends StatefulWidget {
@@ -28,6 +29,14 @@ class _PageWidgetState extends State<PageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final bool movable = parameters.length > 1;
+    final double rightPadding = (movable &&
+            TargetPlatformVariant.desktop()
+                .values
+                .contains(Theme.of(context).platform))
+        ? 40.0
+        : 2.0;
+
     return Column(
       children: [
         Row(
@@ -46,7 +55,7 @@ class _PageWidgetState extends State<PageWidget> {
         ),
         Expanded(
           child: ReorderableListView(
-              buildDefaultDragHandles: parameters.length > 1,
+              buildDefaultDragHandles: movable,
               onReorder: (oldIndex, newIndex) {
                 setState(() {
                   if (oldIndex < newIndex) {
@@ -88,7 +97,7 @@ class _PageWidgetState extends State<PageWidget> {
                       }
                     },
                     child: Padding(
-                      padding: const EdgeInsets.all(2.0),
+                      padding: EdgeInsets.fromLTRB(2.0, 2.0, rightPadding, 2.0),
                       child: entry.buildEntry(context),
                     )));
 
