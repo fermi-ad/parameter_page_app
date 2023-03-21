@@ -45,44 +45,55 @@ class _PageWidgetState extends State<PageWidget> {
           ],
         ),
         Expanded(
-          child: ListView(
-              children: parameters.fold([], (acc, entry) {
-            final index = acc.length;
-
-            acc.add(GestureDetector(
-                onTap: () async {
-                  var result = await showDialog<bool>(
-                    context: context,
-                    builder: (BuildContext context) => AlertDialog(
-                      title: const Text('Delete Row'),
-                      content: const Text(
-                          'Are you sure you want to delete the row?'),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, false),
-                          child: const Text('Cancel'),
-                        ),
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, true),
-                          child: const Text('OK'),
-                        ),
-                      ],
-                    ),
-                  );
-
-                  if (result ?? false) {
-                    setState(() {
-                      parameters.removeAt(index);
-                    });
+          child: ReorderableListView(
+              buildDefaultDragHandles: parameters.length > 1,
+              onReorder: (oldIndex, newIndex) {
+                setState(() {
+                  if (oldIndex < newIndex) {
+                    newIndex -= 1;
                   }
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: entry.buildEntry(context),
-                )));
+                  final PageEntry item = parameters.removeAt(oldIndex);
+                  parameters.insert(newIndex, item);
+                });
+              },
+              children: parameters.fold([], (acc, entry) {
+                final index = acc.length;
 
-            return acc;
-          })),
+                acc.add(GestureDetector(
+                    key: entry.key,
+                    onTap: () async {
+                      var result = await showDialog<bool>(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          title: const Text('Delete Row'),
+                          content: const Text(
+                              'Are you sure you want to delete the row?'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, false),
+                              child: const Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, true),
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        ),
+                      );
+
+                      if (result ?? false) {
+                        setState(() {
+                          parameters.removeAt(index);
+                        });
+                      }
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: entry.buildEntry(context),
+                    )));
+
+                return acc;
+              })),
         ),
       ],
     );
