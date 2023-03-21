@@ -20,9 +20,10 @@ class CommentEntry extends PageEntry {
 
   @override
   Widget buildEntry(BuildContext context, bool editMode, bool wide) {
-    return Row(children: [
-      Expanded(child: Text(text, style: const TextStyle(color: Colors.cyan)))
-    ]);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+      child: Text(text, style: const TextStyle(color: Colors.cyan)),
+    );
   }
 }
 
@@ -99,30 +100,27 @@ class _ParameterEntryState extends State<_ParameterWidget> {
               ],
             ),
           )
-        : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Tooltip(
-                message: widget.drf,
-                child: Text(overflow: TextOverflow.ellipsis, widget.drf)),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Text(
-                        overflow: TextOverflow.ellipsis,
-                        description ?? "",
-                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                            fontStyle: FontStyle.italic, color: Colors.grey)),
-                  ),
-                  Column(
-                    children: [
-                      _buildParam(setting, settingUnits),
-                      _buildParam(reading, readingUnits)
-                    ],
-                  )
-                ]),
-          ]);
+        : Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Tooltip(
+                  message: widget.drf,
+                  child: Text(overflow: TextOverflow.ellipsis, widget.drf)),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(
+                    overflow: TextOverflow.ellipsis,
+                    description ?? "",
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        fontStyle: FontStyle.italic, color: Colors.grey)),
+              ),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                _buildParam(setting, settingUnits),
+                _buildParam(reading, readingUnits)
+              ]),
+            ]),
+          );
   }
 
   @override
