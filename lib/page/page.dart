@@ -37,74 +37,68 @@ class _PageWidgetState extends State<PageWidget> {
         ? 40.0
         : 2.0;
 
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-                child: TextField(
-                    key: const Key('add-entry-textfield'),
-                    controller: controller,
-                    onSubmitted: (value) {
-                      setState(() {
-                        parameters.insert(0, CommentEntry(value));
-                        controller.text = "";
-                      });
-                    })),
-          ],
-        ),
-        Expanded(
-          child: ReorderableListView(
-              buildDefaultDragHandles: movable,
-              onReorder: (oldIndex, newIndex) {
+    return Center(
+      child: ReorderableListView(
+          padding: const EdgeInsets.fromLTRB(4.0, 4.0, 4.0, 4.0),
+          header: TextField(
+              maxLines: 1,
+              minLines: 1,
+              key: const Key('add-entry-textfield'),
+              controller: controller,
+              onSubmitted: (value) {
                 setState(() {
-                  if (oldIndex < newIndex) {
-                    newIndex -= 1;
-                  }
-                  final PageEntry item = parameters.removeAt(oldIndex);
-                  parameters.insert(newIndex, item);
+                  parameters.insert(0, CommentEntry(value));
+                  controller.text = "";
                 });
-              },
-              children: parameters.fold([], (acc, entry) {
-                final index = acc.length;
+              }),
+          buildDefaultDragHandles: movable,
+          onReorder: (oldIndex, newIndex) {
+            setState(() {
+              if (oldIndex < newIndex) {
+                newIndex -= 1;
+              }
+              final PageEntry item = parameters.removeAt(oldIndex);
+              parameters.insert(newIndex, item);
+            });
+          },
+          children: parameters.fold([], (acc, entry) {
+            final index = acc.length;
 
-                acc.add(GestureDetector(
-                    key: entry.key,
-                    onTap: () async {
-                      var result = await showDialog<bool>(
-                        context: context,
-                        builder: (BuildContext context) => AlertDialog(
-                          title: const Text('Delete Row'),
-                          content: const Text(
-                              'Are you sure you want to delete the row?'),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, false),
-                              child: const Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, true),
-                              child: const Text('OK'),
-                            ),
-                          ],
+            acc.add(GestureDetector(
+                key: entry.key,
+                onTap: () async {
+                  var result = await showDialog<bool>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text('Delete Row'),
+                      content: const Text(
+                          'Are you sure you want to delete the row?'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          child: const Text('Cancel'),
                         ),
-                      );
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ),
+                  );
 
-                      if (result ?? false) {
-                        setState(() {
-                          parameters.removeAt(index);
-                        });
-                      }
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(2.0, 2.0, rightPadding, 2.0),
-                      child: entry.buildEntry(context),
-                    )));
+                  if (result ?? false) {
+                    setState(() {
+                      parameters.removeAt(index);
+                    });
+                  }
+                },
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(2.0, 2.0, rightPadding, 2.0),
+                  child: entry.buildEntry(context),
+                )));
 
-                return acc;
-              })),
-        ),
-      ],
+            return acc;
+          })),
     );
   }
 }
