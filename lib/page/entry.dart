@@ -10,7 +10,7 @@ abstract class PageEntry {
 
   PageEntry({Key? key}) : key = key ?? UniqueKey();
 
-  Widget buildEntry(BuildContext context);
+  Widget buildEntry(BuildContext context, bool editMode);
 }
 
 class CommentEntry extends PageEntry {
@@ -19,7 +19,7 @@ class CommentEntry extends PageEntry {
   CommentEntry(this.text, {Key? key}) : super(key: key);
 
   @override
-  Widget buildEntry(BuildContext context) {
+  Widget buildEntry(BuildContext context, bool editMode) {
     return Row(children: [
       Expanded(child: Text(text, style: const TextStyle(color: Colors.cyan)))
     ]);
@@ -32,15 +32,16 @@ class ParameterEntry extends PageEntry {
   ParameterEntry(this.drf, {Key? key}) : super(key: key);
 
   @override
-  Widget buildEntry(BuildContext context) {
-    return _ParameterWidget(drf, key: Key("parameter_row_$drf"));
+  Widget buildEntry(BuildContext context, bool editMode) {
+    return _ParameterWidget(drf, editMode, key: Key("parameter_row_$drf"));
   }
 }
 
 class _ParameterWidget extends StatefulWidget {
   final String drf;
+  final bool editMode;
 
-  const _ParameterWidget(this.drf, {super.key});
+  const _ParameterWidget(this.drf, this.editMode, {super.key});
 
   @override
   _ParameterEntryState createState() => _ParameterEntryState();
@@ -53,25 +54,45 @@ class _ParameterEntryState extends State<_ParameterWidget> {
   double? reading = 99.0;
   String? readingUnits = "mm";
 
-  Widget _buildParam(double? value, String units) {
+  Widget _buildParam(double? value, String? units) {
     return value == null
         ? Container()
-        : Row(children: [Text(textAlign: TextAlign.end, "$value $units")]);
+        : (units == null
+            ? Text(textAlign: TextAlign.end, "$value")
+            : Row(children: [
+                Text(textAlign: TextAlign.end, "$value"),
+                const SizedBox(width: 6.0),
+                Text(units, style: const TextStyle(color: Colors.grey))
+              ]));
+  }
+
+  Widget buildEditor(BuildContext context) {
+    return Text(overflow: TextOverflow.ellipsis, widget.drf);
+  }
+
+  Widget buildRunner(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+            child: Tooltip(
+                message: widget.drf,
+                child: Text(overflow: TextOverflow.ellipsis, widget.drf))),
+        Expanded(
+            child: Text(overflow: TextOverflow.ellipsis, description ?? "")),
+        Row(
+          children: [
+            _buildParam(setting, settingUnits),
+            const SizedBox(width: 12.0),
+            _buildParam(reading, readingUnits)
+          ],
+        ),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Row(children: [
-      Expanded(
-          flex: 3,
-          child: Tooltip(
-              message: widget.drf,
-              child: Text(overflow: TextOverflow.ellipsis, widget.drf))),
-      Expanded(
-          flex: 5,
-          child: Text(overflow: TextOverflow.ellipsis, description ?? "")),
-      _buildParam(setting, settingUnits ?? ""),
-      _buildParam(reading, readingUnits ?? "")
-    ]);
+    return widget.editMode ? buildEditor(context) : buildRunner(context);
   }
 }

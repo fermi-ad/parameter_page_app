@@ -111,14 +111,14 @@ class _PageWidgetState extends State<PageWidget> {
             padding: EdgeInsets.fromLTRB(2.0, 2.0, rightPadding, 2.0),
             child: editMode
                 ? Row(children: [
-                    Expanded(child: entry.buildEntry(context)),
+                    Expanded(child: entry.buildEntry(context, editMode)),
                     const SizedBox(width: 8.0),
                     const IconButton(
                         visualDensity: VisualDensity.compact,
                         onPressed: null,
                         icon: Icon(Icons.delete))
                   ])
-                : entry.buildEntry(context),
+                : entry.buildEntry(context, editMode),
           ),
         ));
   }
