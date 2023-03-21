@@ -10,7 +10,7 @@ abstract class PageEntry {
 
   PageEntry({Key? key}) : key = key ?? UniqueKey();
 
-  Widget buildEntry(BuildContext context, bool editMode);
+  Widget buildEntry(BuildContext context, bool editMode, bool wide);
 }
 
 class CommentEntry extends PageEntry {
@@ -19,7 +19,7 @@ class CommentEntry extends PageEntry {
   CommentEntry(this.text, {Key? key}) : super(key: key);
 
   @override
-  Widget buildEntry(BuildContext context, bool editMode) {
+  Widget buildEntry(BuildContext context, bool editMode, bool wide) {
     return Row(children: [
       Expanded(child: Text(text, style: const TextStyle(color: Colors.cyan)))
     ]);
@@ -32,16 +32,18 @@ class ParameterEntry extends PageEntry {
   ParameterEntry(this.drf, {Key? key}) : super(key: key);
 
   @override
-  Widget buildEntry(BuildContext context, bool editMode) {
-    return _ParameterWidget(drf, editMode, key: Key("parameter_row_$drf"));
+  Widget buildEntry(BuildContext context, bool editMode, bool wide) {
+    return _ParameterWidget(drf, editMode, wide,
+        key: Key("parameter_row_$drf"));
   }
 }
 
 class _ParameterWidget extends StatefulWidget {
   final String drf;
   final bool editMode;
+  final bool wide;
 
-  const _ParameterWidget(this.drf, this.editMode, {super.key});
+  const _ParameterWidget(this.drf, this.editMode, this.wide, {super.key});
 
   @override
   _ParameterEntryState createState() => _ParameterEntryState();
@@ -67,28 +69,60 @@ class _ParameterEntryState extends State<_ParameterWidget> {
   }
 
   Widget buildEditor(BuildContext context) {
-    return Text(overflow: TextOverflow.ellipsis, widget.drf);
+    return ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 36.0),
+        child: Text(overflow: TextOverflow.ellipsis, widget.drf));
   }
 
   Widget buildRunner(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-            child: Tooltip(
+    return widget.wide
+        ? ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 34.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                    child: Tooltip(
+                        message: widget.drf,
+                        child:
+                            Text(overflow: TextOverflow.ellipsis, widget.drf))),
+                Expanded(
+                    child: Text(
+                        overflow: TextOverflow.ellipsis, description ?? "")),
+                Row(
+                  children: [
+                    _buildParam(setting, settingUnits),
+                    const SizedBox(width: 12.0),
+                    _buildParam(reading, readingUnits)
+                  ],
+                ),
+              ],
+            ),
+          )
+        : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Tooltip(
                 message: widget.drf,
-                child: Text(overflow: TextOverflow.ellipsis, widget.drf))),
-        Expanded(
-            child: Text(overflow: TextOverflow.ellipsis, description ?? "")),
-        Row(
-          children: [
-            _buildParam(setting, settingUnits),
-            const SizedBox(width: 12.0),
-            _buildParam(reading, readingUnits)
-          ],
-        ),
-      ],
-    );
+                child: Text(overflow: TextOverflow.ellipsis, widget.drf)),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Text(
+                        overflow: TextOverflow.ellipsis,
+                        description ?? "",
+                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                            fontStyle: FontStyle.italic, color: Colors.grey)),
+                  ),
+                  Column(
+                    children: [
+                      _buildParam(setting, settingUnits),
+                      _buildParam(reading, readingUnits)
+                    ],
+                  )
+                ]),
+          ]);
   }
 
   @override

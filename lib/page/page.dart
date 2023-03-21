@@ -91,8 +91,8 @@ class _PageWidgetState extends State<PageWidget> {
 
   // Builds a single row of the parameter page.
 
-  Widget buildRow(
-      BuildContext context, PageEntry entry, int index, double rightPadding) {
+  Widget buildRow(BuildContext context, PageEntry entry, int index,
+      double rightPadding, bool wide) {
     return GestureDetector(
         key: entry.key,
         onTap: () async {
@@ -104,30 +104,24 @@ class _PageWidgetState extends State<PageWidget> {
             });
           }
         },
-        child: SizedBox(
-          height: 36.0,
-          width: double.infinity,
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(2.0, 2.0, rightPadding, 2.0),
-            child: editMode
-                ? Row(children: [
-                    Expanded(child: entry.buildEntry(context, editMode)),
-                    const SizedBox(width: 8.0),
-                    const IconButton(
-                        visualDensity: VisualDensity.compact,
-                        onPressed: null,
-                        icon: Icon(Icons.delete))
-                  ])
-                : entry.buildEntry(context, editMode),
-          ),
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(2.0, 2.0, rightPadding, 2.0),
+          child: editMode
+              ? Row(children: [
+                  Expanded(child: entry.buildEntry(context, editMode, wide)),
+                  const SizedBox(width: 8.0),
+                  const IconButton(
+                      visualDensity: VisualDensity.compact,
+                      onPressed: null,
+                      icon: Icon(Icons.delete))
+                ])
+              : entry.buildEntry(context, editMode, wide),
         ));
   }
 
-  // Build the widget. The main body of the widget is a ReorderableListView.
-  // Each row of the page is rendered by the underlying Entry class.
+  // Build the widget for wide screens.
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _build(BuildContext context, bool wide) {
     final bool movable = editMode && parameters.length > 1;
     final double rightPadding = (movable &&
             TargetPlatformVariant.desktop()
@@ -146,7 +140,8 @@ class _PageWidgetState extends State<PageWidget> {
               buildDefaultDragHandles: movable,
               onReorder: reorderEntry,
               children: parameters.fold([], (acc, entry) {
-                acc.add(buildRow(context, entry, acc.length, rightPadding));
+                acc.add(
+                    buildRow(context, entry, acc.length, rightPadding, wide));
                 return acc;
               })),
         ),
@@ -161,6 +156,15 @@ class _PageWidgetState extends State<PageWidget> {
               onPressed: () => setState(() => editMode = !editMode)),
         )
       ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return _build(context, constraints.maxWidth > 600);
+      },
     );
   }
 }
