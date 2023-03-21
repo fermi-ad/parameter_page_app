@@ -16,6 +16,7 @@ class PageWidget extends StatefulWidget {
 // The non-public state of the Parameter Page.
 
 class _PageWidgetState extends State<PageWidget> {
+  bool editMode = false;
   List<PageEntry> parameters = [];
   TextEditingController controller = TextEditingController();
 
@@ -46,7 +47,7 @@ class _PageWidgetState extends State<PageWidget> {
         controller: controller,
         onSubmitted: (value) {
           setState(() {
-            parameters.insert(0, CommentEntry(value));
+            parameters.add(CommentEntry(value));
             controller.text = "";
           });
         });
@@ -103,9 +104,22 @@ class _PageWidgetState extends State<PageWidget> {
             });
           }
         },
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(2.0, 2.0, rightPadding, 2.0),
-          child: entry.buildEntry(context),
+        child: SizedBox(
+          height: 36.0,
+          width: double.infinity,
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(2.0, 2.0, rightPadding, 2.0),
+            child: editMode
+                ? Row(children: [
+                    Expanded(child: entry.buildEntry(context)),
+                    const SizedBox(width: 8.0),
+                    const IconButton(
+                        visualDensity: VisualDensity.compact,
+                        onPressed: null,
+                        icon: Icon(Icons.delete))
+                  ])
+                : entry.buildEntry(context),
+          ),
         ));
   }
 
@@ -114,7 +128,7 @@ class _PageWidgetState extends State<PageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final bool movable = parameters.length > 1;
+    final bool movable = editMode && parameters.length > 1;
     final double rightPadding = (movable &&
             TargetPlatformVariant.desktop()
                 .values
@@ -122,16 +136,31 @@ class _PageWidgetState extends State<PageWidget> {
         ? 40.0
         : 2.0;
 
-    return Center(
-      child: ReorderableListView(
-          padding: const EdgeInsets.fromLTRB(4.0, 4.0, 4.0, 4.0),
-          header: newEntryEditor(),
-          buildDefaultDragHandles: movable,
-          onReorder: reorderEntry,
-          children: parameters.fold([], (acc, entry) {
-            acc.add(buildRow(context, entry, acc.length, rightPadding));
-            return acc;
-          })),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Expanded(
+          child: ReorderableListView(
+              padding: const EdgeInsets.fromLTRB(4.0, 4.0, 4.0, 4.0),
+              footer: editMode ? newEntryEditor() : null,
+              buildDefaultDragHandles: movable,
+              onReorder: reorderEntry,
+              children: parameters.fold([], (acc, entry) {
+                acc.add(buildRow(context, entry, acc.length, rightPadding));
+                return acc;
+              })),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: FloatingActionButton.small(
+              backgroundColor: Theme.of(context)
+                  .colorScheme
+                  .primary
+                  .withAlpha(editMode ? 255 : 128),
+              child: const Icon(Icons.settings),
+              onPressed: () => setState(() => editMode = !editMode)),
+        )
+      ],
     );
   }
 }
