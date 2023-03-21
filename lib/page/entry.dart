@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 
+// Base class for the Entry class hierarchy.
+
 abstract class PageEntry {
-  const PageEntry();
+  final Key key;
+
+  // The base class takes an optional 'key' parameter. If it
+  // isn't provided a key, it'll use `UniqueKey()`.
+
+  PageEntry({Key? key}) : key = key ?? UniqueKey();
 
   Widget buildEntry(BuildContext context);
 }
@@ -9,7 +16,7 @@ abstract class PageEntry {
 class CommentEntry extends PageEntry {
   final String text;
 
-  const CommentEntry(this.text);
+  CommentEntry(this.text, {Key? key}) : super(key: key);
 
   @override
   Widget buildEntry(BuildContext context) {
@@ -20,7 +27,7 @@ class CommentEntry extends PageEntry {
 class ParameterEntry extends PageEntry {
   final String drf;
 
-  const ParameterEntry(this.drf);
+  ParameterEntry(this.drf, {Key? key}) : super(key: key);
 
   @override
   Widget buildEntry(BuildContext context) {
