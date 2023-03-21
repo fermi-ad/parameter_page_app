@@ -20,7 +20,9 @@ class CommentEntry extends PageEntry {
 
   @override
   Widget buildEntry(BuildContext context) {
-    return Row(children: [Expanded(child: Text(text))]);
+    return Row(children: [
+      Expanded(child: Text(text, style: const TextStyle(color: Colors.cyan)))
+    ]);
   }
 }
 
