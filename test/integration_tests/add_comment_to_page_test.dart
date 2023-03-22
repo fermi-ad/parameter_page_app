@@ -11,9 +11,10 @@ void main() {
   group('Add Comment to Page', () {
     testWidgets('Submit comment, should appear at the top of the page',
         (tester) async {
-      // Given the test page is loaded
+      // Given the test page is loaded and I am in edit mode
       app.main();
       await tester.pumpAndSettle();
+      await whenIEnterEditMode(tester);
 
       // When I add a new comment...
       await whenIAddANewComment(tester, 'Test comment #1');
