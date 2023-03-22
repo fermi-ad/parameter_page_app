@@ -34,11 +34,11 @@ void main() {
       assertParameterHasDetails("M:OUTTMP@e,02",
           description: "device description",
           settingValue: "50",
-          readingValue: "99");
+          readingValue: "50");
       assertParameterHasDetails("G:AMANDA",
           description: "device description",
           settingValue: "50",
-          readingValue: "99");
+          readingValue: "50");
     });
 
     testWidgets(
@@ -52,7 +52,7 @@ void main() {
       assertParameterHasDetails("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE",
           description: "device description",
           settingValue: "50",
-          readingValue: "99");
+          readingValue: "50");
     });
   });
 }
