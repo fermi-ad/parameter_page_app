@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:parameter_page/page/page.dart';
 
 // Base class for the Entry class hierarchy.
 
@@ -31,7 +33,7 @@ class ParameterEntry extends PageEntry {
   final String drf;
   final String? label;
 
-  ParameterEntry(this.drf, {this.label, Key? key}) : super(key: key);
+  ParameterEntry(this.drf, {this.label, super.key});
 
   @override
   Widget buildEntry(BuildContext context, bool editMode, bool wide) {
@@ -57,7 +59,6 @@ class _ParameterEntryState extends State<_ParameterWidget> {
   String? description = "device description";
   double? setting = 50.0;
   String? settingUnits = "mm";
-  double? reading = 99.0;
   String? readingUnits = "mm";
 
   Widget _buildParam(double? value, String? units) {
@@ -79,6 +80,8 @@ class _ParameterEntryState extends State<_ParameterWidget> {
   }
 
   Widget buildRunner(BuildContext context) {
+    Stream<double> stream = DataSource.of(context).stream()!;
+
     return widget.wide
         ? ConstrainedBox(
             constraints: const BoxConstraints(minHeight: 34.0),
@@ -98,7 +101,16 @@ class _ParameterEntryState extends State<_ParameterWidget> {
                   children: [
                     _buildParam(setting, settingUnits),
                     const SizedBox(width: 12.0),
-                    _buildParam(reading, readingUnits)
+                    StreamBuilder(
+                        stream: stream,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.active) {
+                            return _buildParam(snapshot.data, readingUnits);
+                          } else {
+                            return _buildParam(null, null);
+                          }
+                        })
                   ],
                 ),
               ],
@@ -123,7 +135,15 @@ class _ParameterEntryState extends State<_ParameterWidget> {
               ),
               Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
                 _buildParam(setting, settingUnits),
-                _buildParam(reading, readingUnits)
+                StreamBuilder(
+                    stream: stream,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.active) {
+                        return _buildParam(snapshot.data, readingUnits);
+                      } else {
+                        return _buildParam(null, null);
+                      }
+                    })
               ]),
             ]),
           );
