@@ -10,10 +10,13 @@ void main() {
 
   group('Delete Entry from Page', () {
     testWidgets('Confirm no, should not delete entry', (tester) async {
-      // Given the test page is loaded and the 'G:AMANDA' device is on the page
+      // Given the test page is loaded
+      //   the 'G:AMANDA' device is on the page
+      //   and I am in edit mode
       app.main();
       await tester.pumpAndSettle();
       assertParametersAreOnPage(["G:AMANDA"]);
+      await whenIEnterEditMode(tester);
 
       // When I attempt to delete the parameter entry but select No from the confirmation dialog...
       await whenIDeleteParameter(tester, "G:AMANDA", confirm: false);
@@ -23,10 +26,13 @@ void main() {
     });
 
     testWidgets('Confirm yes, should delete entry', (tester) async {
-      // Given the test page is loaded and the 'G:AMANDA' device is on the page
+      // Given the test page is loaded
+      //    the 'G:AMANDA' device is on the page
+      //    and I am in the edit mode
       app.main();
       await tester.pumpAndSettle();
       assertParametersAreOnPage(["G:AMANDA"]);
+      await whenIEnterEditMode(tester);
 
       // When I delete the parameter entry...
       await whenIDeleteParameter(tester, "G:AMANDA");
