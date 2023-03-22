@@ -33,12 +33,12 @@ void main() {
       // Then the descript and reading values should be...
       assertParameterHasDetails("M:OUTTMP@e,02",
           description: "device description",
-          settingValue: "50 mm",
-          readingValue: "99 mm");
+          settingValue: "50",
+          readingValue: "99");
       assertParameterHasDetails("G:AMANDA",
           description: "device description",
-          settingValue: "50 mm",
-          readingValue: "99 mm");
+          settingValue: "50",
+          readingValue: "99");
     });
 
     testWidgets(
@@ -51,8 +51,8 @@ void main() {
       // Then the description and values should be...
       assertParameterHasDetails("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE",
           description: "device description",
-          settingValue: "50 mm",
-          readingValue: "99 mm");
+          settingValue: "50",
+          readingValue: "99");
     });
   });
 }
