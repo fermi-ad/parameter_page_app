@@ -38,6 +38,11 @@ void assertParameterHasDetails(String parameter,
       find.descendant(of: row, matching: settingValueFinder), findsOneWidget);
 }
 
+Future<void> whenIEnterEditMode(tester) async {
+  await tester.tap(find.byKey(const Key("enable_edit_mode_button")));
+  await tester.pumpAndSettle();
+}
+
 Future<void> whenIDeleteParameter(tester, String parameter,
     {bool confirm = true}) async {
   await tester.tap(find.byKey(Key("parameter_row_$parameter")));

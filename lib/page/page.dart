@@ -148,6 +148,7 @@ class _PageWidgetState extends State<PageWidget> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: FloatingActionButton.small(
+              key: const Key('enable_edit_mode_button'),
               backgroundColor: Theme.of(context)
                   .colorScheme
                   .primary
