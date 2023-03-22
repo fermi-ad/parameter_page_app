@@ -1,6 +1,29 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'entry.dart';
+
+class DataSource extends InheritedWidget {
+  final Stream<double> _data = Stream<double>.periodic(
+    const Duration(seconds: 1),
+    (count) {
+      return 50.0 + count * 0.1;
+    },
+  ).asBroadcastStream();
+
+  DataSource({required super.child, super.key});
+
+  Stream<double>? stream() => _data;
+
+  static DataSource of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<DataSource>()!;
+  }
+
+  @override
+  bool updateShouldNotify(covariant InheritedWidget oldWidget) {
+    return false;
+  }
+}
 
 // This widget implements the entire behavior of a "Parameter Page".
 
@@ -162,10 +185,10 @@ class _PageWidgetState extends State<PageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
+    return DataSource(child: LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         return _build(context, constraints.maxWidth > 600);
       },
-    );
+    ));
   }
 }
