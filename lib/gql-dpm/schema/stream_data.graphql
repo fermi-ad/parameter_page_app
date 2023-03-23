@@ -1,0 +1,12 @@
+subscription StreamData($drfs: [String!]!) {
+    acceleratorData(drfs: $drfs) {
+        refId
+        data {
+            result {
+                ... on Scalar {
+                    value
+                }
+            }
+        }
+    }
+}

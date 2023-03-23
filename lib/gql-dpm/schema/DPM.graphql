@@ -1,0 +1,62 @@
+scalar Timestamp
+
+type StatusReply {
+  status: Int!
+}
+
+type ScalarArray {
+  values: [Float]!
+}
+
+type TextArray {
+  values: [String]!
+}
+
+type Scalar {
+  value: Float
+}
+
+type Raw {
+  value: String
+}
+
+type Text {
+  value: String
+}
+
+union DataType = StatusReply # set when a fatal error occurs
+  | Scalar
+  | ScalarArray
+  | Raw
+  | Text
+  | TextArray
+  | StructData
+
+type StructData {
+  key: String
+  value: DataType
+}
+
+type DataInfo {
+  timestamp: Timestamp!
+  result: DataType!
+  di: Int!
+  name: String!
+  description: String!
+  units: String
+}
+
+type DataReply {
+  refId: Int!
+  cycle: Timestamp!
+  data: DataInfo!
+}
+
+type Query {
+  acceleratorData(drfs: [String!]!): [DataReply!]!
+}
+
+type Subscription {
+  # Replies come through the same stream so DataReply is not an array
+  acceleratorData(drfs: [String!]!): DataReply!
+}

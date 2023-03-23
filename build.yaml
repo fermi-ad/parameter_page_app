@@ -1,0 +1,11 @@
+targets:
+    $default:
+        builders:
+            ferry_generator|graphql_builder:
+                enabled: true
+                options:
+                    schema: parameter_page|lib/gql-dpm/schema/DPM.graphql
+            ferry_generator|serializer_builder:
+                enabled: true
+                options:
+                    schema: parameter_page|lib/gql-dpm/schema/DPM.graphql

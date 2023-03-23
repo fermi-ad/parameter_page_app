@@ -1,0 +1,11 @@
+query GetDeviceInfo($names: [String!]!) {
+    acceleratorData(drfs: $name) {
+        refId
+        data {
+            di
+            name
+            description
+            units
+        }
+    }
+}
