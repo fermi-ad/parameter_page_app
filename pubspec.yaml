@@ -38,6 +38,10 @@ dependencies:
     # Use with the CupertinoIcons class for iOS style icons.
     cupertino_icons: ^1.0.2
     ferry: ^0.14.0+1
+    ferry_flutter: ^0.8.0+1
+    gql_http_link: ^0.4.5
+    gql_websocket_link: ^0.3.4+1
+    built_collection: ^5.1.1
 
 dev_dependencies:
     integration_test:

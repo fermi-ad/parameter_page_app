@@ -98,7 +98,7 @@ packages:
     source: hosted
     version: "7.2.7"
   built_collection:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: built_collection
       sha256: "376e3dd27b51ea877c28d525560790aee2e6fbb5f20e2f85d5081027d94e2100"
@@ -233,6 +233,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.0+1"
+  ferry_flutter:
+    dependency: "direct main"
+    description:
+      name: ferry_flutter
+      sha256: c4483cd33068131773f157224c484e96a3db9dd969d45d56a454ba56834e6569
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.8.0+1"
   ferry_generator:
     dependency: "direct dev"
     description:
@@ -349,6 +357,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.1"
+  gql_websocket_link:
+    dependency: "direct main"
+    description:
+      name: gql_websocket_link
+      sha256: bb325ff05e16815c45600a5b56843a7f64fc04bb6a9690920fade70fc8080b0b
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.4+1"
   graphs:
     dependency: transitive
     description:
@@ -711,6 +727,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.1"
+  uuid:
+    dependency: transitive
+    description:
+      name: uuid
+      sha256: "648e103079f7c64a36dc7d39369cabb358d377078a051d6ae2ad3aa539519313"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.7"
   vector_math:
     dependency: transitive
     description:
