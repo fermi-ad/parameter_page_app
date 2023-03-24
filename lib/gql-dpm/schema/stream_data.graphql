@@ -1,7 +1,9 @@
 subscription StreamData($drfs: [String!]!) {
     acceleratorData(drfs: $drfs) {
         refId
+        cycle
         data {
+            timestamp
             result {
                 ... on Scalar {
                     value

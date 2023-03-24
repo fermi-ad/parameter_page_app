@@ -42,11 +42,25 @@ const StreamData = _i1.OperationDefinitionNode(
           selectionSet: null,
         ),
         _i1.FieldNode(
+          name: _i1.NameNode(value: 'cycle'),
+          alias: null,
+          arguments: [],
+          directives: [],
+          selectionSet: null,
+        ),
+        _i1.FieldNode(
           name: _i1.NameNode(value: 'data'),
           alias: null,
           arguments: [],
           directives: [],
           selectionSet: _i1.SelectionSetNode(selections: [
+            _i1.FieldNode(
+              name: _i1.NameNode(value: 'timestamp'),
+              alias: null,
+              arguments: [],
+              directives: [],
+              selectionSet: null,
+            ),
             _i1.FieldNode(
               name: _i1.NameNode(value: 'result'),
               alias: null,
@@ -71,7 +85,7 @@ const StreamData = _i1.OperationDefinitionNode(
                   ]),
                 )
               ]),
-            )
+            ),
           ]),
         ),
       ]),

@@ -5,6 +5,8 @@
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:gql_code_builder/src/serializers/inline_fragment_serializer.dart'
+    as _i3;
+import 'package:parameter_page/gql-dpm/schema/__generated__/DPM.schema.gql.dart'
     as _i2;
 import 'package:parameter_page/gql-dpm/schema/__generated__/serializers.gql.dart'
     as _i1;
@@ -51,6 +53,7 @@ abstract class GStreamDataData_acceleratorData
   @BuiltValueField(wireName: '__typename')
   String get G__typename;
   int get refId;
+  _i2.GTimestamp get cycle;
   GStreamDataData_acceleratorData_data get data;
   static Serializer<GStreamDataData_acceleratorData> get serializer =>
       _$gStreamDataDataAcceleratorDataSerializer;
@@ -80,6 +83,7 @@ abstract class GStreamDataData_acceleratorData_data
       b..G__typename = 'DataInfo';
   @BuiltValueField(wireName: '__typename')
   String get G__typename;
+  _i2.GTimestamp get timestamp;
   GStreamDataData_acceleratorData_data_result get result;
   static Serializer<GStreamDataData_acceleratorData_data> get serializer =>
       _$gStreamDataDataAcceleratorDataDataSerializer;
@@ -99,7 +103,7 @@ abstract class GStreamDataData_acceleratorData_data_result {
   @BuiltValueField(wireName: '__typename')
   String get G__typename;
   static Serializer<GStreamDataData_acceleratorData_data_result>
-      get serializer => _i2.InlineFragmentSerializer<
+      get serializer => _i3.InlineFragmentSerializer<
               GStreamDataData_acceleratorData_data_result>(
             'GStreamDataData_acceleratorData_data_result',
             GStreamDataData_acceleratorData_data_result__base,
