@@ -3,9 +3,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:built_collection/built_collection.dart';
 import "package:gql_websocket_link/gql_websocket_link.dart";
 import 'package:gql_http_link/gql_http_link.dart';
+import 'package:ferry/ferry.dart';
 import 'package:parameter_page/gql-dpm/schema/__generated__/get_device_info.req.gql.dart';
 import 'package:parameter_page/gql-dpm/schema/__generated__/get_device_info.data.gql.dart';
-import 'package:ferry/ferry.dart';
+import 'package:parameter_page/gql-dpm/schema/__generated__/stream_data.data.gql.dart';
+import 'package:parameter_page/gql-dpm/schema/__generated__/stream_data.req.gql.dart';
+import 'package:parameter_page/gql-dpm/schema/__generated__/stream_data.var.gql.dart';
 
 // Declare an exception type that's specific to the DPM API.
 
@@ -20,6 +23,10 @@ abstract class DPMException implements Exception {
 
 class DPMInvArgException extends DPMException {
   DPMInvArgException(String message) : super("InvArg: $message");
+}
+
+class DPMTypeException extends DPMException {
+  DPMTypeException(String message) : super("Type: $message");
 }
 
 class DPMGraphQLException extends DPMException {
@@ -43,6 +50,21 @@ class DeviceInfo {
       required this.name,
       required this.description,
       this.units});
+}
+
+class Reading {
+  final int refId;
+  final int status;
+  final int cycle;
+  final DateTime timestamp;
+  final double? value;
+
+  const Reading(
+      {required this.refId,
+      this.status = 0,
+      required this.cycle,
+      required this.timestamp,
+      this.value});
 }
 
 // This class provides an interface to Fermi's DPM API via GraphQL. This widget
@@ -114,7 +136,7 @@ class DpmService extends InheritedWidget {
           // schema (hence the ugly name.)
 
           .request(
-              GGetDeviceInfoReq((b) => b.vars.names = ListBuilder(devices)))
+              GGetDeviceInfoReq((b) => b..vars.names = ListBuilder(devices)))
 
           // Ignore items showing the progress of the request. We only want the
           // final response when there's data or an error.
@@ -163,4 +185,60 @@ class DpmService extends InheritedWidget {
         description: e.data.description,
         units: e.data.units,
       );
+
+  // Returns a stream of readings for the devices specified in the parameter
+  // list. The `Reading` class has a `refId` field which indicates to which
+  // device in the passed array the current reading belongs. If `value` is null,
+  // the `status` field will hold the ACNET error status. No more readings will
+  // be sent for a device in error.
+
+  Stream<Reading> monitorDevices(List<String> drfs) {
+    return _s
+        .request(GStreamDataReq((b) => b..vars.drfs = ListBuilder(drfs)))
+        .where((event) => !event.loading)
+        .map(_convertToReading);
+  }
+
+  // Convert the incoming GraphQL messages into `Reading` objects.
+
+  static Reading _convertToReading(
+      OperationResponse<GStreamDataData, GStreamDataVars> e) {
+    // If the packet doesn't have GraphQL errors, then we can process the
+    // payload.
+
+    if (!e.hasErrors) {
+      final GStreamDataData_acceleratorData data = e.data!.acceleratorData;
+      final GStreamDataData_acceleratorData_data_result result =
+          data.data.result;
+
+      // If the result has a scalar value, return a `Reading` with the value.
+
+      if (result is GStreamDataData_acceleratorData_data_result__asScalar) {
+        return Reading(
+            refId: data.refId,
+            cycle: data.cycle,
+            timestamp: data.data.timestamp,
+            value: result.value);
+      }
+
+      // If the result is a status, then the value is `null` and we save the
+      // status code.
+
+      if (result
+          is GStreamDataData_acceleratorData_data_result__asStatusReply) {
+        return Reading(
+            refId: data.refId,
+            cycle: data.cycle,
+            timestamp: data.data.timestamp,
+            status: result.status);
+      }
+
+      // We are only supporting a single, scalar value for the moment. Any types
+      // we don't yet support will report an error and tear down the stream.
+
+      throw DPMTypeException("can't handle ${result.G__typename} types");
+    } else {
+      throw DPMGraphQLException(e.graphqlErrors.toString());
+    }
+  }
 }

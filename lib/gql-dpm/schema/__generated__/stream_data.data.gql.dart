@@ -5,8 +5,6 @@
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:gql_code_builder/src/serializers/inline_fragment_serializer.dart'
-    as _i3;
-import 'package:parameter_page/gql-dpm/schema/__generated__/DPM.schema.gql.dart'
     as _i2;
 import 'package:parameter_page/gql-dpm/schema/__generated__/serializers.gql.dart'
     as _i1;
@@ -53,7 +51,7 @@ abstract class GStreamDataData_acceleratorData
   @BuiltValueField(wireName: '__typename')
   String get G__typename;
   int get refId;
-  _i2.GTimestamp get cycle;
+  int get cycle;
   GStreamDataData_acceleratorData_data get data;
   static Serializer<GStreamDataData_acceleratorData> get serializer =>
       _$gStreamDataDataAcceleratorDataSerializer;
@@ -83,7 +81,7 @@ abstract class GStreamDataData_acceleratorData_data
       b..G__typename = 'DataInfo';
   @BuiltValueField(wireName: '__typename')
   String get G__typename;
-  _i2.GTimestamp get timestamp;
+  DateTime get timestamp;
   GStreamDataData_acceleratorData_data_result get result;
   static Serializer<GStreamDataData_acceleratorData_data> get serializer =>
       _$gStreamDataDataAcceleratorDataDataSerializer;
@@ -103,11 +101,15 @@ abstract class GStreamDataData_acceleratorData_data_result {
   @BuiltValueField(wireName: '__typename')
   String get G__typename;
   static Serializer<GStreamDataData_acceleratorData_data_result>
-      get serializer => _i3.InlineFragmentSerializer<
+      get serializer => _i2.InlineFragmentSerializer<
               GStreamDataData_acceleratorData_data_result>(
             'GStreamDataData_acceleratorData_data_result',
             GStreamDataData_acceleratorData_data_result__base,
-            {'Scalar': GStreamDataData_acceleratorData_data_result__asScalar},
+            {
+              'StatusReply':
+                  GStreamDataData_acceleratorData_data_result__asStatusReply,
+              'Scalar': GStreamDataData_acceleratorData_data_result__asScalar,
+            },
           );
   Map<String, dynamic> toJson() => (_i1.serializers.serializeWith(
         GStreamDataData_acceleratorData_data_result.serializer,
@@ -150,6 +152,43 @@ abstract class GStreamDataData_acceleratorData_data_result__base
           Map<String, dynamic> json) =>
       _i1.serializers.deserializeWith(
         GStreamDataData_acceleratorData_data_result__base.serializer,
+        json,
+      );
+}
+
+abstract class GStreamDataData_acceleratorData_data_result__asStatusReply
+    implements
+        Built<GStreamDataData_acceleratorData_data_result__asStatusReply,
+            GStreamDataData_acceleratorData_data_result__asStatusReplyBuilder>,
+        GStreamDataData_acceleratorData_data_result {
+  GStreamDataData_acceleratorData_data_result__asStatusReply._();
+
+  factory GStreamDataData_acceleratorData_data_result__asStatusReply(
+      [Function(
+              GStreamDataData_acceleratorData_data_result__asStatusReplyBuilder
+                  b)
+          updates]) = _$GStreamDataData_acceleratorData_data_result__asStatusReply;
+
+  static void _initializeBuilder(
+          GStreamDataData_acceleratorData_data_result__asStatusReplyBuilder
+              b) =>
+      b..G__typename = 'StatusReply';
+  @override
+  @BuiltValueField(wireName: '__typename')
+  String get G__typename;
+  int get status;
+  static Serializer<GStreamDataData_acceleratorData_data_result__asStatusReply>
+      get serializer =>
+          _$gStreamDataDataAcceleratorDataDataResultAsStatusReplySerializer;
+  @override
+  Map<String, dynamic> toJson() => (_i1.serializers.serializeWith(
+        GStreamDataData_acceleratorData_data_result__asStatusReply.serializer,
+        this,
+      ) as Map<String, dynamic>);
+  static GStreamDataData_acceleratorData_data_result__asStatusReply? fromJson(
+          Map<String, dynamic> json) =>
+      _i1.serializers.deserializeWith(
+        GStreamDataData_acceleratorData_data_result__asStatusReply.serializer,
         json,
       );
 }

@@ -5,7 +5,13 @@ targets:
                 enabled: true
                 options:
                     schema: parameter_page|lib/gql-dpm/schema/DPM.graphql
+                    type_overrides:
+                        Timestamp:
+                            name: DateTime
             ferry_generator|serializer_builder:
                 enabled: true
                 options:
                     schema: parameter_page|lib/gql-dpm/schema/DPM.graphql
+                    custom_serializers:
+                        - import: "package:parameter_page/gql-dpm/schema/date_serializer.dart"
+                          name: DateSerializer

@@ -70,6 +70,23 @@ const StreamData = _i1.OperationDefinitionNode(
                 _i1.InlineFragmentNode(
                   typeCondition: _i1.TypeConditionNode(
                       on: _i1.NamedTypeNode(
+                    name: _i1.NameNode(value: 'StatusReply'),
+                    isNonNull: false,
+                  )),
+                  directives: [],
+                  selectionSet: _i1.SelectionSetNode(selections: [
+                    _i1.FieldNode(
+                      name: _i1.NameNode(value: 'status'),
+                      alias: null,
+                      arguments: [],
+                      directives: [],
+                      selectionSet: null,
+                    )
+                  ]),
+                ),
+                _i1.InlineFragmentNode(
+                  typeCondition: _i1.TypeConditionNode(
+                      on: _i1.NamedTypeNode(
                     name: _i1.NameNode(value: 'Scalar'),
                     isNonNull: false,
                   )),
@@ -83,7 +100,7 @@ const StreamData = _i1.OperationDefinitionNode(
                       selectionSet: null,
                     )
                   ]),
-                )
+                ),
               ]),
             ),
           ]),

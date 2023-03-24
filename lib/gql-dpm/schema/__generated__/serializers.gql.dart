@@ -7,8 +7,6 @@ import 'package:built_value/standard_json_plugin.dart' show StandardJsonPlugin;
 import 'package:ferry_exec/ferry_exec.dart';
 import 'package:gql_code_builder/src/serializers/operation_serializer.dart'
     show OperationSerializer;
-import 'package:parameter_page/gql-dpm/schema/__generated__/DPM.schema.gql.dart'
-    show GTimestamp;
 import 'package:parameter_page/gql-dpm/schema/__generated__/get_device_info.data.gql.dart'
     show
         GGetDeviceInfoData,
@@ -25,16 +23,20 @@ import 'package:parameter_page/gql-dpm/schema/__generated__/stream_data.data.gql
         GStreamDataData_acceleratorData,
         GStreamDataData_acceleratorData_data,
         GStreamDataData_acceleratorData_data_result__asScalar,
+        GStreamDataData_acceleratorData_data_result__asStatusReply,
         GStreamDataData_acceleratorData_data_result__base;
 import 'package:parameter_page/gql-dpm/schema/__generated__/stream_data.req.gql.dart'
     show GStreamDataReq;
 import 'package:parameter_page/gql-dpm/schema/__generated__/stream_data.var.gql.dart'
     show GStreamDataVars;
+import 'package:parameter_page/gql-dpm/schema/date_serializer.dart'
+    show DateSerializer;
 
 part 'serializers.gql.g.dart';
 
 final SerializersBuilder _serializersBuilder = _$serializers.toBuilder()
   ..add(OperationSerializer())
+  ..add(DateSerializer())
   ..add(GStreamDataData_acceleratorData_data_result.serializer)
   ..addPlugin(StandardJsonPlugin());
 @SerializersFor([
@@ -47,9 +49,9 @@ final SerializersBuilder _serializersBuilder = _$serializers.toBuilder()
   GStreamDataData_acceleratorData,
   GStreamDataData_acceleratorData_data,
   GStreamDataData_acceleratorData_data_result__asScalar,
+  GStreamDataData_acceleratorData_data_result__asStatusReply,
   GStreamDataData_acceleratorData_data_result__base,
   GStreamDataReq,
   GStreamDataVars,
-  GTimestamp,
 ])
 final Serializers serializers = _serializersBuilder.build();

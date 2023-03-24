@@ -249,7 +249,7 @@ const DataReply = _i1.ObjectTypeDefinitionNode(
       directives: [],
       args: [],
       type: _i1.NamedTypeNode(
-        name: _i1.NameNode(value: 'Timestamp'),
+        name: _i1.NameNode(value: 'Int'),
         isNonNull: true,
       ),
     ),

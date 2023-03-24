@@ -17,10 +17,11 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(GStreamDataData_acceleratorData.serializer)
       ..add(GStreamDataData_acceleratorData_data.serializer)
       ..add(GStreamDataData_acceleratorData_data_result__asScalar.serializer)
+      ..add(
+          GStreamDataData_acceleratorData_data_result__asStatusReply.serializer)
       ..add(GStreamDataData_acceleratorData_data_result__base.serializer)
       ..add(GStreamDataReq.serializer)
       ..add(GStreamDataVars.serializer)
-      ..add(GTimestamp.serializer)
       ..addBuilderFactory(
           const FullType(BuiltList,
               const [const FullType(GGetDeviceInfoData_acceleratorData)]),

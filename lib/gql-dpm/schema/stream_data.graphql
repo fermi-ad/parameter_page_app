@@ -5,6 +5,9 @@ subscription StreamData($drfs: [String!]!) {
         data {
             timestamp
             result {
+                ... on StatusReply {
+                    status
+                }
                 ... on Scalar {
                     value
                 }

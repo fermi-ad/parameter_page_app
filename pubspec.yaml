@@ -42,6 +42,7 @@ dependencies:
     gql_http_link: ^0.4.5
     gql_websocket_link: ^0.3.4+1
     built_collection: ^5.1.1
+    built_value: ^8.4.4
 
 dev_dependencies:
     integration_test:
