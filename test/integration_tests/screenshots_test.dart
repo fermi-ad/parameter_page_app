@@ -6,16 +6,18 @@ import 'package:parameter_page/main.dart' as app;
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding();
+
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Generate Screenshots', () {
     testWidgets('Display the test parameter page.', (tester) async {
       // Given the app is running
       app.main();
+      tester.binding.window.physicalSizeTestValue = const Size(600, 600);
       await tester.pumpAndSettle();
 
       // Wait 1 second for data to arrive
-      await Future.delayed(const Duration(seconds: 5));
+      await Future.delayed(const Duration(seconds: 1));
       await tester.pumpAndSettle();
 
       // Say cheese!
