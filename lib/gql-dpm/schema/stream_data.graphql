@@ -9,7 +9,7 @@ subscription StreamData($drfs: [String!]!) {
                     status
                 }
                 ... on Scalar {
-                    value
+                    scalarValue
                 }
             }
         }

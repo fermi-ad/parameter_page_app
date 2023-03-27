@@ -30,7 +30,7 @@ const ScalarArray = _i1.ObjectTypeDefinitionNode(
   interfaces: [],
   fields: [
     _i1.FieldDefinitionNode(
-      name: _i1.NameNode(value: 'values'),
+      name: _i1.NameNode(value: 'scalarArrayValue'),
       directives: [],
       args: [],
       type: _i1.ListTypeNode(
@@ -49,7 +49,7 @@ const TextArray = _i1.ObjectTypeDefinitionNode(
   interfaces: [],
   fields: [
     _i1.FieldDefinitionNode(
-      name: _i1.NameNode(value: 'values'),
+      name: _i1.NameNode(value: 'textArrayValue'),
       directives: [],
       args: [],
       type: _i1.ListTypeNode(
@@ -68,7 +68,7 @@ const Scalar = _i1.ObjectTypeDefinitionNode(
   interfaces: [],
   fields: [
     _i1.FieldDefinitionNode(
-      name: _i1.NameNode(value: 'value'),
+      name: _i1.NameNode(value: 'scalarValue'),
       directives: [],
       args: [],
       type: _i1.NamedTypeNode(
@@ -84,7 +84,7 @@ const Raw = _i1.ObjectTypeDefinitionNode(
   interfaces: [],
   fields: [
     _i1.FieldDefinitionNode(
-      name: _i1.NameNode(value: 'value'),
+      name: _i1.NameNode(value: 'rawValue'),
       directives: [],
       args: [],
       type: _i1.NamedTypeNode(
@@ -100,7 +100,7 @@ const Text = _i1.ObjectTypeDefinitionNode(
   interfaces: [],
   fields: [
     _i1.FieldDefinitionNode(
-      name: _i1.NameNode(value: 'value'),
+      name: _i1.NameNode(value: 'textValue'),
       directives: [],
       args: [],
       type: _i1.NamedTypeNode(
@@ -159,7 +159,7 @@ const StructData = _i1.ObjectTypeDefinitionNode(
       ),
     ),
     _i1.FieldDefinitionNode(
-      name: _i1.NameNode(value: 'value'),
+      name: _i1.NameNode(value: 'structValue'),
       directives: [],
       args: [],
       type: _i1.NamedTypeNode(

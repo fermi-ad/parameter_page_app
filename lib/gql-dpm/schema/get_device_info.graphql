@@ -1,5 +1,5 @@
 query GetDeviceInfo($names: [String!]!) {
-    acceleratorData(drfs: $name) {
+    acceleratorData(drfs: $names) {
         refId
         data {
             di

@@ -29,7 +29,7 @@ const GetDeviceInfo = _i1.OperationDefinitionNode(
       arguments: [
         _i1.ArgumentNode(
           name: _i1.NameNode(value: 'drfs'),
-          value: _i1.VariableNode(name: _i1.NameNode(value: 'name')),
+          value: _i1.VariableNode(name: _i1.NameNode(value: 'names')),
         )
       ],
       directives: [],

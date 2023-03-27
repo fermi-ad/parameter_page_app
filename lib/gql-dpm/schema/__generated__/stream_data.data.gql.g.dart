@@ -333,10 +333,10 @@ class _$GStreamDataData_acceleratorData_data_result__asScalarSerializer
           specifiedType: const FullType(String)),
     ];
     Object? value;
-    value = object.value;
+    value = object.scalarValue;
     if (value != null) {
       result
-        ..add('value')
+        ..add('scalarValue')
         ..add(serializers.serialize(value,
             specifiedType: const FullType(double)));
     }
@@ -360,8 +360,8 @@ class _$GStreamDataData_acceleratorData_data_result__asScalarSerializer
           result.G__typename = serializers.deserialize(value,
               specifiedType: const FullType(String))! as String;
           break;
-        case 'value':
-          result.value = serializers.deserialize(value,
+        case 'scalarValue':
+          result.scalarValue = serializers.deserialize(value,
               specifiedType: const FullType(double)) as double?;
           break;
       }
@@ -1018,7 +1018,7 @@ class _$GStreamDataData_acceleratorData_data_result__asScalar
   @override
   final String G__typename;
   @override
-  final double? value;
+  final double? scalarValue;
 
   factory _$GStreamDataData_acceleratorData_data_result__asScalar(
           [void Function(
@@ -1029,7 +1029,7 @@ class _$GStreamDataData_acceleratorData_data_result__asScalar
           ._build();
 
   _$GStreamDataData_acceleratorData_data_result__asScalar._(
-      {required this.G__typename, this.value})
+      {required this.G__typename, this.scalarValue})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
         G__typename,
@@ -1054,14 +1054,14 @@ class _$GStreamDataData_acceleratorData_data_result__asScalar
     if (identical(other, this)) return true;
     return other is GStreamDataData_acceleratorData_data_result__asScalar &&
         G__typename == other.G__typename &&
-        value == other.value;
+        scalarValue == other.scalarValue;
   }
 
   @override
   int get hashCode {
     var _$hash = 0;
     _$hash = $jc(_$hash, G__typename.hashCode);
-    _$hash = $jc(_$hash, value.hashCode);
+    _$hash = $jc(_$hash, scalarValue.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -1071,7 +1071,7 @@ class _$GStreamDataData_acceleratorData_data_result__asScalar
     return (newBuiltValueToStringHelper(
             r'GStreamDataData_acceleratorData_data_result__asScalar')
           ..add('G__typename', G__typename)
-          ..add('value', value))
+          ..add('scalarValue', scalarValue))
         .toString();
   }
 }
@@ -1086,9 +1086,9 @@ class GStreamDataData_acceleratorData_data_result__asScalarBuilder
   String? get G__typename => _$this._G__typename;
   set G__typename(String? G__typename) => _$this._G__typename = G__typename;
 
-  double? _value;
-  double? get value => _$this._value;
-  set value(double? value) => _$this._value = value;
+  double? _scalarValue;
+  double? get scalarValue => _$this._scalarValue;
+  set scalarValue(double? scalarValue) => _$this._scalarValue = scalarValue;
 
   GStreamDataData_acceleratorData_data_result__asScalarBuilder() {
     GStreamDataData_acceleratorData_data_result__asScalar._initializeBuilder(
@@ -1099,7 +1099,7 @@ class GStreamDataData_acceleratorData_data_result__asScalarBuilder
     final $v = _$v;
     if ($v != null) {
       _G__typename = $v.G__typename;
-      _value = $v.value;
+      _scalarValue = $v.scalarValue;
       _$v = null;
     }
     return this;
@@ -1129,7 +1129,7 @@ class GStreamDataData_acceleratorData_data_result__asScalarBuilder
                 G__typename,
                 r'GStreamDataData_acceleratorData_data_result__asScalar',
                 'G__typename'),
-            value: value);
+            scalarValue: scalarValue);
     replace(_$result);
     return _$result;
   }

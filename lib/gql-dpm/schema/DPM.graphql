@@ -5,23 +5,23 @@ type StatusReply {
 }
 
 type ScalarArray {
-    values: [Float]!
+    scalarArrayValue: [Float]!
 }
 
 type TextArray {
-    values: [String]!
+    textArrayValue: [String]!
 }
 
 type Scalar {
-    value: Float
+    scalarValue: Float
 }
 
 type Raw {
-    value: String
+    rawValue: String
 }
 
 type Text {
-    value: String
+    textValue: String
 }
 
 union DataType =
@@ -35,7 +35,7 @@ union DataType =
 
 type StructData {
     key: String
-    value: DataType
+    structValue: DataType
 }
 
 type DataInfo {

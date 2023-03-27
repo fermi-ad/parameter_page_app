@@ -210,7 +210,7 @@ abstract class GStreamDataData_acceleratorData_data_result__asScalar
   @override
   @BuiltValueField(wireName: '__typename')
   String get G__typename;
-  double? get value;
+  double? get scalarValue;
   static Serializer<GStreamDataData_acceleratorData_data_result__asScalar>
       get serializer =>
           _$gStreamDataDataAcceleratorDataDataResultAsScalarSerializer;
