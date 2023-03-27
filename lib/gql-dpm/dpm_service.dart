@@ -10,6 +10,8 @@ import 'package:parameter_page/gql-dpm/schema/__generated__/stream_data.data.gql
 import 'package:parameter_page/gql-dpm/schema/__generated__/stream_data.req.gql.dart';
 import 'package:parameter_page/gql-dpm/schema/__generated__/stream_data.var.gql.dart';
 
+import 'dart:developer' as developer;
+
 // Declare an exception type that's specific to the DPM API.
 
 abstract class DPMException implements Exception {
@@ -130,13 +132,26 @@ class DpmService extends InheritedWidget {
 
   Future<List<DeviceInfo>> getDeviceInfo(List<String> devices) async {
     if (devices.isNotEmpty) {
+      final req =
+          GGetDeviceInfoReq((b) => b..vars.names = ListBuilder(devices));
+
       return _q
           // Make the request on the "query" connection. This returns a stream
           // of replies. The request type was automatically generated from the
           // schema (hence the ugly name.)
 
-          .request(
-              GGetDeviceInfoReq((b) => b..vars.names = ListBuilder(devices)))
+          .request(req)
+
+          // Insert this identity mapping so we can check for errors.
+
+          .map((event) {
+            if (event.hasErrors) {
+              developer.log("errors: ${event.graphqlErrors}",
+                  name: "gql.getDeviceInfo");
+            }
+
+            return event;
+          })
 
           // Ignore items showing the progress of the request. We only want the
           // final response when there's data or an error.
@@ -154,22 +169,22 @@ class DpmService extends InheritedWidget {
           // `DeviceInfo` objects.
 
           .then(
-        (response) {
-          if (!response.hasErrors) {
-            // Iterate across the list to generate a new one with our "nicer"
-            // class type.
+            (response) {
+              if (!response.hasErrors) {
+                // Iterate across the list to generate a new one with our "nicer"
+                // class type.
 
-            return response.data!.acceleratorData
-                .map(_convertToDevInfo)
-                .toList();
-          } else {
-            // Any GraphQL errors should be re-raised (but wrapped in our
-            // DPM-specific exception.)
+                return response.data!.acceleratorData
+                    .map(_convertToDevInfo)
+                    .toList();
+              } else {
+                // Any GraphQL errors should be re-raised (but wrapped in our
+                // DPM-specific exception.)
 
-            throw DPMGraphQLException(response.graphqlErrors.toString());
-          }
-        },
-      );
+                throw DPMGraphQLException(response.graphqlErrors.toString());
+              }
+            },
+          );
     } else {
       throw DPMInvArgException("empty device list");
     }
@@ -193,8 +208,18 @@ class DpmService extends InheritedWidget {
   // be sent for a device in error.
 
   Stream<Reading> monitorDevices(List<String> drfs) {
+    final req = GStreamDataReq((b) => b..vars.drfs = ListBuilder(drfs));
+
     return _s
-        .request(GStreamDataReq((b) => b..vars.drfs = ListBuilder(drfs)))
+        .request(req)
+        .map((event) {
+          if (event.hasErrors) {
+            developer.log("error: ${event.graphqlErrors}",
+                name: "gql.monitorDevices");
+          }
+
+          return event;
+        })
         .where((event) => !event.loading)
         .map(_convertToReading);
   }
@@ -218,7 +243,7 @@ class DpmService extends InheritedWidget {
             refId: data.refId,
             cycle: data.cycle,
             timestamp: data.data.timestamp,
-            value: result.value);
+            value: result.scalarValue);
       }
 
       // If the result is a status, then the value is `null` and we save the

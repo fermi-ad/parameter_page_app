@@ -37,13 +37,7 @@ class ParameterEntry extends PageEntry {
 
   @override
   Widget buildEntry(BuildContext context, bool editMode, bool wide) {
-    return _ParameterWidget(
-      drf,
-      editMode,
-      wide,
-      label: label,
-      key: Key("parameter_row_$drf"),
-    );
+    return _ParameterWidget(drf, editMode, wide, label: label, key: key);
   }
 }
 
@@ -99,9 +93,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     return value == null
         ? Container()
         : (units == null
-            ? Text(textAlign: TextAlign.end, "$value")
+            ? Text(textAlign: TextAlign.end, value.toStringAsPrecision(4))
             : Row(children: [
-                Text(textAlign: TextAlign.end, "$value"),
+                Text(textAlign: TextAlign.end, value.toStringAsPrecision(4)),
                 const SizedBox(width: 6.0),
                 Text(units, style: const TextStyle(color: Colors.grey))
               ]));
@@ -114,12 +108,15 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
+                flex: 3,
                 child: Tooltip(
                     message: widget.drf,
                     child: Text(overflow: TextOverflow.ellipsis, widget.drf))),
             Expanded(
+                flex: 2,
                 child:
                     Text(overflow: TextOverflow.ellipsis, description ?? "")),
+            const Spacer(),
             Row(
               children: [
                 _buildParam(50.0, "mm"),
@@ -172,18 +169,26 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     );
   }
 
+  // Builds the widget.
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(future: _setup.then((value) {
-      description = value.first.description;
-      units = value.first.units;
-      return value;
-    }), builder: (context, snapshot) {
-      if (snapshot.hasData) {
+    return FutureBuilder(
+      // The FUtureBuilder monitors our `getDeviceInfo` query. When it
+      // completes, we transfer over the values of `description` and `units` so
+      // the widgets can display them.
+
+      future: _setup.then((value) {
+        description = value.first.description;
+        units = value.first.units;
+        return value;
+      }),
+
+      // The builder function decides which renderer to call.
+
+      builder: (context, snapshot) {
         return widget.wide ? _buildWide(context) : _buildNarrow(context);
-      } else {
-        return _buildParam(null, units);
-      }
-    });
+      },
+    );
   }
 }
