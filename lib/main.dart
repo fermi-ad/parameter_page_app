@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'gql-dpm/dpm_service.dart';
 import 'page/entry.dart';
 import 'page/page.dart';
 
@@ -54,14 +55,16 @@ class BaseWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text(title)),
-        body: Center(
-            child: PageWidget([
-          ParameterEntry("M:OUTTMP@e,02"),
-          CommentEntry("This is our first comment!"),
-          ParameterEntry("G:AMANDA"),
-          ParameterEntry("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE"),
-          ParameterEntry("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY",
-              label: "Humidity"),
-        ]))); // This trailing comma makes auto-formatting nicer for build methods.
+        body: DpmService(
+          child: Center(
+              child: PageWidget([
+            ParameterEntry("M:OUTTMP@e,02"),
+            CommentEntry("This is our first comment!"),
+            ParameterEntry("G:AMANDA"),
+            ParameterEntry("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE"),
+            ParameterEntry("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY",
+                label: "Humidity"),
+          ])),
+        )); // This trailing comma makes auto-formatting nicer for build methods.
   }
 }
