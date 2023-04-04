@@ -7,13 +7,13 @@ void assertIsOnPage({required String comment}) {
 
 void assertParametersAreOnPage(List<String> parameters) {
   for (var parameter in parameters) {
-    expect(find.byKey(Key("parameter_row_$parameter")), findsOneWidget);
+    expect(find.text(parameter), findsOneWidget);
   }
 }
 
 void assertParametersAreNotOnPage(List<String> parameters) {
   for (var parameter in parameters) {
-    expect(find.byKey(Key("parameter_row_$parameter")), findsNothing);
+    expect(find.text(parameter), findsNothing);
   }
 }
 
@@ -45,7 +45,7 @@ Future<void> whenIEnterEditMode(tester) async {
 
 Future<void> whenIDeleteParameter(tester, String parameter,
     {bool confirm = true}) async {
-  await tester.tap(find.byKey(Key("parameter_row_$parameter")));
+  await tester.tap(find.text(parameter));
   await tester.pumpAndSettle();
 
   if (confirm) {

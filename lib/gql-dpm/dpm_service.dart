@@ -86,7 +86,7 @@ class DpmService extends InheritedWidget {
             Uri(
               scheme: "http",
               host: "127.0.0.1",
-              port: 8080,
+              port: 8000,
               path: "/dpm/q",
             ).toString(),
           ),
@@ -97,7 +97,7 @@ class DpmService extends InheritedWidget {
             Uri(
               scheme: "ws",
               host: "127.0.0.1",
-              port: 8080,
+              port: 8000,
               path: "/dpm/s",
             ).toString(),
             reconnectInterval: const Duration(seconds: 1),

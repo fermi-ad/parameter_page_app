@@ -12,8 +12,8 @@ void main() {
   group('Generate Screenshots', () {
     testWidgets('Display the test parameter page.', (tester) async {
       // Given the app is running
-      app.main();
       tester.binding.window.physicalSizeTestValue = const Size(600, 600);
+      app.main();
       await tester.pumpAndSettle();
 
       // Wait 1 second for data to arrive
