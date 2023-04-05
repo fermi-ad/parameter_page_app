@@ -1,6 +1,6 @@
 # PIP-II Parameter Page Web Application
 
-![](screenshots/main-screenshot.png | width=600)
+![Parameter Page in Chrome](screenshots/main-screenshot.png "Parameter Page in Chrome")
 
 This is the PIP-II Parameter Page web application. 
 
