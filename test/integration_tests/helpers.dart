@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:parameter_page/page/entry.dart';
 
 void assertIsOnPage({required String comment}) {
   expect(find.text(comment), findsOneWidget);
@@ -38,7 +39,24 @@ void assertParameterHasDetails(String parameter,
       find.descendant(of: row, matching: settingValueFinder), findsOneWidget);
 }
 
+void assertParameterIsInRow(String parameter, int isInRow) {
+  final rowFinder = find.byType(PageEntryWidget);
+  final row = rowFinder.evaluate().isEmpty ? null : rowFinder.at(isInRow);
+
+  if (row == null) {
+    fail("No parameter found at row #$isInRow");
+  }
+
+  expect(
+      find.descendant(of: row, matching: find.text(parameter)), findsOneWidget);
+}
+
 Future<void> whenIEnterEditMode(tester) async {
+  await tester.tap(find.byKey(const Key("enable_edit_mode_button")));
+  await tester.pumpAndSettle();
+}
+
+Future<void> whenIExitEditMode(tester) async {
   await tester.tap(find.byKey(const Key("enable_edit_mode_button")));
   await tester.pumpAndSettle();
 }

@@ -15,6 +15,30 @@ abstract class PageEntry {
   Widget buildEntry(BuildContext context, bool editMode, bool wide);
 }
 
+class PageEntryWidget extends StatelessWidget {
+  final Widget child;
+
+  const PageEntryWidget({required this.child, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0), child: child);
+  }
+}
+
+class CommentEntryWidget extends StatelessWidget {
+  final String text;
+
+  const CommentEntryWidget(this.text, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return PageEntryWidget(
+        child: Text(text, style: const TextStyle(color: Colors.cyan)));
+  }
+}
+
 class CommentEntry extends PageEntry {
   final String text;
 
@@ -22,10 +46,7 @@ class CommentEntry extends PageEntry {
 
   @override
   Widget buildEntry(BuildContext context, bool editMode, bool wide) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
-      child: Text(text, style: const TextStyle(color: Colors.cyan)),
-    );
+    return CommentEntryWidget(text);
   }
 }
 
@@ -37,17 +58,17 @@ class ParameterEntry extends PageEntry {
 
   @override
   Widget buildEntry(BuildContext context, bool editMode, bool wide) {
-    return _ParameterWidget(drf, editMode, wide, label: label, key: key);
+    return ParameterWidget(drf, editMode, wide, label: label, key: key);
   }
 }
 
-class _ParameterWidget extends StatelessWidget {
+class ParameterWidget extends StatelessWidget {
   final String drf;
   final String? label;
   final bool editMode;
   final bool wide;
 
-  const _ParameterWidget(this.drf, this.editMode, this.wide,
+  const ParameterWidget(this.drf, this.editMode, this.wide,
       {this.label, super.key});
 
   Widget buildEditor(BuildContext context) {
@@ -58,9 +79,11 @@ class _ParameterWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return editMode
-        ? buildEditor(context)
-        : _ActiveParamWidget(drf: drf, wide: wide, dpm: DpmService.of(context));
+    return PageEntryWidget(
+        child: editMode
+            ? buildEditor(context)
+            : _ActiveParamWidget(
+                drf: drf, wide: wide, dpm: DpmService.of(context)));
   }
 }
 
