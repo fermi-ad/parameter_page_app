@@ -48,7 +48,9 @@ void assertParameterIsInRow(String parameter, int isInRow) {
   }
 
   expect(
-      find.descendant(of: row, matching: find.text(parameter)), findsOneWidget);
+      find.descendant(of: row, matching: find.text(parameter)), findsOneWidget,
+      reason:
+          "expected $parameter in row $isInRow but something else was there.");
 }
 
 Future<void> whenIEnterEditMode(tester) async {

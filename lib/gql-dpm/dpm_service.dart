@@ -12,6 +12,8 @@ import 'package:parameter_page/gql-dpm/schema/__generated__/stream_data.var.gql.
 
 import 'dart:developer' as developer;
 
+import '../mock-dpm/mock_dpm_service.dart';
+
 // Declare an exception type that's specific to the DPM API.
 
 abstract class DPMException implements Exception {
@@ -69,18 +71,48 @@ class Reading {
       this.value});
 }
 
+abstract class DpmService extends InheritedWidget {
+  const DpmService({super.key, required super.child});
+
+  Future<List<DeviceInfo>> getDeviceInfo(List<String> devices);
+
+  Stream<Reading> monitorDevices(List<String> drfs);
+
+  // This should return `true` if the state of widget has changed. Since it only
+  // provides access to GraphQL, nothing ever changes so we always return
+  // `false`.
+
+  @override
+  bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;
+
+  // These static functions provide access to this widget from down the widget
+  // chain.
+
+  static DpmService? _maybeOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<MockDpmService>() ??
+        context.dependOnInheritedWidgetOfExactType<GraphQLDpmService>();
+  }
+
+  static DpmService of(BuildContext context) {
+    final DpmService? result = _maybeOf(context);
+
+    assert(result != null, 'no DpmService found in context');
+    return result!;
+  }
+}
+
 // This class provides an interface to Fermi's DPM API via GraphQL. This widget
 // should be placed near the top of your widget tree. Widgets further down can
 // access this object by calling `DpmService.of(context)`.
 
-class DpmService extends InheritedWidget {
+class GraphQLDpmService extends DpmService {
   final Client _q;
   final Client _s;
 
   // Constructor. This creates the HTTP links needed to communicate with our
   // GraphQL endpoints.
 
-  DpmService({required super.child, super.key})
+  GraphQLDpmService({required super.child, super.key})
       : _q = Client(
           link: HttpLink(
             Uri(
@@ -104,26 +136,6 @@ class DpmService extends InheritedWidget {
           ),
           cache: Cache(),
         );
-
-  // This should return `true` if the state of widget has changed. Since it only
-  // provides access to GraphQL, nothing ever changes so we always return
-  // `false`.
-
-  @override
-  bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;
-
-  // These static functions provide access to this widget from down the widget
-  // chain.
-
-  static DpmService? _maybeOf(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<DpmService>();
-
-  static DpmService of(BuildContext context) {
-    final DpmService? result = _maybeOf(context);
-
-    assert(result != null, 'no DpmService found in context');
-    return result!;
-  }
 
   // Returns information about devices. The caller provides a list of device
   // names and will receive a list of `DeviceInfo` objects. The order of the

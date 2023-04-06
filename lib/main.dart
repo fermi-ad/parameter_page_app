@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'gql-dpm/dpm_service.dart';
+import 'mock-dpm/mock_dpm_service.dart';
 import 'page/entry.dart';
 import 'page/page.dart';
 
-void main() {
-  runApp(const FermiApp(
-    title: "Parameter Page",
-    child: BaseWidget(title: 'Parameter Page'),
-  ));
+void main({bool useMockServices = false}) {
+  runApp(FermiApp(
+      title: "Parameter Page",
+      child: BaseWidget(
+          title: 'Parameter Page', useMockServices: useMockServices)));
 }
 
 // This is the base widget for the app. It's only purpose is to provide
@@ -47,24 +48,33 @@ class FermiApp extends StatelessWidget {
 }
 
 class BaseWidget extends StatelessWidget {
-  const BaseWidget({super.key, required this.title});
+  const BaseWidget(
+      {super.key, this.useMockServices = false, required this.title});
 
+  final bool useMockServices;
   final String title;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text(title)),
-        body: DpmService(
-          child: Center(
-              child: PageWidget([
-            ParameterEntry("M:OUTTMP@e,02"),
-            CommentEntry("This is our first comment!"),
-            ParameterEntry("G:AMANDA"),
-            ParameterEntry("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE"),
-            ParameterEntry("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY",
-                label: "Humidity"),
-          ])),
-        )); // This trailing comma makes auto-formatting nicer for build methods.
+        body:
+            _buildDPMService()); // This trailing comma makes auto-formatting nicer for build methods.
+  }
+
+  Widget _buildDPMService() {
+    final child = Center(
+        child: PageWidget([
+      ParameterEntry("M:OUTTMP@e,02"),
+      CommentEntry("This is our first comment!"),
+      ParameterEntry("G:AMANDA"),
+      ParameterEntry("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE"),
+      ParameterEntry("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY",
+          label: "Humidity"),
+    ]));
+
+    return useMockServices
+        ? MockDpmService(child: child)
+        : GraphQLDpmService(child: child);
   }
 }
