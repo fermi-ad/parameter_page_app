@@ -141,7 +141,7 @@ class GraphQLDpmService extends DpmService {
   // names and will receive a list of `DeviceInfo` objects. The order of the
   // results in the returned list correspond to the order of the devices in the
   // source list.
-
+  @override
   Future<List<DeviceInfo>> getDeviceInfo(List<String> devices) async {
     if (devices.isNotEmpty) {
       final req =
@@ -218,7 +218,7 @@ class GraphQLDpmService extends DpmService {
   // device in the passed array the current reading belongs. If `value` is null,
   // the `status` field will hold the ACNET error status. No more readings will
   // be sent for a device in error.
-
+  @override
   Stream<Reading> monitorDevices(List<String> drfs) {
     final req = GStreamDataReq((b) => b..vars.drfs = ListBuilder(drfs));
 
