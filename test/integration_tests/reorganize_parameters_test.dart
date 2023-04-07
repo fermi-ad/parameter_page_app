@@ -15,7 +15,7 @@ void main() {
       //   the 'G:AMANDA' device is on the page
       //   in row 3
       //   and I am in edit mode
-      app.main(useMockServices: true);
+      app.main();
       await tester.pumpAndSettle();
       assertParametersAreOnPage(["G:AMANDA"]);
       assertParameterIsInRow("G:AMANDA", 2);

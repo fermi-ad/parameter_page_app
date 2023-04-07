@@ -4,8 +4,12 @@ import 'mock-dpm/mock_dpm_service.dart';
 import 'page/entry.dart';
 import 'page/page.dart';
 
-void main({bool useMockServices = false}) {
-  runApp(FermiApp(
+void main() {
+  const useMockServices =
+      String.fromEnvironment("USE_MOCK_DPM_SERVICE", defaultValue: "false") !=
+          "false";
+
+  runApp(const FermiApp(
       title: "Parameter Page",
       child: BaseWidget(
           title: 'Parameter Page', useMockServices: useMockServices)));
