@@ -23,6 +23,7 @@ void main() {
 
       // When I move the parameter to the top of the page
       //   and I exit edit mode
+      await moveRowAtIndexNRowsUp(tester, 2, 2);
       await whenIExitEditMode(tester);
 
       // Then the comment is in the top position

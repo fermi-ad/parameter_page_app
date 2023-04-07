@@ -7,8 +7,7 @@ import 'page/page.dart';
 void main({bool useMockServices = false}) {
   runApp(FermiApp(
       title: "Parameter Page",
-      child: BaseWidget(
-          title: 'Parameter Page', useMockServices: useMockServices)));
+      child: BaseWidget(title: 'Parameter Page', useMockServices: true)));
 }
 
 // This is the base widget for the app. It's only purpose is to provide
