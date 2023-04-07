@@ -16,10 +16,10 @@ void main() {
       app.main();
       await tester.pumpAndSettle();
       assertParametersAreOnPage(["G:AMANDA"]);
-      await whenIEnterEditMode(tester);
+      await enterEditMode(tester);
 
       // When I attempt to delete the parameter entry but select No from the confirmation dialog...
-      await whenIDeleteParameter(tester, "G:AMANDA", confirm: false);
+      await deleteParameter(tester, "G:AMANDA", confirm: false);
 
       // Then the parameter is still on the page
       assertParametersAreOnPage(["G:AMANDA"]);
@@ -32,10 +32,10 @@ void main() {
       app.main();
       await tester.pumpAndSettle();
       assertParametersAreOnPage(["G:AMANDA"]);
-      await whenIEnterEditMode(tester);
+      await enterEditMode(tester);
 
       // When I delete the parameter entry...
-      await whenIDeleteParameter(tester, "G:AMANDA");
+      await deleteParameter(tester, "G:AMANDA");
 
       // Then the parameter should be removed from the page
       assertParametersAreNotOnPage(["G:AMANDA"]);

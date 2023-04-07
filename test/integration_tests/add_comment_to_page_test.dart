@@ -14,10 +14,10 @@ void main() {
       // Given the test page is loaded and I am in edit mode
       app.main();
       await tester.pumpAndSettle();
-      await whenIEnterEditMode(tester);
+      await enterEditMode(tester);
 
       // When I add a new comment...
-      await whenIAddANewComment(tester, 'Test comment #1');
+      await addANewComment(tester, 'Test comment #1');
 
       // Then the new comment is added to the page
       assertIsOnPage(comment: 'Test comment #1');

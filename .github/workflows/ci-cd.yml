@@ -39,11 +39,11 @@ jobs:
       - name: Starting chromedriver and executing integration tests
         run: |
           chromedriver --port=4444 &
-          flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/smoke_test.dart -d web-server
-          flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/display_parameter_page_test.dart -d web-server
-          flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/delete_entry_from_page_test.dart -d web-server
-          flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/add_comment_to_page_test.dart -d web-server
-          flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/reorganize_parameters_test.dart -d web-server
+          flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/smoke_test.dart -d web-server --dart-define=USE_MOCK_DPM_SERVICE=true
+          flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/display_parameter_page_test.dart -d web-server --dart-define=USE_MOCK_DPM_SERVICE=true
+          flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/delete_entry_from_page_test.dart -d web-server --dart-define=USE_MOCK_DPM_SERVICE=true
+          flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/add_comment_to_page_test.dart -d web-server --dart-define=USE_MOCK_DPM_SERVICE=true
+          flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/reorganize_parameters_test.dart -d web-server --dart-define=USE_MOCK_DPM_SERVICE=true
 
       - name: Building web application
         run: |

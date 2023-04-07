@@ -63,7 +63,7 @@ Future<void> exitEditMode(tester) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> whenIDeleteParameter(tester, String parameter,
+Future<void> deleteParameter(tester, String parameter,
     {bool confirm = true}) async {
   await tester.tap(find.text(parameter));
   await tester.pumpAndSettle();
@@ -77,7 +77,7 @@ Future<void> whenIDeleteParameter(tester, String parameter,
   await tester.pumpAndSettle();
 }
 
-Future<void> whenIAddANewComment(tester, String comment) async {
+Future<void> addANewComment(tester, String comment) async {
   await tester.pumpAndSettle();
   await tester.enterText(find.byKey(const Key('add-entry-textfield')), comment);
   await tester.testTextInput.receiveAction(TextInputAction.done);
