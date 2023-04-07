@@ -19,12 +19,12 @@ void main() {
       await tester.pumpAndSettle();
       assertParametersAreOnPage(["G:AMANDA"]);
       assertParameterIsInRow("G:AMANDA", 2);
-      await whenIEnterEditMode(tester);
+      await enterEditMode(tester);
 
       // When I move the parameter to the top of the page
       //   and I exit edit mode
       await moveRowAtIndexNRowsUp(tester, 2, 2);
-      await whenIExitEditMode(tester);
+      await exitEditMode(tester);
 
       // Then the comment is in the top position
       assertParameterIsInRow("G:AMANDA", 0);

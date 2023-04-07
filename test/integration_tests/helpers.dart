@@ -53,12 +53,12 @@ void assertParameterIsInRow(String parameter, int isInRow) {
           "expected $parameter in row $isInRow but something else was there.");
 }
 
-Future<void> whenIEnterEditMode(tester) async {
+Future<void> enterEditMode(tester) async {
   await tester.tap(find.byKey(const Key("enable_edit_mode_button")));
   await tester.pumpAndSettle();
 }
 
-Future<void> whenIExitEditMode(tester) async {
+Future<void> exitEditMode(tester) async {
   await tester.tap(find.byKey(const Key("enable_edit_mode_button")));
   await tester.pumpAndSettle();
 }
