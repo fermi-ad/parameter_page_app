@@ -71,12 +71,19 @@ class Reading {
       this.value});
 }
 
-abstract class DpmService extends InheritedWidget {
-  const DpmService({super.key, required super.child});
+class DataAcquisitionWidget extends InheritedWidget {
+  final DpmService service;
 
-  Future<List<DeviceInfo>> getDeviceInfo(List<String> devices);
+  const DataAcquisitionWidget(
+      {super.key, required super.child, required this.service});
 
-  Stream<Reading> monitorDevices(List<String> drfs);
+  Future<List<DeviceInfo>> getDeviceInfo(List<String> devices) {
+    return service.getDeviceInfo(devices);
+  }
+
+  Stream<Reading> monitorDevices(List<String> drfs) {
+    return service.monitorDevices(drfs);
+  }
 
   // This should return `true` if the state of widget has changed. Since it only
   // provides access to GraphQL, nothing ever changes so we always return
@@ -88,17 +95,24 @@ abstract class DpmService extends InheritedWidget {
   // These static functions provide access to this widget from down the widget
   // chain.
 
-  static DpmService? _maybeOf(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<MockDpmService>() ??
-        context.dependOnInheritedWidgetOfExactType<GraphQLDpmService>();
+  static DataAcquisitionWidget? _maybeOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<DataAcquisitionWidget>();
   }
 
-  static DpmService of(BuildContext context) {
-    final DpmService? result = _maybeOf(context);
+  static DataAcquisitionWidget of(BuildContext context) {
+    final DataAcquisitionWidget? result = _maybeOf(context);
 
-    assert(result != null, 'no DpmService found in context');
+    assert(result != null, 'no DataAcquisitionWidget found in context');
     return result!;
   }
+}
+
+abstract class DpmService {
+  const DpmService();
+
+  Future<List<DeviceInfo>> getDeviceInfo(List<String> devices);
+
+  Stream<Reading> monitorDevices(List<String> drfs);
 }
 
 // This class provides an interface to Fermi's DPM API via GraphQL. This widget
@@ -112,7 +126,7 @@ class GraphQLDpmService extends DpmService {
   // Constructor. This creates the HTTP links needed to communicate with our
   // GraphQL endpoints.
 
-  GraphQLDpmService({required super.child, super.key})
+  GraphQLDpmService()
       : _q = Client(
           link: HttpLink(
             Uri(

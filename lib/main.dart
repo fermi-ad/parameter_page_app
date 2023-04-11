@@ -83,7 +83,7 @@ class BaseWidget extends StatelessWidget {
     ]));
 
     return useMockServices
-        ? MockDpmService(child: child)
-        : GraphQLDpmService(child: child);
+        ? DataAcquisitionWidget(service: const MockDpmService(), child: child)
+        : DataAcquisitionWidget(service: GraphQLDpmService(), child: child);
   }
 }

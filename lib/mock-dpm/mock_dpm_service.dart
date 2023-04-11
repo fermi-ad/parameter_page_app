@@ -4,10 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:parameter_page/gql-dpm/dpm_service.dart';
 
 class MockDpmService extends DpmService {
-  const MockDpmService({required super.child, super.key});
-
-  @override
-  bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;
+  const MockDpmService();
 
   @override
   Future<List<DeviceInfo>> getDeviceInfo(List<String> devices) async {
