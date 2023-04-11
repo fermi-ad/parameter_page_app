@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 
-import '../gql-dpm/dpm_service.dart';
+import '../dpm_service.dart';
 
 // Base class for the Entry class hierarchy.
 
