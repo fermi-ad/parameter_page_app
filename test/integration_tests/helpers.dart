@@ -91,6 +91,11 @@ Future<void> exitEditMode(tester) async {
   await tester.pumpAndSettle();
 }
 
+Future<void> cancelEditMode(tester) async {
+  await tester.tap(find.byKey(const Key("enable_edit_mode_button")));
+  await tester.pumpAndSettle();
+}
+
 Future<void> deleteParameter(tester, String parameter,
     {bool confirm = true}) async {
   await tester.tap(find.text(parameter));
