@@ -87,22 +87,22 @@ class GraphQLDpmService extends DpmService {
           // `DeviceInfo` objects.
 
           .then(
-            (response) {
-              if (!response.hasErrors) {
-                // Iterate across the list to generate a new one with our "nicer"
-                // class type.
+        (response) {
+          if (!response.hasErrors) {
+            // Iterate across the list to generate a new one with our "nicer"
+            // class type.
 
-                return response.data!.acceleratorData
-                    .map(_convertToDevInfo)
-                    .toList();
-              } else {
-                // Any GraphQL errors should be re-raised (but wrapped in our
-                // DPM-specific exception.)
+            return response.data!.acceleratorData
+                .map(_convertToDevInfo)
+                .toList();
+          } else {
+            // Any GraphQL errors should be re-raised (but wrapped in our
+            // DPM-specific exception.)
 
-                throw DPMGraphQLException(response.graphqlErrors.toString());
-              }
-            },
-          );
+            throw DPMGraphQLException(response.graphqlErrors.toString());
+          }
+        },
+      );
     } else {
       throw DPMInvArgException("empty device list");
     }
