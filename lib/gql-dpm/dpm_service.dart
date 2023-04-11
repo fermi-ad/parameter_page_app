@@ -12,8 +12,6 @@ import 'package:parameter_page/gql-dpm/schema/__generated__/stream_data.var.gql.
 
 import 'dart:developer' as developer;
 
-import '../mock-dpm/mock_dpm_service.dart';
-
 // Declare an exception type that's specific to the DPM API.
 
 abstract class DPMException implements Exception {

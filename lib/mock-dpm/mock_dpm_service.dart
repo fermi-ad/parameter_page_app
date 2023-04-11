@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:parameter_page/gql-dpm/dpm_service.dart';
 
 class MockDpmService extends DpmService {
