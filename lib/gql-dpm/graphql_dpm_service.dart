@@ -66,16 +66,10 @@ class GraphQLDpmService extends DpmService {
 
           .request(req)
 
-          // Insert this identity mapping so we can check for errors.
+          // Report errors.
 
-          .map((event) {
-            if (event.hasErrors) {
-              developer.log("errors: ${event.graphqlErrors}",
-                  name: "gql.getDeviceInfo");
-            }
-
-            return event;
-          })
+          .handleError((error) =>
+              developer.log("error: $error", name: "gql.getDeviceInfo"))
 
           // Ignore items showing the progress of the request. We only want the
           // final response when there's data or an error.
@@ -136,14 +130,8 @@ class GraphQLDpmService extends DpmService {
 
     return _s
         .request(req)
-        .map((event) {
-          if (event.hasErrors) {
-            developer.log("error: ${event.graphqlErrors}",
-                name: "gql.monitorDevices");
-          }
-
-          return event;
-        })
+        .handleError((error) =>
+            developer.log("error: $error", name: "gql.monitorDevices"))
         .where((event) => !event.loading)
         .map(_convertToReading);
   }
