@@ -114,6 +114,9 @@ Future<void> addANewComment(tester, String comment) async {
 
 Future<void> moveRowAtIndexNRowsUp(tester, int rowIndex, int nRowsUp) async {
   final handlesFinder = find.byIcon(Icons.drag_handle);
+
+  pumpUntilFound(tester, handlesFinder);
+
   final rowHandleFinder =
       handlesFinder.evaluate().isEmpty ? null : handlesFinder.at(rowIndex);
 
