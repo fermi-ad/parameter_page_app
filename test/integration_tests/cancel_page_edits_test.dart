@@ -31,7 +31,7 @@ void main() {
       // When I enter edit mode
       await enterEditMode(tester);
 
-      // Then the cancel button is not visible
+      // Then the cancel button is visible
       assertEditModeCancelButton(isVisible: true);
     });
 
