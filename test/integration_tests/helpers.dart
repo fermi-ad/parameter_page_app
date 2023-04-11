@@ -115,7 +115,11 @@ Future<void> addANewComment(tester, String comment) async {
 Future<void> moveRowAtIndexNRowsUp(tester, int rowIndex, int nRowsUp) async {
   final handlesFinder = find.byIcon(Icons.drag_handle);
 
-  pumpUntilFound(tester, handlesFinder);
+  await pumpUntilFound(tester, handlesFinder);
+
+  if (handlesFinder.evaluate().isEmpty) {
+    fail("No drag handles found.");
+  }
 
   final rowHandleFinder =
       handlesFinder.evaluate().isEmpty ? null : handlesFinder.at(rowIndex);
