@@ -11,12 +11,28 @@ void main() {
   group('Cancel Page Edits', () {
     testWidgets('Outside edit mode, cancel button is not visible',
         (tester) async {
+      // Given the test page is loaded and I am in edit mode
+      app.main();
+      await tester.pumpAndSettle();
+      await enterEditMode(tester);
+
+      // When I exit edit mode
+      await exitEditMode(tester);
+
+      // Then the cancel button is not visible
+      assertEditModeCancelButton(isVisible: false);
+    });
+
+    testWidgets('Inside edit mode, cancel button is visible', (tester) async {
       // Given the test page is loaded
       app.main();
       await tester.pumpAndSettle();
 
+      // When I enter edit mode
+      await enterEditMode(tester);
+
       // Then the cancel button is not visible
-      assertEditModeCancelButton(isVisible: false);
+      assertEditModeCancelButton(isVisible: true);
     });
 
     testWidgets(

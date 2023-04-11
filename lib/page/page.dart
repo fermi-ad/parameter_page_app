@@ -165,6 +165,18 @@ class _PageWidgetState extends State<PageWidget> {
                 return acc;
               })),
         ),
+        Visibility(
+            key: const Key("cancel_edit_mode_button_visibility"),
+            visible: editMode,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FloatingActionButton.small(
+                  key: const Key('cancel_edit_mode_button'),
+                  backgroundColor:
+                      Theme.of(context).colorScheme.primary.withAlpha(128),
+                  child: const Icon(Icons.delete),
+                  onPressed: () => setState(() => editMode = !editMode)),
+            )),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: FloatingActionButton.small(
