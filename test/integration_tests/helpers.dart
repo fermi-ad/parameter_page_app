@@ -73,6 +73,11 @@ void assertParameterIsInRow(String parameter, int isInRow) {
           "expected $parameter in row $isInRow but something else was there.");
 }
 
+void assertEditModeCancelButton({required bool isVisible}) {
+  expect(find.byKey(const Key("cancel_edit_mode_button")),
+      isVisible ? findsOneWidget : findsNothing);
+}
+
 Future<void> waitForDataToLoadFor(tester, parameter) async {
   final readingFinder = find.byKey(Key("parameter_reading_$parameter"));
   await pumpUntilFound(tester, readingFinder);
@@ -92,7 +97,7 @@ Future<void> exitEditMode(tester) async {
 }
 
 Future<void> cancelEditMode(tester) async {
-  await tester.tap(find.byKey(const Key("enable_edit_mode_button")));
+  await tester.tap(find.byKey(const Key("cancel_edit_mode_button")));
   await tester.pumpAndSettle();
 }
 

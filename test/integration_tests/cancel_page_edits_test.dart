@@ -9,6 +9,16 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Cancel Page Edits', () {
+    testWidgets('Outside edit mode, cancel button is not visible',
+        (tester) async {
+      // Given the test page is loaded
+      app.main();
+      await tester.pumpAndSettle();
+
+      // Then the cancel button is not visible
+      assertEditModeCancelButton(isVisible: false);
+    });
+
     testWidgets(
         'Move parameter to top of list and cancel, parameter should return to original position',
         (tester) async {
@@ -27,7 +37,7 @@ void main() {
       await moveRowAtIndexNRowsUp(tester, 2, 2);
       await cancelEditMode(tester);
 
-      // Then the comment is in the top position
+      // Then the parameter returns to it's original position in row 3
       assertParameterIsInRow("G:AMANDA", 2);
     });
   });
