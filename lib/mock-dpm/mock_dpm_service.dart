@@ -15,7 +15,7 @@ class MockDpmService extends DpmService {
 
   @override
   Stream<Reading> monitorDevices(List<String> drfs) {
-    final Stream<Reading> stream = Stream<Reading>.periodic(
+    return Stream<Reading>.periodic(
       const Duration(seconds: 1),
       (count) {
         return Reading(
@@ -25,7 +25,5 @@ class MockDpmService extends DpmService {
             value: 100.0); //  + count * 0.1);
       },
     ).asBroadcastStream();
-
-    return stream;
   }
 }
