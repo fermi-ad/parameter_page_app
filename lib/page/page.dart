@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'entry.dart';
 
 class DataSource extends InheritedWidget {
@@ -114,10 +113,8 @@ class _PageWidgetState extends State<PageWidget> {
 
   // Builds a single row of the parameter page.
 
-  Widget buildRow(BuildContext context, PageEntry entry, int index,
-      double rightPadding, bool wide) {
+  Widget buildRow(BuildContext context, PageEntry entry, int index, bool wide) {
     return GestureDetector(
-        key: entry.key,
         onTap: () async {
           var result = await shouldDeleteRow(context);
 
@@ -128,7 +125,7 @@ class _PageWidgetState extends State<PageWidget> {
           }
         },
         child: Padding(
-          padding: EdgeInsets.fromLTRB(2.0, 2.0, rightPadding, 2.0),
+          padding: const EdgeInsets.all(2.0),
           child: editMode
               ? Row(children: [
                   Expanded(child: entry.buildEntry(context, editMode, wide)),
@@ -146,12 +143,6 @@ class _PageWidgetState extends State<PageWidget> {
 
   Widget _build(BuildContext context, bool wide) {
     final bool movable = editMode && parameters.length > 1;
-    final double rightPadding = (movable &&
-            TargetPlatformVariant.desktop()
-                .values
-                .contains(Theme.of(context).platform))
-        ? 40.0
-        : 2.0;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -160,11 +151,17 @@ class _PageWidgetState extends State<PageWidget> {
           child: ReorderableListView(
               padding: const EdgeInsets.fromLTRB(4.0, 4.0, 4.0, 4.0),
               footer: editMode ? newEntryEditor() : null,
-              buildDefaultDragHandles: movable,
+              buildDefaultDragHandles: false,
               onReorder: reorderEntry,
               children: parameters.fold([], (acc, entry) {
-                acc.add(
-                    buildRow(context, entry, acc.length, rightPadding, wide));
+                acc.add(Row(key: entry.key, children: [
+                  Expanded(child: buildRow(context, entry, acc.length, wide)),
+                  movable
+                      ? ReorderableDragStartListener(
+                          index: acc.length,
+                          child: const Icon(Icons.drag_handle))
+                      : Container()
+                ]));
                 return acc;
               })),
         ),
