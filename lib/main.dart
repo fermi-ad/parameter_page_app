@@ -69,11 +69,16 @@ class BaseWidget extends StatelessWidget {
   Widget _buildDPMService() {
     final child = Center(
         child: PageWidget([
-      ParameterEntry("M:OUTTMP@e,02"),
+      ParameterEntry("M:OUTTMP@e,02",
+          key: const Key("parameter_row_M:OUTTMP@e,02")),
       CommentEntry("This is our first comment!"),
-      ParameterEntry("G:AMANDA"),
-      ParameterEntry("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE"),
+      ParameterEntry("G:AMANDA", key: const Key("parameter_row_G:AMANDA")),
+      ParameterEntry("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE",
+          key: const Key(
+              "parameter_row_PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE")),
       ParameterEntry("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY",
+          key: const Key(
+              "parameter_row_PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY"),
           label: "Humidity"),
     ]));
 

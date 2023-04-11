@@ -11,9 +11,14 @@ class MockDpmService extends DpmService {
 
   @override
   Future<List<DeviceInfo>> getDeviceInfo(List<String> devices) async {
-    return Future<List<DeviceInfo>>([
-      const DeviceInfo(di: 0, name: "bad name", description: "bad description")
-    ] as FutureOr<List<DeviceInfo>> Function());
+    List<DeviceInfo> deviceInfoList = [];
+
+    for (String drf in devices) {
+      deviceInfoList
+          .add(DeviceInfo(di: 0, name: drf, description: "device description"));
+    }
+
+    return deviceInfoList;
   }
 
   @override
@@ -25,7 +30,7 @@ class MockDpmService extends DpmService {
             refId: 0,
             cycle: 0,
             timestamp: DateTime(2023),
-            value: 100.0 + count * 0.1);
+            value: 100.0); //  + count * 0.1);
       },
     ).asBroadcastStream();
 

@@ -112,7 +112,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     super.initState();
   }
 
-  Widget _buildParam(double? value, String? units) {
+  Widget _buildParam(double? value, String? units, {required Key key}) {
     return value == null
         ? Container()
         : (units == null
@@ -142,15 +142,18 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
             const Spacer(),
             Row(
               children: [
-                _buildParam(50.0, "mm"),
+                _buildParam(50.0, "mm",
+                    key: Key("parameter_setting_${widget.drf}")),
                 const SizedBox(width: 12.0),
                 StreamBuilder(
                     stream: _stream,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.active) {
-                        return _buildParam(snapshot.data!.value, units);
+                        return _buildParam(snapshot.data!.value, units,
+                            key: Key("parameter_reading_${widget.drf}"));
                       } else {
-                        return _buildParam(null, units);
+                        return _buildParam(null, units,
+                            key: Key("parameter_nullreading_${widget.drf}"));
                       }
                     })
               ],
@@ -177,14 +180,16 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                   .copyWith(fontStyle: FontStyle.italic, color: Colors.grey)),
         ),
         Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-          _buildParam(50.0, units),
+          _buildParam(50.0, units, key: Key("parameter_setting_${widget.drf}")),
           StreamBuilder(
               stream: _stream,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
-                  return _buildParam(snapshot.data!.value, units);
+                  return _buildParam(snapshot.data!.value, units,
+                      key: Key("parameter_reading_${widget.drf}"));
                 } else {
-                  return _buildParam(null, units);
+                  return _buildParam(null, units,
+                      key: Key("parameter_nullreading_${widget.drf}"));
                 }
               })
         ]),

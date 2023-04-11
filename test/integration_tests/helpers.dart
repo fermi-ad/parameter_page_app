@@ -1,6 +1,26 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/page/entry.dart';
+
+Future<void> pumpUntilFound(
+  WidgetTester tester,
+  Finder finder, {
+  Duration timeout = const Duration(seconds: 3),
+}) async {
+  bool timerDone = false;
+  final timer = Timer(timeout, () => timerDone = true);
+  while (timerDone != true) {
+    await tester.pump();
+
+    final found = tester.any(finder);
+    if (found) {
+      timerDone = true;
+    }
+  }
+  timer.cancel();
+}
 
 void assertIsOnPage({required String comment}) {
   expect(find.text(comment), findsOneWidget);
@@ -51,6 +71,14 @@ void assertParameterIsInRow(String parameter, int isInRow) {
       find.descendant(of: row, matching: find.text(parameter)), findsOneWidget,
       reason:
           "expected $parameter in row $isInRow but something else was there.");
+}
+
+Future<void> waitForDataToLoadFor(tester, parameter) async {
+  final readingFinder = find.byKey(Key("parameter_reading_$parameter"));
+  await pumpUntilFound(tester, readingFinder);
+
+  final settingFinder = find.byKey(Key("parameter_setting_$parameter"));
+  await pumpUntilFound(tester, settingFinder);
 }
 
 Future<void> enterEditMode(tester) async {

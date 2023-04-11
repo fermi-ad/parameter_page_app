@@ -30,15 +30,19 @@ void main() {
       app.main();
       await tester.pumpAndSettle();
 
+      // When I wait for the parametr data to update
+      await waitForDataToLoadFor(tester, "M:OUTTMP@e,02");
+      await waitForDataToLoadFor(tester, "G:AMANDA");
+
       // Then the descript and reading values should be...
       assertParameterHasDetails("M:OUTTMP@e,02",
           description: "device description",
-          settingValue: "50",
-          readingValue: "50");
+          settingValue: "50.00",
+          readingValue: "100.0");
       assertParameterHasDetails("G:AMANDA",
           description: "device description",
-          settingValue: "50",
-          readingValue: "50");
+          settingValue: "50.00",
+          readingValue: "100.0");
     });
 
     testWidgets(
@@ -48,11 +52,15 @@ void main() {
       app.main();
       await tester.pumpAndSettle();
 
+      // When I wait for the readings to update
+      await waitForDataToLoadFor(
+          tester, "PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE");
+
       // Then the description and values should be...
       assertParameterHasDetails("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE",
           description: "device description",
-          settingValue: "50",
-          readingValue: "50");
+          settingValue: "50.00",
+          readingValue: "100.0");
     });
   });
 }
