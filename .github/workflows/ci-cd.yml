@@ -2,6 +2,8 @@ name: Continuous Integration / Continuous Delivery Workflow for the Parameter Pa
 
 on:
   push:
+    branches:
+      - "main"
 
   pull_request:
     branches:
