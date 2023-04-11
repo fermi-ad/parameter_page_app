@@ -7,14 +7,10 @@ class MockDpmService extends DpmService {
 
   @override
   Future<List<DeviceInfo>> getDeviceInfo(List<String> devices) async {
-    List<DeviceInfo> deviceInfoList = [];
-
-    for (String drf in devices) {
-      deviceInfoList
-          .add(DeviceInfo(di: 0, name: drf, description: "device description"));
-    }
-
-    return deviceInfoList;
+    return devices
+        .map((drf) =>
+            DeviceInfo(di: 0, name: drf, description: "device description"))
+        .toList();
   }
 
   @override
