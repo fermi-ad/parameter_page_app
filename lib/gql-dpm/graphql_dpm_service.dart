@@ -66,16 +66,10 @@ class GraphQLDpmService extends DpmService {
 
           .request(req)
 
-          // Insert this identity mapping so we can check for errors.
+          // Report errors.
 
-          .map((event) {
-            if (event.hasErrors) {
-              developer.log("errors: ${event.graphqlErrors}",
-                  name: "gql.getDeviceInfo");
-            }
-
-            return event;
-          })
+          .handleError((error) =>
+              developer.log("error: $error", name: "gql.getDeviceInfo"))
 
           // Ignore items showing the progress of the request. We only want the
           // final response when there's data or an error.
@@ -93,22 +87,22 @@ class GraphQLDpmService extends DpmService {
           // `DeviceInfo` objects.
 
           .then(
-            (response) {
-              if (!response.hasErrors) {
-                // Iterate across the list to generate a new one with our "nicer"
-                // class type.
+        (response) {
+          if (!response.hasErrors) {
+            // Iterate across the list to generate a new one with our "nicer"
+            // class type.
 
-                return response.data!.acceleratorData
-                    .map(_convertToDevInfo)
-                    .toList();
-              } else {
-                // Any GraphQL errors should be re-raised (but wrapped in our
-                // DPM-specific exception.)
+            return response.data!.acceleratorData
+                .map(_convertToDevInfo)
+                .toList();
+          } else {
+            // Any GraphQL errors should be re-raised (but wrapped in our
+            // DPM-specific exception.)
 
-                throw DPMGraphQLException(response.graphqlErrors.toString());
-              }
-            },
-          );
+            throw DPMGraphQLException(response.graphqlErrors.toString());
+          }
+        },
+      );
     } else {
       throw DPMInvArgException("empty device list");
     }
@@ -136,14 +130,8 @@ class GraphQLDpmService extends DpmService {
 
     return _s
         .request(req)
-        .map((event) {
-          if (event.hasErrors) {
-            developer.log("error: ${event.graphqlErrors}",
-                name: "gql.monitorDevices");
-          }
-
-          return event;
-        })
+        .handleError((error) =>
+            developer.log("error: $error", name: "gql.monitorDevices"))
         .where((event) => !event.loading)
         .map(_convertToReading);
   }
