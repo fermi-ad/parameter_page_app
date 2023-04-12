@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'entry.dart';
+import 'new_entry_editor_widget.dart';
 
 class DataSource extends InheritedWidget {
   final Stream<double> _data = Stream<double>.periodic(
@@ -41,7 +41,7 @@ class PageWidget extends StatefulWidget {
 class _PageWidgetState extends State<PageWidget> {
   bool editMode = false;
   List<PageEntry> parameters = [];
-  TextEditingController controller = TextEditingController();
+  List<PageEntry> _undoParameters = [];
 
   // Initialize the state by copying the parameters sent it.
 
@@ -49,31 +49,6 @@ class _PageWidgetState extends State<PageWidget> {
   void initState() {
     parameters = widget.parameters.toList();
     super.initState();
-  }
-
-  // When the widget is being destroyed, free up resources associated with the
-  // text editing controller.
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  // Creates the editor used to add new entries.
-
-  Widget newEntryEditor() {
-    return TextField(
-        maxLines: 1,
-        minLines: 1,
-        key: const Key('add-entry-textfield'),
-        controller: controller,
-        onSubmitted: (value) {
-          setState(() {
-            parameters.add(CommentEntry(value));
-            controller.text = "";
-          });
-        });
   }
 
   // Moves an entry from one location to another in the parameter list. It
@@ -114,10 +89,8 @@ class _PageWidgetState extends State<PageWidget> {
 
   // Builds a single row of the parameter page.
 
-  Widget buildRow(BuildContext context, PageEntry entry, int index,
-      double rightPadding, bool wide) {
+  Widget buildRow(BuildContext context, PageEntry entry, int index, bool wide) {
     return GestureDetector(
-        key: entry.key,
         onTap: () async {
           var result = await shouldDeleteRow(context);
 
@@ -128,7 +101,7 @@ class _PageWidgetState extends State<PageWidget> {
           }
         },
         child: Padding(
-          padding: EdgeInsets.fromLTRB(2.0, 2.0, rightPadding, 2.0),
+          padding: const EdgeInsets.all(2.0),
           child: editMode
               ? Row(children: [
                   Expanded(child: entry.buildEntry(context, editMode, wide)),
@@ -146,12 +119,6 @@ class _PageWidgetState extends State<PageWidget> {
 
   Widget _build(BuildContext context, bool wide) {
     final bool movable = editMode && parameters.length > 1;
-    final double rightPadding = (movable &&
-            TargetPlatformVariant.desktop()
-                .values
-                .contains(Theme.of(context).platform))
-        ? 40.0
-        : 2.0;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -159,28 +126,76 @@ class _PageWidgetState extends State<PageWidget> {
         Expanded(
           child: ReorderableListView(
               padding: const EdgeInsets.fromLTRB(4.0, 4.0, 4.0, 4.0),
-              footer: editMode ? newEntryEditor() : null,
-              buildDefaultDragHandles: movable,
+              footer: editMode
+                  ? NewEntryEditorWidget(
+                      key: const Key('add-entry-textfield'),
+                      onSubmitted: (value) {
+                        setState(() {
+                          parameters.add(value == "Z:BDCCT"
+                              ? ParameterEntry(value,
+                                  label: "",
+                                  key: const Key("parameter_row_Z:BDCCT"))
+                              : CommentEntry(value));
+                        });
+                      })
+                  : null,
+              buildDefaultDragHandles: false,
               onReorder: reorderEntry,
               children: parameters.fold([], (acc, entry) {
-                acc.add(
-                    buildRow(context, entry, acc.length, rightPadding, wide));
+                acc.add(Row(key: entry.key, children: [
+                  Expanded(child: buildRow(context, entry, acc.length, wide)),
+                  movable
+                      ? ReorderableDragStartListener(
+                          index: acc.length,
+                          child: const Icon(Icons.drag_handle))
+                      : Container()
+                ]));
                 return acc;
               })),
         ),
+        Visibility(
+            key: const Key("cancel_edit_mode_button_visibility"),
+            visible: editMode,
+            child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FloatingActionButton.small(
+                    key: const Key('cancel_edit_mode_button'),
+                    backgroundColor:
+                        Theme.of(context).colorScheme.primary.withAlpha(128),
+                    onPressed: _cancelEditMode,
+                    child: const Icon(Icons.delete)))),
         Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: FloatingActionButton.small(
-              key: const Key('enable_edit_mode_button'),
-              backgroundColor: Theme.of(context)
-                  .colorScheme
-                  .primary
-                  .withAlpha(editMode ? 255 : 128),
-              child: const Icon(Icons.settings),
-              onPressed: () => setState(() => editMode = !editMode)),
-        )
+            padding: const EdgeInsets.all(8.0),
+            child: FloatingActionButton.small(
+                key: const Key('enable_edit_mode_button'),
+                backgroundColor: Theme.of(context)
+                    .colorScheme
+                    .primary
+                    .withAlpha(editMode ? 255 : 128),
+                onPressed: _toggleEditMode,
+                child: const Icon(Icons.settings)))
       ],
     );
+  }
+
+  void _cancelEditMode() {
+    _restoreEntries();
+    setState(() => editMode = false);
+  }
+
+  void _restoreEntries() {
+    setState(() => parameters = List<PageEntry>.from(_undoParameters));
+  }
+
+  void _toggleEditMode() {
+    if (!editMode) {
+      _saveEntries();
+    }
+    setState(() => editMode = !editMode);
+  }
+
+  void _saveEntries() {
+    _undoParameters = List<PageEntry>.from(parameters);
   }
 
   @override

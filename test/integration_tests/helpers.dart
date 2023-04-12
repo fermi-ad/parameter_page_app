@@ -26,6 +26,10 @@ void assertIsOnPage({required String comment}) {
   expect(find.text(comment), findsOneWidget);
 }
 
+void assertIsNotOnPage({required String comment}) {
+  expect(find.text(comment), findsNothing);
+}
+
 void assertParametersAreOnPage(List<String> parameters) {
   for (var parameter in parameters) {
     expect(find.text(parameter), findsOneWidget);
@@ -73,6 +77,11 @@ void assertParameterIsInRow(String parameter, int isInRow) {
           "expected $parameter in row $isInRow but something else was there.");
 }
 
+void assertEditModeCancelButton({required bool isVisible}) {
+  expect(find.byKey(const Key("cancel_edit_mode_button")),
+      isVisible ? findsOneWidget : findsNothing);
+}
+
 Future<void> waitForDataToLoadFor(tester, parameter) async {
   final readingFinder = find.byKey(Key("parameter_reading_$parameter"));
   await pumpUntilFound(tester, readingFinder);
@@ -88,6 +97,11 @@ Future<void> enterEditMode(tester) async {
 
 Future<void> exitEditMode(tester) async {
   await tester.tap(find.byKey(const Key("enable_edit_mode_button")));
+  await tester.pumpAndSettle();
+}
+
+Future<void> cancelEditMode(tester) async {
+  await tester.tap(find.byKey(const Key("cancel_edit_mode_button")));
   await tester.pumpAndSettle();
 }
 
@@ -108,6 +122,14 @@ Future<void> deleteParameter(tester, String parameter,
 Future<void> addANewComment(tester, String comment) async {
   await tester.pumpAndSettle();
   await tester.enterText(find.byKey(const Key('add-entry-textfield')), comment);
+  await tester.testTextInput.receiveAction(TextInputAction.done);
+  await tester.pump();
+}
+
+Future<void> addANewParameter(tester, String parameter) async {
+  await tester.pumpAndSettle();
+  await tester.enterText(
+      find.byKey(const Key('add-entry-textfield')), parameter);
   await tester.testTextInput.receiveAction(TextInputAction.done);
   await tester.pump();
 }

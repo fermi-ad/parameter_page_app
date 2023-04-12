@@ -1,4 +1,7 @@
-import 'package:flutter/material.dart';
+// This class provides an interface to Fermi's DPM API via GraphQL. This widget
+// should be placed near the top of your widget tree. Widgets further down can
+// access this object by calling `DpmService.of(context)`.
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:built_collection/built_collection.dart';
 import "package:gql_websocket_link/gql_websocket_link.dart";
@@ -12,98 +15,7 @@ import 'package:parameter_page/gql-dpm/schema/__generated__/stream_data.var.gql.
 
 import 'dart:developer' as developer;
 
-import '../mock-dpm/mock_dpm_service.dart';
-
-// Declare an exception type that's specific to the DPM API.
-
-abstract class DPMException implements Exception {
-  final String message;
-
-  const DPMException(this.message);
-
-  @override
-  String toString() => message;
-}
-
-class DPMInvArgException extends DPMException {
-  DPMInvArgException(String message) : super("InvArg: $message");
-}
-
-class DPMTypeException extends DPMException {
-  DPMTypeException(String message) : super("Type: $message");
-}
-
-class DPMGraphQLException extends DPMException {
-  DPMGraphQLException(String message) : super("GraphQL: $message");
-}
-
-// The classes in this section are used to return results from the queries /
-// subscriptions. The generated classes have unusual names and have nested
-// structure. We'd rather present a simpler result type. This also protects us
-// from API changes; hopefully we won't have to change these result classes
-// much, if at all.
-
-class DeviceInfo {
-  final int di;
-  final String name;
-  final String description;
-  final String? units;
-
-  const DeviceInfo(
-      {required this.di,
-      required this.name,
-      required this.description,
-      this.units});
-}
-
-class Reading {
-  final int refId;
-  final int status;
-  final int cycle;
-  final DateTime timestamp;
-  final double? value;
-
-  const Reading(
-      {required this.refId,
-      this.status = 0,
-      required this.cycle,
-      required this.timestamp,
-      this.value});
-}
-
-abstract class DpmService extends InheritedWidget {
-  const DpmService({super.key, required super.child});
-
-  Future<List<DeviceInfo>> getDeviceInfo(List<String> devices);
-
-  Stream<Reading> monitorDevices(List<String> drfs);
-
-  // This should return `true` if the state of widget has changed. Since it only
-  // provides access to GraphQL, nothing ever changes so we always return
-  // `false`.
-
-  @override
-  bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;
-
-  // These static functions provide access to this widget from down the widget
-  // chain.
-
-  static DpmService? _maybeOf(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<MockDpmService>() ??
-        context.dependOnInheritedWidgetOfExactType<GraphQLDpmService>();
-  }
-
-  static DpmService of(BuildContext context) {
-    final DpmService? result = _maybeOf(context);
-
-    assert(result != null, 'no DpmService found in context');
-    return result!;
-  }
-}
-
-// This class provides an interface to Fermi's DPM API via GraphQL. This widget
-// should be placed near the top of your widget tree. Widgets further down can
-// access this object by calling `DpmService.of(context)`.
+import '../dpm_service.dart';
 
 class GraphQLDpmService extends DpmService {
   final Client _q;
@@ -112,7 +24,7 @@ class GraphQLDpmService extends DpmService {
   // Constructor. This creates the HTTP links needed to communicate with our
   // GraphQL endpoints.
 
-  GraphQLDpmService({required super.child, super.key})
+  GraphQLDpmService()
       : _q = Client(
           link: HttpLink(
             Uri(
@@ -154,16 +66,10 @@ class GraphQLDpmService extends DpmService {
 
           .request(req)
 
-          // Insert this identity mapping so we can check for errors.
+          // Report errors.
 
-          .map((event) {
-            if (event.hasErrors) {
-              developer.log("errors: ${event.graphqlErrors}",
-                  name: "gql.getDeviceInfo");
-            }
-
-            return event;
-          })
+          .handleError((error) =>
+              developer.log("error: $error", name: "gql.getDeviceInfo"))
 
           // Ignore items showing the progress of the request. We only want the
           // final response when there's data or an error.
@@ -181,22 +87,22 @@ class GraphQLDpmService extends DpmService {
           // `DeviceInfo` objects.
 
           .then(
-            (response) {
-              if (!response.hasErrors) {
-                // Iterate across the list to generate a new one with our "nicer"
-                // class type.
+        (response) {
+          if (!response.hasErrors) {
+            // Iterate across the list to generate a new one with our "nicer"
+            // class type.
 
-                return response.data!.acceleratorData
-                    .map(_convertToDevInfo)
-                    .toList();
-              } else {
-                // Any GraphQL errors should be re-raised (but wrapped in our
-                // DPM-specific exception.)
+            return response.data!.acceleratorData
+                .map(_convertToDevInfo)
+                .toList();
+          } else {
+            // Any GraphQL errors should be re-raised (but wrapped in our
+            // DPM-specific exception.)
 
-                throw DPMGraphQLException(response.graphqlErrors.toString());
-              }
-            },
-          );
+            throw DPMGraphQLException(response.graphqlErrors.toString());
+          }
+        },
+      );
     } else {
       throw DPMInvArgException("empty device list");
     }
@@ -224,14 +130,8 @@ class GraphQLDpmService extends DpmService {
 
     return _s
         .request(req)
-        .map((event) {
-          if (event.hasErrors) {
-            developer.log("error: ${event.graphqlErrors}",
-                name: "gql.monitorDevices");
-          }
-
-          return event;
-        })
+        .handleError((error) =>
+            developer.log("error: $error", name: "gql.monitorDevices"))
         .where((event) => !event.loading)
         .map(_convertToReading);
   }

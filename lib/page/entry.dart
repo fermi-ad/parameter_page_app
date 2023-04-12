@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:parameter_page/gql-dpm/dpm_service.dart';
+import 'package:parameter_page/widgets/data_acquisition_widget.dart';
+
+import '../dpm_service.dart';
 
 // Base class for the Entry class hierarchy.
 
@@ -83,13 +85,13 @@ class ParameterWidget extends StatelessWidget {
         child: editMode
             ? buildEditor(context)
             : _ActiveParamWidget(
-                drf: drf, wide: wide, dpm: DpmService.of(context)));
+                drf: drf, wide: wide, dpm: DataAcquisitionWidget.of(context)));
   }
 }
 
 class _ActiveParamWidget extends StatefulWidget {
   final String drf;
-  final DpmService dpm;
+  final DataAcquisitionWidget dpm;
   final bool wide;
 
   const _ActiveParamWidget(

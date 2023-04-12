@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:parameter_page/theme/theme.dart';
-import 'gql-dpm/dpm_service.dart';
+import 'package:parameter_page/widgets/data_acquisition_widget.dart';
+import 'gql-dpm/graphql_dpm_service.dart';
 import 'mock-dpm/mock_dpm_service.dart';
 import 'page/entry.dart';
 import 'page/page.dart';
@@ -72,7 +73,7 @@ class BaseWidget extends StatelessWidget {
     ]));
 
     return useMockServices
-        ? MockDpmService(child: child)
-        : GraphQLDpmService(child: child);
+        ? DataAcquisitionWidget(service: const MockDpmService(), child: child)
+        : DataAcquisitionWidget(service: GraphQLDpmService(), child: child);
   }
 }
