@@ -129,13 +129,9 @@ class _PageWidgetState extends State<PageWidget> {
               footer: editMode
                   ? NewEntryEditorWidget(
                       key: const Key('add-entry-textfield'),
-                      onSubmitted: (value) {
+                      onSubmitted: (PageEntry newEntry) {
                         setState(() {
-                          parameters.add(value == "Z:BDCCT"
-                              ? ParameterEntry(value,
-                                  label: "",
-                                  key: const Key("parameter_row_Z:BDCCT"))
-                              : CommentEntry(value));
+                          parameters.add(newEntry);
                         });
                       })
                   : null,
