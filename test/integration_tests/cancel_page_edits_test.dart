@@ -80,5 +80,21 @@ void main() {
       assertParameterIsInRow("M:OUTTMP@e,02", 0);
       assertParameterIsInRow("G:AMANDA", 2);
     });
+
+    testWidgets('Add comment and cancel, new comment should be discarded',
+        (tester) async {
+      // Given the test page is loaded and I am in edit mode
+      app.main();
+      await tester.pumpAndSettle();
+      await enterEditMode(tester);
+
+      // When I add a new comment and cancel edit mode
+      const badComment = "I don't want to see this comment";
+      await addANewComment(tester, badComment);
+      await cancelEditMode(tester);
+
+      // Then the parameters return to their original positions
+      assertIsNotOnPage(comment: badComment);
+    });
   });
 }

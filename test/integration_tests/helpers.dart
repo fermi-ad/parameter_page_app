@@ -26,6 +26,10 @@ void assertIsOnPage({required String comment}) {
   expect(find.text(comment), findsOneWidget);
 }
 
+void assertIsNotOnPage({required String comment}) {
+  expect(find.text(comment), findsNothing);
+}
+
 void assertParametersAreOnPage(List<String> parameters) {
   for (var parameter in parameters) {
     expect(find.text(parameter), findsOneWidget);
