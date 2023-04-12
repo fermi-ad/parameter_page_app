@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'entry.dart';
+
 class NewEntryEditorWidget extends StatefulWidget {
-  final Function(String) onSubmitted;
+  final Function(PageEntry) onSubmitted;
 
   const NewEntryEditorWidget({super.key, required this.onSubmitted});
 
@@ -24,7 +26,11 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
           setState(() {
             controller.text = "";
           });
-          widget.onSubmitted(value);
+
+          widget.onSubmitted(value == "Z:BDCCT"
+              ? ParameterEntry(value,
+                  label: "", key: const Key("parameter_row_Z:BDCCT"))
+              : CommentEntry(value));
         });
   }
 }
