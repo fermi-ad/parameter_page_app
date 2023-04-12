@@ -22,6 +22,10 @@ void main() {
 
       // Then the new parameter is added to the page
       assertParameterIsInRow("Z:BDCCT", 0);
+      assertParameterHasDetails("Z:BDCCT",
+          description: "Booster DCCT",
+          settingValue: "50.00",
+          readingValue: "100.0");
     });
   });
 }
