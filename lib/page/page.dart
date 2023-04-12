@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'entry.dart';
+import 'new_entry_editor_widget.dart';
 
 class DataSource extends InheritedWidget {
   final Stream<double> _data = Stream<double>.periodic(
@@ -41,7 +42,6 @@ class _PageWidgetState extends State<PageWidget> {
   bool editMode = false;
   List<PageEntry> parameters = [];
   List<PageEntry> _undoParameters = [];
-  TextEditingController controller = TextEditingController();
 
   // Initialize the state by copying the parameters sent it.
 
@@ -49,31 +49,6 @@ class _PageWidgetState extends State<PageWidget> {
   void initState() {
     parameters = widget.parameters.toList();
     super.initState();
-  }
-
-  // When the widget is being destroyed, free up resources associated with the
-  // text editing controller.
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  // Creates the editor used to add new entries.
-
-  Widget newEntryEditor() {
-    return TextField(
-        maxLines: 1,
-        minLines: 1,
-        key: const Key('add-entry-textfield'),
-        controller: controller,
-        onSubmitted: (value) {
-          setState(() {
-            parameters.add(CommentEntry(value));
-            controller.text = "";
-          });
-        });
   }
 
   // Moves an entry from one location to another in the parameter list. It
@@ -151,7 +126,13 @@ class _PageWidgetState extends State<PageWidget> {
         Expanded(
           child: ReorderableListView(
               padding: const EdgeInsets.fromLTRB(4.0, 4.0, 4.0, 4.0),
-              footer: editMode ? newEntryEditor() : null,
+              footer: editMode
+                  ? NewEntryEditorWidget(
+                      key: const Key('add-entry-textfield'),
+                      onSubmitted: (value) {
+                        setState(() => parameters.add(CommentEntry(value)));
+                      })
+                  : null,
               buildDefaultDragHandles: false,
               onReorder: reorderEntry,
               children: parameters.fold([], (acc, entry) {
