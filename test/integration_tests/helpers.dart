@@ -126,6 +126,14 @@ Future<void> addANewComment(tester, String comment) async {
   await tester.pump();
 }
 
+Future<void> addANewParameter(tester, String parameter) async {
+  await tester.pumpAndSettle();
+  await tester.enterText(
+      find.byKey(const Key('add-entry-textfield')), parameter);
+  await tester.testTextInput.receiveAction(TextInputAction.done);
+  await tester.pump();
+}
+
 Future<void> moveRowAtIndexNRowsUp(tester, int rowIndex, int nRowsUp) async {
   final handlesFinder = find.byIcon(Icons.drag_handle);
 
