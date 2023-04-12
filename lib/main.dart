@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:parameter_page/theme/theme.dart';
 import 'gql-dpm/dpm_service.dart';
 import 'mock-dpm/mock_dpm_service.dart';
 import 'page/entry.dart';
@@ -29,22 +30,10 @@ class FermiApp extends StatelessWidget {
   // application.
   @override
   Widget build(BuildContext context) {
-    const TextTheme defTextTheme = TextTheme(
-        titleSmall: TextStyle(fontSize: 16.0),
-        titleMedium: TextStyle(fontSize: 18.0),
-        titleLarge: TextStyle(fontSize: 24.0),
-        bodySmall: TextStyle(fontSize: 14.0),
-        bodyMedium: TextStyle(fontSize: 18.0),
-        bodyLarge: TextStyle(fontSize: 20.0));
-
     return MaterialApp(
       title: title,
-      theme: ThemeData(
-          useMaterial3: true,
-          textTheme: defTextTheme,
-          primarySwatch: Colors.blue),
-      darkTheme: ThemeData.dark()
-          .copyWith(useMaterial3: true, textTheme: defTextTheme),
+      theme: GlobalAppTheme.lightTheme,
+      darkTheme: GlobalAppTheme.darkTheme,
       themeMode: ThemeMode.system,
       home: child,
     );
