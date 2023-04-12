@@ -9,7 +9,8 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Add Parameter to Page', () {
-    testWidgets('Submit ACNET parameter, should appear at the top of the page',
+    testWidgets(
+        'Submit ACNET parameter, should appear at the bottom of the page',
         (tester) async {
       // Given the test page is loaded and I am in edit mode
       app.main();
@@ -21,7 +22,7 @@ void main() {
       await exitEditMode(tester);
 
       // Then the new parameter is added to the page
-      assertParameterIsInRow("Z:BDCCT", 0);
+      assertParameterIsInRow("Z:BDCCT", 5);
       assertParameterHasDetails("Z:BDCCT",
           description: "Booster DCCT",
           settingValue: "50.00",
