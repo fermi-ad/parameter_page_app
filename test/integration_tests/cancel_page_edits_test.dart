@@ -56,5 +56,29 @@ void main() {
       // Then the parameter returns to it's original position in row 3
       assertParameterIsInRow("G:AMANDA", 2);
     });
+
+    testWidgets(
+        'Delete multiple entries and cancel, all deletes should be discarded',
+        (tester) async {
+      // Given the test page is loaded
+      //   the 'G:AMANDA' device is on the page
+      //   in row 3
+      //   and I am in edit mode
+      app.main();
+      await tester.pumpAndSettle();
+      assertParameterIsInRow("M:OUTTMP@e,02", 0);
+      assertParameterIsInRow("G:AMANDA", 2);
+      await enterEditMode(tester);
+
+      // When I delete two parameters
+      //   and I exit edit mode
+      await deleteParameter(tester, "M:OUTTMP@e,02");
+      await deleteParameter(tester, "G:AMANDA");
+      await cancelEditMode(tester);
+
+      // Then the parameters return to their original positions
+      assertParameterIsInRow("M:OUTTMP@e,02", 0);
+      assertParameterIsInRow("G:AMANDA", 2);
+    });
   });
 }
