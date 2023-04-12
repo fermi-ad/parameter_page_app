@@ -40,6 +40,7 @@ class PageWidget extends StatefulWidget {
 class _PageWidgetState extends State<PageWidget> {
   bool editMode = false;
   List<PageEntry> parameters = [];
+  List<PageEntry> _undoParameters = [];
   TextEditingController controller = TextEditingController();
 
   // Initialize the state by copying the parameters sent it.
@@ -169,27 +170,45 @@ class _PageWidgetState extends State<PageWidget> {
             key: const Key("cancel_edit_mode_button_visibility"),
             visible: editMode,
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FloatingActionButton.small(
-                  key: const Key('cancel_edit_mode_button'),
-                  backgroundColor:
-                      Theme.of(context).colorScheme.primary.withAlpha(128),
-                  child: const Icon(Icons.delete),
-                  onPressed: () => setState(() => editMode = !editMode)),
-            )),
+                padding: const EdgeInsets.all(8.0),
+                child: FloatingActionButton.small(
+                    key: const Key('cancel_edit_mode_button'),
+                    backgroundColor:
+                        Theme.of(context).colorScheme.primary.withAlpha(128),
+                    onPressed: _cancelEditMode,
+                    child: const Icon(Icons.delete)))),
         Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: FloatingActionButton.small(
-              key: const Key('enable_edit_mode_button'),
-              backgroundColor: Theme.of(context)
-                  .colorScheme
-                  .primary
-                  .withAlpha(editMode ? 255 : 128),
-              child: const Icon(Icons.settings),
-              onPressed: () => setState(() => editMode = !editMode)),
-        )
+            padding: const EdgeInsets.all(8.0),
+            child: FloatingActionButton.small(
+                key: const Key('enable_edit_mode_button'),
+                backgroundColor: Theme.of(context)
+                    .colorScheme
+                    .primary
+                    .withAlpha(editMode ? 255 : 128),
+                onPressed: _toggleEditMode,
+                child: const Icon(Icons.settings)))
       ],
     );
+  }
+
+  void _cancelEditMode() {
+    _restoreEntries();
+    setState(() => editMode = false);
+  }
+
+  void _restoreEntries() {
+    setState(() => parameters = List<PageEntry>.from(_undoParameters));
+  }
+
+  void _toggleEditMode() {
+    if (!editMode) {
+      _saveEntries();
+    }
+    setState(() => editMode = !editMode);
+  }
+
+  void _saveEntries() {
+    _undoParameters = List<PageEntry>.from(parameters);
   }
 
   @override
