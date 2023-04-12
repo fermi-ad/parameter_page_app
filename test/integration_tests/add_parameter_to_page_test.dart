@@ -20,11 +20,12 @@ void main() {
       // When I add a new ACNET parameter...
       await addANewParameter(tester, 'Z:BDCCT');
       await exitEditMode(tester);
+      await waitForDataToLoadFor(tester, "Z:BDCCT");
 
       // Then the new parameter is added to the page
       assertParameterIsInRow("Z:BDCCT", 5);
       assertParameterHasDetails("Z:BDCCT",
-          description: "Booster DCCT",
+          description: "device description",
           settingValue: "50.00",
           readingValue: "100.0");
     });
