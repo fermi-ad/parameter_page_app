@@ -43,7 +43,9 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
   }
 
   bool _isACNETDRF(String val) {
-    return (val == "Z:BDCCT" || val == "I:BEAM");
+    var drfRegEx = RegExp(r"[A-Za-z][:_|][A-Za-z0-9]{1,15}");
+
+    return drfRegEx.hasMatch(val);
   }
 
   bool _isProcessVariable(String val) {
