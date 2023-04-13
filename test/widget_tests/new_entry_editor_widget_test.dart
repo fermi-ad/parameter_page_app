@@ -46,7 +46,15 @@ void main() {
       expect(newEntry, isA<ParameterEntry>());
     });
 
-    testWidgets(
-        'Submit PV, get ParameterEntry', (WidgetTester tester) async {});
+    testWidgets('Submit PV, get ParameterEntry', (WidgetTester tester) async {
+      // Given a new NewEntryEditorWidget
+      await tester.pumpWidget(editor);
+
+      // when I enter a new ACNET device...
+      await createNewEntry(tester, "EXAMPLE:EPICS:PV");
+
+      // Then the returned entry should be a ParameterEntry
+      expect(newEntry, isA<ParameterEntry>());
+    });
   });
 }
