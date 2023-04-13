@@ -27,10 +27,38 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
             controller.text = "";
           });
 
-          widget.onSubmitted(value == "Z:BDCCT"
-              ? ParameterEntry(value,
-                  label: "", key: const Key("parameter_row_Z:BDCCT"))
-              : CommentEntry(value));
+          widget.onSubmitted(_generatePageEntryFrom(textInput: value));
         });
+  }
+
+  PageEntry _generatePageEntryFrom({required final String textInput}) {
+    if (_isACNETDRF(textInput) || _isProcessVariable(textInput)) {
+      return ParameterEntry(textInput,
+          label: "", key: Key("parameter_row_$textInput"));
+    } else if (_isHardComment(textInput)) {
+      return CommentEntry(_stripBang(textInput));
+    } else {
+      return CommentEntry(textInput);
+    }
+  }
+
+  bool _isHardComment(String val) {
+    return "!" == val[0];
+  }
+
+  bool _isACNETDRF(String val) {
+    var drfRegEx = RegExp(r"^[A-Za-z][:_|][A-Za-z0-9@,]{1,255}$");
+
+    return drfRegEx.hasMatch(val);
+  }
+
+  bool _isProcessVariable(String val) {
+    var pvRegEx = RegExp(r"^([A-Za-z0-9:]{1,255})$");
+
+    return pvRegEx.hasMatch(val);
+  }
+
+  String _stripBang(String textInput) {
+    return textInput.substring(1);
   }
 }
