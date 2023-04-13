@@ -39,6 +39,14 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
   }
 
   bool _isComment(String val) {
-    return !(val == "Z:BDCCT" || val == "I:BEAM" || val == "EXAMPLE:EPICS:PV");
+    return !(_isACNETDRF(val) || _isProcessVariable(val));
+  }
+
+  bool _isACNETDRF(String val) {
+    return (val == "Z:BDCCT" || val == "I:BEAM");
+  }
+
+  bool _isProcessVariable(String val) {
+    return val == "EXAMPLE:EPICS:PV";
   }
 }
