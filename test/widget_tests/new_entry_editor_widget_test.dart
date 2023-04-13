@@ -5,7 +5,7 @@ import 'package:parameter_page/page/new_entry_editor_widget.dart';
 
 void main() {
   group("NewEntryEditorWidget", () {
-    PageEntry? newEntry;
+    late PageEntry newEntry;
 
     late MaterialApp editor;
 
@@ -38,6 +38,19 @@ void main() {
 
       // Then the returned entry should be a comment
       expect(newEntry, isA<CommentEntry>());
+    });
+
+    testWidgets('Submit a hard comment, get comment with bang stripped',
+        (WidgetTester tester) async {
+      // Given a new NewEntryEditorWidget
+      await tester.pumpWidget(editor);
+
+      // when I enter a new comment...
+      await createNewEntry(tester, "!THIS:IS:A:COMMENT");
+
+      // Then the returned entry should be a comment
+      expect(newEntry, isA<CommentEntry>());
+      expect(newEntry.entryText(), equals("THIS:IS:A:COMMENT"));
     });
 
     testWidgets('Submit ACNET device, get ParameterEntry',

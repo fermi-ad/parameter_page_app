@@ -32,10 +32,12 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
   }
 
   PageEntry _generatePageEntryFrom({required final String textInput}) {
-    return _isComment(textInput)
-        ? CommentEntry(textInput)
-        : ParameterEntry(textInput,
-            label: "", key: Key("parameter_row_$textInput"));
+    if (_isACNETDRF(textInput) || _isProcessVariable(textInput)) {
+      return ParameterEntry(textInput,
+          label: "", key: Key("parameter_row_$textInput"));
+    } else {
+      return CommentEntry(textInput);
+    }
   }
 
   bool _isComment(String val) {
