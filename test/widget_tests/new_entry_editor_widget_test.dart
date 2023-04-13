@@ -25,7 +25,23 @@ void main() {
     });
 
     testWidgets('Submit ACNET device, get ParameterEntry',
-        (WidgetTester tester) async {});
+        (WidgetTester tester) async {
+      // Given a new NewEntryEditorWidget
+      PageEntry? newEntry;
+      final editor = MaterialApp(home: Scaffold(
+          body: NewEntryEditorWidget(onSubmitted: (PageEntry submitted) {
+        newEntry = submitted;
+      })));
+      await tester.pumpWidget(editor);
+
+      // when I enter a new ACNET device...
+      await tester.enterText(find.byType(TextField), "Z:BDCCT");
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpWidget(editor);
+
+      // Then the returned entry should be a ParameterEntry
+      expect(newEntry, isA<ParameterEntry>());
+    });
 
     testWidgets(
         'Submit PV, get ParameterEntry', (WidgetTester tester) async {});
