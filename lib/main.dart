@@ -36,7 +36,7 @@ class FermiApp extends StatelessWidget {
       theme: GlobalAppTheme.lightTheme,
       darkTheme: GlobalAppTheme.darkTheme,
       themeMode: ThemeMode.system,
-      home: child,
+      home: SelectionArea(child: child),
     );
   }
 }
