@@ -63,6 +63,7 @@ void main() {
       // Then the returned entry should be a ParameterEntry
       await createNewEntryAndExpectParameterEntry(tester, "Z:BDCCT");
       await createNewEntryAndExpectParameterEntry(tester, "I:BEAM");
+      await createNewEntryAndExpectParameterEntry(tester, "Z:BDCCT@e,02");
     });
 
     testWidgets('Submit PV, get ParameterEntry', (WidgetTester tester) async {
