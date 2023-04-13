@@ -105,9 +105,24 @@ Future<void> cancelEditMode(tester) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> deleteParameter(tester, String parameter,
-    {bool confirm = true}) async {
-  await tester.tap(find.text(parameter));
+Future<void> deleteRow(tester,
+    {required int index, bool confirm = true}) async {
+  final trashCansFinder = find.byIcon(Icons.delete);
+
+  await pumpUntilFound(tester, trashCansFinder);
+
+  if (trashCansFinder.evaluate().isEmpty) {
+    fail("No delete buttons found.");
+  }
+
+  final rowHandleFinder =
+      trashCansFinder.evaluate().isEmpty ? null : trashCansFinder.at(index);
+
+  if (rowHandleFinder == null) {
+    fail("No delete buttons found at index $index.");
+  }
+
+  await tester.tap(rowHandleFinder);
   await tester.pumpAndSettle();
 
   if (confirm) {
