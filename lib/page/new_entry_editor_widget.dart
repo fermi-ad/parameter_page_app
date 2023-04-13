@@ -35,12 +35,14 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
     if (_isACNETDRF(textInput) || _isProcessVariable(textInput)) {
       return ParameterEntry(textInput,
           label: "", key: Key("parameter_row_$textInput"));
+    } else if (_isHardComment(textInput)) {
+      return CommentEntry(_stripBang(textInput));
     } else {
       return CommentEntry(textInput);
     }
   }
 
-  bool _isComment(String val) {
+  bool _isHardComment(String val) {
     return !(_isACNETDRF(val) || _isProcessVariable(val));
   }
 
@@ -54,5 +56,9 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
     var pvRegEx = RegExp(r"^([A-Za-z0-9:]{0,255})$");
 
     return pvRegEx.hasMatch(val);
+  }
+
+  String _stripBang(String textInput) {
+    return textInput.substring(1);
   }
 }
