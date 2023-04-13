@@ -19,7 +19,7 @@ void main() {
       await enterEditMode(tester);
 
       // When I attempt to delete the parameter entry but select No from the confirmation dialog...
-      await deleteParameter(tester, "G:AMANDA", confirm: false);
+      await deleteRow(tester, index: 2, confirm: false);
 
       // Then the parameter is still on the page
       assertParametersAreOnPage(["G:AMANDA"]);
@@ -35,7 +35,7 @@ void main() {
       await enterEditMode(tester);
 
       // When I delete the parameter entry...
-      await deleteParameter(tester, "G:AMANDA");
+      await deleteRow(tester, index: 2);
 
       // Then the parameter should be removed from the page
       assertParametersAreNotOnPage(["G:AMANDA"]);
