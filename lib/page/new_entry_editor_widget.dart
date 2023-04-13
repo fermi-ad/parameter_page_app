@@ -53,7 +53,7 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
   }
 
   bool _isProcessVariable(String val) {
-    var pvRegEx = RegExp(r"^([A-Za-z0-9:]{0,255})$");
+    var pvRegEx = RegExp(r"^([A-Za-z0-9:]{1,255})$");
 
     return pvRegEx.hasMatch(val);
   }
