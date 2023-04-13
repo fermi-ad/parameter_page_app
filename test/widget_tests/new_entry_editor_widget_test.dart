@@ -38,6 +38,7 @@ void main() {
 
       // Then the returned entry should be a comment
       expect(newEntry, isA<CommentEntry>());
+      expect(newEntry.entryText(), equals("this is a new comment"));
     });
 
     testWidgets('Submit a hard comment, get comment with bang stripped',

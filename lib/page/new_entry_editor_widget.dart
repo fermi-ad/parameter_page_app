@@ -43,7 +43,7 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
   }
 
   bool _isHardComment(String val) {
-    return !(_isACNETDRF(val) || _isProcessVariable(val));
+    return "!" == val[0];
   }
 
   bool _isACNETDRF(String val) {
