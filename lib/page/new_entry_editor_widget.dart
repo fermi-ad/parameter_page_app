@@ -27,10 +27,18 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
             controller.text = "";
           });
 
-          widget.onSubmitted(value == "Z:BDCCT"
-              ? ParameterEntry(value,
-                  label: "", key: const Key("parameter_row_Z:BDCCT"))
-              : CommentEntry(value));
+          widget.onSubmitted(_generatePageEntryFrom(textInput: value));
         });
+  }
+
+  PageEntry _generatePageEntryFrom({required final String textInput}) {
+    return _isComment(textInput)
+        ? CommentEntry(textInput)
+        : ParameterEntry(textInput,
+            label: "", key: Key("parameter_row_$textInput"));
+  }
+
+  bool _isComment(String val) {
+    return !(val == "Z:BDCCT" || val == "I:BEAM" || val == "EXAMPLE:EPICS:PV");
   }
 }

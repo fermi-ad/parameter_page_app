@@ -22,6 +22,12 @@ void main() {
       await tester.pumpWidget(editor);
     }
 
+    Future<void> createNewEntryAndExpectParameterEntry(
+        tester, String newEntryInputText) async {
+      await createNewEntry(tester, newEntryInputText);
+      expect(newEntry, isA<ParameterEntry>());
+    }
+
     testWidgets('Submit comment, get comment entry',
         (WidgetTester tester) async {
       // Given a new NewEntryEditorWidget
@@ -40,21 +46,18 @@ void main() {
       await tester.pumpWidget(editor);
 
       // when I enter a new ACNET device...
-      await createNewEntry(tester, "Z:BDCCT");
-
       // Then the returned entry should be a ParameterEntry
-      expect(newEntry, isA<ParameterEntry>());
+      await createNewEntryAndExpectParameterEntry(tester, "Z:BDCCT");
+      await createNewEntryAndExpectParameterEntry(tester, "I:BEAM");
     });
 
     testWidgets('Submit PV, get ParameterEntry', (WidgetTester tester) async {
       // Given a new NewEntryEditorWidget
       await tester.pumpWidget(editor);
 
-      // when I enter a new ACNET device...
-      await createNewEntry(tester, "EXAMPLE:EPICS:PV");
-
+      // when I enter a new EPICS PV...
       // Then the returned entry should be a ParameterEntry
-      expect(newEntry, isA<ParameterEntry>());
+      await createNewEntryAndExpectParameterEntry(tester, "EXAMPLE:EPICS:PV");
     });
   });
 }
