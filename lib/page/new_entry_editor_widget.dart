@@ -47,7 +47,7 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
   }
 
   bool _isACNETDRF(String val) {
-    var drfRegEx = RegExp(r"^[A-Za-z][:_|][A-Za-z0-9]{1,255}$");
+    var drfRegEx = RegExp(r"^[A-Za-z][:_|][A-Za-z0-9@,]{1,255}$");
 
     return drfRegEx.hasMatch(val);
   }
