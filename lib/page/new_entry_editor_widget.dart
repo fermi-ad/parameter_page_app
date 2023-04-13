@@ -43,12 +43,14 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
   }
 
   bool _isACNETDRF(String val) {
-    var drfRegEx = RegExp(r"[A-Za-z][:_|][A-Za-z0-9]{1,15}");
+    var drfRegEx = RegExp(r"[A-Za-z][:_|][A-Za-z0-9]{1}");
 
     return drfRegEx.hasMatch(val);
   }
 
   bool _isProcessVariable(String val) {
-    return val == "EXAMPLE:EPICS:PV";
+    var pvRegEx = RegExp(r"^([A-Za-z0-9:]{0,255})$");
+
+    return pvRegEx.hasMatch(val);
   }
 }
