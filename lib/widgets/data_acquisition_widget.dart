@@ -15,6 +15,18 @@ class DataAcquisitionWidget extends InheritedWidget {
     return service.monitorDevices(drfs);
   }
 
+  bool isACNETDRF(String val) {
+    var drfRegEx = RegExp(r"^[A-Za-z][:_|][A-Za-z0-9@,]{1,255}$");
+
+    return drfRegEx.hasMatch(val);
+  }
+
+  bool isProcessVariable(String val) {
+    var pvRegEx = RegExp(r"^([A-Za-z0-9:]{1,255})$");
+
+    return pvRegEx.hasMatch(val);
+  }
+
   // This should return `true` if the state of widget has changed. Since it only
   // provides access to GraphQL, nothing ever changes so we always return
   // `false`.

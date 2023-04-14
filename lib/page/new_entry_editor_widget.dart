@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/data_acquisition_widget.dart';
 import 'entry.dart';
 
 class NewEntryEditorWidget extends StatefulWidget {
@@ -16,8 +17,11 @@ class NewEntryEditorWidget extends StatefulWidget {
 class _NewEntryEditorState extends State<NewEntryEditorWidget> {
   TextEditingController controller = TextEditingController();
 
+  late DataAcquisitionWidget _daqWidget;
+
   @override
   Widget build(BuildContext context) {
+    _daqWidget = DataAcquisitionWidget.of(context);
     return TextField(
         maxLines: 1,
         minLines: 1,
@@ -32,7 +36,8 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
   }
 
   PageEntry _generatePageEntryFrom({required final String textInput}) {
-    if (_isACNETDRF(textInput) || _isProcessVariable(textInput)) {
+    if (_daqWidget.isACNETDRF(textInput) ||
+        _daqWidget.isProcessVariable(textInput)) {
       return ParameterEntry(textInput,
           label: "", key: Key("parameter_row_$textInput"));
     } else if (_isHardComment(textInput)) {
@@ -44,18 +49,6 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
 
   bool _isHardComment(String val) {
     return "!" == val[0];
-  }
-
-  bool _isACNETDRF(String val) {
-    var drfRegEx = RegExp(r"^[A-Za-z][:_|][A-Za-z0-9@,]{1,255}$");
-
-    return drfRegEx.hasMatch(val);
-  }
-
-  bool _isProcessVariable(String val) {
-    var pvRegEx = RegExp(r"^([A-Za-z0-9:]{1,255})$");
-
-    return pvRegEx.hasMatch(val);
   }
 
   String _stripBang(String textInput) {

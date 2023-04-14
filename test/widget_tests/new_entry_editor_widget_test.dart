@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:parameter_page/mock-dpm/mock_dpm_service.dart';
 import 'package:parameter_page/page/entry.dart';
 import 'package:parameter_page/page/new_entry_editor_widget.dart';
+import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 
 void main() {
   group("NewEntryEditorWidget", () {
@@ -10,10 +12,14 @@ void main() {
     late MaterialApp editor;
 
     setUp(() {
-      editor = MaterialApp(home: Scaffold(
-          body: NewEntryEditorWidget(onSubmitted: (PageEntry submitted) {
-        newEntry = submitted;
-      })));
+      editor = MaterialApp(
+          home: Scaffold(
+              body: DataAcquisitionWidget(
+                  service: const MockDpmService(),
+                  child:
+                      NewEntryEditorWidget(onSubmitted: (PageEntry submitted) {
+                    newEntry = submitted;
+                  }))));
     });
 
     Future<void> createNewEntry(tester, String newEntryInputText) async {
