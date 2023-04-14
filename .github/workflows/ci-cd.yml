@@ -31,6 +31,9 @@ jobs:
         with:
           channel: "stable"
           cache: true
+
+      - name: Resolving dependencies
+        run: flutter pub get
       
       - name: Installing chromedriver (needed for Integration tests)
         uses: nanasess/setup-chromedriver@v1
