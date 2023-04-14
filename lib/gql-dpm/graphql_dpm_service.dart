@@ -30,7 +30,7 @@ class GraphQLDpmService extends DpmService {
             Uri(
               scheme: "http",
               host: "127.0.0.1",
-              port: 8000,
+              port: 8080,
               path: "/dpm/q",
             ).toString(),
           ),
@@ -38,14 +38,16 @@ class GraphQLDpmService extends DpmService {
         ),
         _s = Client(
           link: WebSocketLink(
-            Uri(
-              scheme: "ws",
-              host: "127.0.0.1",
-              port: 8000,
-              path: "/dpm/s",
-            ).toString(),
-            reconnectInterval: const Duration(seconds: 1),
-          ),
+              Uri(
+                scheme: "ws",
+                host: "127.0.0.1",
+                port: 8080,
+                path: "/dpm/s",
+              ).toString(),
+              reconnectInterval: const Duration(seconds: 1),
+              initialPayload: {
+                "headers": {"sec-websocket-protocol": "graphql-ws"}
+              }),
           cache: Cache(),
         );
 
