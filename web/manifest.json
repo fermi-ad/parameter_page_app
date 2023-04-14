@@ -1,11 +1,12 @@
 {
-    "name": "parameter_page",
-    "short_name": "parameter_page",
+    "name": "Parameter Page",
+    "short_name": "PPage",
+    "id": "parameter_page",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "A flexible scratchpad for accessing accelerator device information.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
