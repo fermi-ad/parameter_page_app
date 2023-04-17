@@ -10,7 +10,37 @@ on:
       - "main"
 
 jobs:
-  Setup-Build-Test-Dockerize-Push:
+
+  Integration-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        test: ['smoke_test', 'display_parameter_page_test', 'delete_entry_from_page_test', 'add_comment_to_page_test', 'reorganize_parameters_test', 'cancel_page_edits_test', 'add_parameter_to_page_test']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v2
+        with:
+          path: /opt/hostedtoolcache/flutter
+          key: flutter-install-cache
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+      
+      - name: Installing chromedriver (needed for Integration tests)
+        uses: nanasess/setup-chromedriver@v1
+
+      - name: Starting chromedriver and executing integration test
+        run: |
+          chromedriver --port=4444 &
+          flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/${{ matrix.test }}.dart -d web-server --dart-define=USE_MOCK_DPM_SERVICE=true
+
+  Linter-UnitTest-SmokeTest:
     runs-on: ubuntu-latest
 
     steps:
@@ -42,20 +72,27 @@ jobs:
         run: |
           flutter test test/widget_tests
 
-      - name: Installing chromedriver (needed for Integration tests)
-        uses: nanasess/setup-chromedriver@v1
+  Build-Dockerize-Push:
+    runs-on: ubuntu-latest
+    needs:  [ Linter-UnitTest-SmokeTest, Integration-tests]
 
-      - name: Starting chromedriver and executing integration tests
-        run: |
-          chromedriver --port=4444 &
-          flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/smoke_test.dart -d web-server --dart-define=USE_MOCK_DPM_SERVICE=true
-          flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/display_parameter_page_test.dart -d web-server --dart-define=USE_MOCK_DPM_SERVICE=true
-          flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/delete_entry_from_page_test.dart -d web-server --dart-define=USE_MOCK_DPM_SERVICE=true
-          flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/add_comment_to_page_test.dart -d web-server --dart-define=USE_MOCK_DPM_SERVICE=true
-          flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/reorganize_parameters_test.dart -d web-server --dart-define=USE_MOCK_DPM_SERVICE=true
-          flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/cancel_page_edits_test.dart -d web-server --dart-define=USE_MOCK_DPM_SERVICE=true
-          flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/add_parameter_to_page_test.dart -d web-server --dart-define=USE_MOCK_DPM_SERVICE=true
+    steps:
+      - name: Checking out source code
+        uses: actions/checkout@v3
 
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v2
+        with:
+          path: /opt/hostedtoolcache/flutter
+          key: flutter-install-cache
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+
+      - name: Resolving dependencies
+        run: flutter pub get
       - name: Building web application
         run: |
           flutter build web
