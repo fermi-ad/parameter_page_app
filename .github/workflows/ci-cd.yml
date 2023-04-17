@@ -21,16 +21,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Cache Flutter dependencies
-        uses: actions/cache@v2
-        with:
-          path: /opt/hostedtoolcache/flutter
-          key: flutter-install-cache
-
-      - uses: subosito/flutter-action@v2
+      - name: Install Flutter and dependencies
+        uses: subosito/flutter-action@v2
         with:
           channel: "stable"
           cache: true
+          cache-path: /opt/hostedtoolcache/flutter
+          cache-key: flutter-install-cache
 
       - name: Resolving dependencies
         run: flutter pub get
@@ -50,16 +47,13 @@ jobs:
       - name: Checking out source code
         uses: actions/checkout@v3
 
-      - name: Cache Flutter dependencies
-        uses: actions/cache@v2
-        with:
-          path: /opt/hostedtoolcache/flutter
-          key: flutter-install-cache
-
-      - uses: subosito/flutter-action@v2
+      - name: Install Flutter and dependencies
+        uses: subosito/flutter-action@v2
         with:
           channel: "stable"
           cache: true
+          cache-path: /opt/hostedtoolcache/flutter
+          cache-key: flutter-install-cache
 
       - name: Resolving dependencies
         run: flutter pub get
@@ -83,16 +77,13 @@ jobs:
       - name: Checking out source code
         uses: actions/checkout@v3
 
-      - name: Cache Flutter dependencies
-        uses: actions/cache@v2
-        with:
-          path: /opt/hostedtoolcache/flutter
-          key: flutter-install-cache
-
-      - uses: subosito/flutter-action@v2
+      - name: Install Flutter and dependencies
+        uses: subosito/flutter-action@v2
         with:
           channel: "stable"
           cache: true
+          cache-path: /opt/hostedtoolcache/flutter
+          cache-key: flutter-install-cache
 
       - name: Resolving dependencies
         run: flutter pub get
