@@ -31,7 +31,7 @@ class GraphQLDpmService extends DpmService {
               scheme: "http",
               host: "127.0.0.1",
               port: 8080,
-              path: "/dpm/q",
+              path: "/acsys",
             ).toString(),
           ),
           cache: Cache(),
@@ -42,7 +42,7 @@ class GraphQLDpmService extends DpmService {
                 scheme: "ws",
                 host: "127.0.0.1",
                 port: 8080,
-                path: "/dpm/s",
+                path: "/acsys",
               ).toString(),
               reconnectInterval: const Duration(seconds: 1),
               initialPayload: {
