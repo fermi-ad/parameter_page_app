@@ -105,9 +105,24 @@ Future<void> cancelEditMode(tester) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> deleteParameter(tester, String parameter,
-    {bool confirm = true}) async {
-  await tester.tap(find.text(parameter));
+Future<void> deleteRow(tester,
+    {required int index, bool confirm = true}) async {
+  final trashCansFinder = find.byIcon(Icons.delete);
+
+  await pumpUntilFound(tester, trashCansFinder);
+
+  if (trashCansFinder.evaluate().isEmpty) {
+    fail("No delete buttons found.");
+  }
+
+  final rowHandleFinder =
+      trashCansFinder.evaluate().isEmpty ? null : trashCansFinder.at(index);
+
+  if (rowHandleFinder == null) {
+    fail("No delete buttons found at index $index.");
+  }
+
+  await tester.tap(rowHandleFinder);
   await tester.pumpAndSettle();
 
   if (confirm) {
@@ -122,6 +137,14 @@ Future<void> deleteParameter(tester, String parameter,
 Future<void> addANewComment(tester, String comment) async {
   await tester.pumpAndSettle();
   await tester.enterText(find.byKey(const Key('add-entry-textfield')), comment);
+  await tester.testTextInput.receiveAction(TextInputAction.done);
+  await tester.pump();
+}
+
+Future<void> addANewParameter(tester, String parameter) async {
+  await tester.pumpAndSettle();
+  await tester.enterText(
+      find.byKey(const Key('add-entry-textfield')), parameter);
   await tester.testTextInput.receiveAction(TextInputAction.done);
   await tester.pump();
 }

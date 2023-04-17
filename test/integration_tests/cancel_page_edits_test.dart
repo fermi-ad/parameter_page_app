@@ -72,8 +72,8 @@ void main() {
 
       // When I delete two parameters
       //   and I exit edit mode
-      await deleteParameter(tester, "M:OUTTMP@e,02");
-      await deleteParameter(tester, "G:AMANDA");
+      await deleteRow(tester, index: 0);
+      await deleteRow(tester, index: 2);
       await cancelEditMode(tester);
 
       // Then the parameters return to their original positions

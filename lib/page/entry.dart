@@ -15,6 +15,8 @@ abstract class PageEntry {
   PageEntry({Key? key}) : key = key ?? UniqueKey();
 
   Widget buildEntry(BuildContext context, bool editMode, bool wide);
+
+  String entryText();
 }
 
 class PageEntryWidget extends StatelessWidget {
@@ -50,6 +52,9 @@ class CommentEntry extends PageEntry {
   Widget buildEntry(BuildContext context, bool editMode, bool wide) {
     return CommentEntryWidget(text);
   }
+
+  @override
+  String entryText() => text;
 }
 
 class ParameterEntry extends PageEntry {
@@ -62,6 +67,9 @@ class ParameterEntry extends PageEntry {
   Widget buildEntry(BuildContext context, bool editMode, bool wide) {
     return ParameterWidget(drf, editMode, wide, label: label, key: key);
   }
+
+  @override
+  String entryText() => drf;
 }
 
 class ParameterWidget extends StatelessWidget {
