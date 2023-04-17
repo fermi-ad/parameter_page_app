@@ -8,7 +8,18 @@ void main() {
       ParameterPage page = ParameterPage();
 
       // Then the entries list is empty
-      expect(page.entriesAsList().length, 0);
+      expect(page.numberOfEntries(), 0);
+    });
+
+    test("createEntry with comment, increments length", () {
+      // Given an empty ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // When I add a comment
+      page.createEntry("this is a comment");
+
+      // Then the number of entries is 1
+      expect(page.numberOfEntries(), 1);
     });
   });
 }
