@@ -38,7 +38,7 @@ jobs:
       - name: Starting chromedriver and executing integration test
         run: |
           chromedriver --port=4444 &
-          flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/${{ matrix.test }}.dart -d web-server --dart-define=USE_MOCK_DPM_SERVICE=true --no-pub --release --web-port=8080
+          flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/${{ matrix.test }}.dart -d web-server --dart-define=USE_MOCK_DPM_SERVICE=true --no-pub --web-port=8080
 
   Linter-UnitTest-SmokeTest:
     runs-on: ubuntu-latest
