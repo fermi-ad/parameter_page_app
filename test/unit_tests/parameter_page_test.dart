@@ -125,5 +125,20 @@ void main() {
       expect(page.editing(), false);
       expect(page.numberOfEntries(), 0);
     });
+
+    test("reorderEntry(..), moves entry to a new position", () {
+      // Given a ParameterPage in edit mode with two comment entries
+      ParameterPage page =
+          ParameterPage([CommentEntry("comment 1"), CommentEntry("comment 2")]);
+      page.enableEditing();
+
+      // When I move entry 1 to position 0
+      page.reorderEntry(atIndex: 1, toIndex: 0);
+
+      // Then the entry appears in the new position
+      var entries = page.entriesAsList();
+      expect(entries[0].entryText(), "comment 2");
+      expect(entries[1].entryText(), "comment 1");
+    });
   });
 }

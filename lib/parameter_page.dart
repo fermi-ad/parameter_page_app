@@ -37,6 +37,8 @@ class ParameterPage {
     _editing = false;
   }
 
+  void reorderEntry({required int atIndex, required int toIndex}) {}
+
   List<PageEntry> _entries;
 
   List<PageEntry> _undoEntries = [];
