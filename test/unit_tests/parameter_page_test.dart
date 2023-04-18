@@ -126,7 +126,7 @@ void main() {
       expect(page.numberOfEntries(), 0);
     });
 
-    test("reorderEntry(..), moves entry to a new position", () {
+    test("reorderEntry(..) upwards, moves entry to a new position", () {
       // Given a ParameterPage in edit mode with two comment entries
       ParameterPage page =
           ParameterPage([CommentEntry("comment 1"), CommentEntry("comment 2")]);
@@ -139,6 +139,43 @@ void main() {
       var entries = page.entriesAsList();
       expect(entries[0].entryText(), "comment 2");
       expect(entries[1].entryText(), "comment 1");
+    });
+
+    test("reorderEntry(..) downwards, moves entry to a new position", () {
+      // Given a ParameterPage in edit mode with two comment entries
+      ParameterPage page = ParameterPage([
+        CommentEntry("comment 2"),
+        CommentEntry("comment 1"),
+        CommentEntry("comment 3")
+      ]);
+      page.enableEditing();
+
+      // When I move entry 1 to position 2
+      page.reorderEntry(atIndex: 0, toIndex: 1);
+
+      // Then the entry appears in the new position
+      var entries = page.entriesAsList();
+      expect(entries[0].entryText(), "comment 1");
+      expect(entries[1].entryText(), "comment 2");
+      expect(entries[2].entryText(), "comment 3");
+    });
+
+    test("removeEntry(at:), removes entry", () {
+      // Given a ParameterPage in edit mode with three comment entries
+      ParameterPage page = ParameterPage([
+        CommentEntry("comment 1"),
+        CommentEntry("comment 2"),
+        CommentEntry("comment 3")
+      ]);
+      page.enableEditing();
+
+      // When I remove the second entry
+      page.removeEntry(at: 1);
+
+      // Then the entry is removed from the list
+      var entries = page.entriesAsList();
+      expect(entries[0].entryText(), "comment 1");
+      expect(entries[1].entryText(), "comment 3");
     });
   });
 }
