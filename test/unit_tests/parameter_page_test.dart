@@ -1,3 +1,4 @@
+import 'package:parameter_page/page/entry.dart';
 import 'package:parameter_page/parameter_page.dart';
 import 'package:test/test.dart';
 
@@ -20,6 +21,17 @@ void main() {
 
       // Then the number of entries is 1
       expect(page.numberOfEntries(), 1);
+    });
+
+    test("createEntry, returns the correct type", () {
+      // Given an empty ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // When I add a new comment...
+      PageEntry newEntry = page.createEntry("this is a comment");
+
+      // Then the return type is...
+      expect(newEntry, isA<CommentEntry>());
     });
   });
 }
