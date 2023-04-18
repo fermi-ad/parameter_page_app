@@ -1,10 +1,8 @@
 import 'package:parameter_page/page/entry.dart';
 
 class ParameterPage {
-  PageEntry createEntry(String newEntryText) {
-    PageEntry newEntry = CommentEntry(newEntryText);
-    _entries.add(CommentEntry(newEntryText));
-    return newEntry;
+  void add(PageEntry entry) {
+    _entries.add(entry);
   }
 
   List<PageEntry> entriesAsList() {

@@ -12,26 +12,29 @@ void main() {
       expect(page.numberOfEntries(), 0);
     });
 
-    test("createEntry with comment, increments length", () {
+    test("Add Entry, increments count", () {
       // Given an empty ParameterPage
       ParameterPage page = ParameterPage();
 
       // When I add a comment
-      page.createEntry("this is a comment");
+      page.add(CommentEntry("this is a comment"));
 
-      // Then the number of entries is 1
+      // Then the entries list is 1
       expect(page.numberOfEntries(), 1);
     });
 
-    test("createEntry, returns the correct type", () {
-      // Given an empty ParameterPage
+    test("entriesAsList(), returns List of PageEntry objects", () {
+      // Given a ParameterPage with two entries
       ParameterPage page = ParameterPage();
+      page.add(CommentEntry("this is a comment"));
+      page.add(ParameterEntry("M:OUTTMP"));
 
-      // When I add a new comment...
-      PageEntry newEntry = page.createEntry("this is a comment");
+      // When I request a list of entries
+      List<PageEntry> entries = page.entriesAsList();
 
-      // Then the return type is...
-      expect(newEntry, isA<CommentEntry>());
+      // Then the list contains the two entries
+      expect(entries[0], isA<CommentEntry>());
+      expect(entries[1], isA<ParameterEntry>());
     });
   });
 }
