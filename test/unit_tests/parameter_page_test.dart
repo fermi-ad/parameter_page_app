@@ -36,5 +36,25 @@ void main() {
       expect(entries[0], isA<CommentEntry>());
       expect(entries[1], isA<ParameterEntry>());
     });
+
+    test("editing(), initially returns false", () {
+      // Given nothing
+      // When I instantiate a new ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // Then edit mode is disabled
+      expect(page.editing(), false);
+    });
+
+    test("enableEditing(), turns editing mode on", () {
+      // Given a new ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // When I enableEditing()...
+      page.enableEditing();
+
+      // Then edit mode is enabled
+      expect(page.editing(), true);
+    });
   });
 }
