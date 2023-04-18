@@ -42,7 +42,9 @@ class ParameterPage {
     _entries.insert(toIndex, entry);
   }
 
-  void removeEntry({required int at}) {}
+  void removeEntry({required int at}) {
+    _entries.removeAt(at);
+  }
 
   List<PageEntry> _entries;
 
