@@ -13,5 +13,19 @@ class ParameterPage {
     return _entries.length;
   }
 
+  bool editing() {
+    return _editing;
+  }
+
+  void enableEditing() {
+    _editing = true;
+  }
+
+  void disableEditing() {
+    _editing = false;
+  }
+
   final List<PageEntry> _entries = [];
+
+  bool _editing = false;
 }

@@ -56,5 +56,17 @@ void main() {
       // Then edit mode is enabled
       expect(page.editing(), true);
     });
+
+    test("disableEditing(), disables editing mode", () {
+      // Given I am editing a ParameterPage
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I disableEditing()
+      page.disableEditing();
+
+      // Then edit mode is disabled
+      expect(page.editing(), false);
+    });
   });
 }
