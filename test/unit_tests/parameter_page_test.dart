@@ -41,6 +41,7 @@ void main() {
       expect(() => page.add(CommentEntry("throw when edit mode is disabled")),
           throwsException);
       expect(() => page.removeEntry(at: 0), throwsException);
+      expect(() => page.reorderEntry(atIndex: 0, toIndex: 1), throwsException);
     });
 
     test("Add Entry, increments count", () {
