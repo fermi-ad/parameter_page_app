@@ -46,6 +46,8 @@ class ParameterPage {
   }
 
   void reorderEntry({required int atIndex, required int toIndex}) {
+    _enforceEditMode();
+
     if (atIndex < toIndex) {
       toIndex -= 1;
     }
