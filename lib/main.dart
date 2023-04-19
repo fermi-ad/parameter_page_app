@@ -58,7 +58,7 @@ class BaseWidget extends StatelessWidget {
 
   Widget _buildDPMService() {
     final child = Center(
-        child: PageWidget([
+        child: PageWidget(initialParameters: [
       ParameterEntry("M:OUTTMP@e,02",
           key: const Key("parameter_row_M:OUTTMP@e,02")),
       CommentEntry("This is our first comment!"),

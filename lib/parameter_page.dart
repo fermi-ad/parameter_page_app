@@ -38,6 +38,9 @@ class ParameterPage {
   }
 
   void reorderEntry({required int atIndex, required int toIndex}) {
+    if (atIndex < toIndex) {
+      toIndex -= 1;
+    }
     final PageEntry entry = _entries.removeAt(atIndex);
     _entries.insert(toIndex, entry);
   }

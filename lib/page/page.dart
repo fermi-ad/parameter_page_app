@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../parameter_page.dart';
 import 'entry.dart';
 import 'new_entry_editor_widget.dart';
 
@@ -28,9 +29,9 @@ class DataSource extends InheritedWidget {
 // This widget implements the entire behavior of a "Parameter Page".
 
 class PageWidget extends StatefulWidget {
-  final List<PageEntry> parameters;
+  final List<PageEntry> initialParameters;
 
-  const PageWidget(this.parameters, {super.key});
+  const PageWidget({required this.initialParameters, super.key});
 
   @override
   State<PageWidget> createState() => _PageWidgetState();
@@ -39,15 +40,13 @@ class PageWidget extends StatefulWidget {
 // The non-public state of the Parameter Page.
 
 class _PageWidgetState extends State<PageWidget> {
-  bool editMode = false;
-  List<PageEntry> parameters = [];
-  List<PageEntry> _undoParameters = [];
+  late ParameterPage _page;
 
   // Initialize the state by copying the parameters sent it.
 
   @override
   void initState() {
-    parameters = widget.parameters.toList();
+    _page = ParameterPage(widget.initialParameters);
     super.initState();
   }
 
@@ -56,11 +55,7 @@ class _PageWidgetState extends State<PageWidget> {
 
   void reorderEntry(oldIndex, newIndex) {
     setState(() {
-      if (oldIndex < newIndex) {
-        newIndex -= 1;
-      }
-      final PageEntry item = parameters.removeAt(oldIndex);
-      parameters.insert(newIndex, item);
+      _page.reorderEntry(atIndex: oldIndex, toIndex: newIndex);
     });
   }
 
@@ -96,29 +91,30 @@ class _PageWidgetState extends State<PageWidget> {
 
           if (result ?? false) {
             setState(() {
-              parameters.removeAt(index);
+              _page.removeEntry(at: index);
             });
           }
         },
         child: Padding(
           padding: const EdgeInsets.all(2.0),
-          child: editMode
+          child: _page.editing()
               ? Row(children: [
-                  Expanded(child: entry.buildEntry(context, editMode, wide)),
+                  Expanded(
+                      child: entry.buildEntry(context, _page.editing(), wide)),
                   const SizedBox(width: 8.0),
                   const IconButton(
                       visualDensity: VisualDensity.compact,
                       onPressed: null,
                       icon: Icon(Icons.delete))
                 ])
-              : entry.buildEntry(context, editMode, wide),
+              : entry.buildEntry(context, _page.editing(), wide),
         ));
   }
 
   // Build the widget for wide screens.
 
   Widget _build(BuildContext context, bool wide) {
-    final bool movable = editMode && parameters.length > 1;
+    final bool movable = _page.editing() && _page.numberOfEntries() > 1;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -126,18 +122,18 @@ class _PageWidgetState extends State<PageWidget> {
         Expanded(
           child: ReorderableListView(
               padding: const EdgeInsets.fromLTRB(4.0, 4.0, 4.0, 4.0),
-              footer: editMode
+              footer: _page.editing()
                   ? NewEntryEditorWidget(
                       key: const Key('add-entry-textfield'),
                       onSubmitted: (PageEntry newEntry) {
                         setState(() {
-                          parameters.add(newEntry);
+                          _page.add(newEntry);
                         });
                       })
                   : null,
               buildDefaultDragHandles: false,
               onReorder: reorderEntry,
-              children: parameters.fold([], (acc, entry) {
+              children: _page.entriesAsList().fold([], (acc, entry) {
                 acc.add(Row(key: entry.key, children: [
                   Expanded(child: buildRow(context, entry, acc.length, wide)),
                   movable
@@ -151,7 +147,7 @@ class _PageWidgetState extends State<PageWidget> {
         ),
         Visibility(
             key: const Key("cancel_edit_mode_button_visibility"),
-            visible: editMode,
+            visible: _page.editing(),
             child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: FloatingActionButton.small(
@@ -167,7 +163,7 @@ class _PageWidgetState extends State<PageWidget> {
                 backgroundColor: Theme.of(context)
                     .colorScheme
                     .primary
-                    .withAlpha(editMode ? 255 : 128),
+                    .withAlpha(_page.editing() ? 255 : 128),
                 onPressed: _toggleEditMode,
                 child: const Icon(Icons.settings)))
       ],
@@ -175,23 +171,12 @@ class _PageWidgetState extends State<PageWidget> {
   }
 
   void _cancelEditMode() {
-    _restoreEntries();
-    setState(() => editMode = false);
-  }
-
-  void _restoreEntries() {
-    setState(() => parameters = List<PageEntry>.from(_undoParameters));
+    setState(() => _page.cancelEditing());
   }
 
   void _toggleEditMode() {
-    if (!editMode) {
-      _saveEntries();
-    }
-    setState(() => editMode = !editMode);
-  }
-
-  void _saveEntries() {
-    _undoParameters = List<PageEntry>.from(parameters);
+    setState(
+        () => _page.editing() ? _page.disableEditing() : _page.enableEditing());
   }
 
   @override
