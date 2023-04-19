@@ -54,6 +54,8 @@ class ParameterPage {
   }
 
   void removeEntry({required int at}) {
+    _enforceEditMode();
+
     _entries.removeAt(at);
   }
 
