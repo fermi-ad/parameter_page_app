@@ -28,14 +28,19 @@ void main() {
       expect(page.numberOfEntries(), initialEntries.length);
     });
 
-    test("Add Entry when editing is disabled, throws", () {
-      // Given a ParameterPage that is not in edit mode
-      ParameterPage page = ParameterPage();
+    test("Modifying ParameterPage when editing is disabled, throws", () {
+      // Given a ParameterPage with some entries that is not in edit mode
+      ParameterPage page = ParameterPage([
+        CommentEntry("row 1"),
+        CommentEntry("row 2"),
+        CommentEntry("row 3")
+      ]);
 
-      // When I attempt to add an entry
+      // When I attempt to modify the ParameterPage
       // Then an exception is thrown
       expect(() => page.add(CommentEntry("throw when edit mode is disabled")),
           throwsException);
+      expect(() => page.removeEntry(at: 0), throwsException);
     });
 
     test("Add Entry, increments count", () {

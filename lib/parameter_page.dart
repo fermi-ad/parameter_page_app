@@ -4,11 +4,15 @@ class ParameterPage {
   ParameterPage([List<PageEntry>? entries]) : _entries = entries ?? [];
 
   void add(PageEntry entry) {
+    _enforceEditMode();
+    _entries.add(entry);
+  }
+
+  void _enforceEditMode() {
     if (!_editing) {
       throw Exception(
           "Can not modify a ParameterPage when edit mode is disabled.");
     }
-    _entries.add(entry);
   }
 
   List<PageEntry> entriesAsList() {
