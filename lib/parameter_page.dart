@@ -4,11 +4,15 @@ class ParameterPage {
   ParameterPage([List<PageEntry>? entries]) : _entries = entries ?? [];
 
   void add(PageEntry entry) {
+    _enforceEditMode();
+    _entries.add(entry);
+  }
+
+  void _enforceEditMode() {
     if (!_editing) {
       throw Exception(
           "Can not modify a ParameterPage when edit mode is disabled.");
     }
-    _entries.add(entry);
   }
 
   List<PageEntry> entriesAsList() {
@@ -32,12 +36,18 @@ class ParameterPage {
     _editing = false;
   }
 
+  void toggleEditing() {
+    _editing ? disableEditing() : enableEditing();
+  }
+
   void cancelEditing() {
     _entries = List<PageEntry>.from(_undoEntries);
     _editing = false;
   }
 
   void reorderEntry({required int atIndex, required int toIndex}) {
+    _enforceEditMode();
+
     if (atIndex < toIndex) {
       toIndex -= 1;
     }
@@ -46,6 +56,8 @@ class ParameterPage {
   }
 
   void removeEntry({required int at}) {
+    _enforceEditMode();
+
     _entries.removeAt(at);
   }
 
