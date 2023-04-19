@@ -4,7 +4,7 @@ import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 import 'gql-dpm/graphql_dpm_service.dart';
 import 'mock-dpm/mock_dpm_service.dart';
 import 'page/entry.dart';
-import 'page/page.dart';
+import 'page/page_widget.dart';
 
 void main() {
   const useMockServices =
