@@ -29,5 +29,21 @@ void main() {
       // Then the comment is in the top position
       assertParameterIsInRow("G:AMANDA", 0);
     });
+
+    testWidgets(
+        'Move entry down two rows, should remove from old position and insert at new position',
+        (tester) async {
+      // Given the test page is loaded, "G:AMANDA" is in row 3 and edit mode is enabled
+      app.main();
+      await tester.pumpAndSettle();
+      assertParameterIsInRow("G:AMANDA", 2);
+      await enterEditMode(tester);
+
+      // When I move the parameter down by 1 row...
+      await moveRowAtIndexNRowsDown(tester, 2, 1);
+
+      // Then the parameter appears in the new row...
+      assertParameterIsInRow("G:AMANDA", 3);
+    });
   });
 }
