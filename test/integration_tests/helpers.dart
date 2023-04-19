@@ -169,3 +169,8 @@ Future<void> moveRowAtIndexNRowsUp(tester, int rowIndex, int nRowsUp) async {
   await tester.drag(rowHandleFinder, dragOffset);
   await tester.pumpAndSettle();
 }
+
+Future<void> moveRowAtIndexNRowsDown(
+    tester, int rowIndex, int nRowsDown) async {
+  return await moveRowAtIndexNRowsUp(tester, rowIndex, -nRowsDown);
+}

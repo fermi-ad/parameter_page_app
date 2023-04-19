@@ -151,7 +151,7 @@ void main() {
       page.enableEditing();
 
       // When I move entry 1 to position 2
-      page.reorderEntry(atIndex: 0, toIndex: 1);
+      page.reorderEntry(atIndex: 0, toIndex: 2);
 
       // Then the entry appears in the new position
       var entries = page.entriesAsList();
