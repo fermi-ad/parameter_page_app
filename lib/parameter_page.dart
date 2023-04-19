@@ -32,6 +32,10 @@ class ParameterPage {
     _editing = false;
   }
 
+  void toggleEditing() {
+    _editing ? disableEditing() : enableEditing();
+  }
+
   void cancelEditing() {
     _entries = List<PageEntry>.from(_undoEntries);
     _editing = false;

@@ -111,6 +111,29 @@ void main() {
       expect(page.numberOfEntries(), 1);
     });
 
+    test("toggleEditing(), switches from off to on", () {
+      // Given an empty ParameterPage with editing mode disabled
+      ParameterPage page = ParameterPage();
+
+      // When I toggleEditingMode()
+      page.toggleEditing();
+
+      // Then editing mode is enabled
+      expect(page.editing(), true);
+    });
+
+    test("toggleEditing(), switches from on to off", () {
+      // Given an empty ParameterPage with editing mode enabled
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I toggleEditingMode()
+      page.toggleEditing();
+
+      // Then editing mode is disabled
+      expect(page.editing(), false);
+    });
+
     test("cancelEditing(), discards new entries added during editing mode", () {
       // Given an empty ParameterPage
       ParameterPage page = ParameterPage();

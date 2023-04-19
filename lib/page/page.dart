@@ -175,8 +175,7 @@ class _PageWidgetState extends State<PageWidget> {
   }
 
   void _toggleEditMode() {
-    setState(
-        () => _page.editing() ? _page.disableEditing() : _page.enableEditing());
+    setState(() => _page.toggleEditing());
   }
 
   @override
