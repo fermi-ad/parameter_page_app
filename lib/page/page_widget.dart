@@ -151,20 +151,28 @@ class _PageWidgetState extends State<PageWidget> {
             child: Column(children: [
               Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: FloatingActionButton.small(
-                      key: const Key('cancel_edit_mode_button'),
-                      backgroundColor:
-                          Theme.of(context).colorScheme.primary.withAlpha(128),
-                      onPressed: _cancelEditMode,
-                      child: const Icon(Icons.restore))),
+                  child: Tooltip(
+                      message: "Cancel",
+                      child: FloatingActionButton.small(
+                          key: const Key('cancel_edit_mode_button'),
+                          backgroundColor: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withAlpha(128),
+                          onPressed: _cancelEditMode,
+                          child: const Icon(Icons.restore)))),
               Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: FloatingActionButton.small(
-                      key: const Key('clear_all_entries_button'),
-                      backgroundColor:
-                          Theme.of(context).colorScheme.primary.withAlpha(128),
-                      onPressed: _clearAllEntries,
-                      child: const Icon(Icons.delete)))
+                  child: Tooltip(
+                      message: "Delete All",
+                      child: FloatingActionButton.small(
+                          key: const Key('clear_all_entries_button'),
+                          backgroundColor: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withAlpha(128),
+                          onPressed: _clearAllEntries,
+                          child: const Icon(Icons.delete))))
             ])),
         Padding(
             padding: const EdgeInsets.all(8.0),
