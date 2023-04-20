@@ -82,6 +82,11 @@ void assertEditModeCancelButton({required bool isVisible}) {
       isVisible ? findsOneWidget : findsNothing);
 }
 
+void assertClearAllButton({required bool isVisible}) {
+  expect(find.byKey(const Key("clear_all_entries_button")),
+      isVisible ? findsOneWidget : findsNothing);
+}
+
 Future<void> waitForDataToLoadFor(tester, parameter) async {
   final readingFinder = find.byKey(Key("parameter_reading_$parameter"));
   await pumpUntilFound(tester, readingFinder);
@@ -173,4 +178,9 @@ Future<void> moveRowAtIndexNRowsUp(tester, int rowIndex, int nRowsUp) async {
 Future<void> moveRowAtIndexNRowsDown(
     tester, int rowIndex, int nRowsDown) async {
   return await moveRowAtIndexNRowsUp(tester, rowIndex, -nRowsDown);
+}
+
+Future<void> clearAll(tester) async {
+  await tester.tap(find.byKey(const Key("clear_all_entries_button")));
+  await tester.pumpAndSettle();
 }

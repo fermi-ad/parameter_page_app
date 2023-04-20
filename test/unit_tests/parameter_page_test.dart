@@ -42,6 +42,7 @@ void main() {
           throwsException);
       expect(() => page.removeEntry(at: 0), throwsException);
       expect(() => page.reorderEntry(atIndex: 0, toIndex: 1), throwsException);
+      expect(() => page.clearAll(), throwsException);
     });
 
     test("Add Entry, increments count", () {
@@ -205,6 +206,22 @@ void main() {
       var entries = page.entriesAsList();
       expect(entries[0].entryText(), "comment 1");
       expect(entries[1].entryText(), "comment 3");
+    });
+
+    test("clearAll(), removes all entries", () {
+      // Given a ParameterPage with three comment entries and edit mode enabled
+      ParameterPage page = ParameterPage([
+        CommentEntry("comment 1"),
+        CommentEntry("comment 2"),
+        CommentEntry("comment 3")
+      ]);
+      page.enableEditing();
+
+      // When I clearAll()
+      page.clearAll();
+
+      // Then numberOfEntries is 0
+      expect(page.numberOfEntries(), 0);
     });
   });
 }

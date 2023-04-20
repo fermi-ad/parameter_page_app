@@ -146,16 +146,34 @@ class _PageWidgetState extends State<PageWidget> {
               })),
         ),
         Visibility(
-            key: const Key("cancel_edit_mode_button_visibility"),
+            key: const Key("edit_mode_tools_visibility"),
             visible: _page.editing(),
-            child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: FloatingActionButton.small(
-                    key: const Key('cancel_edit_mode_button'),
-                    backgroundColor:
-                        Theme.of(context).colorScheme.primary.withAlpha(128),
-                    onPressed: _cancelEditMode,
-                    child: const Icon(Icons.delete)))),
+            child: Column(children: [
+              Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Tooltip(
+                      message: "Cancel",
+                      child: FloatingActionButton.small(
+                          key: const Key('cancel_edit_mode_button'),
+                          backgroundColor: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withAlpha(128),
+                          onPressed: _cancelEditMode,
+                          child: const Icon(Icons.restore)))),
+              Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Tooltip(
+                      message: "Delete All",
+                      child: FloatingActionButton.small(
+                          key: const Key('clear_all_entries_button'),
+                          backgroundColor: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withAlpha(128),
+                          onPressed: _clearAllEntries,
+                          child: const Icon(Icons.delete))))
+            ])),
         Padding(
             padding: const EdgeInsets.all(8.0),
             child: FloatingActionButton.small(
@@ -168,6 +186,10 @@ class _PageWidgetState extends State<PageWidget> {
                 child: const Icon(Icons.settings)))
       ],
     );
+  }
+
+  void _clearAllEntries() {
+    setState(() => _page.clearAll());
   }
 
   void _cancelEditMode() {
