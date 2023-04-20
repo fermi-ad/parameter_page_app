@@ -61,6 +61,12 @@ class ParameterPage {
     _entries.removeAt(at);
   }
 
+  void clearAll() {
+    _enforceEditMode();
+
+    _entries = [];
+  }
+
   List<PageEntry> _entries;
 
   List<PageEntry> _undoEntries = [];
