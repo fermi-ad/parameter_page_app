@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        test: ['smoke_test', 'display_parameter_page_test', 'delete_entry_from_page_test', 'add_comment_to_page_test', 'reorganize_parameters_test', 'cancel_page_edits_test', 'add_parameter_to_page_test']
+        test: ['smoke_test', 'display_parameter_page_test', 'delete_entry_from_page_test', 'add_comment_to_page_test', 'reorganize_parameters_test', 'cancel_page_edits_test', 'add_parameter_to_page_test', 'clear_all_entries_test']
 
     steps:
       - name: Checkout code
