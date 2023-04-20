@@ -189,7 +189,7 @@ class _PageWidgetState extends State<PageWidget> {
   }
 
   void _clearAllEntries() {
-    // setState(() => _page.clearAll());
+    setState(() => _page.clearAll());
   }
 
   void _cancelEditMode() {
