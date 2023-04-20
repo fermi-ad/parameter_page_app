@@ -32,5 +32,19 @@ void main() {
       // Then the clear all button is displayed
       assertClearAllButton(isVisible: true);
     });
+
+    testWidgets('Tap Clear All button, should remove all entries',
+        (tester) async {
+      // Given the test page is loaded and I am in edit mode
+      app.main();
+      await tester.pumpAndSettle();
+      await enterEditMode(tester);
+
+      // When I tap the clear all button...
+      await clearAll(tester);
+
+      // Then all of the entries are gone
+      assertParametersAreNotOnPage(["M:OUTTMP@e,02", "G:AMANDA"]);
+    });
   });
 }

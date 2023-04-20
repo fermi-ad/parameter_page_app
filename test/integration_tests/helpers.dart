@@ -179,3 +179,8 @@ Future<void> moveRowAtIndexNRowsDown(
     tester, int rowIndex, int nRowsDown) async {
   return await moveRowAtIndexNRowsUp(tester, rowIndex, -nRowsDown);
 }
+
+Future<void> clearAll(tester) async {
+  await tester.tap(find.byKey(const Key("clear_all_entries_button")));
+  await tester.pumpAndSettle();
+}
