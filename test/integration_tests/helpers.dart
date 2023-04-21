@@ -87,6 +87,11 @@ void assertClearAllButton({required bool isVisible}) {
       isVisible ? findsOneWidget : findsNothing);
 }
 
+void assertNumberOfEntriesOnPageIs(int n) {
+  final finder = find.byType(PageEntryWidget);
+  expect(finder.evaluate().length, n);
+}
+
 Future<void> waitForDataToLoadFor(tester, parameter) async {
   final readingFinder = find.byKey(Key("parameter_reading_$parameter"));
   await pumpUntilFound(tester, readingFinder);
@@ -184,3 +189,5 @@ Future<void> clearAll(tester) async {
   await tester.tap(find.byKey(const Key("clear_all_entries_button")));
   await tester.pumpAndSettle();
 }
+
+Future<void> newPage(tester) async {}
