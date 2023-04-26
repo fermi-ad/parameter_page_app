@@ -15,11 +15,18 @@ void main() {
       app.main();
       await tester.pumpAndSettle();
 
-      // When I press new page
+      // When I press new page and add some new entries
       await newPage(tester);
+      await enterEditMode(tester);
+      await addANewParameter(tester, "A comment");
+      await exitEditMode(tester);
+      await enterEditMode(tester);
+      await addANewParameter(tester, "M:OUTTMP");
+      await exitEditMode(tester);
 
       // Then the page is empty
-      assertNumberOfEntriesOnPageIs(0);
+      assertNumberOfEntriesOnPageIs(2);
+      assertParameterIsInRow("M:OUTTMP", 1);
     });
   });
 }

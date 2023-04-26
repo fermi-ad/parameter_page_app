@@ -148,7 +148,7 @@ Future<void> addANewComment(tester, String comment) async {
   await tester.pumpAndSettle();
   await tester.enterText(find.byKey(const Key('add-entry-textfield')), comment);
   await tester.testTextInput.receiveAction(TextInputAction.done);
-  await tester.pump();
+  await tester.pumpAndSettle();
 }
 
 Future<void> addANewParameter(tester, String parameter) async {
@@ -156,7 +156,7 @@ Future<void> addANewParameter(tester, String parameter) async {
   await tester.enterText(
       find.byKey(const Key('add-entry-textfield')), parameter);
   await tester.testTextInput.receiveAction(TextInputAction.done);
-  await tester.pump();
+  await tester.pumpAndSettle();
 }
 
 Future<void> moveRowAtIndexNRowsUp(tester, int rowIndex, int nRowsUp) async {
@@ -190,4 +190,7 @@ Future<void> clearAll(tester) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> newPage(tester) async {}
+Future<void> newPage(tester) async {
+  await tester.tap(find.byKey(const Key("new_page_button")));
+  await tester.pumpAndSettle();
+}
