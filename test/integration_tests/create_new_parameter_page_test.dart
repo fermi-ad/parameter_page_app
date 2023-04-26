@@ -29,6 +29,20 @@ void main() {
       assertParameterIsInRow("M:OUTTMP", 1);
     });
 
+    testWidgets('Tap New Page, should not be prompted if there are no changes',
+        (tester) async {
+      // Given the test page is loaded and I haven't made any changes
+      app.main();
+      await tester.pumpAndSettle();
+
+      // When I press new page
+      await newPage(tester);
+
+      // Then I should not have been prompted and have a new page
+      assertConfirmThrowAwayDialog(isVisible: false);
+      assertNumberOfEntriesOnPageIs(0);
+    });
+
     testWidgets('Tap New Page, should be prompted to throw away recent changes',
         (tester) async {
       // Given the test page is loaded and I have added a new comment but did not save the page yet
