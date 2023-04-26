@@ -87,6 +87,11 @@ void assertClearAllButton({required bool isVisible}) {
       isVisible ? findsOneWidget : findsNothing);
 }
 
+void assertNumberOfEntriesOnPageIs(int n) {
+  final finder = find.byType(PageEntryWidget);
+  expect(finder.evaluate().length, n);
+}
+
 Future<void> waitForDataToLoadFor(tester, parameter) async {
   final readingFinder = find.byKey(Key("parameter_reading_$parameter"));
   await pumpUntilFound(tester, readingFinder);
@@ -143,7 +148,7 @@ Future<void> addANewComment(tester, String comment) async {
   await tester.pumpAndSettle();
   await tester.enterText(find.byKey(const Key('add-entry-textfield')), comment);
   await tester.testTextInput.receiveAction(TextInputAction.done);
-  await tester.pump();
+  await tester.pumpAndSettle();
 }
 
 Future<void> addANewParameter(tester, String parameter) async {
@@ -151,7 +156,7 @@ Future<void> addANewParameter(tester, String parameter) async {
   await tester.enterText(
       find.byKey(const Key('add-entry-textfield')), parameter);
   await tester.testTextInput.receiveAction(TextInputAction.done);
-  await tester.pump();
+  await tester.pumpAndSettle();
 }
 
 Future<void> moveRowAtIndexNRowsUp(tester, int rowIndex, int nRowsUp) async {
@@ -182,5 +187,10 @@ Future<void> moveRowAtIndexNRowsDown(
 
 Future<void> clearAll(tester) async {
   await tester.tap(find.byKey(const Key("clear_all_entries_button")));
+  await tester.pumpAndSettle();
+}
+
+Future<void> newPage(tester) async {
+  await tester.tap(find.byKey(const Key("new_page_button")));
   await tester.pumpAndSettle();
 }

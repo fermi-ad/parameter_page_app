@@ -177,6 +177,16 @@ class _PageWidgetState extends State<PageWidget> {
         Padding(
             padding: const EdgeInsets.all(8.0),
             child: FloatingActionButton.small(
+                key: const Key('new_page_button'),
+                backgroundColor: Theme.of(context)
+                    .colorScheme
+                    .primary
+                    .withAlpha(_page.editing() ? 255 : 128),
+                onPressed: _newPage,
+                child: const Icon(Icons.description))),
+        Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FloatingActionButton.small(
                 key: const Key('enable_edit_mode_button'),
                 backgroundColor: Theme.of(context)
                     .colorScheme
@@ -198,6 +208,10 @@ class _PageWidgetState extends State<PageWidget> {
 
   void _toggleEditMode() {
     setState(() => _page.toggleEditing());
+  }
+
+  void _newPage() {
+    setState(() => _page = ParameterPage());
   }
 
   @override
