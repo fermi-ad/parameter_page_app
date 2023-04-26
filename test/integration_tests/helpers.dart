@@ -92,6 +92,13 @@ void assertNumberOfEntriesOnPageIs(int n) {
   expect(finder.evaluate().length, n);
 }
 
+void assertConfirmThrowAwayDialog({required bool isVisible}) {
+  expect(
+      find.text(
+          "This page has unsaved changes that will be discarded.  Do you wish to continue?"),
+      isVisible ? findsOneWidget : findsNothing);
+}
+
 Future<void> waitForDataToLoadFor(tester, parameter) async {
   final readingFinder = find.byKey(Key("parameter_reading_$parameter"));
   await pumpUntilFound(tester, readingFinder);
