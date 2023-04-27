@@ -138,7 +138,7 @@ class _PageWidgetState extends State<PageWidget> {
   // Build the widget for wide screens.
 
   Widget _build(BuildContext context, bool wide) {
-    final bool movable = _page.editing() && _page.numberOfEntries() > 1;
+    final bool movable = _page.editing() && _page.numberOfEntries > 1;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,

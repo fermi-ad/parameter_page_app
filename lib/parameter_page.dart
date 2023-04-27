@@ -22,7 +22,7 @@ class ParameterPage {
     return _entries;
   }
 
-  int numberOfEntries() {
+  int get numberOfEntries {
     return _entries.length;
   }
 

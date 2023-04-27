@@ -9,7 +9,7 @@ void main() {
       ParameterPage page = ParameterPage();
 
       // Then the entries list is empty
-      expect(page.numberOfEntries(), 0);
+      expect(page.numberOfEntries, 0);
     });
 
     test("New ParamterPage initialized with entries, numberOfEntries matches",
@@ -25,7 +25,7 @@ void main() {
       ParameterPage page = ParameterPage(initialEntries);
 
       // Then the entries size matches the number of parameters passed to the constructor
-      expect(page.numberOfEntries(), initialEntries.length);
+      expect(page.numberOfEntries, initialEntries.length);
     });
 
     test("Modifying ParameterPage when editing is disabled, throws", () {
@@ -54,7 +54,7 @@ void main() {
       page.add(CommentEntry("this is a comment"));
 
       // Then the entries list is 1
-      expect(page.numberOfEntries(), 1);
+      expect(page.numberOfEntries, 1);
     });
 
     test("entriesAsList(), returns List of PageEntry objects", () {
@@ -115,7 +115,7 @@ void main() {
       page.disableEditing();
 
       // Then there is one entry on the page
-      expect(page.numberOfEntries(), 1);
+      expect(page.numberOfEntries, 1);
     });
 
     test("toggleEditing(), switches from off to on", () {
@@ -153,7 +153,7 @@ void main() {
 
       // Then editing mode is cancelled, the new entries are discarded and the page is empty
       expect(page.editing(), false);
-      expect(page.numberOfEntries(), 0);
+      expect(page.numberOfEntries, 0);
     });
 
     test("reorderEntry(..) upwards, moves entry to a new position", () {
@@ -221,7 +221,7 @@ void main() {
       page.clearAll();
 
       // Then numberOfEntries is 0
-      expect(page.numberOfEntries(), 0);
+      expect(page.numberOfEntries, 0);
     });
 
     test("isDirty(), returns false initially", () {
