@@ -92,6 +92,13 @@ void assertNumberOfEntriesOnPageIs(int n) {
   expect(finder.evaluate().length, n);
 }
 
+void assertConfirmThrowAwayDialog({required bool isVisible}) {
+  expect(
+      find.text(
+          "This page has unsaved changes that will be discarded.  Do you wish to continue?"),
+      isVisible ? findsOneWidget : findsNothing);
+}
+
 Future<void> waitForDataToLoadFor(tester, parameter) async {
   final readingFinder = find.byKey(Key("parameter_reading_$parameter"));
   await pumpUntilFound(tester, readingFinder);
@@ -190,7 +197,16 @@ Future<void> clearAll(tester) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> newPage(tester) async {
+Future<void> newPage(tester, {bool? confirmDiscardChanges}) async {
   await tester.tap(find.byKey(const Key("new_page_button")));
   await tester.pumpAndSettle();
+
+  if (confirmDiscardChanges != null) {
+    if (confirmDiscardChanges) {
+      await tester.tap(find.text("Continue"));
+    } else {
+      await tester.tap(find.text("Cancel"));
+    }
+    await tester.pumpAndSettle();
+  }
 }

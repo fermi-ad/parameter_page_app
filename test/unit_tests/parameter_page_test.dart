@@ -9,7 +9,7 @@ void main() {
       ParameterPage page = ParameterPage();
 
       // Then the entries list is empty
-      expect(page.numberOfEntries(), 0);
+      expect(page.numberOfEntries, 0);
     });
 
     test("New ParamterPage initialized with entries, numberOfEntries matches",
@@ -25,7 +25,7 @@ void main() {
       ParameterPage page = ParameterPage(initialEntries);
 
       // Then the entries size matches the number of parameters passed to the constructor
-      expect(page.numberOfEntries(), initialEntries.length);
+      expect(page.numberOfEntries, initialEntries.length);
     });
 
     test("Modifying ParameterPage when editing is disabled, throws", () {
@@ -54,7 +54,7 @@ void main() {
       page.add(CommentEntry("this is a comment"));
 
       // Then the entries list is 1
-      expect(page.numberOfEntries(), 1);
+      expect(page.numberOfEntries, 1);
     });
 
     test("entriesAsList(), returns List of PageEntry objects", () {
@@ -115,7 +115,7 @@ void main() {
       page.disableEditing();
 
       // Then there is one entry on the page
-      expect(page.numberOfEntries(), 1);
+      expect(page.numberOfEntries, 1);
     });
 
     test("toggleEditing(), switches from off to on", () {
@@ -153,7 +153,7 @@ void main() {
 
       // Then editing mode is cancelled, the new entries are discarded and the page is empty
       expect(page.editing(), false);
-      expect(page.numberOfEntries(), 0);
+      expect(page.numberOfEntries, 0);
     });
 
     test("reorderEntry(..) upwards, moves entry to a new position", () {
@@ -221,7 +221,55 @@ void main() {
       page.clearAll();
 
       // Then numberOfEntries is 0
-      expect(page.numberOfEntries(), 0);
+      expect(page.numberOfEntries, 0);
+    });
+
+    test("isDirty(), returns false initially", () {
+      // Given a ParameterPage with no changes
+      ParameterPage page = ParameterPage([CommentEntry("comment 1")]);
+
+      // Then isDirty() is false
+      expect(page.isDirty, false);
+    });
+
+    test("add comment, isDirty() returns true", () {
+      // Given a ParameterPage with an initial list of entries
+      ParameterPage page = ParameterPage([CommentEntry("comment 1")]);
+      expect(page.isDirty, false);
+
+      // When I add an entry
+      page.toggleEditing();
+      page.add(CommentEntry("page should be dirty now"));
+
+      // Then isDirty() is true
+      expect(page.isDirty, true);
+    });
+
+    test("remove entry, isDirty() return true", () {
+      // Givem a ParameterPage with an initial list of entries
+      ParameterPage page =
+          ParameterPage([CommentEntry("comment 1"), CommentEntry("comment 2")]);
+
+      // When I remove an entry
+      page.toggleEditing();
+      page.removeEntry(at: 0);
+
+      // Then isDirty() is true
+      expect(page.isDirty, true);
+    });
+
+    test("add and remove same entry, isDirty() returns false", () {
+      // Givem a ParameterPage with an initial list of entries
+      ParameterPage page =
+          ParameterPage([CommentEntry("comment 1"), CommentEntry("comment 2")]);
+
+      // When I add an entry and then remove the same entry
+      page.toggleEditing();
+      page.add(CommentEntry("comment 3"));
+      page.removeEntry(at: 2);
+
+      // Then isDirty() is true
+      expect(page.isDirty, false);
     });
   });
 }
