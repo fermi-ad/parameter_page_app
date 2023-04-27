@@ -1,7 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:parameter_page/page/entry.dart';
 
 class ParameterPage {
-  ParameterPage([List<PageEntry>? entries]) : _entries = entries ?? [];
+  ParameterPage([List<PageEntry>? entries])
+      : _entries = List<PageEntry>.from(entries ?? []),
+        _savedEntries = List<PageEntry>.from(entries ?? []);
 
   void add(PageEntry entry) {
     _enforceEditMode();
@@ -67,9 +70,15 @@ class ParameterPage {
     _entries = [];
   }
 
+  bool isDirty() {
+    return !listEquals<PageEntry>(_entries, _savedEntries);
+  }
+
   List<PageEntry> _entries;
 
   List<PageEntry> _undoEntries = [];
+
+  List<PageEntry> _savedEntries;
 
   bool _editing = false;
 }

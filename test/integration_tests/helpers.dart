@@ -197,7 +197,16 @@ Future<void> clearAll(tester) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> newPage(tester) async {
+Future<void> newPage(tester, {bool? confirmDiscardChanges}) async {
   await tester.tap(find.byKey(const Key("new_page_button")));
   await tester.pumpAndSettle();
+
+  if (confirmDiscardChanges != null) {
+    if (confirmDiscardChanges) {
+      await tester.tap(find.text("Continue"));
+    } else {
+      await tester.tap(find.text("Cancel"));
+    }
+    await tester.pumpAndSettle();
+  }
 }

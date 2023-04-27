@@ -223,5 +223,39 @@ void main() {
       // Then numberOfEntries is 0
       expect(page.numberOfEntries(), 0);
     });
+
+    test("isDirty(), returns false initially", () {
+      // Given a ParameterPage with no changes
+      ParameterPage page = ParameterPage([CommentEntry("comment 1")]);
+
+      // Then isDirty() is false
+      expect(page.isDirty(), false);
+    });
+
+    test("add comment, isDirty() returns true", () {
+      // Given a ParameterPage with an initial list of entries
+      ParameterPage page = ParameterPage([CommentEntry("comment 1")]);
+      expect(page.isDirty(), false);
+
+      // When I add an entry
+      page.toggleEditing();
+      page.add(CommentEntry("page should be dirty now"));
+
+      // Then isDirty() is true
+      expect(page.isDirty(), true);
+    });
+
+    test("remove entry, isDirty() return true", () {
+      // Givem a ParameterPage with an initial list of entries
+      ParameterPage page =
+          ParameterPage([CommentEntry("comment 1"), CommentEntry("comment 2")]);
+
+      // When I remove an entry
+      page.toggleEditing();
+      page.removeEntry(at: 0);
+
+      // Then isDirty() is true
+      expect(page.isDirty(), true);
+    });
   });
 }

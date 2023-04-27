@@ -82,6 +82,30 @@ class _PageWidgetState extends State<PageWidget> {
     );
   }
 
+  // Prompts the user to see if they want to discard changes to the page.
+  // Return `true` or `false` based on response.
+
+  Future<bool?> shouldDiscardChanges(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('Discard Changes'),
+        content: const Text(
+            'This page has unsaved changes that will be discarded.  Do you wish to continue?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Continue'),
+          ),
+        ],
+      ),
+    );
+  }
+
   // Builds a single row of the parameter page.
 
   Widget buildRow(BuildContext context, PageEntry entry, int index, bool wide) {
@@ -210,8 +234,15 @@ class _PageWidgetState extends State<PageWidget> {
     setState(() => _page.toggleEditing());
   }
 
-  void _newPage() {
-    setState(() => _page = ParameterPage());
+  void _newPage() async {
+    if (_page.isDirty()) {
+      final dialogResponse = await shouldDiscardChanges(context);
+      if (!(dialogResponse == null || !dialogResponse)) {
+        setState(() => _page = ParameterPage());
+      }
+    } else {
+      setState(() => _page = ParameterPage());
+    }
   }
 
   @override

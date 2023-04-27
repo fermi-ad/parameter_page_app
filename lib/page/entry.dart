@@ -16,6 +16,14 @@ abstract class PageEntry {
 
   Widget buildEntry(BuildContext context, bool editMode, bool wide);
 
+  @override
+  bool operator ==(other) {
+    return (other is PageEntry) && entryText() == other.entryText();
+  }
+
+  // @override
+  // int get hashCode => entryText().hashCode;
+
   String entryText();
 }
 
