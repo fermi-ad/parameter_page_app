@@ -235,7 +235,7 @@ class _PageWidgetState extends State<PageWidget> {
   }
 
   void _newPage() async {
-    if (_page.isDirty()) {
+    if (_page.isDirty) {
       final dialogResponse = await shouldDiscardChanges(context);
       if (!(dialogResponse == null || !dialogResponse)) {
         setState(() => _page = ParameterPage());
