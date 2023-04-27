@@ -70,7 +70,7 @@ class ParameterPage {
     _entries = [];
   }
 
-  bool isDirty() {
+  bool get isDirty {
     return !listEquals<PageEntry>(_entries, _savedEntries);
   }
 

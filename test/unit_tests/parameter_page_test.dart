@@ -229,20 +229,20 @@ void main() {
       ParameterPage page = ParameterPage([CommentEntry("comment 1")]);
 
       // Then isDirty() is false
-      expect(page.isDirty(), false);
+      expect(page.isDirty, false);
     });
 
     test("add comment, isDirty() returns true", () {
       // Given a ParameterPage with an initial list of entries
       ParameterPage page = ParameterPage([CommentEntry("comment 1")]);
-      expect(page.isDirty(), false);
+      expect(page.isDirty, false);
 
       // When I add an entry
       page.toggleEditing();
       page.add(CommentEntry("page should be dirty now"));
 
       // Then isDirty() is true
-      expect(page.isDirty(), true);
+      expect(page.isDirty, true);
     });
 
     test("remove entry, isDirty() return true", () {
@@ -255,7 +255,7 @@ void main() {
       page.removeEntry(at: 0);
 
       // Then isDirty() is true
-      expect(page.isDirty(), true);
+      expect(page.isDirty, true);
     });
 
     test("add and remove same entry, isDirty() returns false", () {
@@ -269,7 +269,7 @@ void main() {
       page.removeEntry(at: 2);
 
       // Then isDirty() is true
-      expect(page.isDirty(), false);
+      expect(page.isDirty, false);
     });
   });
 }
