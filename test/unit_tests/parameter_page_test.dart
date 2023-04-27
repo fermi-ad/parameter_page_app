@@ -257,5 +257,19 @@ void main() {
       // Then isDirty() is true
       expect(page.isDirty(), true);
     });
+
+    test("add and remove same entry, isDirty() returns false", () {
+      // Givem a ParameterPage with an initial list of entries
+      ParameterPage page =
+          ParameterPage([CommentEntry("comment 1"), CommentEntry("comment 2")]);
+
+      // When I add an entry and then remove the same entry
+      page.toggleEditing();
+      page.add(CommentEntry("comment 3"));
+      page.removeEntry(at: 2);
+
+      // Then isDirty() is true
+      expect(page.isDirty(), false);
+    });
   });
 }

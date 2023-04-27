@@ -21,8 +21,8 @@ abstract class PageEntry {
     return (other is PageEntry) && entryText() == other.entryText();
   }
 
-  // @override
-  // int get hashCode => entryText().hashCode;
+  @override
+  int get hashCode => entryText().hashCode;
 
   String entryText();
 }

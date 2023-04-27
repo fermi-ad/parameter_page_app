@@ -78,7 +78,7 @@ class ParameterPage {
 
   List<PageEntry> _undoEntries = [];
 
-  List<PageEntry> _savedEntries;
+  final List<PageEntry> _savedEntries;
 
   bool _editing = false;
 }
