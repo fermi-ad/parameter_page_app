@@ -3,7 +3,7 @@ import 'package:parameter_page/theme/theme.dart';
 import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 import 'gql-dpm/graphql_dpm_service.dart';
 import 'mock-dpm/mock_dpm_service.dart';
-import 'page/entry.dart';
+import 'page_entry.dart';
 import 'widgets/page_widget.dart';
 
 void main() {

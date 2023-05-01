@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../parameter_page.dart';
-import '../page/entry.dart';
+import '../page_entry.dart';
 import '../page/new_entry_editor_widget.dart';
 
 class DataSource extends InheritedWidget {

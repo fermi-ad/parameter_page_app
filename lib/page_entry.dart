@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/comment_entry_widget.dart';
-import '../widgets/parameter_widget.dart';
+import 'widgets/comment_entry_widget.dart';
+import 'widgets/parameter_widget.dart';
 
 // Base class for the Entry class hierarchy.
 
