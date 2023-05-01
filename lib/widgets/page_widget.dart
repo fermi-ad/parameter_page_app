@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../parameter_page.dart';
 import '../page_entry.dart';
-import '../page/new_entry_editor_widget.dart';
+import 'new_entry_editor_widget.dart';
 
 class DataSource extends InheritedWidget {
   final Stream<double> _data = Stream<double>.periodic(

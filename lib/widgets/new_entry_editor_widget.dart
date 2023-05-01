@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/data_acquisition_widget.dart';
+import 'data_acquisition_widget.dart';
 import '../page_entry.dart';
 
 class NewEntryEditorWidget extends StatefulWidget {
