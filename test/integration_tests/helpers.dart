@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:parameter_page/page/entry.dart';
+import 'package:parameter_page/widgets/page_entry_widget.dart';
 
 Future<void> pumpUntilFound(
   WidgetTester tester,
