@@ -1,4 +1,4 @@
-import 'package:parameter_page/page/entry.dart';
+import 'package:parameter_page/page_entry.dart';
 import 'package:parameter_page/parameter_page.dart';
 import 'package:test/test.dart';
 

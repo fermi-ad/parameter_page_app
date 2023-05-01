@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/data_acquisition_widget.dart';
-import 'entry.dart';
+import '../page_entry.dart';
 
 class NewEntryEditorWidget extends StatefulWidget {
   final Function(PageEntry) onSubmitted;
