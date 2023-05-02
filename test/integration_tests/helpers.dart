@@ -99,6 +99,20 @@ void assertConfirmThrowAwayDialog({required bool isVisible}) {
       isVisible ? findsOneWidget : findsNothing);
 }
 
+void assertDisplayUnits({required String isSetTo}) {
+  final displayUnitsIndicator =
+      find.byKey(const Key("display_units_indicator"));
+  expect(
+      find.descendant(of: displayUnitsIndicator, matching: find.text(isSetTo)),
+      findsOneWidget);
+}
+
+void assertReadingPropertyUnits(
+    {required String forParameter, required String are}) {
+  final units = find.byKey(Key("parameter_reading_units_$forParameter"));
+  expect(find.descendant(of: units, matching: find.text(are)), findsOneWidget);
+}
+
 Future<void> waitForDataToLoadFor(tester, parameter) async {
   final readingFinder = find.byKey(Key("parameter_reading_$parameter"));
   await pumpUntilFound(tester, readingFinder);

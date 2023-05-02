@@ -169,6 +169,9 @@ class _PageWidgetState extends State<PageWidget> {
                 return acc;
               })),
         ),
+        Row(
+            key: const Key("display_units_indicator"),
+            children: const [Text("Common Units")]),
         Visibility(
             key: const Key("edit_mode_tools_visibility"),
             visible: _page.editing(),
