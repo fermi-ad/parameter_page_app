@@ -14,6 +14,7 @@ void main() {
       // Given the test page is loaded
       app.main();
       await tester.pumpAndSettle();
+      await waitForDataToLoadFor(tester, "M:OUTTMP@e,02");
 
       // Then the display units should be set to Common Units
       assertDisplayUnits(isSetTo: "Common Units");

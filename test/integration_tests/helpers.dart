@@ -109,8 +109,9 @@ void assertDisplayUnits({required String isSetTo}) {
 
 void assertReadingPropertyUnits(
     {required String forParameter, required String are}) {
-  final units = find.byKey(Key("parameter_reading_units_$forParameter"));
-  expect(find.descendant(of: units, matching: find.text(are)), findsOneWidget);
+  final reading = find.byKey(Key("parameter_reading_$forParameter"));
+  expect(
+      find.descendant(of: reading, matching: find.text(are)), findsOneWidget);
 }
 
 Future<void> waitForDataToLoadFor(tester, parameter) async {
