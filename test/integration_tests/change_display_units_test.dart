@@ -30,8 +30,8 @@ void main() {
       await navigateToDisplaySettings(tester);
 
       // Then Units is set to Common
-      // assertDisplaySettings(isVisible: true);
-      // assertDisplaySettingsUnits(isSetTo: "Common Units");
+      assertDisplaySettings(isVisible: true);
+      assertDisplaySettingsUnits(isSetTo: "Common Units");
     });
   });
 }
