@@ -16,11 +16,22 @@ void main() {
       await tester.pumpAndSettle();
       await waitForDataToLoadFor(tester, "M:OUTTMP@e,02");
 
-      // Then the display units should be set to Common Units
-      assertDisplayUnits(isSetTo: "Common Units");
-
-      // ... and M:OUTTMP should show units of degF
+      // Then M:OUTTMP should show units of degF
       assertReadingPropertyUnits(forParameter: "M:OUTTMP@e,02", are: "degF");
+    });
+
+    testWidgets('Page Settings / display units, is set to Common Units',
+        (tester) async {
+      // Given the test page is loaded
+      app.main();
+      await tester.pumpAndSettle();
+
+      // When I navigate to the display settings page
+      await navigateToDisplaySettings(tester);
+
+      // Then Units is set to Common
+      assertDisplaySettings(isVisible: true);
+      assertDisplaySettingsUnits(isSetTo: "Common Units");
     });
   });
 }

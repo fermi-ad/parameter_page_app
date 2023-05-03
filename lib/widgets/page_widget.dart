@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../parameter_page.dart';
 import '../page_entry.dart';
+import 'display_settings_widget.dart';
 import 'new_entry_editor_widget.dart';
 
 class DataSource extends InheritedWidget {
@@ -220,6 +221,16 @@ class _PageWidgetState extends State<PageWidget> {
                     .primary
                     .withAlpha(_page.editing() ? 255 : 128),
                 onPressed: _toggleEditMode,
+                child: const Icon(Icons.edit_note))),
+        Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FloatingActionButton.small(
+                key: const Key('display_settings_button'),
+                backgroundColor: Theme.of(context)
+                    .colorScheme
+                    .primary
+                    .withAlpha(_page.editing() ? 255 : 128),
+                onPressed: _navigateToDisplaySettings,
                 child: const Icon(Icons.settings)))
       ],
     );
@@ -246,6 +257,13 @@ class _PageWidgetState extends State<PageWidget> {
     } else {
       setState(() => _page = ParameterPage());
     }
+  }
+
+  void _navigateToDisplaySettings() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const DisplaySettingsWidget()),
+    );
   }
 
   @override

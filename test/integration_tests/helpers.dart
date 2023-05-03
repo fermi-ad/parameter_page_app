@@ -99,7 +99,7 @@ void assertConfirmThrowAwayDialog({required bool isVisible}) {
       isVisible ? findsOneWidget : findsNothing);
 }
 
-void assertDisplayUnits({required String isSetTo}) {
+void assertDisplaySettingsUnits({required String isSetTo}) {
   final displayUnitsIndicator =
       find.byKey(const Key("display_units_indicator"));
   expect(
@@ -112,6 +112,11 @@ void assertReadingPropertyUnits(
   final reading = find.byKey(Key("parameter_reading_$forParameter"));
   expect(
       find.descendant(of: reading, matching: find.text(are)), findsOneWidget);
+}
+
+void assertDisplaySettings({required bool isVisible}) {
+  expect(find.byKey(const Key("display_settings_title")),
+      isVisible ? findsOneWidget : findsNothing);
 }
 
 Future<void> waitForDataToLoadFor(tester, parameter) async {
@@ -224,4 +229,9 @@ Future<void> newPage(tester, {bool? confirmDiscardChanges}) async {
     }
     await tester.pumpAndSettle();
   }
+}
+
+Future<void> navigateToDisplaySettings(tester) async {
+  await tester.tap(find.byKey(const Key("display_settings_button")));
+  await tester.pumpAndSettle();
 }
