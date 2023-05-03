@@ -6,17 +6,12 @@ class DisplaySettingsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Display Settings'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // Navigate back to first route when tapped.
-          },
-          child: const Text('Go back!'),
+        appBar: AppBar(
+          key: const Key("display_settings_appbar"),
+          title: const Text('Display Settings'),
         ),
-      ),
-    );
+        body: Row(
+            key: const Key("display_units_indicator"),
+            children: const [Text("Common Units")]));
   }
 }

@@ -170,9 +170,6 @@ class _PageWidgetState extends State<PageWidget> {
                 return acc;
               })),
         ),
-        Row(
-            key: const Key("display_units_indicator"),
-            children: const [Text("Common Units")]),
         Visibility(
             key: const Key("edit_mode_tools_visibility"),
             visible: _page.editing(),
@@ -183,6 +180,7 @@ class _PageWidgetState extends State<PageWidget> {
                       message: "Cancel",
                       child: FloatingActionButton.small(
                           key: const Key('cancel_edit_mode_button'),
+                          heroTag: null,
                           backgroundColor: Theme.of(context)
                               .colorScheme
                               .primary
@@ -195,6 +193,7 @@ class _PageWidgetState extends State<PageWidget> {
                       message: "Delete All",
                       child: FloatingActionButton.small(
                           key: const Key('clear_all_entries_button'),
+                          heroTag: null,
                           backgroundColor: Theme.of(context)
                               .colorScheme
                               .primary
@@ -206,6 +205,7 @@ class _PageWidgetState extends State<PageWidget> {
             padding: const EdgeInsets.all(8.0),
             child: FloatingActionButton.small(
                 key: const Key('new_page_button'),
+                heroTag: null,
                 backgroundColor: Theme.of(context)
                     .colorScheme
                     .primary
@@ -216,6 +216,7 @@ class _PageWidgetState extends State<PageWidget> {
             padding: const EdgeInsets.all(8.0),
             child: FloatingActionButton.small(
                 key: const Key('enable_edit_mode_button'),
+                heroTag: null,
                 backgroundColor: Theme.of(context)
                     .colorScheme
                     .primary
@@ -226,6 +227,7 @@ class _PageWidgetState extends State<PageWidget> {
             padding: const EdgeInsets.all(8.0),
             child: FloatingActionButton.small(
                 key: const Key('display_settings_button'),
+                heroTag: null,
                 backgroundColor: Theme.of(context)
                     .colorScheme
                     .primary
@@ -262,7 +264,9 @@ class _PageWidgetState extends State<PageWidget> {
   void _navigateToDisplaySettings() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const DisplaySettingsWidget()),
+      MaterialPageRoute(
+          builder: (context) =>
+              const DisplaySettingsWidget(key: Key("display_settings_route"))),
     );
   }
 

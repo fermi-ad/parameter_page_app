@@ -115,7 +115,7 @@ void assertReadingPropertyUnits(
 }
 
 void assertDisplaySettings({required bool isVisible}) {
-  expect(find.byKey(const Key("display_settings_title")),
+  expect(find.byKey(const Key("display_settings_appbar")),
       isVisible ? findsOneWidget : findsNothing);
 }
 
