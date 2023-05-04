@@ -17,5 +17,14 @@ void main() {
       // Then the app bar title is visible
       expect(find.text("Display Settings"), findsOneWidget);
     });
+
+    testWidgets('Initially, display units is Common Units',
+        (WidgetTester tester) async {
+      // Given a new DisplaySettingsWidget
+      await tester.pumpWidget(app);
+
+      // Then the Units setting shows 'Common Units'
+      expect(find.text("Common Units"), findsOneWidget);
+    });
   });
 }
