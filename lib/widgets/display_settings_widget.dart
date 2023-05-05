@@ -20,7 +20,7 @@ class _DisplaySettingsState extends State<DisplaySettingsWidget> {
           SettingsSection(title: const Text("Display"), tiles: <SettingsTile>[
             SettingsTile.navigation(
                 key: const Key("display_settings_tile_units"),
-                leading: const Icon(Icons.language),
+                leading: const Icon(Icons.abc),
                 title: const Text("Units"),
                 value: Text(_units),
                 onPressed: _popupUnitsMenu)
