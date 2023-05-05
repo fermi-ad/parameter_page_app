@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         test: 
-          - smoke_test'
+          - smoke_test
           - display_parameter_page_test
           - delete_entry_from_page_test
           - add_comment_to_page_test
