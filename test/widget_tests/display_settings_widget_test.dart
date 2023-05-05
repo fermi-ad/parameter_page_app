@@ -26,5 +26,18 @@ void main() {
       // Then the Units setting shows 'Common Units'
       expect(find.text("Common Units"), findsOneWidget);
     });
+
+    testWidgets('Change Units, form displays new setting',
+        (WidgetTester tester) async {
+      // Given a new DisplaySettingsWidget and the units are set to 'Common Units'
+      await tester.pumpWidget(app);
+      expect(find.text('Common Units'), findsOneWidget);
+
+      // When I change the units to...
+      // todo
+
+      // Then the units setting shows...
+      expect(find.text('Primary Units'), findsOneWidget);
+    });
   });
 }
