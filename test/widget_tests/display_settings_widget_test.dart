@@ -10,6 +10,20 @@ void main() {
       app = const MaterialApp(home: Scaffold(body: DisplaySettingsWidget()));
     });
 
+    Future<void> changeUnits(tester, {required String to}) async {
+      await tester.tap(find.byKey(const Key("display_settings_tile_units")));
+      await tester.pumpAndSettle();
+      await tester
+          .tap(find.byKey(Key("display_settings_tile_units_menuitem_$to")));
+      await tester.pumpAndSettle();
+    }
+
+    void assertUnits({required String isSetTo}) {
+      final tileFinder = find.byKey(const Key('display_settings_tile_units'));
+      expect(find.descendant(of: tileFinder, matching: find.text(isSetTo)),
+          findsOneWidget);
+    }
+
     testWidgets('Title is Display Settings', (WidgetTester tester) async {
       // Given a new DisplaySettingsWidget
       await tester.pumpWidget(app);
@@ -24,24 +38,20 @@ void main() {
       await tester.pumpWidget(app);
 
       // Then the Units setting shows 'Common Units'
-      expect(find.text("Common Units"), findsOneWidget);
+      assertUnits(isSetTo: "Common Units");
     });
 
     testWidgets('Change Units, form displays new setting',
         (WidgetTester tester) async {
       // Given a new DisplaySettingsWidget and the units are set to 'Common Units'
       await tester.pumpWidget(app);
-      expect(find.text('Common Units'), findsOneWidget);
+      assertUnits(isSetTo: 'Common Units');
 
       // When I tap the units tile and change the units to...
-      await tester.tap(find.byKey(const Key("display_settings_tile_units")));
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(
-          const Key("display_settings_tile_units_menuitem_Primary Units")));
-      await tester.pumpAndSettle();
+      await changeUnits(tester, to: "Primary Units");
 
       // Then the units setting shows...
-      expect(find.text('Primary Units'), findsOneWidget);
+      assertUnits(isSetTo: 'Primary Units');
     });
   });
 }
