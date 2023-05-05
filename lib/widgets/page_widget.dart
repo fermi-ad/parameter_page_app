@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../parameter_page.dart';
 import '../page_entry.dart';
+import 'display_settings_widget.dart';
 import 'new_entry_editor_widget.dart';
 
 class DataSource extends InheritedWidget {
@@ -179,6 +180,7 @@ class _PageWidgetState extends State<PageWidget> {
                       message: "Cancel",
                       child: FloatingActionButton.small(
                           key: const Key('cancel_edit_mode_button'),
+                          heroTag: null,
                           backgroundColor: Theme.of(context)
                               .colorScheme
                               .primary
@@ -191,6 +193,7 @@ class _PageWidgetState extends State<PageWidget> {
                       message: "Delete All",
                       child: FloatingActionButton.small(
                           key: const Key('clear_all_entries_button'),
+                          heroTag: null,
                           backgroundColor: Theme.of(context)
                               .colorScheme
                               .primary
@@ -202,6 +205,7 @@ class _PageWidgetState extends State<PageWidget> {
             padding: const EdgeInsets.all(8.0),
             child: FloatingActionButton.small(
                 key: const Key('new_page_button'),
+                heroTag: null,
                 backgroundColor: Theme.of(context)
                     .colorScheme
                     .primary
@@ -212,11 +216,23 @@ class _PageWidgetState extends State<PageWidget> {
             padding: const EdgeInsets.all(8.0),
             child: FloatingActionButton.small(
                 key: const Key('enable_edit_mode_button'),
+                heroTag: null,
                 backgroundColor: Theme.of(context)
                     .colorScheme
                     .primary
                     .withAlpha(_page.editing() ? 255 : 128),
                 onPressed: _toggleEditMode,
+                child: const Icon(Icons.edit_note))),
+        Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FloatingActionButton.small(
+                key: const Key('display_settings_button'),
+                heroTag: null,
+                backgroundColor: Theme.of(context)
+                    .colorScheme
+                    .primary
+                    .withAlpha(_page.editing() ? 255 : 128),
+                onPressed: _navigateToDisplaySettings,
                 child: const Icon(Icons.settings)))
       ],
     );
@@ -243,6 +259,15 @@ class _PageWidgetState extends State<PageWidget> {
     } else {
       setState(() => _page = ParameterPage());
     }
+  }
+
+  void _navigateToDisplaySettings() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) =>
+              const DisplaySettingsWidget(key: Key("display_settings_route"))),
+    );
   }
 
   @override

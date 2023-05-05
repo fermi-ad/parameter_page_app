@@ -51,6 +51,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   void initState() {
     _setup = widget.dpm.getDeviceInfo([widget.drf]);
     _stream = widget.dpm.monitorDevices([widget.drf]);
+    units = "degF";
     super.initState();
   }
 
@@ -58,8 +59,11 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     return value == null
         ? Container()
         : (units == null
-            ? Text(textAlign: TextAlign.end, value.toStringAsPrecision(4))
-            : Row(children: [
+            ? Text(
+                key: key,
+                textAlign: TextAlign.end,
+                value.toStringAsPrecision(4))
+            : Row(key: key, children: [
                 Text(textAlign: TextAlign.end, value.toStringAsPrecision(4)),
                 const SizedBox(width: 6.0),
                 Text(units, style: const TextStyle(color: Colors.grey))
@@ -150,7 +154,8 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
 
       future: _setup.then((value) {
         description = value.first.description;
-        units = value.first.units;
+        units = "degF";
+        // value.first.units;
         return value;
       }),
 
