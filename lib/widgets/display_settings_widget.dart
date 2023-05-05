@@ -50,14 +50,4 @@ class _DisplaySettingsState extends State<DisplaySettingsWidget> {
       }
     });
   }
-
-  void doSomething(BuildContext context, String value) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        duration: Duration(seconds: 1),
-        content: Text('You did something'),
-      ),
-    );
-  }
 }
