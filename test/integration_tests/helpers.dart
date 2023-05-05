@@ -100,10 +100,8 @@ void assertConfirmThrowAwayDialog({required bool isVisible}) {
 }
 
 void assertDisplaySettingsUnits({required String isSetTo}) {
-  final displayUnitsIndicator =
-      find.byKey(const Key("display_units_indicator"));
-  expect(
-      find.descendant(of: displayUnitsIndicator, matching: find.text(isSetTo)),
+  final displayUnitsTile = find.byKey(const Key("display_settings_tile_units"));
+  expect(find.descendant(of: displayUnitsTile, matching: find.text(isSetTo)),
       findsOneWidget);
 }
 
