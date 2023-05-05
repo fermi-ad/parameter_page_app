@@ -33,8 +33,12 @@ void main() {
       await tester.pumpWidget(app);
       expect(find.text('Common Units'), findsOneWidget);
 
-      // When I change the units to...
-      // todo
+      // When I tap the units tile and change the units to...
+      await tester.tap(find.byKey(const Key("display_settings_tile_units")));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(
+          const Key("display_settings_tile_units_menuitem_Primary Units")));
+      await tester.pumpAndSettle();
 
       // Then the units setting shows...
       expect(find.text('Primary Units'), findsOneWidget);
