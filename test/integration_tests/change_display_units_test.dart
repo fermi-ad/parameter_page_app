@@ -33,5 +33,21 @@ void main() {
       assertDisplaySettings(isVisible: true);
       assertDisplaySettingsUnits(isSetTo: "Common Units");
     });
+
+    testWidgets(
+        'Change Display Settings > Units to Primary Units, M:OUTTMP units change to volts',
+        (tester) async {
+      // Given the test page is loaded and I am on the Display Settings page
+      app.main();
+      await tester.pumpAndSettle();
+      await navigateToDisplaySettings(tester);
+
+      // When I change Units to Primary Units and exit Display Settings
+      await changeDisplaySettingsUnits(tester, to: "Primary Units");
+      await navigateBackwards(tester);
+
+      // Then the M:OUTTMP units change to Volts
+      assertReadingPropertyUnits(forParameter: "M:OUTTMP@e,02", are: "Volt");
+    });
   });
 }

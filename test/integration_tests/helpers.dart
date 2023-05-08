@@ -233,3 +233,7 @@ Future<void> navigateToDisplaySettings(tester) async {
   await tester.tap(find.byKey(const Key("display_settings_button")));
   await tester.pumpAndSettle();
 }
+
+Future<void> navigateBackwards(tester) async {}
+
+Future<void> changeDisplaySettingsUnits(tester, {required String to}) async {}
