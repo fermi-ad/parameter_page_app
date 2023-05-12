@@ -234,6 +234,14 @@ Future<void> navigateToDisplaySettings(tester) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> navigateBackwards(tester) async {}
+Future<void> navigateBackwards(tester) async {
+  await tester.tap(find.byIcon(Icons.arrow_back));
+  await tester.pumpAndSettle();
+}
 
-Future<void> changeDisplaySettingsUnits(tester, {required String to}) async {}
+Future<void> changeDisplaySettingsUnits(tester, {required String to}) async {
+  await tester.tap(find.byKey(const Key("display_settings_tile_units")));
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(Key("display_settings_tile_units_menuitem_$to")));
+  await tester.pumpAndSettle();
+}
