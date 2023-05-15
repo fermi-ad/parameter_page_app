@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 
+class DisplaySettings {
+  String units = "Common Units";
+}
+
 class DisplaySettingsWidget extends StatefulWidget {
-  const DisplaySettingsWidget({super.key});
+  const DisplaySettingsWidget({super.key, required this.onChanged});
+
+  final Function(DisplaySettings) onChanged;
 
   @override
   State<DisplaySettingsWidget> createState() => _DisplaySettingsState();

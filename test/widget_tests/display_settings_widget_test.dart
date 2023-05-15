@@ -6,8 +6,13 @@ void main() {
   group("DisplaySettingsWidget", () {
     late MaterialApp app;
 
+    late DisplaySettings newSettings;
+
     setUp(() {
-      app = const MaterialApp(home: Scaffold(body: DisplaySettingsWidget()));
+      app = MaterialApp(home: Scaffold(
+          body: DisplaySettingsWidget(onChanged: (DisplaySettings settings) {
+        newSettings = settings;
+      })));
     });
 
     Future<void> changeUnits(tester, {required String to}) async {
@@ -52,6 +57,20 @@ void main() {
 
       // Then the units setting shows...
       assertUnits(isSetTo: 'Primary Units');
+    });
+
+    testWidgets('Change settings, onChange is called with new settings',
+        (WidgetTester tester) async {
+      // Given a new DisplaySettingsWidget and the units are set to 'Common Units'
+      await tester.pumpWidget(app);
+      assertUnits(isSetTo: 'Common Units');
+
+      // When I change the units to "Primary Units"
+      await changeUnits(tester, to: "Primary Units");
+
+      // Then the onChange callback is called
+      //   and the new settings are stored in settings
+      expect(newSettings.units, equals("Primary Units"));
     });
   });
 }

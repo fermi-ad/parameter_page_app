@@ -265,8 +265,9 @@ class _PageWidgetState extends State<PageWidget> {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) =>
-              const DisplaySettingsWidget(key: Key("display_settings_route"))),
+          builder: (context) => DisplaySettingsWidget(
+              key: const Key("display_settings_route"),
+              onChanged: (DisplaySettings newSettings) {})),
     );
   }
 
