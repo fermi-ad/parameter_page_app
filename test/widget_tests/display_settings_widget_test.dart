@@ -6,7 +6,7 @@ void main() {
   group("DisplaySettingsWidget", () {
     late MaterialApp app;
 
-    late DisplaySettings newSettings;
+    DisplaySettings newSettings = DisplaySettings();
 
     setUp(() {
       app = MaterialApp(home: Scaffold(

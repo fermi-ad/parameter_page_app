@@ -52,6 +52,10 @@ class _DisplaySettingsState extends State<DisplaySettingsWidget> {
         setState(() {
           _units = value;
         });
+
+        DisplaySettings newSettings = DisplaySettings();
+        newSettings.units = value;
+        widget.onChanged(newSettings);
       }
     });
   }
