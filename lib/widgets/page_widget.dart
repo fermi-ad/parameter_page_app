@@ -43,7 +43,7 @@ class PageWidget extends StatefulWidget {
 class _PageWidgetState extends State<PageWidget> {
   late ParameterPage _page;
 
-  DisplaySettings _settings = DisplaySettings();
+  DisplaySettings _settings = const DisplaySettings();
 
   // Initialize the state by copying the parameters sent it.
 
@@ -269,6 +269,7 @@ class _PageWidgetState extends State<PageWidget> {
       context,
       MaterialPageRoute(
           builder: (context) => DisplaySettingsWidget(
+              initialSettings: _settings,
               key: const Key("display_settings_route"),
               onChanged: (DisplaySettings newSettings) {
                 setState(() => _settings = newSettings);

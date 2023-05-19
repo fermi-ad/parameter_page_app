@@ -2,13 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 
 class DisplaySettings {
-  String units = "Common Units";
+  final String units;
+
+  const DisplaySettings({this.units = "Common Units"});
 }
 
 class DisplaySettingsWidget extends StatefulWidget {
-  const DisplaySettingsWidget({super.key, required this.onChanged});
+  const DisplaySettingsWidget(
+      {super.key, required this.initialSettings, required this.onChanged});
 
   final Function(DisplaySettings) onChanged;
+
+  final DisplaySettings initialSettings;
 
   @override
   State<DisplaySettingsWidget> createState() => _DisplaySettingsState();
@@ -28,7 +33,7 @@ class _DisplaySettingsState extends State<DisplaySettingsWidget> {
                 key: const Key("display_settings_tile_units"),
                 leading: const Icon(Icons.abc),
                 title: const Text("Units"),
-                value: Text(_units),
+                value: Text(_units ??= widget.initialSettings.units),
                 onPressed: _popupUnitsMenu)
           ])
         ]));
@@ -53,8 +58,7 @@ class _DisplaySettingsState extends State<DisplaySettingsWidget> {
           _units = value;
         });
 
-        DisplaySettings newSettings = DisplaySettings();
-        newSettings.units = value;
+        DisplaySettings newSettings = DisplaySettings(units: value);
         widget.onChanged(newSettings);
       }
     });
@@ -62,5 +66,5 @@ class _DisplaySettingsState extends State<DisplaySettingsWidget> {
 
   static const _displayUnits = ["Primary Units", "Common Units", "Raw"];
 
-  String _units = "Common Units";
+  String? _units;
 }

@@ -3,31 +3,53 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/widgets/display_settings_widget.dart';
 
 void main() {
+  Future<void> changeUnits(tester, {required String to}) async {
+    await tester.tap(find.byKey(const Key("display_settings_tile_units")));
+    await tester.pumpAndSettle();
+    await tester
+        .tap(find.byKey(Key("display_settings_tile_units_menuitem_$to")));
+    await tester.pumpAndSettle();
+  }
+
+  void assertUnits({required String isSetTo}) {
+    final tileFinder = find.byKey(const Key('display_settings_tile_units'));
+    expect(find.descendant(of: tileFinder, matching: find.text(isSetTo)),
+        findsOneWidget);
+  }
+
+  group("DisplaySettingsWidget with initialSettings", () {
+    testWidgets('Pass settings to constructor, used for initial value',
+        (WidgetTester tester) async {
+      // Given an initial set of DisplaySettings
+      DisplaySettings mySettings =
+          const DisplaySettings(units: "Primary Units");
+
+      // When I initialize the widget with those settings
+      MaterialApp myApp = MaterialApp(
+          home: Scaffold(
+              body: DisplaySettingsWidget(
+                  initialSettings: mySettings,
+                  onChanged: (DisplaySettings settings) {})));
+      await tester.pumpWidget(myApp);
+
+      // Then the units setting shows 'Primary Units'
+      assertUnits(isSetTo: "Primary Units");
+    });
+  });
   group("DisplaySettingsWidget", () {
     late MaterialApp app;
 
-    DisplaySettings newSettings = DisplaySettings();
+    DisplaySettings newSettings = const DisplaySettings();
 
     setUp(() {
-      app = MaterialApp(home: Scaffold(
-          body: DisplaySettingsWidget(onChanged: (DisplaySettings settings) {
-        newSettings = settings;
-      })));
+      app = MaterialApp(
+          home: Scaffold(
+              body: DisplaySettingsWidget(
+                  initialSettings: const DisplaySettings(),
+                  onChanged: (DisplaySettings settings) {
+                    newSettings = settings;
+                  })));
     });
-
-    Future<void> changeUnits(tester, {required String to}) async {
-      await tester.tap(find.byKey(const Key("display_settings_tile_units")));
-      await tester.pumpAndSettle();
-      await tester
-          .tap(find.byKey(Key("display_settings_tile_units_menuitem_$to")));
-      await tester.pumpAndSettle();
-    }
-
-    void assertUnits({required String isSetTo}) {
-      final tileFinder = find.byKey(const Key('display_settings_tile_units'));
-      expect(find.descendant(of: tileFinder, matching: find.text(isSetTo)),
-          findsOneWidget);
-    }
 
     testWidgets('Title is Display Settings', (WidgetTester tester) async {
       // Given a new DisplaySettingsWidget
