@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'widgets/comment_entry_widget.dart';
+import 'widgets/display_settings_widget.dart';
 import 'widgets/parameter_widget.dart';
 
 // Base class for the Entry class hierarchy.
@@ -13,7 +14,8 @@ abstract class PageEntry {
 
   PageEntry({Key? key}) : key = key ?? UniqueKey();
 
-  Widget buildEntry(BuildContext context, bool editMode, bool wide);
+  Widget buildEntry(
+      BuildContext context, bool editMode, bool wide, DisplaySettings settings);
 
   @override
   bool operator ==(other) {
@@ -32,7 +34,8 @@ class CommentEntry extends PageEntry {
   CommentEntry(this.text, {Key? key}) : super(key: key);
 
   @override
-  Widget buildEntry(BuildContext context, bool editMode, bool wide) {
+  Widget buildEntry(BuildContext context, bool editMode, bool wide,
+      DisplaySettings settings) {
     return CommentEntryWidget(text);
   }
 
@@ -47,8 +50,10 @@ class ParameterEntry extends PageEntry {
   ParameterEntry(this.drf, {this.label, super.key});
 
   @override
-  Widget buildEntry(BuildContext context, bool editMode, bool wide) {
-    return ParameterWidget(drf, editMode, wide, label: label, key: key);
+  Widget buildEntry(BuildContext context, bool editMode, bool wide,
+      DisplaySettings settings) {
+    return ParameterWidget(drf, editMode, wide,
+        displayUnits: settings.units, label: label, key: key);
   }
 
   @override

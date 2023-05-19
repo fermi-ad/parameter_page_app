@@ -9,9 +9,10 @@ class ParameterWidget extends StatelessWidget {
   final String? label;
   final bool editMode;
   final bool wide;
+  final String displayUnits;
 
   const ParameterWidget(this.drf, this.editMode, this.wide,
-      {this.label, super.key});
+      {this.label, super.key, this.displayUnits = "Common Units"});
 
   Widget buildEditor(BuildContext context) {
     return ConstrainedBox(
@@ -25,7 +26,10 @@ class ParameterWidget extends StatelessWidget {
         child: editMode
             ? buildEditor(context)
             : _ActiveParamWidget(
-                drf: drf, wide: wide, dpm: DataAcquisitionWidget.of(context)));
+                displayUnits: displayUnits,
+                drf: drf,
+                wide: wide,
+                dpm: DataAcquisitionWidget.of(context)));
   }
 }
 
@@ -33,9 +37,13 @@ class _ActiveParamWidget extends StatefulWidget {
   final String drf;
   final DataAcquisitionWidget dpm;
   final bool wide;
+  final String displayUnits;
 
   const _ActiveParamWidget(
-      {required this.drf, required this.dpm, required this.wide});
+      {required this.drf,
+      required this.dpm,
+      required this.wide,
+      required this.displayUnits});
 
   @override
   _ActiveParamState createState() => _ActiveParamState();
@@ -51,7 +59,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   void initState() {
     _setup = widget.dpm.getDeviceInfo([widget.drf]);
     _stream = widget.dpm.monitorDevices([widget.drf]);
-    units = "degF";
+    units = widget.displayUnits == "Common Units" ? "degF" : "Volt";
     super.initState();
   }
 
@@ -154,7 +162,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
 
       future: _setup.then((value) {
         description = value.first.description;
-        units = "degF";
+        units = widget.displayUnits == "Common Units" ? "degF" : "Volt";
         // value.first.units;
         return value;
       }),

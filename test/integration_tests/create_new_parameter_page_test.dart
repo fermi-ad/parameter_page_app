@@ -9,26 +9,6 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Create New Parameter Page', () {
-    testWidgets('Tap New Page, should be presented with a new blank page',
-        (tester) async {
-      // Given the test page is loaded
-      app.main();
-      await tester.pumpAndSettle();
-
-      // When I press new page and add some new entries
-      await newPage(tester);
-      await enterEditMode(tester);
-      await addANewComment(tester, "A comment");
-      await exitEditMode(tester);
-      await enterEditMode(tester);
-      await addANewParameter(tester, "M:OUTTMP");
-      await exitEditMode(tester);
-
-      // Then the page is empty
-      assertNumberOfEntriesOnPageIs(2);
-      assertParameterIsInRow("M:OUTTMP", 1);
-    });
-
     testWidgets('Tap New Page, should not be prompted if there are no changes',
         (tester) async {
       // Given the test page is loaded and I haven't made any changes
@@ -58,7 +38,6 @@ void main() {
       // Then I should be prompted to throw away changes
       assertConfirmThrowAwayDialog(isVisible: true);
     });
-
     testWidgets('Cancel New Page, should preserve the existing page',
         (tester) async {
       // Given the test page is loaded and I have added a new comment but did not save the page yet
@@ -91,6 +70,23 @@ void main() {
 
       // Then the changes are discarded and I get a new page
       assertNumberOfEntriesOnPageIs(0);
+    });
+
+    testWidgets('Tap New Page, should be presented with a new blank page',
+        (tester) async {
+      // Given the test page is loaded
+      app.main();
+      await tester.pumpAndSettle();
+
+      // When I press new page and add some new entries
+      await newPage(tester);
+      await enterEditMode(tester);
+      await addANewParameter(tester, "I:BEAM");
+      await exitEditMode(tester);
+
+      // Then the page is empty except for the entries I added
+      assertNumberOfEntriesOnPageIs(1);
+      assertParameterIsInRow("I:BEAM", 0);
     });
   });
 }

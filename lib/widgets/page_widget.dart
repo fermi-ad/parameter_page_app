@@ -43,6 +43,8 @@ class PageWidget extends StatefulWidget {
 class _PageWidgetState extends State<PageWidget> {
   late ParameterPage _page;
 
+  DisplaySettings _settings = const DisplaySettings();
+
   // Initialize the state by copying the parameters sent it.
 
   @override
@@ -125,14 +127,15 @@ class _PageWidgetState extends State<PageWidget> {
           child: _page.editing()
               ? Row(children: [
                   Expanded(
-                      child: entry.buildEntry(context, _page.editing(), wide)),
+                      child: entry.buildEntry(
+                          context, _page.editing(), wide, _settings)),
                   const SizedBox(width: 8.0),
                   const IconButton(
                       visualDensity: VisualDensity.compact,
                       onPressed: null,
                       icon: Icon(Icons.delete))
                 ])
-              : entry.buildEntry(context, _page.editing(), wide),
+              : entry.buildEntry(context, _page.editing(), wide, _settings),
         ));
   }
 
@@ -265,8 +268,12 @@ class _PageWidgetState extends State<PageWidget> {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) =>
-              const DisplaySettingsWidget(key: Key("display_settings_route"))),
+          builder: (context) => DisplaySettingsWidget(
+              initialSettings: _settings,
+              key: const Key("display_settings_route"),
+              onChanged: (DisplaySettings newSettings) {
+                setState(() => _settings = newSettings);
+              })),
     );
   }
 
