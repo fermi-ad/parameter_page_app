@@ -85,7 +85,8 @@ void main() {
       await navigateBackwards(tester);
 
       // Then no units are display for M:OUTTMP
-      assertParameterHasDetails("M:OUTTMP@e,02", readingUnits: "");
+      assertParameterHasDetails("M:OUTTMP@e,02",
+          settingUnits: "", readingUnits: "");
     });
   });
 }
