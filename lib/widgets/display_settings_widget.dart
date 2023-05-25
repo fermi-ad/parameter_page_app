@@ -17,6 +17,8 @@ class DisplaySettingsWidget extends StatefulWidget {
 
   @override
   State<DisplaySettingsWidget> createState() => _DisplaySettingsState();
+
+  static const displayUnits = ["Primary Units", "Common Units", "Raw"];
 }
 
 class _DisplaySettingsState extends State<DisplaySettingsWidget> {
@@ -43,7 +45,7 @@ class _DisplaySettingsState extends State<DisplaySettingsWidget> {
     showMenu(
       context: context,
       position: RelativeRect.fill,
-      items: _displayUnits
+      items: DisplaySettingsWidget.displayUnits
           .map(
             (e) => PopupMenuItem(
               key: Key("display_settings_tile_units_menuitem_$e"),
@@ -63,8 +65,6 @@ class _DisplaySettingsState extends State<DisplaySettingsWidget> {
       }
     });
   }
-
-  static const _displayUnits = ["Primary Units", "Common Units", "Raw"];
 
   String? _units;
 }
