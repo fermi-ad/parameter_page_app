@@ -3,16 +3,17 @@ import 'package:parameter_page/dpm_service.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
 
 import 'data_acquisition_widget.dart';
+import 'display_settings_widget.dart';
 
 class ParameterWidget extends StatelessWidget {
   final String drf;
   final String? label;
   final bool editMode;
   final bool wide;
-  final String displayUnits;
+  final DisplayUnits displayUnits;
 
   const ParameterWidget(this.drf, this.editMode, this.wide,
-      {this.label, super.key, this.displayUnits = "Common Units"});
+      {this.label, super.key, this.displayUnits = DisplayUnits.commonUnits});
 
   Widget buildEditor(BuildContext context) {
     return ConstrainedBox(
@@ -37,7 +38,7 @@ class _ActiveParamWidget extends StatefulWidget {
   final String drf;
   final DataAcquisitionWidget dpm;
   final bool wide;
-  final String displayUnits;
+  final DisplayUnits displayUnits;
 
   const _ActiveParamWidget(
       {required this.drf,
@@ -151,16 +152,17 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   String _extractValueString({required from}) {
-    if (widget.displayUnits == "Common Units") {
-      return from.data!.value.toStringAsPrecision(4);
-    } else if (widget.displayUnits == "Primary Units") {
-      return from.data!.primaryValue.toStringAsPrecision(4);
-    } else if (widget.displayUnits == "Raw") {
-      return from.data!.rawValue;
+    switch (widget.displayUnits) {
+      case DisplayUnits.commonUnits:
+        return from.data!.value.toStringAsPrecision(4);
+      case DisplayUnits.primaryUnits:
+        return from.data!.primaryValue.toStringAsPrecision(4);
+      case DisplayUnits.raw:
+        return from.data!.rawValue;
+      default:
+        AssertionError("Invalid displayUnits!");
+        return "Invalid displayUnits!";
     }
-
-    AssertionError("Invalid displayUnits!");
-    return "Invalid displayUnits!";
   }
 
   // Builds the widget.
@@ -187,38 +189,44 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   String get _readingUnits {
-    if (widget.displayUnits == "Common Units") {
-      return "degF";
-    } else if (widget.displayUnits == "Primary Units") {
-      return "Volt";
-    } else if (widget.displayUnits == "Raw") {
-      return "";
+    switch (widget.displayUnits) {
+      case DisplayUnits.commonUnits:
+        return "degF";
+      case DisplayUnits.primaryUnits:
+        return "Volt";
+      case DisplayUnits.raw:
+        return "";
+      default:
+        AssertionError("Invalid displayUnits!");
+        return "Invalid displayUnits!";
     }
-
-    AssertionError("Invalid displayUnits!");
-    return "Invalid displayUnits!";
   }
 
   String get _settingUnits {
-    if (widget.displayUnits == "Common Units") {
-      return "mm";
-    } else if (widget.displayUnits == "Primary Units") {
-      return "Volt";
-    } else if (widget.displayUnits == "Raw") {
-      return "";
+    switch (widget.displayUnits) {
+      case DisplayUnits.commonUnits:
+        return "mm";
+      case DisplayUnits.primaryUnits:
+        return "Volt";
+      case DisplayUnits.raw:
+        return "";
+      default:
+        AssertionError("Invalid displayUnits!");
+        return "Invalid displayUnits!";
     }
-
-    AssertionError("Invalid displayUnits!");
-    return "Invalid displayUnits!";
   }
 
   String get _settingValue {
-    if (widget.displayUnits == "Raw") {
-      return "8888";
-    } else if (widget.displayUnits == "Primary Units") {
-      return "5.0";
-    } else {
-      return "50.0";
+    switch (widget.displayUnits) {
+      case DisplayUnits.commonUnits:
+        return "50.0";
+      case DisplayUnits.primaryUnits:
+        return "5.0";
+      case DisplayUnits.raw:
+        return "8888";
+      default:
+        AssertionError("Invalid displayUnits!");
+        return "Invalid displayUnits!";
     }
   }
 }

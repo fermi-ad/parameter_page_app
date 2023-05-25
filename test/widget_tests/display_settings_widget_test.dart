@@ -21,7 +21,8 @@ void main() {
     testWidgets('Pass settings to constructor, used for initial value',
         (WidgetTester tester) async {
       // Given an initial set of DisplaySettings
-      DisplaySettings mySettings = DisplaySettings(units: "Primary Units");
+      DisplaySettings mySettings =
+          DisplaySettings(units: DisplayUnits.primaryUnits);
 
       // When I initialize the widget with those settings
       MaterialApp myApp = MaterialApp(
