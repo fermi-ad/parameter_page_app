@@ -59,7 +59,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   void initState() {
     _setup = widget.dpm.getDeviceInfo([widget.drf]);
     _stream = widget.dpm.monitorDevices([widget.drf]);
-    units = _getUnits();
+
     super.initState();
   }
 
@@ -96,7 +96,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
             const Spacer(),
             Row(
               children: [
-                _buildParam(50.0, "mm",
+                _buildParam(50.0, _settingUnits,
                     key: Key("parameter_setting_${widget.drf}")),
                 const SizedBox(width: 12.0),
                 StreamBuilder(
@@ -162,7 +162,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
 
       future: _setup.then((value) {
         description = value.first.description;
-        units = _getUnits();
+        units = _readingUnits;
         // value.first.units;
         return value;
       }),
@@ -175,9 +175,22 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     );
   }
 
-  String _getUnits() {
+  String get _readingUnits {
     if (widget.displayUnits == "Common Units") {
       return "degF";
+    } else if (widget.displayUnits == "Primary Units") {
+      return "Volt";
+    } else if (widget.displayUnits == "Raw") {
+      return "";
+    }
+
+    AssertionError("Invalid displayUnits!");
+    return "Invalid displayUnits!";
+  }
+
+  String get _settingUnits {
+    if (widget.displayUnits == "Common Units") {
+      return "mm";
     } else if (widget.displayUnits == "Primary Units") {
       return "Volt";
     } else if (widget.displayUnits == "Raw") {
