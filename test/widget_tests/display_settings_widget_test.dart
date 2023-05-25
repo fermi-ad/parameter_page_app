@@ -21,8 +21,7 @@ void main() {
     testWidgets('Pass settings to constructor, used for initial value',
         (WidgetTester tester) async {
       // Given an initial set of DisplaySettings
-      DisplaySettings mySettings =
-          const DisplaySettings(units: "Primary Units");
+      DisplaySettings mySettings = DisplaySettings(units: "Primary Units");
 
       // When I initialize the widget with those settings
       MaterialApp myApp = MaterialApp(
@@ -39,13 +38,13 @@ void main() {
   group("DisplaySettingsWidget", () {
     late MaterialApp app;
 
-    DisplaySettings newSettings = const DisplaySettings();
+    DisplaySettings newSettings = DisplaySettings();
 
     setUp(() {
       app = MaterialApp(
           home: Scaffold(
               body: DisplaySettingsWidget(
-                  initialSettings: const DisplaySettings(),
+                  initialSettings: DisplaySettings(),
                   onChanged: (DisplaySettings settings) {
                     newSettings = settings;
                   })));

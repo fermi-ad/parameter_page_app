@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 
 class DisplaySettings {
-  final String units;
+  String units;
 
-  const DisplaySettings({this.units = "Common Units"});
+  DisplaySettings({this.units = "Common Units"});
 }
 
 class DisplaySettingsWidget extends StatefulWidget {
@@ -23,6 +23,12 @@ class DisplaySettingsWidget extends StatefulWidget {
 
 class _DisplaySettingsState extends State<DisplaySettingsWidget> {
   @override
+  void initState() {
+    super.initState();
+    _settings = widget.initialSettings;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -35,7 +41,7 @@ class _DisplaySettingsState extends State<DisplaySettingsWidget> {
                 key: const Key("display_settings_tile_units"),
                 leading: const Icon(Icons.abc),
                 title: const Text("Units"),
-                value: Text(_units ??= widget.initialSettings.units),
+                value: Text(_settings.units),
                 onPressed: _popupUnitsMenu)
           ])
         ]));
@@ -57,7 +63,7 @@ class _DisplaySettingsState extends State<DisplaySettingsWidget> {
     ).then((value) {
       if (value != null) {
         setState(() {
-          _units = value;
+          _settings.units = value;
         });
 
         DisplaySettings newSettings = DisplaySettings(units: value);
@@ -66,5 +72,5 @@ class _DisplaySettingsState extends State<DisplaySettingsWidget> {
     });
   }
 
-  String? _units;
+  late DisplaySettings _settings;
 }
