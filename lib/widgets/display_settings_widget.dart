@@ -38,11 +38,12 @@ class _DisplaySettingsState extends State<DisplaySettingsWidget> {
         body: SettingsList(sections: [
           SettingsSection(title: const Text("Display"), tiles: <SettingsTile>[
             SettingsTile.navigation(
-                key: const Key("display_settings_tile_units"),
-                leading: const Icon(Icons.abc),
-                title: const Text("Units"),
-                value: Text(_settings.units),
-                onPressed: _popupUnitsMenu)
+              key: const Key("display_settings_tile_units"),
+              leading: const Icon(Icons.abc),
+              title: const Text("Units"),
+              onPressed: _popupUnitsMenu,
+              value: Text(_settings.units),
+            )
           ])
         ]));
   }
@@ -65,9 +66,7 @@ class _DisplaySettingsState extends State<DisplaySettingsWidget> {
         setState(() {
           _settings.units = value;
         });
-
-        DisplaySettings newSettings = DisplaySettings(units: value);
-        widget.onChanged(newSettings);
+        widget.onChanged(_settings);
       }
     });
   }
