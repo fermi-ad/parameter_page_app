@@ -51,7 +51,8 @@ void main() {
       await navigateBackwards(tester);
 
       // Then the M:OUTTMP units change to Volts
-      assertParameterHasDetails("M:OUTTMP@e,02", readingUnits: "Volt");
+      assertParameterHasDetails("M:OUTTMP@e,02",
+          settingUnits: "Volt", readingUnits: "Volt");
     });
 
     testWidgets(
