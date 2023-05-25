@@ -43,7 +43,7 @@ class PageWidget extends StatefulWidget {
 class _PageWidgetState extends State<PageWidget> {
   late ParameterPage _page;
 
-  DisplaySettings _settings = const DisplaySettings();
+  DisplaySettings _settings = DisplaySettings();
 
   // Initialize the state by copying the parameters sent it.
 
