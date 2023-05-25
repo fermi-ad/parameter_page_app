@@ -22,7 +22,9 @@ class MockDpmService extends DpmService {
             refId: 0,
             cycle: 0,
             timestamp: DateTime(2023),
-            value: 100.0); //  + count * 0.1);
+            value: 100.0,
+            rawValue: "FFFF",
+            primaryValue: 10.0); //  + count * 0.1);
       },
     ).asBroadcastStream();
   }

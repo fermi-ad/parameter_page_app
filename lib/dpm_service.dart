@@ -46,13 +46,17 @@ class Reading {
   final int cycle;
   final DateTime timestamp;
   final double? value;
+  final String? rawValue;
+  final double? primaryValue;
 
   const Reading(
       {required this.refId,
       this.status = 0,
       required this.cycle,
       required this.timestamp,
-      this.value});
+      this.value,
+      this.rawValue,
+      this.primaryValue});
 }
 
 abstract class DpmService {

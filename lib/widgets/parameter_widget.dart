@@ -63,16 +63,13 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     super.initState();
   }
 
-  Widget _buildParam(double? value, String? units, {required Key key}) {
+  Widget _buildParam(String? value, String? units, {required Key key}) {
     return value == null
         ? Container()
         : (units == null
-            ? Text(
-                key: key,
-                textAlign: TextAlign.end,
-                value.toStringAsPrecision(4))
+            ? Text(key: key, textAlign: TextAlign.end, value)
             : Row(key: key, children: [
-                Text(textAlign: TextAlign.end, value.toStringAsPrecision(4)),
+                Text(textAlign: TextAlign.end, value),
                 const SizedBox(width: 6.0),
                 Text(units, style: const TextStyle(color: Colors.grey))
               ]));
@@ -96,14 +93,15 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
             const Spacer(),
             Row(
               children: [
-                _buildParam(50.0, _settingUnits,
+                _buildParam(_settingValue, _settingUnits,
                     key: Key("parameter_setting_${widget.drf}")),
                 const SizedBox(width: 12.0),
                 StreamBuilder(
                     stream: _stream,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.active) {
-                        return _buildParam(snapshot.data!.value, units,
+                        return _buildParam(
+                            _extractValueString(from: snapshot), units,
                             key: Key("parameter_reading_${widget.drf}"));
                       } else {
                         return _buildParam(null, units,
@@ -134,12 +132,13 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                   .copyWith(fontStyle: FontStyle.italic, color: Colors.grey)),
         ),
         Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-          _buildParam(50.0, units, key: Key("parameter_setting_${widget.drf}")),
+          _buildParam(_settingValue, units,
+              key: Key("parameter_setting_${widget.drf}")),
           StreamBuilder(
               stream: _stream,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
-                  return _buildParam(snapshot.data!.value, units,
+                  return _buildParam(_extractValueString(from: snapshot), units,
                       key: Key("parameter_reading_${widget.drf}"));
                 } else {
                   return _buildParam(null, units,
@@ -151,8 +150,20 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     );
   }
 
-  // Builds the widget.
+  String _extractValueString({required from}) {
+    if (widget.displayUnits == "Common Units") {
+      return from.data!.value.toStringAsPrecision(4);
+    } else if (widget.displayUnits == "Primary Units") {
+      return from.data!.primaryValue.toStringAsPrecision(4);
+    } else if (widget.displayUnits == "Raw") {
+      return from.data!.rawValue;
+    }
 
+    AssertionError("Invalid displayUnits!");
+    return "Invalid displayUnits!";
+  }
+
+  // Builds the widget.
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -199,5 +210,13 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
 
     AssertionError("Invalid displayUnits!");
     return "Invalid displayUnits!";
+  }
+
+  String get _settingValue {
+    if (widget.displayUnits == "Raw") {
+      return "8888";
+    } else {
+      return "50.0";
+    }
   }
 }

@@ -18,7 +18,7 @@ void main() {
 
       // Then M:OUTTMP should show units of degF
       assertParameterHasDetails("M:OUTTMP@e,02",
-          settingValue: "50.00",
+          settingValue: "50.0",
           settingUnits: "mm",
           readingValue: "100.0",
           readingUnits: "degF");
@@ -86,10 +86,10 @@ void main() {
 
       // Then no units are display for M:OUTTMP
       assertParameterHasDetails("M:OUTTMP@e,02",
+          settingValue: "8888",
           settingUnits: "",
-          settingValue: "0000",
           readingUnits: "",
-          readingValue: "0000");
+          readingValue: "FFFF");
     });
   });
 }
