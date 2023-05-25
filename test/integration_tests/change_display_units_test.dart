@@ -17,7 +17,8 @@ void main() {
       await waitForDataToLoadFor(tester, "M:OUTTMP@e,02");
 
       // Then M:OUTTMP should show units of degF
-      assertReadingPropertyUnits(forParameter: "M:OUTTMP@e,02", are: "degF");
+      assertParameterHasDetails("M:OUTTMP@e,02",
+          settingValue: "50.00", readingValue: "100.0", readingUnits: "degF");
     });
 
     testWidgets('Initially, Display Settings > Units is set to Common Units',
@@ -47,7 +48,7 @@ void main() {
       await navigateBackwards(tester);
 
       // Then the M:OUTTMP units change to Volts
-      assertReadingPropertyUnits(forParameter: "M:OUTTMP@e,02", are: "Volt");
+      assertParameterHasDetails("M:OUTTMP@e,02", readingUnits: "Volt");
     });
 
     testWidgets(
@@ -80,7 +81,7 @@ void main() {
       await navigateBackwards(tester);
 
       // Then no units are display for M:OUTTMP
-      assertReadingPropertyUnits(forParameter: "M:OUTTMP@e,02", are: "");
+      assertParameterHasDetails("M:OUTTMP@e,02", readingUnits: "");
     });
   });
 }

@@ -43,24 +43,45 @@ void assertParametersAreNotOnPage(List<String> parameters) {
 }
 
 void assertParameterHasDetails(String parameter,
-    {required String description,
-    required String settingValue,
-    required String readingValue}) {
+    {String? description,
+    String? settingValue,
+    String? settingUnits,
+    String? readingValue,
+    String? readingUnits}) {
   final row = find.byKey(Key("parameter_row_$parameter"));
 
   final parameterFinder = find.text(parameter);
   expect(find.descendant(of: row, matching: parameterFinder), findsOneWidget);
 
-  final descriptionFinder = find.text(description);
-  expect(find.descendant(of: row, matching: descriptionFinder), findsOneWidget);
+  if (description != null) {
+    final descriptionFinder = find.text(description);
+    expect(
+        find.descendant(of: row, matching: descriptionFinder), findsOneWidget);
+  }
 
-  final readingValueFinder = find.text(readingValue);
-  expect(
-      find.descendant(of: row, matching: readingValueFinder), findsOneWidget);
+  if (readingValue != null) {
+    final readingValueFinder = find.text(readingValue);
+    expect(
+        find.descendant(of: row, matching: readingValueFinder), findsOneWidget);
+  }
 
-  final settingValueFinder = find.text(settingValue);
-  expect(
-      find.descendant(of: row, matching: settingValueFinder), findsOneWidget);
+  if (readingUnits != null) {
+    final reading = find.byKey(Key("parameter_reading_$parameter"));
+    expect(find.descendant(of: reading, matching: find.text(readingUnits)),
+        findsOneWidget);
+  }
+
+  if (settingValue != null) {
+    final settingValueFinder = find.text(settingValue);
+    expect(
+        find.descendant(of: row, matching: settingValueFinder), findsOneWidget);
+  }
+
+  if (settingUnits != null) {
+    final setting = find.byKey(Key("parameter_setting_$parameter"));
+    expect(find.descendant(of: setting, matching: find.text(settingUnits)),
+        findsOneWidget);
+  }
 }
 
 void assertParameterIsInRow(String parameter, int isInRow) {
@@ -103,13 +124,6 @@ void assertDisplaySettingsUnits({required String isSetTo}) {
   final displayUnitsTile = find.byKey(const Key("display_settings_tile_units"));
   expect(find.descendant(of: displayUnitsTile, matching: find.text(isSetTo)),
       findsOneWidget);
-}
-
-void assertReadingPropertyUnits(
-    {required String forParameter, required String are}) {
-  final reading = find.byKey(Key("parameter_reading_$forParameter"));
-  expect(
-      find.descendant(of: reading, matching: find.text(are)), findsOneWidget);
 }
 
 void assertDisplaySettings({required bool isVisible}) {
