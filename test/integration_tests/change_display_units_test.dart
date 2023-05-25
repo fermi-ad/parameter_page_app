@@ -18,7 +18,10 @@ void main() {
 
       // Then M:OUTTMP should show units of degF
       assertParameterHasDetails("M:OUTTMP@e,02",
-          settingValue: "50.00", readingValue: "100.0", readingUnits: "degF");
+          settingValue: "50.00",
+          settingUnits: "mm",
+          readingValue: "100.0",
+          readingUnits: "degF");
     });
 
     testWidgets('Initially, Display Settings > Units is set to Common Units',
