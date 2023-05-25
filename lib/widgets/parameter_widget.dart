@@ -59,7 +59,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   void initState() {
     _setup = widget.dpm.getDeviceInfo([widget.drf]);
     _stream = widget.dpm.monitorDevices([widget.drf]);
-    units = widget.displayUnits == "Common Units" ? "degF" : "Volt";
+    units = _getUnits();
     super.initState();
   }
 
@@ -162,7 +162,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
 
       future: _setup.then((value) {
         description = value.first.description;
-        units = widget.displayUnits == "Common Units" ? "degF" : "Volt";
+        units = _getUnits();
         // value.first.units;
         return value;
       }),
@@ -173,5 +173,18 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         return widget.wide ? _buildWide(context) : _buildNarrow(context);
       },
     );
+  }
+
+  String _getUnits() {
+    if (widget.displayUnits == "Common Units") {
+      return "degF";
+    } else if (widget.displayUnits == "Primary Units") {
+      return "Volt";
+    } else if (widget.displayUnits == "Raw") {
+      return "";
+    }
+
+    AssertionError("Invalid displayUnits!");
+    return "Invalid displayUnits!";
   }
 }
