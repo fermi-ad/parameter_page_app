@@ -215,6 +215,8 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   String get _settingValue {
     if (widget.displayUnits == "Raw") {
       return "8888";
+    } else if (widget.displayUnits == "Primary Units") {
+      return "5.0";
     } else {
       return "50.0";
     }

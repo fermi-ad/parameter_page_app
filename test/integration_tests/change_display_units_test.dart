@@ -52,7 +52,10 @@ void main() {
 
       // Then the M:OUTTMP units change to Volts
       assertParameterHasDetails("M:OUTTMP@e,02",
-          settingUnits: "Volt", readingUnits: "Volt");
+          settingValue: "5.0",
+          settingUnits: "Volt",
+          readingValue: "10.00",
+          readingUnits: "Volt");
     });
 
     testWidgets(
