@@ -66,5 +66,21 @@ void main() {
       // Then Units is set to Primary Units
       assertDisplaySettingsUnits(isSetTo: "Primary Units");
     });
+
+    testWidgets(
+        'Change Display Settings > Units to Raw, no units are displayed',
+        (tester) async {
+      // Given the test page is loaded and I am on the Display Settings page
+      app.main();
+      await tester.pumpAndSettle();
+      await navigateToDisplaySettings(tester);
+
+      // When I change Units to Raw and exit Display Settings
+      await changeDisplaySettingsUnits(tester, to: "Raw");
+      await navigateBackwards(tester);
+
+      // Then no units are display for M:OUTTMP
+      assertReadingPropertyUnits(forParameter: "M:OUTTMP@e,02", are: "");
+    });
   });
 }
