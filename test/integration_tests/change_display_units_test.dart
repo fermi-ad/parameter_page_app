@@ -86,7 +86,10 @@ void main() {
 
       // Then no units are display for M:OUTTMP
       assertParameterHasDetails("M:OUTTMP@e,02",
-          settingUnits: "", readingUnits: "");
+          settingUnits: "",
+          settingValue: "0000",
+          readingUnits: "",
+          readingValue: "0000");
     });
   });
 }
