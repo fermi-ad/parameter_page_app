@@ -92,7 +92,7 @@ void main() {
 
       // Then the onChange callback is called
       //   and the new settings are stored in settings
-      expect(newSettings.units, equals("Primary Units"));
+      expect(newSettings.units, equals(DisplayUnits.primaryUnits));
     });
   });
 }
