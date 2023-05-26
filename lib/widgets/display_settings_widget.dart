@@ -1,10 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 
-class DisplaySettings {
-  String units;
+enum DisplayUnits {
+  commonUnits,
+  primaryUnits,
+  raw;
 
-  DisplaySettings({this.units = "Common Units"});
+  String get asString {
+    switch (this) {
+      case DisplayUnits.commonUnits:
+        return "Common Units";
+      case DisplayUnits.primaryUnits:
+        return "Primary Units";
+      case DisplayUnits.raw:
+        return "Raw";
+      default:
+        AssertionError("default case in DisplayUnits.asString!");
+        return "invalid DisplayUnits!";
+    }
+  }
+}
+
+class DisplaySettings {
+  DisplayUnits units;
+
+  DisplaySettings({this.units = DisplayUnits.commonUnits});
 }
 
 class DisplaySettingsWidget extends StatefulWidget {
@@ -18,7 +38,11 @@ class DisplaySettingsWidget extends StatefulWidget {
   @override
   State<DisplaySettingsWidget> createState() => _DisplaySettingsState();
 
-  static const displayUnits = ["Primary Units", "Common Units", "Raw"];
+  static const displayUnits = [
+    DisplayUnits.raw,
+    DisplayUnits.primaryUnits,
+    DisplayUnits.commonUnits
+  ];
 }
 
 class _DisplaySettingsState extends State<DisplaySettingsWidget> {
@@ -38,11 +62,12 @@ class _DisplaySettingsState extends State<DisplaySettingsWidget> {
         body: SettingsList(sections: [
           SettingsSection(title: const Text("Display"), tiles: <SettingsTile>[
             SettingsTile.navigation(
-                key: const Key("display_settings_tile_units"),
-                leading: const Icon(Icons.abc),
-                title: const Text("Units"),
-                value: Text(_settings.units),
-                onPressed: _popupUnitsMenu)
+              key: const Key("display_settings_tile_units"),
+              leading: const Icon(Icons.abc),
+              title: const Text("Units"),
+              onPressed: _popupUnitsMenu,
+              value: Text(_settings.units.asString),
+            )
           ])
         ]));
   }
@@ -54,9 +79,9 @@ class _DisplaySettingsState extends State<DisplaySettingsWidget> {
       items: DisplaySettingsWidget.displayUnits
           .map(
             (e) => PopupMenuItem(
-              key: Key("display_settings_tile_units_menuitem_$e"),
+              key: Key("display_settings_tile_units_menuitem_${e.asString}"),
               value: e,
-              child: Text(e),
+              child: Text(e.asString),
             ),
           )
           .toList(),
@@ -65,9 +90,7 @@ class _DisplaySettingsState extends State<DisplaySettingsWidget> {
         setState(() {
           _settings.units = value;
         });
-
-        DisplaySettings newSettings = DisplaySettings(units: value);
-        widget.onChanged(newSettings);
+        widget.onChanged(_settings);
       }
     });
   }

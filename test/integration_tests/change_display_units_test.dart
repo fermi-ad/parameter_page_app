@@ -17,7 +17,11 @@ void main() {
       await waitForDataToLoadFor(tester, "M:OUTTMP@e,02");
 
       // Then M:OUTTMP should show units of degF
-      assertReadingPropertyUnits(forParameter: "M:OUTTMP@e,02", are: "degF");
+      assertParameterHasDetails("M:OUTTMP@e,02",
+          settingValue: "50.0",
+          settingUnits: "mm",
+          readingValue: "100.0",
+          readingUnits: "degF");
     });
 
     testWidgets('Initially, Display Settings > Units is set to Common Units',
@@ -47,7 +51,11 @@ void main() {
       await navigateBackwards(tester);
 
       // Then the M:OUTTMP units change to Volts
-      assertReadingPropertyUnits(forParameter: "M:OUTTMP@e,02", are: "Volt");
+      assertParameterHasDetails("M:OUTTMP@e,02",
+          settingValue: "5.0",
+          settingUnits: "Volt",
+          readingValue: "10.00",
+          readingUnits: "Volt");
     });
 
     testWidgets(
@@ -65,6 +73,26 @@ void main() {
 
       // Then Units is set to Primary Units
       assertDisplaySettingsUnits(isSetTo: "Primary Units");
+    });
+
+    testWidgets(
+        'Change Display Settings > Units to Raw, no units are displayed',
+        (tester) async {
+      // Given the test page is loaded and I am on the Display Settings page
+      app.main();
+      await tester.pumpAndSettle();
+      await navigateToDisplaySettings(tester);
+
+      // When I change Units to Raw and exit Display Settings
+      await changeDisplaySettingsUnits(tester, to: "Raw");
+      await navigateBackwards(tester);
+
+      // Then no units are display for M:OUTTMP
+      assertParameterHasDetails("M:OUTTMP@e,02",
+          settingValue: "8888",
+          settingUnits: "",
+          readingUnits: "",
+          readingValue: "FFFF");
     });
   });
 }

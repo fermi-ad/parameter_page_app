@@ -37,11 +37,11 @@ void main() {
       // Then the descript and reading values should be...
       assertParameterHasDetails("M:OUTTMP@e,02",
           description: "device description",
-          settingValue: "50.00",
+          settingValue: "50.0",
           readingValue: "100.0");
       assertParameterHasDetails("G:AMANDA",
           description: "device description",
-          settingValue: "50.00",
+          settingValue: "50.0",
           readingValue: "100.0");
     });
 
@@ -59,7 +59,7 @@ void main() {
       // Then the description and values should be...
       assertParameterHasDetails("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE",
           description: "device description",
-          settingValue: "50.00",
+          settingValue: "50.0",
           readingValue: "100.0");
     });
   });

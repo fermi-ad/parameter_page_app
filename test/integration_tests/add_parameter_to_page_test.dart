@@ -26,7 +26,7 @@ void main() {
       assertParameterIsInRow("Z:BDCCT", 5);
       assertParameterHasDetails("Z:BDCCT",
           description: "device description",
-          settingValue: "50.00",
+          settingValue: "50.0",
           readingValue: "100.0");
     });
   });
