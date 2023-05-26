@@ -190,9 +190,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   String _extractReadingUnits({required from}) {
     switch (widget.displayUnits) {
       case DisplayUnits.commonUnits:
-        return from.first.readingCommonUnits;
+        return from.first.reading.commonUnits;
       case DisplayUnits.primaryUnits:
-        return from.first.readingPrimaryUnits;
+        return from.first.reading.primaryUnits;
       case DisplayUnits.raw:
         return "";
       default:

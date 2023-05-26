@@ -12,10 +12,10 @@ class MockDpmService extends DpmService {
             di: 0,
             name: drf,
             description: "device description",
-            readingCommonUnits: "degF",
-            readingPrimaryUnits: "Volt",
-            settingCommonUnits: "degF",
-            settingPrimaryUnits: "Volt"))
+            reading: const DeviceInfoProperty(
+                commonUnits: "degF", primaryUnits: "Volt"),
+            setting: const DeviceInfoProperty(
+                commonUnits: "degF", primaryUnits: "Volt")))
         .toList();
   }
 

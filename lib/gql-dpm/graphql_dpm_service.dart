@@ -115,11 +115,15 @@ class GraphQLDpmService extends DpmService {
 
   static DeviceInfo _convertToDevInfo(GGetDeviceInfoData_acceleratorData e) =>
       DeviceInfo(
-        di: e.data.di,
-        name: e.data.name,
-        description: e.data.description,
-        readingCommonUnits: e.data.units,
-      );
+          di: e.data.di,
+          name: e.data.name,
+          description: e.data.description,
+          reading: DeviceInfoProperty(
+              commonUnits: e.data.units ?? "",
+              primaryUnits: e.data.units ?? ""),
+          setting: DeviceInfoProperty(
+              commonUnits: e.data.units ?? "",
+              primaryUnits: e.data.units ?? ""));
 
   // Returns a stream of readings for the devices specified in the parameter
   // list. The `Reading` class has a `refId` field which indicates to which

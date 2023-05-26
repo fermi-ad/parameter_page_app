@@ -27,23 +27,27 @@ class DPMGraphQLException extends DPMException {
 // from API changes; hopefully we won't have to change these result classes
 // much, if at all.
 
+class DeviceInfoProperty {
+  final String commonUnits;
+  final String primaryUnits;
+
+  const DeviceInfoProperty(
+      {required this.commonUnits, required this.primaryUnits});
+}
+
 class DeviceInfo {
   final int di;
   final String name;
   final String description;
-  final String? readingCommonUnits;
-  final String? readingPrimaryUnits;
-  final String? settingCommonUnits;
-  final String? settingPrimaryUnits;
+  final DeviceInfoProperty? reading;
+  final DeviceInfoProperty? setting;
 
   const DeviceInfo(
       {required this.di,
       required this.name,
       required this.description,
-      this.readingCommonUnits,
-      this.readingPrimaryUnits,
-      this.settingCommonUnits,
-      this.settingPrimaryUnits});
+      this.reading,
+      this.setting});
 }
 
 class Reading {
