@@ -126,9 +126,8 @@ void assertDisplaySettingsShowAlarmDetails({required bool isOn}) {
   expect(
       find.descendant(
           of: displayAlarmDetailsTile,
-          matching: isOn
-              ? find.byIcon(Icons.toggle_on)
-              : find.byIcon(Icons.toggle_off)),
+          matching: find
+              .text("Show Parameter Alarm Details (${isOn ? "on" : "off"})")),
       findsOneWidget);
 }
 
@@ -269,5 +268,11 @@ Future<void> changeDisplaySettingsUnits(tester, {required String to}) async {
   await tester.tap(find.byKey(const Key("display_settings_tile_units")));
   await tester.pumpAndSettle();
   await tester.tap(find.byKey(Key("display_settings_tile_units_menuitem_$to")));
+  await tester.pumpAndSettle();
+}
+
+Future<void> toggleShowAlarmDetails(tester) async {
+  await tester
+      .tap(find.byKey(const Key("display_settings_tile_alarm_details")));
   await tester.pumpAndSettle();
 }

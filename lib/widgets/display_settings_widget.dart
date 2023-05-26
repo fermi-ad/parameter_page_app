@@ -67,7 +67,13 @@ class _DisplaySettingsState extends State<DisplaySettingsWidget> {
               title: const Text("Units"),
               onPressed: _popupUnitsMenu,
               value: Text(_settings.units.asString),
-            )
+            ),
+            SettingsTile.switchTile(
+                key: const Key("display_settings_tile_alarm_details"),
+                initialValue: false,
+                onToggle: (bool value) {},
+                leading: const Icon(Icons.alarm),
+                title: const Text("Show Parameter Alarm Details (off)"))
           ])
         ]));
   }

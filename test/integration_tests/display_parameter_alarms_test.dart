@@ -9,13 +9,7 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Change Parameter Alarm Min/Max/Tolerance', () {
-    testWidgets('Placeholder', (tester) async {
-      // Given
-      // When
-      // Then
-    });
-
-    testWidgets('Initially, Display Settings > Show Alarm Details is OFF',
+    testWidgets('Display Settings > Show Alarm Details, initially is OFF',
         (tester) async {
       // Given the test page is loaded
       app.main();
@@ -24,9 +18,27 @@ void main() {
       // When I navigate to the display settings page
       await navigateToDisplaySettings(tester);
 
-      // Then Units is set to Common
+      // Then Show Parameter Alarm Details is set to off
       assertDisplaySettings(isVisible: true);
       assertDisplaySettingsShowAlarmDetails(isOn: false);
+    });
+
+    testWidgets(
+        'Turn on Display Settings > Show Alarm Details, change persists',
+        (tester) async {
+      // Given I have turned on Show Parameter Alarm Details
+      app.main();
+      await tester.pumpAndSettle();
+      await navigateToDisplaySettings(tester);
+      await toggleShowAlarmDetails(tester);
+
+      // When I navigate to the parameter page and then back to display settings
+      await navigateBackwards(tester);
+      await navigateToDisplaySettings(tester);
+
+      // Then Show Parameter Alarm Details is set to on
+      assertDisplaySettings(isVisible: true);
+      assertDisplaySettingsShowAlarmDetails(isOn: true);
     });
   });
 }
