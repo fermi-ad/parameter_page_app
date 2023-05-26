@@ -120,6 +120,18 @@ void assertConfirmThrowAwayDialog({required bool isVisible}) {
       isVisible ? findsOneWidget : findsNothing);
 }
 
+void assertDisplaySettingsShowAlarmDetails({required bool isOn}) {
+  final displayAlarmDetailsTile =
+      find.byKey(const Key("display_settings_tile_alarm_details"));
+  expect(
+      find.descendant(
+          of: displayAlarmDetailsTile,
+          matching: isOn
+              ? find.byIcon(Icons.toggle_on)
+              : find.byIcon(Icons.toggle_off)),
+      findsOneWidget);
+}
+
 void assertDisplaySettingsUnits({required String isSetTo}) {
   final displayUnitsTile = find.byKey(const Key("display_settings_tile_units"));
   expect(find.descendant(of: displayUnitsTile, matching: find.text(isSetTo)),

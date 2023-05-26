@@ -14,5 +14,19 @@ void main() {
       // When
       // Then
     });
+
+    testWidgets('Initially, Display Settings > Show Alarm Details is OFF',
+        (tester) async {
+      // Given the test page is loaded
+      app.main();
+      await tester.pumpAndSettle();
+
+      // When I navigate to the display settings page
+      await navigateToDisplaySettings(tester);
+
+      // Then Units is set to Common
+      assertDisplaySettings(isVisible: true);
+      assertDisplaySettingsShowAlarmDetails(isOn: false);
+    });
   });
 }
