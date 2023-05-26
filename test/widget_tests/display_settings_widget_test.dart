@@ -17,6 +17,22 @@ void main() {
         findsOneWidget);
   }
 
+  Future<void> toggleShowAlarmDetails(tester) async {
+    await tester
+        .tap(find.byKey(const Key("display_settings_tile_alarm_details")));
+    await tester.pumpAndSettle();
+  }
+
+  void assertShowAlarmDetails({required String isSetTo}) {
+    final tileFinder =
+        find.byKey(const Key('display_settings_tile_alarm_details'));
+    expect(
+        find.descendant(
+            of: tileFinder,
+            matching: find.text("Show Parameter Alarm Details ($isSetTo)")),
+        findsOneWidget);
+  }
+
   group("DisplaySettingsWidget with initialSettings", () {
     testWidgets('Pass settings to constructor, used for initial value',
         (WidgetTester tester) async {
@@ -93,6 +109,28 @@ void main() {
       // Then the onChange callback is called
       //   and the new settings are stored in settings
       expect(newSettings.units, equals(DisplayUnits.primaryUnits));
+    });
+
+    testWidgets('Initially, Show Alarm Details is off',
+        (WidgetTester tester) async {
+      // Given a new DisplaySettingsWidget
+      await tester.pumpWidget(app);
+
+      // Then the Units setting shows 'Common Units'
+      assertShowAlarmDetails(isSetTo: "off");
+    });
+
+    testWidgets('Change Show Alarm Details, form displays new setting',
+        (WidgetTester tester) async {
+      // Given a new DisplaySettingsWidget and the units are set to 'Common Units'
+      await tester.pumpWidget(app);
+      assertShowAlarmDetails(isSetTo: 'off');
+
+      // When I toggle the Show Alarm Details setting
+      await toggleShowAlarmDetails(tester);
+
+      // Then the Show Alarm Details setting shows...
+      assertShowAlarmDetails(isSetTo: 'on');
     });
   });
 }
