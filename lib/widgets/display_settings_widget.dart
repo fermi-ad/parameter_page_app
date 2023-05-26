@@ -24,7 +24,10 @@ enum DisplayUnits {
 class DisplaySettings {
   DisplayUnits units;
 
-  DisplaySettings({this.units = DisplayUnits.commonUnits});
+  bool showAlarmDetails;
+
+  DisplaySettings(
+      {this.units = DisplayUnits.commonUnits, this.showAlarmDetails = false});
 }
 
 class DisplaySettingsWidget extends StatefulWidget {
@@ -70,10 +73,11 @@ class _DisplaySettingsState extends State<DisplaySettingsWidget> {
             ),
             SettingsTile.switchTile(
                 key: const Key("display_settings_tile_alarm_details"),
-                initialValue: false,
-                onToggle: (bool value) {},
+                initialValue: _settings.showAlarmDetails,
+                onToggle: _toggleShowAlarmDetails,
                 leading: const Icon(Icons.alarm),
-                title: const Text("Show Parameter Alarm Details (off)"))
+                title: Text(
+                    "Show Parameter Alarm Details (${_settings.showAlarmDetails ? "on" : "off"})"))
           ])
         ]));
   }
@@ -99,6 +103,10 @@ class _DisplaySettingsState extends State<DisplaySettingsWidget> {
         widget.onChanged(_settings);
       }
     });
+  }
+
+  void _toggleShowAlarmDetails(bool newSetting) {
+    setState(() => _settings.showAlarmDetails = newSetting);
   }
 
   late DisplaySettings _settings;
