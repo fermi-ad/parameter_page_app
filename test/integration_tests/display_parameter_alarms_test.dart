@@ -40,5 +40,22 @@ void main() {
       assertDisplaySettings(isVisible: true);
       assertDisplaySettingsShowAlarmDetails(isOn: true);
     });
+
+    testWidgets(
+        'Turn on Display Settings > Show Alarm Details, alarm details are shown',
+        (tester) async {
+      // Given the test parameter page is loaded
+      app.main();
+      await tester.pumpAndSettle();
+
+      // When I turn on Show Alarm Details and return to the parameter page
+      await navigateToDisplaySettings(tester);
+      await toggleShowAlarmDetails(tester);
+      await navigateBackwards(tester);
+
+      // Then the nominal value, tolerance and min/max alarm details are displayed for M:OUTTMP
+      assertParameterHasAlarmDetails("M:OUTTMP@e,02",
+          nominal: "72", tolerance: "10", min: "64.8", max: "79.2");
+    });
   });
 }

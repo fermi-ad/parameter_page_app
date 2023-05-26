@@ -84,6 +84,14 @@ void assertParameterHasDetails(String parameter,
   }
 }
 
+void assertParameterHasAlarmDetails(String s,
+    {required String nominal,
+    required String tolerance,
+    required String min,
+    required String max}) {
+  fail("TODO");
+}
+
 void assertParameterIsInRow(String parameter, int isInRow) {
   final rowFinder = find.byType(PageEntryWidget);
   final row = rowFinder.evaluate().isEmpty ? null : rowFinder.at(isInRow);
