@@ -31,13 +31,19 @@ class DeviceInfo {
   final int di;
   final String name;
   final String description;
-  final String? units;
+  final String? readingCommonUnits;
+  final String? readingPrimaryUnits;
+  final String? settingCommonUnits;
+  final String? settingPrimaryUnits;
 
   const DeviceInfo(
       {required this.di,
       required this.name,
       required this.description,
-      this.units});
+      this.readingCommonUnits,
+      this.readingPrimaryUnits,
+      this.settingCommonUnits,
+      this.settingPrimaryUnits});
 }
 
 class Reading {

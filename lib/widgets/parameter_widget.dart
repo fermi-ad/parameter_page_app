@@ -175,8 +175,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
 
       future: _setup.then((value) {
         description = value.first.description;
-        units = _readingUnits;
-        // value.first.units;
+        units = _extractReadingUnits(from: value);
         return value;
       }),
 
@@ -188,12 +187,12 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     );
   }
 
-  String get _readingUnits {
+  String _extractReadingUnits({required from}) {
     switch (widget.displayUnits) {
       case DisplayUnits.commonUnits:
-        return "degF";
+        return from.first.readingCommonUnits;
       case DisplayUnits.primaryUnits:
-        return "Volt";
+        return from.first.readingPrimaryUnits;
       case DisplayUnits.raw:
         return "";
       default:

@@ -8,8 +8,14 @@ class MockDpmService extends DpmService {
   @override
   Future<List<DeviceInfo>> getDeviceInfo(List<String> devices) async {
     return devices
-        .map((drf) =>
-            DeviceInfo(di: 0, name: drf, description: "device description"))
+        .map((drf) => DeviceInfo(
+            di: 0,
+            name: drf,
+            description: "device description",
+            readingCommonUnits: "degF",
+            readingPrimaryUnits: "Volt",
+            settingCommonUnits: "degF",
+            settingPrimaryUnits: "Volt"))
         .toList();
   }
 

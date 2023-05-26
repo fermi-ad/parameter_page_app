@@ -118,7 +118,7 @@ class GraphQLDpmService extends DpmService {
         di: e.data.di,
         name: e.data.name,
         description: e.data.description,
-        units: e.data.units,
+        readingCommonUnits: e.data.units,
       );
 
   // Returns a stream of readings for the devices specified in the parameter
