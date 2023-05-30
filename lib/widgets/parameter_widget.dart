@@ -114,6 +114,8 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                       const Spacer(),
                       Text(
                           key: Key("parameter_alarm_min_${widget.drf}"), "Min"),
+                      const Spacer(),
+                      Text(key: Key("parameter_alarm_max_${widget.drf}"), "Max")
                     ]))),
             const Spacer(),
             Row(
