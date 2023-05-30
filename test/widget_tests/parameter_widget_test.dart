@@ -12,6 +12,9 @@ void main() {
 
       expect(find.byKey(const Key("parameter_alarm_tolerance_M:OUTTMP")),
           areVisible ? findsOneWidget : findsNothing);
+
+      expect(find.byKey(const Key("parameter_alarm_min_M:OUTTMP")),
+          areVisible ? findsOneWidget : findsNothing);
     }
 
     testWidgets('showAlarmDetails false, alarm details are not displayed',
