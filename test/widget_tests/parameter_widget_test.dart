@@ -5,7 +5,10 @@ import 'package:parameter_page/widgets/parameter_widget.dart';
 
 void main() {
   group("ParameterWidget", () {
-    assertAlarmDetails({required bool areVisible}) {}
+    assertAlarmDetails({required bool areVisible}) {
+      expect(find.byKey(Key("parameter_alarms_nominal_M:OUTTMP")),
+          areVisible ? findsOneWidget : findsNothing);
+    }
 
     testWidgets('showAlarmDetails false, alarm details are not displayed',
         (WidgetTester tester) async {
