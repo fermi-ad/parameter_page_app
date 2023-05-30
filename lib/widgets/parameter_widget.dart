@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:parameter_page/dpm_service.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
@@ -10,10 +12,14 @@ class ParameterWidget extends StatelessWidget {
   final String? label;
   final bool editMode;
   final bool wide;
+  final bool displayAlarmDetails;
   final DisplayUnits displayUnits;
 
   const ParameterWidget(this.drf, this.editMode, this.wide,
-      {this.label, super.key, this.displayUnits = DisplayUnits.commonUnits});
+      {this.label,
+      super.key,
+      this.displayUnits = DisplayUnits.commonUnits,
+      this.displayAlarmDetails = false});
 
   Widget buildEditor(BuildContext context) {
     return ConstrainedBox(
@@ -30,7 +36,8 @@ class ParameterWidget extends StatelessWidget {
                 displayUnits: displayUnits,
                 drf: drf,
                 wide: wide,
-                dpm: DataAcquisitionWidget.of(context)));
+                dpm: DataAcquisitionWidget.of(context),
+                displayAlarmDetails: displayAlarmDetails));
   }
 }
 
@@ -39,12 +46,14 @@ class _ActiveParamWidget extends StatefulWidget {
   final DataAcquisitionWidget dpm;
   final bool wide;
   final DisplayUnits displayUnits;
+  final bool displayAlarmDetails;
 
   const _ActiveParamWidget(
       {required this.drf,
       required this.dpm,
       required this.wide,
-      required this.displayUnits});
+      required this.displayUnits,
+      required this.displayAlarmDetails});
 
   @override
   _ActiveParamState createState() => _ActiveParamState();
@@ -52,14 +61,12 @@ class _ActiveParamWidget extends StatefulWidget {
 
 class _ActiveParamState extends State<_ActiveParamWidget> {
   late final Future<List<DeviceInfo>> _setup;
-  late final Stream<Reading> _stream;
   String? description;
   String? units;
 
   @override
   void initState() {
     _setup = widget.dpm.getDeviceInfo([widget.drf]);
-    _stream = widget.dpm.monitorDevices([widget.drf]);
 
     super.initState();
   }
@@ -92,13 +99,21 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                 child:
                     Text(overflow: TextOverflow.ellipsis, description ?? "")),
             const Spacer(),
+            Expanded(
+                flex: 2,
+                child: Visibility(
+                    visible: widget.displayAlarmDetails,
+                    child: Text(
+                        key: Key("parameter_alarm_nominal_${widget.drf}"),
+                        "Nominal"))),
+            const Spacer(),
             Row(
               children: [
                 _buildParam(_settingValue, _settingUnits,
                     key: Key("parameter_setting_${widget.drf}")),
                 const SizedBox(width: 12.0),
                 StreamBuilder(
-                    stream: _stream,
+                    stream: widget.dpm.monitorDevices([widget.drf]),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.active) {
                         return _buildParam(
@@ -136,7 +151,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
           _buildParam(_settingValue, units,
               key: Key("parameter_setting_${widget.drf}")),
           StreamBuilder(
-              stream: _stream,
+              stream: widget.dpm.monitorDevices([widget.drf]),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
                   return _buildParam(_extractValueString(from: snapshot), units,
