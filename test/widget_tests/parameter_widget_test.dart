@@ -34,7 +34,12 @@ void main() {
           home: Scaffold(
               body: DataAcquisitionWidget(
                   service: MockDpmService(useEmptyStream: true),
-                  child: ParameterWidget("M:OUTTMP", false, true))));
+                  child: ParameterWidget(
+                    "M:OUTTMP",
+                    false,
+                    true,
+                    displayAlarmDetails: true,
+                  ))));
       await tester.pumpWidget(app);
 
       // Then the alarm details are displayed
