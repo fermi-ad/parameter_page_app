@@ -6,7 +6,7 @@ import 'package:parameter_page/widgets/parameter_widget.dart';
 void main() {
   group("ParameterWidget", () {
     assertAlarmDetails({required bool areVisible}) {
-      expect(find.byKey(Key("parameter_alarms_nominal_M:OUTTMP")),
+      expect(find.byKey(const Key("parameter_alarms_nominal_M:OUTTMP")),
           areVisible ? findsOneWidget : findsNothing);
     }
 
@@ -14,12 +14,23 @@ void main() {
         (WidgetTester tester) async {
       // Given nothing...
       // When I instantiate and display a ParameterEntry with showAlarmDetails = false
-      const parameterWidgetApp = MaterialApp(
+      const MaterialApp(
           home: Scaffold(body: ParameterWidget("M:OUTTMP", false, true)));
       await tester.pumpAndSettle();
 
       // Then the alarm details are not displayed
       assertAlarmDetails(areVisible: false);
+    });
+
+    testWidgets('showAlarmDetails true, alarm details are displayed',
+        (WidgetTester tester) async {
+      // Given nothing...
+      // When I instantiate and display a ParameterEntry with showAlarmDetails = true
+      const MaterialApp(
+          home: Scaffold(body: ParameterWidget("M:OUTTMP", false, true)));
+
+      // Then the alarm details are displayed
+      assertAlarmDetails(areVisible: true);
     });
   });
 }
