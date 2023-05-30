@@ -84,12 +84,16 @@ void assertParameterHasDetails(String parameter,
   }
 }
 
-void assertParameterHasAlarmDetails(String s,
+void assertParameterHasAlarmDetails(String parameter,
     {required String nominal,
     required String tolerance,
     required String min,
     required String max}) {
-  fail("TODO");
+  expect(
+      find.descendant(
+          of: find.byKey(Key("parameter_alarm_nominal_$parameter")),
+          matching: find.text(nominal)),
+      findsOneWidget);
 }
 
 void assertParameterIsInRow(String parameter, int isInRow) {
