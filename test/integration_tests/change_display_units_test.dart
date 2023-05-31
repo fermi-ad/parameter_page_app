@@ -49,6 +49,7 @@ void main() {
       // When I change Units to Primary Units and exit Display Settings
       await changeDisplaySettingsUnits(tester, to: "Primary Units");
       await navigateBackwards(tester);
+      await waitForDataToLoadFor(tester, "M:OUTTMP@e,02");
 
       // Then the M:OUTTMP units change to Volts
       assertParameterHasDetails("M:OUTTMP@e,02",
@@ -86,6 +87,7 @@ void main() {
       // When I change Units to Raw and exit Display Settings
       await changeDisplaySettingsUnits(tester, to: "Raw");
       await navigateBackwards(tester);
+      await waitForDataToLoadFor(tester, "M:OUTTMP@e,02");
 
       // Then no units are display for M:OUTTMP
       assertParameterHasDetails("M:OUTTMP@e,02",
