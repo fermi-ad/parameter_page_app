@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:parameter_page/dpm_service.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
