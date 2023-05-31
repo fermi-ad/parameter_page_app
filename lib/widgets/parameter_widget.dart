@@ -115,19 +115,26 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                       Column(
                           key: Key("parameter_alarm_tolerance_${widget.drf}"),
                           children: const [
-                            Text("Tolerance"),
+                            Text("Tolerance:"),
                             Spacer(),
                             Text("10.00")
                           ]),
+                      const Spacer(),
                       Column(
                           key: Key("parameter_alarm_min_${widget.drf}"),
                           children: const [
-                            Text("Min"),
+                            Text("Min:"),
                             Spacer(),
                             Text("64.80")
                           ]),
                       const Spacer(),
-                      Text(key: Key("parameter_alarm_max_${widget.drf}"), "Max")
+                      Column(
+                          key: Key("parameter_alarm_max_${widget.drf}"),
+                          children: const [
+                            Text("Max:"),
+                            Spacer(),
+                            Text("79.20")
+                          ]),
                     ]))),
             const Spacer(),
             Row(
