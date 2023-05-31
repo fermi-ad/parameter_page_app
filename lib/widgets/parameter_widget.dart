@@ -6,6 +6,7 @@ import 'package:parameter_page/widgets/page_entry_widget.dart';
 
 import 'data_acquisition_widget.dart';
 import 'display_settings_widget.dart';
+import 'parameter_alarm_details_widget.dart';
 
 class ParameterWidget extends StatelessWidget {
   final String drf;
@@ -103,39 +104,12 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                 flex: 10,
                 child: Visibility(
                     visible: widget.displayAlarmDetails,
-                    child: Row(children: [
-                      Column(
-                          key: Key("parameter_alarm_nominal_${widget.drf}"),
-                          children: const [
-                            Text("Nominal:"),
-                            Spacer(),
-                            Text("72.00")
-                          ]),
-                      const Spacer(),
-                      Column(
-                          key: Key("parameter_alarm_tolerance_${widget.drf}"),
-                          children: const [
-                            Text("Tolerance:"),
-                            Spacer(),
-                            Text("10.00")
-                          ]),
-                      const Spacer(),
-                      Column(
-                          key: Key("parameter_alarm_min_${widget.drf}"),
-                          children: const [
-                            Text("Min:"),
-                            Spacer(),
-                            Text("64.80")
-                          ]),
-                      const Spacer(),
-                      Column(
-                          key: Key("parameter_alarm_max_${widget.drf}"),
-                          children: const [
-                            Text("Max:"),
-                            Spacer(),
-                            Text("79.20")
-                          ]),
-                    ]))),
+                    child: ParameterAlarmDetailsWidget(
+                        drf: widget.drf,
+                        nominal: "72.00",
+                        tolerance: "10.00",
+                        min: "64.80",
+                        max: "79.20"))),
             const Spacer(),
             Row(
               children: [
