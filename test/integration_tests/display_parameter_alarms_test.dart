@@ -55,7 +55,7 @@ void main() {
 
       // Then the nominal value, tolerance and min/max alarm details are displayed for M:OUTTMP
       assertParameterHasAlarmDetails("M:OUTTMP@e,02",
-          nominal: "72", tolerance: "10", min: "64.8", max: "79.2");
+          nominal: "72.00", tolerance: "10.00", min: "64.80", max: "79.20");
     });
   });
 }

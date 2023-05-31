@@ -97,7 +97,7 @@ void main() {
       assertUnits(isSetTo: 'Primary Units');
     });
 
-    testWidgets('Change settings, onChange is called with new settings',
+    testWidgets('Change Display Units, onChange is called with new settings',
         (WidgetTester tester) async {
       // Given a new DisplaySettingsWidget and the units are set to 'Common Units'
       await tester.pumpWidget(app);
@@ -131,6 +131,21 @@ void main() {
 
       // Then the Show Alarm Details setting shows...
       assertShowAlarmDetails(isSetTo: 'on');
+    });
+
+    testWidgets(
+        'Change Show Alarm Details, onChange is called with new settings',
+        (WidgetTester tester) async {
+      // Given a new DisplaySettingsWidget and Show Alarm Details is off
+      await tester.pumpWidget(app);
+      assertShowAlarmDetails(isSetTo: 'off');
+
+      // When I toggle Show Alarm Details
+      await toggleShowAlarmDetails(tester);
+
+      // Then the onChange callback is called
+      //   and the new settings are stored in settings
+      expect(newSettings.showAlarmDetails, equals(true));
     });
   });
 }

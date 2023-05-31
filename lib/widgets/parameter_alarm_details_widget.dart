@@ -17,22 +17,29 @@ class ParameterAlarmDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(children: [
-      Column(
-          key: Key("parameter_alarm_nominal_$drf"),
-          children: const [Text("Nominal:"), Spacer(), Text("72.00")]),
-      const Spacer(),
-      Column(
-          key: Key("parameter_alarm_tolerance_$drf"),
-          children: const [Text("Tolerance:"), Spacer(), Text("10.00")]),
-      const Spacer(),
-      Column(
-          key: Key("parameter_alarm_min_$drf"),
-          children: const [Text("Min:"), Spacer(), Text("64.80")]),
-      const Spacer(),
-      Column(
-          key: Key("parameter_alarm_max_$drf"),
-          children: const [Text("Max:"), Spacer(), Text("79.20")]),
-    ]);
+    return SizedBox(
+        width: 250,
+        child: Column(children: [
+          Row(key: Key("parameter_alarm_nominal_$drf"), children: const [
+            Text(overflow: TextOverflow.ellipsis, "Nominal:"),
+            Spacer(),
+            Text(overflow: TextOverflow.ellipsis, "72.00")
+          ]),
+          Row(key: Key("parameter_alarm_tolerance_$drf"), children: const [
+            Text(overflow: TextOverflow.ellipsis, "Tolerance:"),
+            Spacer(),
+            Text(overflow: TextOverflow.ellipsis, "10.00")
+          ]),
+          Row(key: Key("parameter_alarm_min_$drf"), children: const [
+            Text(overflow: TextOverflow.ellipsis, "Min:"),
+            Spacer(),
+            Text(overflow: TextOverflow.ellipsis, "64.80")
+          ]),
+          Row(key: Key("parameter_alarm_max_$drf"), children: const [
+            Text(overflow: TextOverflow.ellipsis, "Max:"),
+            Spacer(),
+            Text(overflow: TextOverflow.ellipsis, "79.20")
+          ]),
+        ]));
   }
 }

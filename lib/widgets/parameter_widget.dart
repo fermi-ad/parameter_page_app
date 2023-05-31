@@ -91,7 +91,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-                flex: 3,
+                flex: 2,
                 child: Tooltip(
                     message: widget.drf,
                     child: Text(overflow: TextOverflow.ellipsis, widget.drf))),
@@ -100,16 +100,14 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                 child:
                     Text(overflow: TextOverflow.ellipsis, description ?? "")),
             const Spacer(),
-            Expanded(
-                flex: 10,
-                child: Visibility(
-                    visible: widget.displayAlarmDetails,
-                    child: ParameterAlarmDetailsWidget(
-                        drf: widget.drf,
-                        nominal: "72.00",
-                        tolerance: "10.00",
-                        min: "64.80",
-                        max: "79.20"))),
+            Visibility(
+                visible: widget.displayAlarmDetails,
+                child: ParameterAlarmDetailsWidget(
+                    drf: widget.drf,
+                    nominal: "72.00",
+                    tolerance: "10.00",
+                    min: "64.80",
+                    max: "79.20")),
             const Spacer(),
             Row(
               children: [

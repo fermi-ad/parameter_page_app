@@ -107,6 +107,7 @@ class _DisplaySettingsState extends State<DisplaySettingsWidget> {
 
   void _toggleShowAlarmDetails(bool newSetting) {
     setState(() => _settings.showAlarmDetails = newSetting);
+    widget.onChanged(_settings);
   }
 
   late DisplaySettings _settings;
