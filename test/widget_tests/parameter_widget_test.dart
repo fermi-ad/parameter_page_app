@@ -6,7 +6,7 @@ import 'package:parameter_page/widgets/parameter_widget.dart';
 
 void main() {
   group("ParameterWidget", () {
-    assertAlarmDetails({required bool areVisible}) {
+    assertAlarmDetailsAreVisible(bool areVisible) {
       expect(find.byKey(const Key("parameter_alarm_nominal_M:OUTTMP")),
           areVisible ? findsOneWidget : findsNothing);
 
@@ -18,6 +18,14 @@ void main() {
 
       expect(find.byKey(const Key("parameter_alarm_max_M:OUTTMP")),
           areVisible ? findsOneWidget : findsNothing);
+    }
+
+    assertAlarmDetails({required String nominal}) {
+      expect(
+          find.descendant(
+              of: find.byKey(Key("parameter_alarm_nominal_M:OUTTMP")),
+              matching: find.text(nominal)),
+          findsOneWidget);
     }
 
     testWidgets('showAlarmDetails false, alarm details are not displayed',
@@ -32,7 +40,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // Then the alarm details are not displayed
-      assertAlarmDetails(areVisible: false);
+      assertAlarmDetailsAreVisible(false);
     });
 
     testWidgets('showAlarmDetails true, alarm details are displayed',
@@ -52,7 +60,8 @@ void main() {
       await tester.pumpWidget(app);
 
       // Then the alarm details are displayed
-      assertAlarmDetails(areVisible: true);
+      assertAlarmDetailsAreVisible(true);
+      assertAlarmDetails(nominal: "72");
     });
   });
 }
