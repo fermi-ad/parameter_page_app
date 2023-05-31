@@ -7,16 +7,35 @@ class MockDpmService extends DpmService {
 
   @override
   Future<List<DeviceInfo>> getDeviceInfo(List<String> devices) async {
-    return devices
-        .map((drf) => DeviceInfo(
-            di: 0,
-            name: drf,
-            description: "device description",
-            reading: const DeviceInfoProperty(
-                commonUnits: "degF", primaryUnits: "Volt"),
-            setting: const DeviceInfoProperty(
-                commonUnits: "degF", primaryUnits: "Volt")))
-        .toList();
+    return devices.map((drf) {
+      switch (drf) {
+        case "Z:NO_READ":
+          return DeviceInfo(
+              di: 0,
+              name: drf,
+              description: "device description",
+              reading: null,
+              setting: const DeviceInfoProperty(
+                  commonUnits: "cUS", primaryUnits: "pUS"));
+        case "Z:NO_SET":
+          return DeviceInfo(
+              di: 0,
+              name: drf,
+              description: "device description",
+              reading: const DeviceInfoProperty(
+                  commonUnits: "cUR", primaryUnits: "pUR"),
+              setting: null);
+        default:
+          return DeviceInfo(
+              di: 0,
+              name: drf,
+              description: "device description",
+              reading: const DeviceInfoProperty(
+                  commonUnits: "cUR", primaryUnits: "pUR"),
+              setting: const DeviceInfoProperty(
+                  commonUnits: "cUS", primaryUnits: "pUS"));
+      }
+    }).toList();
   }
 
   @override

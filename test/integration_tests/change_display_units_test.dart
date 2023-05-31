@@ -19,9 +19,9 @@ void main() {
       // Then M:OUTTMP should show units of degF
       assertParameterHasDetails("M:OUTTMP@e,02",
           settingValue: "50.0",
-          settingUnits: "mm",
+          settingUnits: "cUS",
           readingValue: "100.0",
-          readingUnits: "degF");
+          readingUnits: "cUR");
     });
 
     testWidgets('Initially, Display Settings > Units is set to Common Units',
@@ -53,9 +53,9 @@ void main() {
       // Then the M:OUTTMP units change to Volts
       assertParameterHasDetails("M:OUTTMP@e,02",
           settingValue: "5.0",
-          settingUnits: "Volt",
+          settingUnits: "pUS",
           readingValue: "10.00",
-          readingUnits: "Volt");
+          readingUnits: "pUR");
     });
 
     testWidgets(
@@ -89,10 +89,7 @@ void main() {
 
       // Then no units are display for M:OUTTMP
       assertParameterHasDetails("M:OUTTMP@e,02",
-          settingValue: "8888",
-          settingUnits: "",
-          readingUnits: "",
-          readingValue: "FFFF");
+          settingValue: "8888", readingValue: "FFFF");
     });
   });
 }

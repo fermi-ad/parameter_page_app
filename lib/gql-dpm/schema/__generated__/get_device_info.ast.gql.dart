@@ -24,59 +24,102 @@ const GetDeviceInfo = _i1.OperationDefinitionNode(
   directives: [],
   selectionSet: _i1.SelectionSetNode(selections: [
     _i1.FieldNode(
-      name: _i1.NameNode(value: 'acceleratorData'),
+      name: _i1.NameNode(value: 'deviceInfo'),
       alias: null,
       arguments: [
         _i1.ArgumentNode(
-          name: _i1.NameNode(value: 'drfs'),
+          name: _i1.NameNode(value: 'devices'),
           value: _i1.VariableNode(name: _i1.NameNode(value: 'names')),
         )
       ],
       directives: [],
       selectionSet: _i1.SelectionSetNode(selections: [
         _i1.FieldNode(
-          name: _i1.NameNode(value: 'refId'),
-          alias: null,
-          arguments: [],
-          directives: [],
-          selectionSet: null,
-        ),
-        _i1.FieldNode(
-          name: _i1.NameNode(value: 'data'),
+          name: _i1.NameNode(value: 'result'),
           alias: null,
           arguments: [],
           directives: [],
           selectionSet: _i1.SelectionSetNode(selections: [
-            _i1.FieldNode(
-              name: _i1.NameNode(value: 'di'),
-              alias: null,
-              arguments: [],
+            _i1.InlineFragmentNode(
+              typeCondition: _i1.TypeConditionNode(
+                  on: _i1.NamedTypeNode(
+                name: _i1.NameNode(value: 'DeviceInfo'),
+                isNonNull: false,
+              )),
               directives: [],
-              selectionSet: null,
+              selectionSet: _i1.SelectionSetNode(selections: [
+                _i1.FieldNode(
+                  name: _i1.NameNode(value: 'description'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null,
+                ),
+                _i1.FieldNode(
+                  name: _i1.NameNode(value: 'reading'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: _i1.SelectionSetNode(selections: [
+                    _i1.FieldNode(
+                      name: _i1.NameNode(value: 'primaryUnits'),
+                      alias: null,
+                      arguments: [],
+                      directives: [],
+                      selectionSet: null,
+                    ),
+                    _i1.FieldNode(
+                      name: _i1.NameNode(value: 'commonUnits'),
+                      alias: null,
+                      arguments: [],
+                      directives: [],
+                      selectionSet: null,
+                    ),
+                  ]),
+                ),
+                _i1.FieldNode(
+                  name: _i1.NameNode(value: 'setting'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: _i1.SelectionSetNode(selections: [
+                    _i1.FieldNode(
+                      name: _i1.NameNode(value: 'primaryUnits'),
+                      alias: null,
+                      arguments: [],
+                      directives: [],
+                      selectionSet: null,
+                    ),
+                    _i1.FieldNode(
+                      name: _i1.NameNode(value: 'commonUnits'),
+                      alias: null,
+                      arguments: [],
+                      directives: [],
+                      selectionSet: null,
+                    ),
+                  ]),
+                ),
+              ]),
             ),
-            _i1.FieldNode(
-              name: _i1.NameNode(value: 'name'),
-              alias: null,
-              arguments: [],
+            _i1.InlineFragmentNode(
+              typeCondition: _i1.TypeConditionNode(
+                  on: _i1.NamedTypeNode(
+                name: _i1.NameNode(value: 'ErrorReply'),
+                isNonNull: false,
+              )),
               directives: [],
-              selectionSet: null,
-            ),
-            _i1.FieldNode(
-              name: _i1.NameNode(value: 'description'),
-              alias: null,
-              arguments: [],
-              directives: [],
-              selectionSet: null,
-            ),
-            _i1.FieldNode(
-              name: _i1.NameNode(value: 'units'),
-              alias: null,
-              arguments: [],
-              directives: [],
-              selectionSet: null,
+              selectionSet: _i1.SelectionSetNode(selections: [
+                _i1.FieldNode(
+                  name: _i1.NameNode(value: 'message'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null,
+                )
+              ]),
             ),
           ]),
-        ),
+        )
       ]),
     )
   ]),

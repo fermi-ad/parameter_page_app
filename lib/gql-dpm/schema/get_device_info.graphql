@@ -1,11 +1,20 @@
 query GetDeviceInfo($names: [String!]!) {
-    acceleratorData(drfs: $names) {
-        refId
-        data {
-            di
-            name
+    deviceInfo(devices: $names) {
+        result {
+          ... on DeviceInfo {
             description
-            units
+            reading {
+              primaryUnits
+              commonUnits
+            }
+            setting {
+              primaryUnits
+              commonUnits
+            }
+          }
+          ... on ErrorReply {
+            message
+          }
         }
     }
 }
