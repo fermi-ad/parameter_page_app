@@ -84,6 +84,18 @@ void assertParameterHasDetails(String parameter,
   }
 }
 
+void assertParameterHasAlarmDetails(String parameter,
+    {required String nominal,
+    required String tolerance,
+    required String min,
+    required String max}) {
+  expect(
+      find.descendant(
+          of: find.byKey(Key("parameter_alarm_nominal_$parameter")),
+          matching: find.text(nominal)),
+      findsOneWidget);
+}
+
 void assertParameterIsInRow(String parameter, int isInRow) {
   final rowFinder = find.byType(PageEntryWidget);
   final row = rowFinder.evaluate().isEmpty ? null : rowFinder.at(isInRow);
@@ -118,6 +130,17 @@ void assertConfirmThrowAwayDialog({required bool isVisible}) {
       find.text(
           "This page has unsaved changes that will be discarded.  Do you wish to continue?"),
       isVisible ? findsOneWidget : findsNothing);
+}
+
+void assertDisplaySettingsShowAlarmDetails({required bool isOn}) {
+  final displayAlarmDetailsTile =
+      find.byKey(const Key("display_settings_tile_alarm_details"));
+  expect(
+      find.descendant(
+          of: displayAlarmDetailsTile,
+          matching: find
+              .text("Show Parameter Alarm Details (${isOn ? "on" : "off"})")),
+      findsOneWidget);
 }
 
 void assertDisplaySettingsUnits({required String isSetTo}) {
@@ -257,5 +280,11 @@ Future<void> changeDisplaySettingsUnits(tester, {required String to}) async {
   await tester.tap(find.byKey(const Key("display_settings_tile_units")));
   await tester.pumpAndSettle();
   await tester.tap(find.byKey(Key("display_settings_tile_units_menuitem_$to")));
+  await tester.pumpAndSettle();
+}
+
+Future<void> toggleShowAlarmDetails(tester) async {
+  await tester
+      .tap(find.byKey(const Key("display_settings_tile_alarm_details")));
   await tester.pumpAndSettle();
 }

@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:parameter_page/dpm_service.dart';
 
 class MockDpmService extends DpmService {
-  const MockDpmService();
+  final bool useEmptyStream;
+
+  const MockDpmService({this.useEmptyStream = false});
 
   @override
   Future<List<DeviceInfo>> getDeviceInfo(List<String> devices) async {
@@ -40,17 +42,21 @@ class MockDpmService extends DpmService {
 
   @override
   Stream<Reading> monitorDevices(List<String> drfs) {
-    return Stream<Reading>.periodic(
-      const Duration(seconds: 1),
-      (count) {
-        return Reading(
-            refId: 0,
-            cycle: 0,
-            timestamp: DateTime(2023),
-            value: 100.0,
-            rawValue: "FFFF",
-            primaryValue: 10.0); //  + count * 0.1);
-      },
-    ).asBroadcastStream();
+    if (useEmptyStream) {
+      return const Stream<Reading>.empty();
+    } else {
+      return Stream<Reading>.periodic(
+        const Duration(seconds: 1),
+        (count) {
+          return Reading(
+              refId: 0,
+              cycle: 0,
+              timestamp: DateTime(2023),
+              value: 100.0,
+              rawValue: "FFFF",
+              primaryValue: 10.0); //  + count * 0.1);
+        },
+      ).asBroadcastStream();
+    }
   }
 }

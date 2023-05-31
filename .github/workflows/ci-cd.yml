@@ -26,6 +26,7 @@ jobs:
           - clear_all_entries_test
           - create_new_parameter_page_test
           - change_display_units_test
+          - display_parameter_alarms_test
 
     steps:
       - name: Checkout code
