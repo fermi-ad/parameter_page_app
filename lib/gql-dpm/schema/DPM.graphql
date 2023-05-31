@@ -43,8 +43,6 @@ type DataInfo {
     result: DataType!
     di: Int!
     name: String!
-    description: String!
-    units: String
 }
 
 type DataReply {
