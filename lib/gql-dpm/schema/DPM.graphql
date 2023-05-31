@@ -53,8 +53,32 @@ type DataReply {
     data: DataInfo!
 }
 
+type DeviceProperty {
+    primaryUnits: String
+    commonUnits: String
+}
+
+type DeviceInfo {
+    description: String!
+    reading: DeviceProperty
+    setting: DeviceProperty
+}
+
+type ErrorReply {
+    message: String!
+}
+
+union DeviceInfoResult =
+      DeviceInfo
+    | ErrorReply
+
+type DeviceInfoReply {
+    result: [DeviceInfoResult!]!
+}
+
 type Query {
     acceleratorData(drfs: [String!]!): [DataReply!]!
+    deviceInfo(device: [String!]!): DeviceInfoReply!
 }
 
 type Subscription {
