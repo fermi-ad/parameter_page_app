@@ -23,7 +23,8 @@ void main() {
     assertAlarmDetails(
         {required String nominal,
         required String tolerance,
-        required String min}) {
+        required String min,
+        required String max}) {
       expect(
           find.descendant(
               of: find.byKey(const Key("parameter_alarm_nominal_M:OUTTMP")),
@@ -40,6 +41,12 @@ void main() {
           find.descendant(
               of: find.byKey(const Key("parameter_alarm_min_M:OUTTMP")),
               matching: find.text(min)),
+          findsOneWidget);
+
+      expect(
+          find.descendant(
+              of: find.byKey(const Key("parameter_alarm_max_M:OUTTMP")),
+              matching: find.text(max)),
           findsOneWidget);
     }
 
@@ -76,7 +83,8 @@ void main() {
 
       // Then the alarm details are displayed
       assertAlarmDetailsAreVisible(true);
-      assertAlarmDetails(nominal: "72.00", tolerance: "10.00", min: "64.80");
+      assertAlarmDetails(
+          nominal: "72.00", tolerance: "10.00", min: "64.80", max: "79.2");
     });
   });
 }
