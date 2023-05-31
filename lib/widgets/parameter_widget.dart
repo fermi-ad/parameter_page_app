@@ -100,13 +100,17 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                     Text(overflow: TextOverflow.ellipsis, description ?? "")),
             const Spacer(),
             Expanded(
-                flex: 6,
+                flex: 8,
                 child: Visibility(
                     visible: widget.displayAlarmDetails,
                     child: Row(children: [
-                      Text(
+                      Column(
                           key: Key("parameter_alarm_nominal_${widget.drf}"),
-                          "Nominal"),
+                          children: const [
+                            Text("Nominal:"),
+                            Spacer(),
+                            Text("72")
+                          ]),
                       const Spacer(),
                       Text(
                           key: Key("parameter_alarm_tolerance_${widget.drf}"),
