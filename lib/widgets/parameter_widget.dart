@@ -62,8 +62,30 @@ class _ActiveParamWidget extends StatefulWidget {
 
 class _ActiveParamState extends State<_ActiveParamWidget> {
   late final Future<List<DeviceInfo>> _setup;
-  String? description;
-  String? units;
+  late final Stream<Reading> _stream;
+  DeviceInfo? info;
+
+  String? get readingUnits {
+    switch (widget.displayUnits) {
+      case DisplayUnits.commonUnits:
+        return info?.reading?.commonUnits;
+      case DisplayUnits.primaryUnits:
+        return info?.reading?.primaryUnits;
+      case DisplayUnits.raw:
+        return null;
+    }
+  }
+
+  String? get settingUnits {
+    switch (widget.displayUnits) {
+      case DisplayUnits.commonUnits:
+        return info?.setting?.commonUnits;
+      case DisplayUnits.primaryUnits:
+        return info?.setting?.primaryUnits;
+      case DisplayUnits.raw:
+        return null;
+    }
+  }
 
   @override
   void initState() {
@@ -97,8 +119,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                     child: Text(overflow: TextOverflow.ellipsis, widget.drf))),
             Expanded(
                 flex: 2,
-                child:
-                    Text(overflow: TextOverflow.ellipsis, description ?? "")),
+                child: info != null
+                    ? Text(overflow: TextOverflow.ellipsis, info!.description)
+                    : Container()),
             const Spacer(),
             Visibility(
                 visible: widget.displayAlarmDetails,
@@ -111,7 +134,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
             const Spacer(),
             Row(
               children: [
-                _buildParam(_settingValue, _settingUnits,
+                _buildParam(_settingValue, settingUnits,
                     key: Key("parameter_setting_${widget.drf}")),
                 const SizedBox(width: 12.0),
                 StreamBuilder(
@@ -119,10 +142,10 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.active) {
                         return _buildParam(
-                            _extractValueString(from: snapshot), units,
+                            _extractValueString(from: snapshot), readingUnits,
                             key: Key("parameter_reading_${widget.drf}"));
                       } else {
-                        return _buildParam(null, units,
+                        return _buildParam(null, readingUnits,
                             key: Key("parameter_nullreading_${widget.drf}"));
                       }
                     })
@@ -143,23 +166,24 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
           padding: const EdgeInsets.only(left: 8.0),
           child: Text(
               overflow: TextOverflow.ellipsis,
-              description ?? "",
+              info?.description ?? "",
               style: Theme.of(context)
                   .textTheme
                   .bodySmall!
                   .copyWith(fontStyle: FontStyle.italic, color: Colors.grey)),
         ),
         Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-          _buildParam(_settingValue, units,
+          _buildParam(_settingValue, settingUnits,
               key: Key("parameter_setting_${widget.drf}")),
           StreamBuilder(
               stream: widget.dpm.monitorDevices([widget.drf]),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
-                  return _buildParam(_extractValueString(from: snapshot), units,
+                  return _buildParam(
+                      _extractValueString(from: snapshot), readingUnits,
                       key: Key("parameter_reading_${widget.drf}"));
                 } else {
-                  return _buildParam(null, units,
+                  return _buildParam(null, readingUnits,
                       key: Key("parameter_nullreading_${widget.drf}"));
                 }
               })
@@ -176,9 +200,6 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         return from.data!.primaryValue.toStringAsPrecision(4);
       case DisplayUnits.raw:
         return from.data!.rawValue;
-      default:
-        AssertionError("Invalid displayUnits!");
-        return "Invalid displayUnits!";
     }
   }
 
@@ -186,13 +207,11 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      // The FUtureBuilder monitors our `getDeviceInfo` query. When it
-      // completes, we transfer over the values of `description` and `units` so
-      // the widgets can display them.
+      // The FutureBuilder monitors our `getDeviceInfo` query. When it
+      // completes, we save the information.
 
       future: _setup.then((value) {
-        description = value.first.description;
-        units = _extractReadingUnits(from: value);
+        info = value.first;
         return value;
       }),
 
@@ -204,34 +223,6 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     );
   }
 
-  String _extractReadingUnits({required from}) {
-    switch (widget.displayUnits) {
-      case DisplayUnits.commonUnits:
-        return from.first.reading.commonUnits;
-      case DisplayUnits.primaryUnits:
-        return from.first.reading.primaryUnits;
-      case DisplayUnits.raw:
-        return "";
-      default:
-        AssertionError("Invalid displayUnits!");
-        return "Invalid displayUnits!";
-    }
-  }
-
-  String get _settingUnits {
-    switch (widget.displayUnits) {
-      case DisplayUnits.commonUnits:
-        return "mm";
-      case DisplayUnits.primaryUnits:
-        return "Volt";
-      case DisplayUnits.raw:
-        return "";
-      default:
-        AssertionError("Invalid displayUnits!");
-        return "Invalid displayUnits!";
-    }
-  }
-
   String get _settingValue {
     switch (widget.displayUnits) {
       case DisplayUnits.commonUnits:
@@ -240,9 +231,6 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         return "5.0";
       case DisplayUnits.raw:
         return "8888";
-      default:
-        AssertionError("Invalid displayUnits!");
-        return "Invalid displayUnits!";
     }
   }
 }

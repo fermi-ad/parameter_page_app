@@ -9,9 +9,14 @@ import 'package:gql_code_builder/src/serializers/operation_serializer.dart'
     show OperationSerializer;
 import 'package:parameter_page/gql-dpm/schema/__generated__/get_device_info.data.gql.dart'
     show
+        GGetDeviceInfoData_deviceInfo_result,
         GGetDeviceInfoData,
-        GGetDeviceInfoData_acceleratorData,
-        GGetDeviceInfoData_acceleratorData_data;
+        GGetDeviceInfoData_deviceInfo,
+        GGetDeviceInfoData_deviceInfo_result__asDeviceInfo,
+        GGetDeviceInfoData_deviceInfo_result__asDeviceInfo_reading,
+        GGetDeviceInfoData_deviceInfo_result__asDeviceInfo_setting,
+        GGetDeviceInfoData_deviceInfo_result__asErrorReply,
+        GGetDeviceInfoData_deviceInfo_result__base;
 import 'package:parameter_page/gql-dpm/schema/__generated__/get_device_info.req.gql.dart'
     show GGetDeviceInfoReq;
 import 'package:parameter_page/gql-dpm/schema/__generated__/get_device_info.var.gql.dart'
@@ -37,12 +42,17 @@ part 'serializers.gql.g.dart';
 final SerializersBuilder _serializersBuilder = _$serializers.toBuilder()
   ..add(OperationSerializer())
   ..add(DateSerializer())
+  ..add(GGetDeviceInfoData_deviceInfo_result.serializer)
   ..add(GStreamDataData_acceleratorData_data_result.serializer)
   ..addPlugin(StandardJsonPlugin());
 @SerializersFor([
   GGetDeviceInfoData,
-  GGetDeviceInfoData_acceleratorData,
-  GGetDeviceInfoData_acceleratorData_data,
+  GGetDeviceInfoData_deviceInfo,
+  GGetDeviceInfoData_deviceInfo_result__asDeviceInfo,
+  GGetDeviceInfoData_deviceInfo_result__asDeviceInfo_reading,
+  GGetDeviceInfoData_deviceInfo_result__asDeviceInfo_setting,
+  GGetDeviceInfoData_deviceInfo_result__asErrorReply,
+  GGetDeviceInfoData_deviceInfo_result__base,
   GGetDeviceInfoReq,
   GGetDeviceInfoVars,
   GStreamDataData,
