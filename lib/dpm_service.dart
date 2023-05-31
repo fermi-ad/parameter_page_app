@@ -28,8 +28,8 @@ class DPMGraphQLException extends DPMException {
 // much, if at all.
 
 class DeviceInfoProperty {
-  final String commonUnits;
-  final String primaryUnits;
+  final String? commonUnits;
+  final String? primaryUnits;
 
   const DeviceInfoProperty(
       {required this.commonUnits, required this.primaryUnits});

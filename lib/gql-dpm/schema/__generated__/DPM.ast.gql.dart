@@ -210,24 +210,6 @@ const DataInfo = _i1.ObjectTypeDefinitionNode(
         isNonNull: true,
       ),
     ),
-    _i1.FieldDefinitionNode(
-      name: _i1.NameNode(value: 'description'),
-      directives: [],
-      args: [],
-      type: _i1.NamedTypeNode(
-        name: _i1.NameNode(value: 'String'),
-        isNonNull: true,
-      ),
-    ),
-    _i1.FieldDefinitionNode(
-      name: _i1.NameNode(value: 'units'),
-      directives: [],
-      args: [],
-      type: _i1.NamedTypeNode(
-        name: _i1.NameNode(value: 'String'),
-        isNonNull: false,
-      ),
-    ),
   ],
 );
 const DataReply = _i1.ObjectTypeDefinitionNode(
@@ -264,6 +246,114 @@ const DataReply = _i1.ObjectTypeDefinitionNode(
     ),
   ],
 );
+const DeviceProperty = _i1.ObjectTypeDefinitionNode(
+  name: _i1.NameNode(value: 'DeviceProperty'),
+  directives: [],
+  interfaces: [],
+  fields: [
+    _i1.FieldDefinitionNode(
+      name: _i1.NameNode(value: 'primaryUnits'),
+      directives: [],
+      args: [],
+      type: _i1.NamedTypeNode(
+        name: _i1.NameNode(value: 'String'),
+        isNonNull: false,
+      ),
+    ),
+    _i1.FieldDefinitionNode(
+      name: _i1.NameNode(value: 'commonUnits'),
+      directives: [],
+      args: [],
+      type: _i1.NamedTypeNode(
+        name: _i1.NameNode(value: 'String'),
+        isNonNull: false,
+      ),
+    ),
+  ],
+);
+const DeviceInfo = _i1.ObjectTypeDefinitionNode(
+  name: _i1.NameNode(value: 'DeviceInfo'),
+  directives: [],
+  interfaces: [],
+  fields: [
+    _i1.FieldDefinitionNode(
+      name: _i1.NameNode(value: 'description'),
+      directives: [],
+      args: [],
+      type: _i1.NamedTypeNode(
+        name: _i1.NameNode(value: 'String'),
+        isNonNull: true,
+      ),
+    ),
+    _i1.FieldDefinitionNode(
+      name: _i1.NameNode(value: 'reading'),
+      directives: [],
+      args: [],
+      type: _i1.NamedTypeNode(
+        name: _i1.NameNode(value: 'DeviceProperty'),
+        isNonNull: false,
+      ),
+    ),
+    _i1.FieldDefinitionNode(
+      name: _i1.NameNode(value: 'setting'),
+      directives: [],
+      args: [],
+      type: _i1.NamedTypeNode(
+        name: _i1.NameNode(value: 'DeviceProperty'),
+        isNonNull: false,
+      ),
+    ),
+  ],
+);
+const ErrorReply = _i1.ObjectTypeDefinitionNode(
+  name: _i1.NameNode(value: 'ErrorReply'),
+  directives: [],
+  interfaces: [],
+  fields: [
+    _i1.FieldDefinitionNode(
+      name: _i1.NameNode(value: 'message'),
+      directives: [],
+      args: [],
+      type: _i1.NamedTypeNode(
+        name: _i1.NameNode(value: 'String'),
+        isNonNull: true,
+      ),
+    )
+  ],
+);
+const DeviceInfoResult = _i1.UnionTypeDefinitionNode(
+  name: _i1.NameNode(value: 'DeviceInfoResult'),
+  directives: [],
+  types: [
+    _i1.NamedTypeNode(
+      name: _i1.NameNode(value: 'DeviceInfo'),
+      isNonNull: false,
+    ),
+    _i1.NamedTypeNode(
+      name: _i1.NameNode(value: 'ErrorReply'),
+      isNonNull: false,
+    ),
+  ],
+);
+const DeviceInfoReply = _i1.ObjectTypeDefinitionNode(
+  name: _i1.NameNode(value: 'DeviceInfoReply'),
+  directives: [],
+  interfaces: [],
+  fields: [
+    _i1.FieldDefinitionNode(
+      name: _i1.NameNode(value: 'result'),
+      directives: [],
+      args: [],
+      type: _i1.ListTypeNode(
+        type: _i1.NamedTypeNode(
+          name: _i1.NameNode(value: 'DeviceInfoResult'),
+          isNonNull: true,
+        ),
+        isNonNull: true,
+      ),
+    )
+  ],
+);
 const Query = _i1.ObjectTypeDefinitionNode(
   name: _i1.NameNode(value: 'Query'),
   directives: [],
@@ -293,7 +383,29 @@ const Query = _i1.ObjectTypeDefinitionNode(
         ),
         isNonNull: true,
       ),
-    )
+    ),
+    _i1.FieldDefinitionNode(
+      name: _i1.NameNode(value: 'deviceInfo'),
+      directives: [],
+      args: [
+        _i1.InputValueDefinitionNode(
+          name: _i1.NameNode(value: 'device'),
+          directives: [],
+          type: _i1.ListTypeNode(
+            type: _i1.NamedTypeNode(
+              name: _i1.NameNode(value: 'String'),
+              isNonNull: true,
+            ),
+            isNonNull: true,
+          ),
+          defaultValue: null,
+        )
+      ],
+      type: _i1.NamedTypeNode(
+        name: _i1.NameNode(value: 'DeviceInfoReply'),
+        isNonNull: true,
+      ),
+    ),
   ],
 );
 const Subscription = _i1.ObjectTypeDefinitionNode(
@@ -337,6 +449,11 @@ const document = _i1.DocumentNode(definitions: [
   StructData,
   DataInfo,
   DataReply,
+  DeviceProperty,
+  DeviceInfo,
+  ErrorReply,
+  DeviceInfoResult,
+  DeviceInfoReply,
   Query,
   Subscription,
 ]);

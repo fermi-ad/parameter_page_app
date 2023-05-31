@@ -94,7 +94,7 @@ class GraphQLDpmService extends DpmService {
             // Iterate across the list to generate a new one with our "nicer"
             // class type.
 
-            return response.data!.acceleratorData
+            return response.data!.deviceInfo.result
                 .map(_convertToDevInfo)
                 .toList();
           } else {
@@ -113,17 +113,36 @@ class GraphQLDpmService extends DpmService {
   // Private conversion method to convert an obnoxiously named, nested class
   // into our nicer, flatter one. Used by `getDeviceInfo()`.
 
-  static DeviceInfo _convertToDevInfo(GGetDeviceInfoData_acceleratorData e) =>
-      DeviceInfo(
-          di: e.data.di,
-          name: e.data.name,
-          description: e.data.description,
-          reading: DeviceInfoProperty(
-              commonUnits: e.data.units ?? "",
-              primaryUnits: e.data.units ?? ""),
-          setting: DeviceInfoProperty(
-              commonUnits: e.data.units ?? "",
-              primaryUnits: e.data.units ?? ""));
+  static DeviceInfo _convertToDevInfo(GGetDeviceInfoData_deviceInfo_result e) {
+    if (e is GGetDeviceInfoData_deviceInfo_result__asDeviceInfo) {
+      final DeviceInfoProperty? rProp = e.reading != null
+          ? DeviceInfoProperty(
+              primaryUnits: e.reading!.primaryUnits,
+              commonUnits: e.reading!.commonUnits)
+          : null;
+      final DeviceInfoProperty? sProp = e.reading != null
+          ? DeviceInfoProperty(
+              primaryUnits: e.reading!.primaryUnits,
+              commonUnits: e.reading!.commonUnits)
+          : null;
+
+      return DeviceInfo(
+        di: 0,
+        name: "",
+        description: e.description,
+        reading: rProp,
+        setting: sProp,
+      );
+    } else {
+      return const DeviceInfo(
+        di: 0,
+        name: "",
+        description: "",
+        reading: null,
+        setting: null,
+      );
+    }
+  }
 
   // Returns a stream of readings for the devices specified in the parameter
   // list. The `Reading` class has a `refId` field which indicates to which

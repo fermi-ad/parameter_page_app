@@ -9,8 +9,14 @@ part of 'serializers.gql.dart';
 Serializers _$serializers = (new Serializers().toBuilder()
       ..add(FetchPolicy.serializer)
       ..add(GGetDeviceInfoData.serializer)
-      ..add(GGetDeviceInfoData_acceleratorData.serializer)
-      ..add(GGetDeviceInfoData_acceleratorData_data.serializer)
+      ..add(GGetDeviceInfoData_deviceInfo.serializer)
+      ..add(GGetDeviceInfoData_deviceInfo_result__asDeviceInfo.serializer)
+      ..add(
+          GGetDeviceInfoData_deviceInfo_result__asDeviceInfo_reading.serializer)
+      ..add(
+          GGetDeviceInfoData_deviceInfo_result__asDeviceInfo_setting.serializer)
+      ..add(GGetDeviceInfoData_deviceInfo_result__asErrorReply.serializer)
+      ..add(GGetDeviceInfoData_deviceInfo_result__base.serializer)
       ..add(GGetDeviceInfoReq.serializer)
       ..add(GGetDeviceInfoVars.serializer)
       ..add(GStreamDataData.serializer)
@@ -24,8 +30,8 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(GStreamDataVars.serializer)
       ..addBuilderFactory(
           const FullType(BuiltList,
-              const [const FullType(GGetDeviceInfoData_acceleratorData)]),
-          () => new ListBuilder<GGetDeviceInfoData_acceleratorData>())
+              const [const FullType(GGetDeviceInfoData_deviceInfo_result)]),
+          () => new ListBuilder<GGetDeviceInfoData_deviceInfo_result>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(String)]),
           () => new ListBuilder<String>())
