@@ -35,7 +35,12 @@ class MockDpmService extends DpmService {
               reading: const DeviceInfoProperty(
                   commonUnits: "cUR", primaryUnits: "pUR"),
               setting: const DeviceInfoProperty(
-                  commonUnits: "cUS", primaryUnits: "pUS"));
+                  commonUnits: "cUS", primaryUnits: "pUS"),
+              alarm: const DeviceInfoAlarmBlock(
+                  nominal: "72.00",
+                  tolerance: "10.00",
+                  min: "64.80",
+                  max: "79.20"));
       }
     }).toList();
   }

@@ -27,6 +27,19 @@ class DPMGraphQLException extends DPMException {
 // from API changes; hopefully we won't have to change these result classes
 // much, if at all.
 
+class DeviceInfoAlarmBlock {
+  final String nominal;
+  final String tolerance;
+  final String min;
+  final String max;
+
+  const DeviceInfoAlarmBlock(
+      {required this.nominal,
+      required this.tolerance,
+      required this.min,
+      required this.max});
+}
+
 class DeviceInfoProperty {
   final String? commonUnits;
   final String? primaryUnits;
@@ -41,13 +54,15 @@ class DeviceInfo {
   final String description;
   final DeviceInfoProperty? reading;
   final DeviceInfoProperty? setting;
+  final DeviceInfoAlarmBlock? alarm;
 
   const DeviceInfo(
       {required this.di,
       required this.name,
       required this.description,
       this.reading,
-      this.setting});
+      this.setting,
+      this.alarm});
 }
 
 class Reading {
