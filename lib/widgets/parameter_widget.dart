@@ -123,12 +123,10 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
             const Spacer(),
             Visibility(
                 visible: widget.displayAlarmDetails,
-                child: ParameterAlarmDetailsWidget(
-                    drf: widget.drf,
-                    nominal: info?.alarm?.nominal ?? "",
-                    tolerance: info?.alarm?.tolerance ?? "",
-                    min: info?.alarm?.min ?? "",
-                    max: info?.alarm?.max ?? "")),
+                child: (info != null && info!.alarm != null)
+                    ? ParameterAlarmDetailsWidget(
+                        drf: widget.drf, alarmBlock: info!.alarm!)
+                    : Container()),
             const Spacer(),
             Row(
               children: [

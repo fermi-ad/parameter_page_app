@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/mock-dpm/mock_dpm_service.dart';
@@ -6,6 +8,24 @@ import 'package:parameter_page/widgets/parameter_widget.dart';
 
 void main() {
   group("ParameterWidget", () {
+    Future<void> pumpUntilFound(
+      WidgetTester tester,
+      Finder finder, {
+      Duration timeout = const Duration(seconds: 3),
+    }) async {
+      bool timerDone = false;
+      final timer = Timer(timeout, () => timerDone = true);
+      while (timerDone != true) {
+        await tester.pump();
+
+        final found = tester.any(finder);
+        if (found) {
+          timerDone = true;
+        }
+      }
+      timer.cancel();
+    }
+
     assertAlarmDetailsAreVisible(bool areVisible) {
       expect(find.byKey(const Key("parameter_alarm_nominal_M:OUTTMP")),
           areVisible ? findsOneWidget : findsNothing);
@@ -65,6 +85,12 @@ void main() {
       assertAlarmDetailsAreVisible(false);
     });
 
+    testWidgets(
+        'showAlarmDetails true and alarmBlock is empty, alarm details are not displayed',
+        (WidgetTester tester) async {
+      throw UnimplementedError();
+    });
+
     testWidgets('showAlarmDetails true, alarm details are displayed',
         (WidgetTester tester) async {
       // Given nothing...
@@ -80,6 +106,8 @@ void main() {
                     displayAlarmDetails: true,
                   ))));
       await tester.pumpWidget(app);
+      await pumpUntilFound(
+          tester, find.byKey(const Key("parameter_alarm_nominal_M:OUTTMP")));
 
       // Then the alarm details are displayed
       assertAlarmDetailsAreVisible(true);
