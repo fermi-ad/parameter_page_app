@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/mock-dpm/mock_dpm_service.dart';
@@ -6,6 +8,24 @@ import 'package:parameter_page/widgets/parameter_widget.dart';
 
 void main() {
   group("ParameterWidget", () {
+    Future<void> waitForParameterToLoad(
+      WidgetTester tester, {
+      required String drf,
+      Duration timeout = const Duration(seconds: 3),
+    }) async {
+      bool timerDone = false;
+      final timer = Timer(timeout, () => timerDone = true);
+      while (timerDone != true) {
+        await tester.pump();
+
+        final found = tester.any(find.byKey(Key("parameter_description_$drf")));
+        if (found) {
+          timerDone = true;
+        }
+      }
+      timer.cancel();
+    }
+
     assertAlarmDetailsAreVisible(bool areVisible) {
       expect(find.byKey(const Key("parameter_alarm_nominal_M:OUTTMP")),
           areVisible ? findsOneWidget : findsNothing);
@@ -65,6 +85,28 @@ void main() {
       assertAlarmDetailsAreVisible(false);
     });
 
+    testWidgets(
+        'showAlarmDetails true and alarmBlock is empty, alarm details are not displayed',
+        (WidgetTester tester) async {
+      // Given a parameter with no alarms block (Z:NO_ALARMS)
+      // When I instantiate and display a ParameterWidget with showAlarmDetails = true
+      const app = MaterialApp(
+          home: Scaffold(
+              body: DataAcquisitionWidget(
+                  service: MockDpmService(useEmptyStream: true),
+                  child: ParameterWidget(
+                    "Z:NO_ALARMS",
+                    false,
+                    true,
+                    displayAlarmDetails: true,
+                  ))));
+      await tester.pumpWidget(app);
+      await waitForParameterToLoad(tester, drf: "Z:NO_ALARMS");
+
+      // Then the alarm details are NOT displayed
+      assertAlarmDetailsAreVisible(false);
+    });
+
     testWidgets('showAlarmDetails true, alarm details are displayed',
         (WidgetTester tester) async {
       // Given nothing...
@@ -80,6 +122,7 @@ void main() {
                     displayAlarmDetails: true,
                   ))));
       await tester.pumpWidget(app);
+      await waitForParameterToLoad(tester, drf: "M:OUTTMP");
 
       // Then the alarm details are displayed
       assertAlarmDetailsAreVisible(true);

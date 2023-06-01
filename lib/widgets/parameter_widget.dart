@@ -118,17 +118,18 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
             Expanded(
                 flex: 2,
                 child: info != null
-                    ? Text(overflow: TextOverflow.ellipsis, info!.description)
+                    ? Text(
+                        key: Key("parameter_description_${widget.drf}"),
+                        overflow: TextOverflow.ellipsis,
+                        info!.description)
                     : Container()),
             const Spacer(),
             Visibility(
                 visible: widget.displayAlarmDetails,
-                child: ParameterAlarmDetailsWidget(
-                    drf: widget.drf,
-                    nominal: info?.alarm?.nominal ?? "",
-                    tolerance: info?.alarm?.tolerance ?? "",
-                    min: info?.alarm?.min ?? "",
-                    max: info?.alarm?.max ?? "")),
+                child: (info != null && info!.alarm != null)
+                    ? ParameterAlarmDetailsWidget(
+                        drf: widget.drf, alarmBlock: info!.alarm!)
+                    : Container()),
             const Spacer(),
             Row(
               children: [
