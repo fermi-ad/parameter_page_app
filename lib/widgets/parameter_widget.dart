@@ -125,10 +125,10 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                 visible: widget.displayAlarmDetails,
                 child: ParameterAlarmDetailsWidget(
                     drf: widget.drf,
-                    nominal: "72.00",
-                    tolerance: "10.00",
-                    min: "64.80",
-                    max: "79.20")),
+                    nominal: info?.alarm?.nominal ?? "",
+                    tolerance: info?.alarm?.tolerance ?? "",
+                    min: info?.alarm?.min ?? "",
+                    max: info?.alarm?.max ?? "")),
             const Spacer(),
             Row(
               children: [
