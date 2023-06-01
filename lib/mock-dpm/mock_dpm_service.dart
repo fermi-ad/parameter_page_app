@@ -27,6 +27,15 @@ class MockDpmService extends DpmService {
               reading: const DeviceInfoProperty(
                   commonUnits: "cUR", primaryUnits: "pUR"),
               setting: null);
+        case "Z:NO_ALARMS":
+          return DeviceInfo(
+              di: 0,
+              name: drf,
+              description: "device description",
+              reading: const DeviceInfoProperty(
+                  commonUnits: "cUR", primaryUnits: "pUR"),
+              setting: const DeviceInfoProperty(
+                  commonUnits: "cUS", primaryUnits: "pUS"));
         default:
           return DeviceInfo(
               di: 0,

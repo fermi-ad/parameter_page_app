@@ -118,7 +118,10 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
             Expanded(
                 flex: 2,
                 child: info != null
-                    ? Text(overflow: TextOverflow.ellipsis, info!.description)
+                    ? Text(
+                        key: Key("parameter_description_${widget.drf}"),
+                        overflow: TextOverflow.ellipsis,
+                        info!.description)
                     : Container()),
             const Spacer(),
             Visibility(
