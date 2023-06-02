@@ -18,41 +18,34 @@ class ParameterAlarmDetailsWidget extends StatelessWidget {
         child: Column(children: [
           Row(key: Key("parameter_alarm_nominal_$drf"), children: [
             const Text(
-                overflow: TextOverflow.ellipsis, "Nominal:", style: textStyle),
-            const Spacer(),
+                overflow: TextOverflow.ellipsis, "Nominal: ", style: textStyle),
             Text(
                 overflow: TextOverflow.ellipsis,
                 alarmBlock.nominal,
-                style: valueStyle)
+                style: valueStyle),
+            Row(key: Key("parameter_alarm_tolerance_$drf"), children: [
+              const Text(" (+/- ", style: textStyle),
+              Text(alarmBlock.tolerance, style: valueStyle),
+              const Text(")", style: textStyle)
+            ])
           ]),
-          Row(key: Key("parameter_alarm_tolerance_$drf"), children: [
-            const Text(
-                overflow: TextOverflow.ellipsis,
-                "Tolerance:",
-                style: textStyle),
-            const Spacer(),
-            Text(
-                overflow: TextOverflow.ellipsis,
-                alarmBlock.tolerance,
-                style: valueStyle)
-          ]),
-          Row(key: Key("parameter_alarm_min_$drf"), children: [
-            const Text(
-                overflow: TextOverflow.ellipsis, "Min:", style: textStyle),
-            const Spacer(),
-            Text(
-                overflow: TextOverflow.ellipsis,
-                alarmBlock.min,
-                style: valueStyle)
-          ]),
-          Row(key: Key("parameter_alarm_max_$drf"), children: [
-            const Text(
-                overflow: TextOverflow.ellipsis, "Max:", style: textStyle),
-            const Spacer(),
-            Text(
-                overflow: TextOverflow.ellipsis,
-                alarmBlock.max,
-                style: valueStyle)
+          Row(children: [
+            Row(key: Key("parameter_alarm_min_$drf"), children: [
+              const Text(
+                  overflow: TextOverflow.ellipsis, "Min: ", style: textStyle),
+              Text(
+                  overflow: TextOverflow.ellipsis,
+                  alarmBlock.min,
+                  style: valueStyle)
+            ]),
+            Row(key: Key("parameter_alarm_max_$drf"), children: [
+              const Text(
+                  overflow: TextOverflow.ellipsis, " Max: ", style: textStyle),
+              Text(
+                  overflow: TextOverflow.ellipsis,
+                  alarmBlock.max,
+                  style: valueStyle)
+            ])
           ]),
         ]));
   }
