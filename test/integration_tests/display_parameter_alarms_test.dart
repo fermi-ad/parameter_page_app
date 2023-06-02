@@ -54,8 +54,15 @@ void main() {
       await navigateBackwards(tester);
 
       // Then the nominal value, tolerance and min/max alarm details are displayed for M:OUTTMP
-      assertParameterHasAlarmDetails("M:OUTTMP@e,02",
-          nominal: "72.00", tolerance: "10.00", min: "64.80", max: "79.20");
+      assertAlarmValues(
+          forDRF: "M:OUTTMP@e,02",
+          nominal: "72.00",
+          tolerance: "10.00",
+          min: "64.80",
+          max: "79.20");
+
+      // ... but they are not shown for Z:NO_ALARMS
+      assertAlarmDetails(forDRF: "Z:NO_ALARMS", areVisible: false);
     });
   });
 }

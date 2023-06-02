@@ -84,16 +84,29 @@ void assertParameterHasDetails(String parameter,
   }
 }
 
-void assertParameterHasAlarmDetails(String parameter,
-    {required String nominal,
+void assertAlarmValues(
+    {required String forDRF,
+    required String nominal,
     required String tolerance,
     required String min,
     required String max}) {
+  assertAlarmDetails(forDRF: forDRF, areVisible: true);
   expect(
       find.descendant(
-          of: find.byKey(Key("parameter_alarm_nominal_$parameter")),
+          of: find.byKey(Key("parameter_alarm_nominal_$forDRF")),
           matching: find.text(nominal)),
       findsOneWidget);
+}
+
+void assertAlarmDetails({required String forDRF, required bool areVisible}) {
+  expect(find.byKey(Key("parameter_alarm_nominal_$forDRF")),
+      areVisible ? findsOneWidget : findsNothing);
+  expect(find.byKey(Key("parameter_alarm_tolerance_$forDRF")),
+      areVisible ? findsOneWidget : findsNothing);
+  expect(find.byKey(Key("parameter_alarm_min_$forDRF")),
+      areVisible ? findsOneWidget : findsNothing);
+  expect(find.byKey(Key("parameter_alarm_max_$forDRF")),
+      areVisible ? findsOneWidget : findsNothing);
 }
 
 void assertParameterIsInRow(String parameter, int isInRow) {

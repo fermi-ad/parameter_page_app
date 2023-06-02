@@ -63,6 +63,8 @@ class BaseWidget extends StatelessWidget {
           key: const Key("parameter_row_M:OUTTMP@e,02")),
       CommentEntry("This is our first comment!"),
       ParameterEntry("G:AMANDA", key: const Key("parameter_row_G:AMANDA")),
+      ParameterEntry("Z:NO_ALARMS",
+          key: const Key("parameter_row_Z:NO_ALARMS")),
       ParameterEntry("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE",
           key: const Key(
               "parameter_row_PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE")),
