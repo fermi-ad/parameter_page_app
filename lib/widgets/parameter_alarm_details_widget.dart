@@ -11,28 +11,48 @@ class ParameterAlarmDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const textStyle = TextStyle(color: Colors.grey, fontSize: 12.0);
+    const valueStyle = TextStyle(fontSize: 12.0);
     return SizedBox(
         width: 250,
         child: Column(children: [
           Row(key: Key("parameter_alarm_nominal_$drf"), children: [
-            const Text(overflow: TextOverflow.ellipsis, "Nominal:"),
+            const Text(
+                overflow: TextOverflow.ellipsis, "Nominal:", style: textStyle),
             const Spacer(),
-            Text(overflow: TextOverflow.ellipsis, alarmBlock.nominal)
+            Text(
+                overflow: TextOverflow.ellipsis,
+                alarmBlock.nominal,
+                style: valueStyle)
           ]),
           Row(key: Key("parameter_alarm_tolerance_$drf"), children: [
-            const Text(overflow: TextOverflow.ellipsis, "Tolerance:"),
+            const Text(
+                overflow: TextOverflow.ellipsis,
+                "Tolerance:",
+                style: textStyle),
             const Spacer(),
-            Text(overflow: TextOverflow.ellipsis, alarmBlock.tolerance)
+            Text(
+                overflow: TextOverflow.ellipsis,
+                alarmBlock.tolerance,
+                style: valueStyle)
           ]),
           Row(key: Key("parameter_alarm_min_$drf"), children: [
-            const Text(overflow: TextOverflow.ellipsis, "Min:"),
+            const Text(
+                overflow: TextOverflow.ellipsis, "Min:", style: textStyle),
             const Spacer(),
-            Text(overflow: TextOverflow.ellipsis, alarmBlock.min)
+            Text(
+                overflow: TextOverflow.ellipsis,
+                alarmBlock.min,
+                style: valueStyle)
           ]),
           Row(key: Key("parameter_alarm_max_$drf"), children: [
-            const Text(overflow: TextOverflow.ellipsis, "Max:"),
+            const Text(
+                overflow: TextOverflow.ellipsis, "Max:", style: textStyle),
             const Spacer(),
-            Text(overflow: TextOverflow.ellipsis, alarmBlock.max)
+            Text(
+                overflow: TextOverflow.ellipsis,
+                alarmBlock.max,
+                style: valueStyle)
           ]),
         ]));
   }
