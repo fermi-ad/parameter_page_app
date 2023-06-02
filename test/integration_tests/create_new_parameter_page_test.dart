@@ -51,7 +51,7 @@ void main() {
       await newPage(tester, confirmDiscardChanges: false);
 
       // Then I should be returned to the page
-      assertNumberOfEntriesOnPageIs(6);
+      assertNumberOfEntriesOnPageIs(7);
       assertParameterIsInRow("M:OUTTMP@e,02", 0);
     });
 
