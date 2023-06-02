@@ -129,5 +129,27 @@ void main() {
       assertAlarmDetails(
           nominal: "72.00", tolerance: "10.00", min: "64.80", max: "79.20");
     });
+
+    testWidgets(
+        'showAlarmDetails true and narrow mode, alarm details are displayed',
+        (WidgetTester tester) async {
+      // Given M:OUTTMP is a device with an alarm block
+      // When I instantiate and display a ParameterEntry with showAlarmDetails = true and wide mode turned off
+      const app = MaterialApp(
+          home: Scaffold(
+              body: DataAcquisitionWidget(
+                  service: MockDpmService(useEmptyStream: true),
+                  child: ParameterWidget(
+                    "M:OUTTMP",
+                    false,
+                    false,
+                    displayAlarmDetails: true,
+                  ))));
+      await tester.pumpWidget(app);
+      await waitForParameterToLoad(tester, drf: "M:OUTTMP");
+
+      // Then the alarm details are displayed
+      assertAlarmDetailsAreVisible(true);
+    });
   });
 }
