@@ -77,7 +77,8 @@ void main() {
       const scaffold = Scaffold(
           body: DataAcquisitionWidget(
               service: MockDpmService(useEmptyStream: true),
-              child: ParameterWidget("M:OUTTMP", false, true)));
+              child: ParameterWidget(
+                  drf: "M:OUTTMP", editMode: false, wide: true)));
       const app = MaterialApp(home: scaffold);
       await tester.pumpWidget(app);
 
@@ -95,9 +96,9 @@ void main() {
               body: DataAcquisitionWidget(
                   service: MockDpmService(useEmptyStream: true),
                   child: ParameterWidget(
-                    "Z:NO_ALARMS",
-                    false,
-                    true,
+                    drf: "Z:NO_ALARMS",
+                    editMode: false,
+                    wide: true,
                     displayAlarmDetails: true,
                   ))));
       await tester.pumpWidget(app);
@@ -116,9 +117,9 @@ void main() {
               body: DataAcquisitionWidget(
                   service: MockDpmService(useEmptyStream: true),
                   child: ParameterWidget(
-                    "M:OUTTMP",
-                    false,
-                    true,
+                    drf: "M:OUTTMP",
+                    editMode: false,
+                    wide: true,
                     displayAlarmDetails: true,
                   ))));
       await tester.pumpWidget(app);
@@ -128,6 +129,28 @@ void main() {
       assertAlarmDetailsAreVisible(true);
       assertAlarmDetails(
           nominal: "72.00", tolerance: "10.00", min: "64.80", max: "79.20");
+    });
+
+    testWidgets(
+        'showAlarmDetails true and narrow mode, alarm details are displayed',
+        (WidgetTester tester) async {
+      // Given M:OUTTMP is a device with an alarm block
+      // When I instantiate and display a ParameterEntry with showAlarmDetails = true and wide mode turned off
+      const app = MaterialApp(
+          home: Scaffold(
+              body: DataAcquisitionWidget(
+                  service: MockDpmService(useEmptyStream: true),
+                  child: ParameterWidget(
+                    drf: "M:OUTTMP",
+                    editMode: false,
+                    wide: false,
+                    displayAlarmDetails: true,
+                  ))));
+      await tester.pumpWidget(app);
+      await waitForParameterToLoad(tester, drf: "M:OUTTMP");
+
+      // Then the alarm details are displayed
+      assertAlarmDetailsAreVisible(true);
     });
   });
 }

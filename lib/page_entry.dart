@@ -52,7 +52,10 @@ class ParameterEntry extends PageEntry {
   @override
   Widget buildEntry(BuildContext context, bool editMode, bool wide,
       DisplaySettings settings) {
-    return ParameterWidget(drf, editMode, wide,
+    return ParameterWidget(
+        drf: drf,
+        editMode: editMode,
+        wide: wide,
         displayUnits: settings.units,
         displayAlarmDetails: settings.showAlarmDetails,
         label: label,
