@@ -15,8 +15,11 @@ class ParameterWidget extends StatelessWidget {
   final bool displayAlarmDetails;
   final DisplayUnits displayUnits;
 
-  const ParameterWidget(this.drf, this.editMode, this.wide,
-      {this.label,
+  const ParameterWidget(
+      {required this.drf,
+      required this.editMode,
+      required this.wide,
+      this.label,
       super.key,
       this.displayUnits = DisplayUnits.commonUnits,
       this.displayAlarmDetails = false});

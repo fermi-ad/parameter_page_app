@@ -77,7 +77,8 @@ void main() {
       const scaffold = Scaffold(
           body: DataAcquisitionWidget(
               service: MockDpmService(useEmptyStream: true),
-              child: ParameterWidget("M:OUTTMP", false, true)));
+              child: ParameterWidget(
+                  drf: "M:OUTTMP", editMode: false, wide: true)));
       const app = MaterialApp(home: scaffold);
       await tester.pumpWidget(app);
 
@@ -95,9 +96,9 @@ void main() {
               body: DataAcquisitionWidget(
                   service: MockDpmService(useEmptyStream: true),
                   child: ParameterWidget(
-                    "Z:NO_ALARMS",
-                    false,
-                    true,
+                    drf: "Z:NO_ALARMS",
+                    editMode: false,
+                    wide: true,
                     displayAlarmDetails: true,
                   ))));
       await tester.pumpWidget(app);
@@ -116,9 +117,9 @@ void main() {
               body: DataAcquisitionWidget(
                   service: MockDpmService(useEmptyStream: true),
                   child: ParameterWidget(
-                    "M:OUTTMP",
-                    false,
-                    true,
+                    drf: "M:OUTTMP",
+                    editMode: false,
+                    wide: true,
                     displayAlarmDetails: true,
                   ))));
       await tester.pumpWidget(app);
@@ -140,9 +141,9 @@ void main() {
               body: DataAcquisitionWidget(
                   service: MockDpmService(useEmptyStream: true),
                   child: ParameterWidget(
-                    "M:OUTTMP",
-                    false,
-                    false,
+                    drf: "M:OUTTMP",
+                    editMode: false,
+                    wide: false,
                     displayAlarmDetails: true,
                   ))));
       await tester.pumpWidget(app);
