@@ -45,7 +45,7 @@ class MockDpmService extends DpmService {
                   commonUnits: "cUR", primaryUnits: "pUR"),
               setting: const DeviceInfoProperty(
                   commonUnits: "cUS", primaryUnits: "pUS"),
-              alarm: const DeviceInfoAlarmBlock(
+              alarm: const DeviceInfoAnalogAlarm(
                   nominal: "72.00",
                   tolerance: "10.00",
                   min: "64.80",

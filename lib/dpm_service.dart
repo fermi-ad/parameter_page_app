@@ -27,13 +27,13 @@ class DPMGraphQLException extends DPMException {
 // from API changes; hopefully we won't have to change these result classes
 // much, if at all.
 
-class DeviceInfoAlarmBlock {
+class DeviceInfoAnalogAlarm {
   final String nominal;
   final String tolerance;
   final String min;
   final String max;
 
-  const DeviceInfoAlarmBlock(
+  const DeviceInfoAnalogAlarm(
       {required this.nominal,
       required this.tolerance,
       required this.min,
@@ -54,7 +54,7 @@ class DeviceInfo {
   final String description;
   final DeviceInfoProperty? reading;
   final DeviceInfoProperty? setting;
-  final DeviceInfoAlarmBlock? alarm;
+  final DeviceInfoAnalogAlarm? alarm;
 
   const DeviceInfo(
       {required this.di,
