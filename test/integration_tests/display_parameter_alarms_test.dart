@@ -58,8 +58,8 @@ void main() {
           forDRF: "M:OUTTMP@e,02",
           nominal: "72.00",
           tolerance: "10.00",
-          min: "64.80",
-          max: "79.20");
+          min: "62.00",
+          max: "82.00");
 
       // ... but they are not shown for Z:NO_ALARMS
       assertAlarmDetails(forDRF: "Z:NO_ALARMS", areVisible: false);
