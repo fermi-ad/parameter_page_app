@@ -128,7 +128,7 @@ void main() {
       // Then the alarm details are displayed
       assertAlarmDetailsAreVisible(true);
       assertAlarmDetails(
-          nominal: "72.00", tolerance: "10.00", min: "64.80", max: "79.20");
+          nominal: "72.00", tolerance: "10.00", min: "62.00", max: "82.00");
     });
 
     testWidgets(
