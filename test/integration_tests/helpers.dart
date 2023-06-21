@@ -139,6 +139,11 @@ void assertNumberOfEntriesOnPageIs(int n) {
 }
 
 void assertConfirmThrowAwayDialog({required bool isVisible}) {
+  expect(find.text("Are you sure you want to delete this row?"),
+      isVisible ? findsOneWidget : findsNothing);
+}
+
+void assertConfirmDeleteDialog({required bool isVisible}) {
   expect(
       find.text(
           "This page has unsaved changes that will be discarded.  Do you wish to continue?"),
@@ -300,4 +305,19 @@ Future<void> toggleShowAlarmDetails(tester) async {
   await tester
       .tap(find.byKey(const Key("display_settings_tile_alarm_details")));
   await tester.pumpAndSettle();
+}
+
+Future<void> tapPageEntry(tester, {required int atRowIndex}) async {
+  final rowsFinder = find.byType(PageEntryWidget);
+
+  await pumpUntilFound(tester, rowsFinder);
+
+  if (rowsFinder.evaluate().isEmpty) {
+    fail("No page entries found.");
+  }
+
+  final rowFinder =
+      rowsFinder.evaluate().isEmpty ? null : rowsFinder.at(atRowIndex);
+
+  tester.tap(rowFinder);
 }
