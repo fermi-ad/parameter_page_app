@@ -319,5 +319,5 @@ Future<void> tapPageEntry(tester, {required int atRowIndex}) async {
   final rowFinder =
       rowsFinder.evaluate().isEmpty ? null : rowsFinder.at(atRowIndex);
 
-  tester.tap(rowFinder);
+  await tester.tap(rowFinder);
 }
