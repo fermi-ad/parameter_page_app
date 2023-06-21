@@ -10,6 +10,12 @@ void main() {
 
   group('Display Digital Status Detail', () {
     testWidgets(
+        'Parameter with no digitial status, should display nothing in the status colum',
+        (tester) async {
+      // Then nothing is display in the digitial status column
+    });
+
+    testWidgets(
         'Tapping paramter with no digital status, should not do anything',
         (tester) async {
       // Given the test page is loaded
