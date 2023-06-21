@@ -172,6 +172,19 @@ void assertDisplaySettings({required bool isVisible}) {
       isVisible ? findsOneWidget : findsNothing);
 }
 
+void assertBasicStatus({required String forDRF, required bool isVisible}) {
+  expect(find.byKey(Key("parameter_basicstatus_$forDRF")),
+      isVisible ? findsOneWidget : findsNothing);
+}
+
+void assertOnOffStatus(
+    {required String forDRF,
+    required String isCharacter,
+    required Color withColor}) {
+  expect(
+      find.byKey(Key("parameter_basicstatus_onoff_$forDRF")), findsOneWidget);
+}
+
 Future<void> waitForDataToLoadFor(tester, parameter) async {
   final readingFinder = find.byKey(Key("parameter_reading_$parameter"));
   await pumpUntilFound(tester, readingFinder);

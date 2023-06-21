@@ -84,6 +84,30 @@ class Reading {
       this.primaryValue});
 }
 
+enum StatusColor { black, blue, green, cyan, red, magenta, yellow, white }
+
+class BasicStatusAttribute {
+  final String character;
+  final StatusColor color;
+
+  const BasicStatusAttribute({required this.character, required this.color});
+}
+
+class DigitalStatus {
+  final int refId;
+  final int status;
+  final int cycle;
+  final DateTime timestamp;
+  final BasicStatusAttribute? onOff;
+
+  const DigitalStatus(
+      {required this.refId,
+      this.status = 0,
+      required this.cycle,
+      required this.timestamp,
+      this.onOff});
+}
+
 abstract class DpmService {
   const DpmService();
 
