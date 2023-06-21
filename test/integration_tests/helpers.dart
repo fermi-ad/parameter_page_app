@@ -138,12 +138,12 @@ void assertNumberOfEntriesOnPageIs(int n) {
   expect(finder.evaluate().length, n);
 }
 
-void assertConfirmThrowAwayDialog({required bool isVisible}) {
+void assertConfirmDeleteDialog({required bool isVisible}) {
   expect(find.text("Are you sure you want to delete this row?"),
       isVisible ? findsOneWidget : findsNothing);
 }
 
-void assertConfirmDeleteDialog({required bool isVisible}) {
+void assertConfirmThrowAwayDialog({required bool isVisible}) {
   expect(
       find.text(
           "This page has unsaved changes that will be discarded.  Do you wish to continue?"),
