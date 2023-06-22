@@ -41,7 +41,7 @@ void main() {
       // Given a ParameterBasicStatusWidget instantiated for a device called G:AMANDA with all of it's basic status properties filled in
 
       // When I display the basic status
-      await tester.pumpAndSettle();
+      await tester.pumpWidget(app);
 
       // Then all of the attributes are displayed
       assertBasicStatus(tester,
