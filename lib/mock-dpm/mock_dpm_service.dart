@@ -86,7 +86,13 @@ class MockDpmService extends DpmService {
               cycle: 0,
               timestamp: DateTime(2023),
               onOff: const BasicStatusAttribute(
-                  character: ".", color: StatusColor.green));
+                  character: ".", color: StatusColor.green),
+              readyTripped: const BasicStatusAttribute(
+                  character: "T", color: StatusColor.red),
+              remoteLocal: const BasicStatusAttribute(
+                  character: "L", color: StatusColor.blue),
+              positiveNegative: const BasicStatusAttribute(
+                  character: "T", color: StatusColor.magenta));
         },
       ).asBroadcastStream();
     }
