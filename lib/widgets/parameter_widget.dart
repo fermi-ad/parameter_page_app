@@ -157,30 +157,40 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   Widget _buildBasicStatus() {
+    const labelsStyle = TextStyle(color: Colors.grey, fontSize: 12.0);
+    const onOffValueStyle = TextStyle(color: Colors.green, fontSize: 12.0);
+    const readyTrippedValueStyle = TextStyle(color: Colors.red, fontSize: 12.0);
+    const remoteLocalValueStyle = TextStyle(color: Colors.blue, fontSize: 12.0);
+    const positiveNegativeValueStyle =
+        TextStyle(color: Colors.pink, fontSize: 12.0);
+
     return Column(key: Key("parameter_basicstatus_${widget.drf}"), children: [
       Row(
           key: Key("parameter_basicstatus_onoff_${widget.drf}"),
           children: const [
-            Text("On/Off: "),
-            Text(".", style: TextStyle(color: Colors.green))
+            Text("On/Off: ", style: labelsStyle, textAlign: TextAlign.right),
+            Text(".", style: onOffValueStyle)
           ]),
       Row(
           key: Key("parameter_basicstatus_readytripped_${widget.drf}"),
           children: const [
-            Text("Ready/Tripped: "),
-            Text("T", style: TextStyle(color: Colors.red))
+            Text("Ready/Tripped: ",
+                style: labelsStyle, textAlign: TextAlign.right),
+            Text("T", style: readyTrippedValueStyle)
           ]),
       Row(
           key: Key("parameter_basicstatus_remotelocal_${widget.drf}"),
           children: const [
-            Text("Remote/Local: "),
-            Text("L", style: TextStyle(color: Colors.blue))
+            Text("Remote/Local: ",
+                style: labelsStyle, textAlign: TextAlign.right),
+            Text("L", style: remoteLocalValueStyle)
           ]),
       Row(
           key: Key("parameter_basicstatus_positivenegative_${widget.drf}"),
           children: const [
-            Text("Positive/Negative: "),
-            Text("T", style: TextStyle(color: Colors.pink))
+            Text("Positive/Negative: ",
+                style: labelsStyle, textAlign: TextAlign.right),
+            Text("T", style: positiveNegativeValueStyle)
           ])
     ]);
   }
