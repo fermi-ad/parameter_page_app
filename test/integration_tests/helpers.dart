@@ -177,12 +177,65 @@ void assertBasicStatus({required String forDRF, required bool isVisible}) {
       isVisible ? findsOneWidget : findsNothing);
 }
 
-void assertOnOffStatus(
+void assertOnOffStatus(tester,
     {required String forDRF,
     required String isCharacter,
     required Color withColor}) {
-  expect(
-      find.byKey(Key("parameter_basicstatus_onoff_$forDRF")), findsOneWidget);
+  _assertBasicStatusCharacter(tester,
+      forDRF: forDRF,
+      forType: "onoff",
+      isCharacter: isCharacter,
+      withColor: withColor);
+}
+
+void _assertBasicStatusCharacter(tester,
+    {required String forDRF,
+    required String forType,
+    required String isCharacter,
+    required Color withColor}) {
+  final onOffFinder =
+      find.byKey(Key("parameter_basicstatus_${forType}_$forDRF"));
+  expect(onOffFinder, findsOneWidget);
+
+  final onOffCharacterFinder =
+      find.descendant(of: onOffFinder, matching: find.text(isCharacter));
+  expect(onOffCharacterFinder, findsOneWidget);
+
+  final characterText = tester.widget<Text>(onOffCharacterFinder);
+  expect(characterText.style.color, withColor);
+}
+
+void assertReadyTrippedStatus(tester,
+    {required String forDRF,
+    required String isCharacter,
+    required Color withColor}) {
+  _assertBasicStatusCharacter(tester,
+      forDRF: forDRF,
+      forType: "readytripped",
+      isCharacter: isCharacter,
+      withColor: withColor);
+}
+
+void assertRemoteLocalStatus(tester,
+    {required String forDRF,
+    required String isCharacter,
+    required Color withColor}) {
+  _assertBasicStatusCharacter(tester,
+      forDRF: forDRF,
+      forType: "remotelocal",
+      isCharacter: isCharacter,
+      withColor: withColor);
+}
+
+void assertPositiveNegativeStatus(tester,
+    {required String forDRF,
+    required String isCharacter,
+    required Color withColor}) {
+  _assertBasicStatusCharacter(tester,
+      forDRF: forDRF,
+      forType: "positivenegative",
+      isCharacter: isCharacter,
+      withColor: withColor);
 }
 
 Future<void> waitForDataToLoadFor(tester, parameter) async {

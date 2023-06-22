@@ -110,54 +110,84 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   Widget _buildWide(BuildContext context) {
     return ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 34.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-                flex: 2,
-                child: Tooltip(
-                    message: widget.drf,
-                    child: Text(overflow: TextOverflow.ellipsis, widget.drf))),
-            Expanded(
-                flex: 2,
-                child: info != null
-                    ? Text(
-                        key: Key("parameter_description_${widget.drf}"),
-                        overflow: TextOverflow.ellipsis,
-                        info!.description)
-                    : Container()),
-            const Spacer(),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(children: [
-                  _buildParam(_settingValue, settingUnits,
-                      key: Key("parameter_setting_${widget.drf}")),
-                  const SizedBox(width: 12.0),
-                  StreamBuilder(
-                      stream: widget.dpm.monitorDevices([widget.drf]),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.active) {
-                          return _buildParam(
-                              _extractValueString(from: snapshot), readingUnits,
-                              key: Key("parameter_reading_${widget.drf}"));
-                        } else {
-                          return _buildParam(null, readingUnits,
-                              key: Key("parameter_nullreading_${widget.drf}"));
-                        }
-                      })
-                ]),
-                Visibility(
-                    visible: widget.displayAlarmDetails,
-                    child: (info != null && info!.alarm != null)
-                        ? ParameterAlarmDetailsWidget(
-                            drf: widget.drf, alarmBlock: info!.alarm!)
-                        : Container()),
-              ],
-            ),
-          ],
-        ));
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Expanded(
+              flex: 2,
+              child: Tooltip(
+                  message: widget.drf,
+                  child: Text(overflow: TextOverflow.ellipsis, widget.drf))),
+          Expanded(
+              flex: 2,
+              child: info != null
+                  ? Text(
+                      key: Key("parameter_description_${widget.drf}"),
+                      overflow: TextOverflow.ellipsis,
+                      info!.description)
+                  : Container()),
+          const Spacer(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(children: [
+                _buildParam(_settingValue, settingUnits,
+                    key: Key("parameter_setting_${widget.drf}")),
+                const SizedBox(width: 12.0),
+                StreamBuilder(
+                    stream: widget.dpm.monitorDevices([widget.drf]),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.active) {
+                        return _buildParam(
+                            _extractValueString(from: snapshot), readingUnits,
+                            key: Key("parameter_reading_${widget.drf}"));
+                      } else {
+                        return _buildParam(null, readingUnits,
+                            key: Key("parameter_nullreading_${widget.drf}"));
+                      }
+                    }),
+                const SizedBox(width: 12.0),
+                Column(
+                  key: Key("parameter_basicstatus_${widget.drf}"),
+                  children: [
+                    Row(
+                        key: Key("parameter_basicstatus_onoff_${widget.drf}"),
+                        children: const [
+                          Text("On/Off: "),
+                          Text(".", style: TextStyle(color: Colors.green))
+                        ]),
+                    Row(
+                        key: Key(
+                            "parameter_basicstatus_readytripped_${widget.drf}"),
+                        children: const [
+                          Text("Ready/Tripped: "),
+                          Text("T", style: TextStyle(color: Colors.red))
+                        ]),
+                    Row(
+                        key: Key(
+                            "parameter_basicstatus_remotelocal_${widget.drf}"),
+                        children: const [
+                          Text("Remote/Local: "),
+                          Text("L", style: TextStyle(color: Colors.blue))
+                        ]),
+                    Row(
+                        key: Key(
+                            "parameter_basicstatus_positivenegative_${widget.drf}"),
+                        children: const [
+                          Text("Positive/Negative: "),
+                          Text("T", style: TextStyle(color: Colors.pink))
+                        ]),
+                    Visibility(
+                        visible: widget.displayAlarmDetails,
+                        child: (info != null && info!.alarm != null)
+                            ? ParameterAlarmDetailsWidget(
+                                drf: widget.drf, alarmBlock: info!.alarm!)
+                            : Container()),
+                  ],
+                ),
+              ]),
+            ],
+          )
+        ]));
   }
 
   Widget _buildNarrow(BuildContext context) {

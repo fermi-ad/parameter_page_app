@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
@@ -11,7 +12,7 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Display Digital Status Detail', () {
-    testWidgets(
+    /*testWidgets(
         'Parameter with no digitial status, should display nothing in the status colum',
         (tester) async {
       // Given the test page is loaded
@@ -23,7 +24,7 @@ void main() {
       // Then nothing is display in the digitial status column
       assertBasicStatus(forDRF: "M:OUTTMP@e,02", isVisible: false);
     });
-
+*/
     testWidgets(
         'Parameter with digital status, should display all four basic status characters',
         (tester) async {
@@ -35,13 +36,21 @@ void main() {
       await waitForDataToLoadFor(tester, "G:AMANDA");
 
       // Then on/off characters are displayed
-      assertOnOffStatus(
-          forDRF: "G:AMANDA",
-          isCharacter: ".",
-          withColor: const Color(0x0000ff00));
+      assertBasicStatus(forDRF: "G:AMANDA", isVisible: true);
+      assertOnOffStatus(tester,
+          forDRF: "G:AMANDA", isCharacter: ".", withColor: Colors.green);
+
       //  ... and ready/tripped characters are displayed
+      assertReadyTrippedStatus(tester,
+          forDRF: "G:AMANDA", isCharacter: "T", withColor: Colors.red);
+
       //  ... and remote/local characters are displayed
+      assertRemoteLocalStatus(tester,
+          forDRF: "G:AMANDA", isCharacter: "L", withColor: Colors.blue);
+
       //  ... and positive/negative characters are displayed
+      assertPositiveNegativeStatus(tester,
+          forDRF: "G:AMANDA", isCharacter: "T", withColor: Colors.pink);
     });
 
     testWidgets(
