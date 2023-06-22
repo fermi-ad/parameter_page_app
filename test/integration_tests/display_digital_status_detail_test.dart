@@ -10,7 +10,7 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Display Digital Status Detail', () {
-    /*testWidgets(
+    /*  testWidgets(
         'Parameter with no digitial status, should display nothing in the status colum',
         (tester) async {
       // Given the test page is loaded

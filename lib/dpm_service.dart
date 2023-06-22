@@ -99,13 +99,19 @@ class DigitalStatus {
   final int cycle;
   final DateTime timestamp;
   final BasicStatusAttribute? onOff;
+  final BasicStatusAttribute? readyTripped;
+  final BasicStatusAttribute? remoteLocal;
+  final BasicStatusAttribute? positiveNegative;
 
   const DigitalStatus(
       {required this.refId,
       this.status = 0,
       required this.cycle,
       required this.timestamp,
-      this.onOff});
+      this.onOff,
+      this.readyTripped,
+      this.remoteLocal,
+      this.positiveNegative});
 }
 
 abstract class DpmService {
