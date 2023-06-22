@@ -138,6 +138,11 @@ void assertNumberOfEntriesOnPageIs(int n) {
   expect(finder.evaluate().length, n);
 }
 
+void assertConfirmDeleteDialog({required bool isVisible}) {
+  expect(find.text("Are you sure you want to delete this row?"),
+      isVisible ? findsOneWidget : findsNothing);
+}
+
 void assertConfirmThrowAwayDialog({required bool isVisible}) {
   expect(
       find.text(
@@ -165,6 +170,72 @@ void assertDisplaySettingsUnits({required String isSetTo}) {
 void assertDisplaySettings({required bool isVisible}) {
   expect(find.byKey(const Key("display_settings_appbar")),
       isVisible ? findsOneWidget : findsNothing);
+}
+
+void assertBasicStatus({required String forDRF, required bool isVisible}) {
+  expect(find.byKey(Key("parameter_basicstatus_$forDRF")),
+      isVisible ? findsOneWidget : findsNothing);
+}
+
+void assertOnOffStatus(tester,
+    {required String forDRF,
+    required String isCharacter,
+    required Color withColor}) {
+  _assertBasicStatusCharacter(tester,
+      forDRF: forDRF,
+      forType: "onoff",
+      isCharacter: isCharacter,
+      withColor: withColor);
+}
+
+void _assertBasicStatusCharacter(tester,
+    {required String forDRF,
+    required String forType,
+    required String isCharacter,
+    required Color withColor}) {
+  final onOffFinder =
+      find.byKey(Key("parameter_basicstatus_${forType}_$forDRF"));
+  expect(onOffFinder, findsOneWidget);
+
+  final onOffCharacterFinder =
+      find.descendant(of: onOffFinder, matching: find.text(isCharacter));
+  expect(onOffCharacterFinder, findsOneWidget);
+
+  final characterText = tester.widget<Text>(onOffCharacterFinder);
+  expect(characterText.style.color, withColor);
+}
+
+void assertReadyTrippedStatus(tester,
+    {required String forDRF,
+    required String isCharacter,
+    required Color withColor}) {
+  _assertBasicStatusCharacter(tester,
+      forDRF: forDRF,
+      forType: "readytripped",
+      isCharacter: isCharacter,
+      withColor: withColor);
+}
+
+void assertRemoteLocalStatus(tester,
+    {required String forDRF,
+    required String isCharacter,
+    required Color withColor}) {
+  _assertBasicStatusCharacter(tester,
+      forDRF: forDRF,
+      forType: "remotelocal",
+      isCharacter: isCharacter,
+      withColor: withColor);
+}
+
+void assertPositiveNegativeStatus(tester,
+    {required String forDRF,
+    required String isCharacter,
+    required Color withColor}) {
+  _assertBasicStatusCharacter(tester,
+      forDRF: forDRF,
+      forType: "positivenegative",
+      isCharacter: isCharacter,
+      withColor: withColor);
 }
 
 Future<void> waitForDataToLoadFor(tester, parameter) async {
@@ -300,4 +371,19 @@ Future<void> toggleShowAlarmDetails(tester) async {
   await tester
       .tap(find.byKey(const Key("display_settings_tile_alarm_details")));
   await tester.pumpAndSettle();
+}
+
+Future<void> tapPageEntry(tester, {required int atRowIndex}) async {
+  final rowsFinder = find.byType(PageEntryWidget);
+
+  await pumpUntilFound(tester, rowsFinder);
+
+  if (rowsFinder.evaluate().isEmpty) {
+    fail("No page entries found.");
+  }
+
+  final rowFinder =
+      rowsFinder.evaluate().isEmpty ? null : rowsFinder.at(atRowIndex);
+
+  await tester.tap(rowFinder);
 }

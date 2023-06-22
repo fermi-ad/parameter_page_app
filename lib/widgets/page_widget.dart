@@ -112,31 +112,31 @@ class _PageWidgetState extends State<PageWidget> {
   // Builds a single row of the parameter page.
 
   Widget buildRow(BuildContext context, PageEntry entry, int index, bool wide) {
-    return GestureDetector(
-        onTap: () async {
-          var result = await shouldDeleteRow(context);
+    return Padding(
+      padding: const EdgeInsets.all(2.0),
+      child: _page.editing()
+          ? Row(children: [
+              Expanded(
+                  child: entry.buildEntry(
+                      context, _page.editing(), wide, _settings)),
+              const SizedBox(width: 8.0),
+              GestureDetector(
+                  onTap: () async {
+                    var result = await shouldDeleteRow(context);
 
-          if (result ?? false) {
-            setState(() {
-              _page.removeEntry(at: index);
-            });
-          }
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(2.0),
-          child: _page.editing()
-              ? Row(children: [
-                  Expanded(
-                      child: entry.buildEntry(
-                          context, _page.editing(), wide, _settings)),
-                  const SizedBox(width: 8.0),
-                  const IconButton(
+                    if (result ?? false) {
+                      setState(() {
+                        _page.removeEntry(at: index);
+                      });
+                    }
+                  },
+                  child: const IconButton(
                       visualDensity: VisualDensity.compact,
                       onPressed: null,
-                      icon: Icon(Icons.delete))
-                ])
-              : entry.buildEntry(context, _page.editing(), wide, _settings),
-        ));
+                      icon: Icon(Icons.delete)))
+            ])
+          : entry.buildEntry(context, _page.editing(), wide, _settings),
+    );
   }
 
   // Build the widget for wide screens.

@@ -73,4 +73,22 @@ class MockDpmService extends DpmService {
       ).asBroadcastStream();
     }
   }
+
+  Stream<DigitalStatus> monitorDigitalStatusDevices(List<String> drfs) {
+    if (useEmptyStream) {
+      return const Stream<DigitalStatus>.empty();
+    } else {
+      return Stream<DigitalStatus>.periodic(
+        const Duration(seconds: 1),
+        (count) {
+          return DigitalStatus(
+              refId: 0,
+              cycle: 0,
+              timestamp: DateTime(2023),
+              onOff: const BasicStatusAttribute(
+                  character: ".", color: StatusColor.green));
+        },
+      ).asBroadcastStream();
+    }
+  }
 }
