@@ -50,6 +50,24 @@ void main() {
           isVisible: true,
           characterIs: ".",
           withColor: Colors.green);
+      assertBasicStatus(tester,
+          forDRF: "G:AMANDA",
+          property: "readyTripped",
+          isVisible: true,
+          characterIs: "T",
+          withColor: Colors.red);
+      assertBasicStatus(tester,
+          forDRF: "G:AMANDA",
+          property: "remoteLocal",
+          isVisible: true,
+          characterIs: "L",
+          withColor: Colors.blue);
+      assertBasicStatus(tester,
+          forDRF: "G:AMANDA",
+          property: "positiveNegative",
+          isVisible: true,
+          characterIs: ".",
+          withColor: Colors.pink);
     });
   });
 }
