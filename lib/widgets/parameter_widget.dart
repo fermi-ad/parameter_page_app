@@ -147,14 +147,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
               const SizedBox(width: 12.0),
               StreamBuilder(
                   stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.active) {
-                      return ParameterBasicStatusWidget(
-                          drf: widget.drf, digitalStatus: snapshot.data!);
-                    } else {
-                      return Container();
-                    }
-                  })
+                  builder: _basicStatusBuilder)
             ]),
             Visibility(
                 visible: widget.displayAlarmDetails,
@@ -164,6 +157,15 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                     : Container()),
           ])
         ]));
+  }
+
+  Widget _basicStatusBuilder(context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.active) {
+      return ParameterBasicStatusWidget(
+          drf: widget.drf, digitalStatus: snapshot.data!);
+    } else {
+      return Container();
+    }
   }
 
   Widget _buildNarrow(BuildContext context) {
