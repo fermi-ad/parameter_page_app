@@ -11,70 +11,60 @@ class ParameterBasicStatusWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const fontSize = 12.0;
-    const labelsStyle = TextStyle(color: Colors.grey, fontSize: fontSize);
-
     List<Row> digitalStatusRows = List<Row>.empty(growable: true);
 
     if (digitalStatus.onOff != null) {
-      final onOffValueStyle = TextStyle(
-          color: _convertToColor(fromStatusColor: digitalStatus.onOff!.color),
-          fontSize: fontSize);
-
-      digitalStatusRows
-          .add(Row(key: Key("parameter_basicstatus_onoff_$drf"), children: [
-        const Text("On/Off: ", style: labelsStyle, textAlign: TextAlign.right),
-        Text(digitalStatus.onOff!.character, style: onOffValueStyle)
-      ]));
+      digitalStatusRows.add(_buildRow(
+          forProperty: "onoff",
+          withLabel: "On/Off: ",
+          withCharacter: digitalStatus.onOff!.character,
+          withColor: digitalStatus.onOff!.color));
     }
 
     if (digitalStatus.readyTripped != null) {
-      final readyTrippedValueStyle = TextStyle(
-          color: _convertToColor(
-              fromStatusColor: digitalStatus.readyTripped!.color),
-          fontSize: fontSize);
-
-      digitalStatusRows.add(
-          Row(key: Key("parameter_basicstatus_readytripped_$drf"), children: [
-        const Text("Ready/Tripped: ",
-            style: labelsStyle, textAlign: TextAlign.right),
-        Text(digitalStatus.readyTripped!.character,
-            style: readyTrippedValueStyle)
-      ]));
+      digitalStatusRows.add(_buildRow(
+          forProperty: "readytripped",
+          withLabel: "Ready/Tripped: ",
+          withCharacter: digitalStatus.readyTripped!.character,
+          withColor: digitalStatus.readyTripped!.color));
     }
 
     if (digitalStatus.remoteLocal != null) {
-      final remoteLocalValueStyle = TextStyle(
-          color: _convertToColor(
-              fromStatusColor: digitalStatus.remoteLocal!.color),
-          fontSize: fontSize);
-
-      digitalStatusRows.add(
-          Row(key: Key("parameter_basicstatus_remotelocal_$drf"), children: [
-        const Text("Remote/Local: ",
-            style: labelsStyle, textAlign: TextAlign.right),
-        Text(digitalStatus.remoteLocal!.character, style: remoteLocalValueStyle)
-      ]));
+      digitalStatusRows.add(_buildRow(
+          forProperty: "remotelocal",
+          withLabel: "Remote/Local: ",
+          withCharacter: digitalStatus.remoteLocal!.character,
+          withColor: digitalStatus.remoteLocal!.color));
     }
 
     if (digitalStatus.positiveNegative != null) {
-      final positiveNegativeValueStyle = TextStyle(
-          color: _convertToColor(
-              fromStatusColor: digitalStatus.positiveNegative!.color),
-          fontSize: fontSize);
-
-      digitalStatusRows.add(Row(
-          key: Key("parameter_basicstatus_positivenegative_$drf"),
-          children: [
-            const Text("Positive/Negative: ",
-                style: labelsStyle, textAlign: TextAlign.right),
-            Text(digitalStatus.positiveNegative!.character,
-                style: positiveNegativeValueStyle)
-          ]));
+      digitalStatusRows.add(_buildRow(
+          forProperty: "positivenegative",
+          withLabel: "Positive/Negative: ",
+          withCharacter: digitalStatus.positiveNegative!.character,
+          withColor: digitalStatus.positiveNegative!.color));
     }
 
     return Column(
         key: Key("parameter_basicstatus_$drf"), children: digitalStatusRows);
+  }
+
+  Row _buildRow(
+      {required String forProperty,
+      required String withLabel,
+      required String withCharacter,
+      required StatusColor withColor}) {
+    const labelsStyle = TextStyle(color: Colors.grey, fontSize: _fontSize);
+    final valueStyle = TextStyle(
+        color: _convertToColor(fromStatusColor: withColor),
+        fontSize: _fontSize);
+
+    return Row(
+        key: Key("parameter_basicstatus_${forProperty}_$drf"),
+        children: [
+          Text(withLabel, style: labelsStyle, textAlign: TextAlign.right),
+          Text(withCharacter, style: valueStyle)
+        ]);
   }
 
   Color _convertToColor({required StatusColor fromStatusColor}) {
@@ -97,4 +87,6 @@ class ParameterBasicStatusWidget extends StatelessWidget {
         return Colors.yellow;
     }
   }
+
+  static const _fontSize = 12.0;
 }
