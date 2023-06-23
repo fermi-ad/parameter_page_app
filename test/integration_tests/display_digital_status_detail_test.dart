@@ -80,5 +80,18 @@ void main() {
       // Then the option to expand the row to display digital status is not present
       assertExpandDigitalStatusIcon(forDRF: "M:OUTTMP@e,02", isVisible: false);
     });
+
+    testWidgets('Parameter with digital status, does have expand icon',
+        (tester) async {
+      // Given the test page is loaded
+      app.main();
+      await tester.pumpAndSettle();
+
+      // When I wait for the parametr data to update
+      await waitForDataToLoadFor(tester, "G:AMANDA");
+
+      // Then the option to expand the row to display digital status is present for G:AMANDA
+      assertExpandDigitalStatusIcon(forDRF: "G:AMANDA", isVisible: true);
+    });
   });
 }
