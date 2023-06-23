@@ -31,8 +31,20 @@ void main() {
       required bool isVisible,
       String? characterIs,
       Color? withColor}) {
-    expect(find.byKey(Key("parameter_basicstatus_$forDRF")),
-        isVisible ? findsOneWidget : findsNothing);
+    final propertyFinder =
+        find.byKey(Key("parameter_basicstatus_${property}_$forDRF"));
+    expect(propertyFinder, isVisible ? findsOneWidget : findsNothing);
+
+    if (characterIs != null) {
+      final characterFinder = find.descendant(
+          of: propertyFinder, matching: find.text(characterIs!));
+      expect(characterFinder, findsOneWidget);
+
+      if (withColor != null) {
+        final characterText = tester.widget<Text>(characterFinder);
+        expect(characterText.style.color, withColor);
+      }
+    }
   }
 
   group("ParameterBasicStatusWidget", () {
@@ -49,17 +61,17 @@ void main() {
 
       // Then all of the attributes are displayed
       assertBasicStatus(tester,
-          forDRF: "G:AMANDA", property: "onOff", isVisible: false);
+          forDRF: "G:AMANDA", property: "onoff", isVisible: false);
       assertBasicStatus(tester,
           forDRF: "G:AMANDA",
-          property: "readyTripped",
+          property: "readytripped",
           isVisible: true,
           characterIs: ".",
           withColor: Colors.green);
       assertBasicStatus(tester,
-          forDRF: "G:AMANDA", property: "remoteLocal", isVisible: false);
+          forDRF: "G:AMANDA", property: "remotelocal", isVisible: false);
       assertBasicStatus(tester,
-          forDRF: "G:AMANDA", property: "positiveNegative", isVisible: false);
+          forDRF: "G:AMANDA", property: "positivenegative", isVisible: false);
     });
     testWidgets('Pass all attributes, display all attributes',
         (WidgetTester tester) async {
