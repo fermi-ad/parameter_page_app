@@ -238,6 +238,15 @@ void assertPositiveNegativeStatus(tester,
       withColor: withColor);
 }
 
+void assertExpandDigitalStatusIcon(
+    {required String forDRF, required bool isVisible}) {
+  final row = find.byKey(Key("parameter_row_$forDRF"));
+
+  final expandIconFinder = find.byIcon(Icons.expand_more);
+  expect(find.descendant(of: row, matching: expandIconFinder),
+      isVisible ? findsOneWidget : findsNothing);
+}
+
 Future<void> waitForDataToLoadFor(tester, parameter) async {
   final readingFinder = find.byKey(Key("parameter_reading_$parameter"));
   await pumpUntilFound(tester, readingFinder);
