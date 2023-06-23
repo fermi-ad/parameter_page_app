@@ -11,7 +11,7 @@ class ParameterBasicStatusWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const fontSize = 12.0
+    const fontSize = 12.0;
     const labelsStyle = TextStyle(color: Colors.grey, fontSize: fontSize);
 
     List<Row> digitalStatusRows = List<Row>.empty(growable: true);
