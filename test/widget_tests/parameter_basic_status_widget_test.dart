@@ -36,8 +36,8 @@ void main() {
     expect(propertyFinder, isVisible ? findsOneWidget : findsNothing);
 
     if (characterIs != null) {
-      final characterFinder = find.descendant(
-          of: propertyFinder, matching: find.text(characterIs!));
+      final characterFinder =
+          find.descendant(of: propertyFinder, matching: find.text(characterIs));
       expect(characterFinder, findsOneWidget);
 
       if (withColor != null) {
@@ -73,7 +73,7 @@ void main() {
       assertBasicStatus(tester,
           forDRF: "G:AMANDA", property: "positivenegative", isVisible: false);
     });
-    testWidgets('Pass all attributes, display all attributes',
+    testWidgets('All attributes present, display all attributes',
         (WidgetTester tester) async {
       // Given a ParameterBasicStatusWidget instantiated for a device called G:AMANDA with all of it's basic status properties filled in
       final app = MaterialApp(
@@ -86,27 +86,27 @@ void main() {
       // Then all of the attributes are displayed
       assertBasicStatus(tester,
           forDRF: "G:AMANDA",
-          property: "onOff",
+          property: "onoff",
           isVisible: true,
           characterIs: ".",
           withColor: Colors.green);
       assertBasicStatus(tester,
           forDRF: "G:AMANDA",
-          property: "readyTripped",
+          property: "readytripped",
           isVisible: true,
           characterIs: "T",
           withColor: Colors.red);
       assertBasicStatus(tester,
           forDRF: "G:AMANDA",
-          property: "remoteLocal",
+          property: "remotelocal",
           isVisible: true,
           characterIs: "L",
           withColor: Colors.blue);
       assertBasicStatus(tester,
           forDRF: "G:AMANDA",
-          property: "positiveNegative",
+          property: "positivenegative",
           isVisible: true,
-          characterIs: ".",
+          characterIs: "T",
           withColor: Colors.pink);
     });
   });

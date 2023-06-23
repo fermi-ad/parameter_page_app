@@ -12,15 +12,14 @@ class ParameterBasicStatusWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const labelsStyle = TextStyle(color: Colors.grey, fontSize: 12.0);
-    const onOffValueStyle = TextStyle(color: Colors.green, fontSize: 12.0);
-    const readyTrippedValueStyle = TextStyle(color: Colors.red, fontSize: 12.0);
-    const remoteLocalValueStyle = TextStyle(color: Colors.blue, fontSize: 12.0);
-    const positiveNegativeValueStyle =
-        TextStyle(color: Colors.pink, fontSize: 12.0);
 
     List<Row> digitalStatusRows = List<Row>.empty(growable: true);
 
     if (digitalStatus.onOff != null) {
+      final onOffValueStyle = TextStyle(
+          color: _convertToColor(fromStatusColor: digitalStatus.onOff!.color),
+          fontSize: 12.0);
+
       digitalStatusRows
           .add(Row(key: Key("parameter_basicstatus_onoff_$drf"), children: [
         const Text("On/Off: ", style: labelsStyle, textAlign: TextAlign.right),
@@ -29,6 +28,11 @@ class ParameterBasicStatusWidget extends StatelessWidget {
     }
 
     if (digitalStatus.readyTripped != null) {
+      final readyTrippedValueStyle = TextStyle(
+          color: _convertToColor(
+              fromStatusColor: digitalStatus.readyTripped!.color),
+          fontSize: 12.0);
+
       digitalStatusRows.add(
           Row(key: Key("parameter_basicstatus_readytripped_$drf"), children: [
         const Text("Ready/Tripped: ",
@@ -39,6 +43,11 @@ class ParameterBasicStatusWidget extends StatelessWidget {
     }
 
     if (digitalStatus.remoteLocal != null) {
+      final remoteLocalValueStyle = TextStyle(
+          color: _convertToColor(
+              fromStatusColor: digitalStatus.remoteLocal!.color),
+          fontSize: 12.0);
+
       digitalStatusRows.add(
           Row(key: Key("parameter_basicstatus_remotelocal_$drf"), children: [
         const Text("Remote/Local: ",
@@ -48,6 +57,11 @@ class ParameterBasicStatusWidget extends StatelessWidget {
     }
 
     if (digitalStatus.positiveNegative != null) {
+      final positiveNegativeValueStyle = TextStyle(
+          color: _convertToColor(
+              fromStatusColor: digitalStatus.positiveNegative!.color),
+          fontSize: 12.0);
+
       digitalStatusRows.add(Row(
           key: Key("parameter_basicstatus_positivenegative_$drf"),
           children: [
@@ -60,5 +74,26 @@ class ParameterBasicStatusWidget extends StatelessWidget {
 
     return Column(
         key: Key("parameter_basicstatus_$drf"), children: digitalStatusRows);
+  }
+
+  Color _convertToColor({required StatusColor fromStatusColor}) {
+    switch (fromStatusColor) {
+      case StatusColor.black:
+        return Colors.black;
+      case StatusColor.blue:
+        return Colors.blue;
+      case StatusColor.cyan:
+        return Colors.cyan;
+      case StatusColor.green:
+        return Colors.green;
+      case StatusColor.magenta:
+        return Colors.pink;
+      case StatusColor.red:
+        return Colors.red;
+      case StatusColor.white:
+        return Colors.white;
+      case StatusColor.yellow:
+        return Colors.yellow;
+    }
   }
 }
