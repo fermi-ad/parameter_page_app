@@ -11,14 +11,15 @@ class ParameterBasicStatusWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const labelsStyle = TextStyle(color: Colors.grey, fontSize: 12.0);
+    const fontSize = 12.0
+    const labelsStyle = TextStyle(color: Colors.grey, fontSize: fontSize);
 
     List<Row> digitalStatusRows = List<Row>.empty(growable: true);
 
     if (digitalStatus.onOff != null) {
       final onOffValueStyle = TextStyle(
           color: _convertToColor(fromStatusColor: digitalStatus.onOff!.color),
-          fontSize: 12.0);
+          fontSize: fontSize);
 
       digitalStatusRows
           .add(Row(key: Key("parameter_basicstatus_onoff_$drf"), children: [
@@ -31,7 +32,7 @@ class ParameterBasicStatusWidget extends StatelessWidget {
       final readyTrippedValueStyle = TextStyle(
           color: _convertToColor(
               fromStatusColor: digitalStatus.readyTripped!.color),
-          fontSize: 12.0);
+          fontSize: fontSize);
 
       digitalStatusRows.add(
           Row(key: Key("parameter_basicstatus_readytripped_$drf"), children: [
@@ -46,7 +47,7 @@ class ParameterBasicStatusWidget extends StatelessWidget {
       final remoteLocalValueStyle = TextStyle(
           color: _convertToColor(
               fromStatusColor: digitalStatus.remoteLocal!.color),
-          fontSize: 12.0);
+          fontSize: fontSize);
 
       digitalStatusRows.add(
           Row(key: Key("parameter_basicstatus_remotelocal_$drf"), children: [
@@ -60,7 +61,7 @@ class ParameterBasicStatusWidget extends StatelessWidget {
       final positiveNegativeValueStyle = TextStyle(
           color: _convertToColor(
               fromStatusColor: digitalStatus.positiveNegative!.color),
-          fontSize: 12.0);
+          fontSize: fontSize);
 
       digitalStatusRows.add(Row(
           key: Key("parameter_basicstatus_positivenegative_$drf"),
