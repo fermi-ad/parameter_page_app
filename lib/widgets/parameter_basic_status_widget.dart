@@ -11,33 +11,82 @@ class ParameterBasicStatusWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const labelsStyle = TextStyle(color: Colors.grey, fontSize: 12.0);
-    const onOffValueStyle = TextStyle(color: Colors.green, fontSize: 12.0);
-    const readyTrippedValueStyle = TextStyle(color: Colors.red, fontSize: 12.0);
-    const remoteLocalValueStyle = TextStyle(color: Colors.blue, fontSize: 12.0);
-    const positiveNegativeValueStyle =
-        TextStyle(color: Colors.pink, fontSize: 12.0);
+    List<Row> digitalStatusRows = List<Row>.empty(growable: true);
 
-    return Column(key: Key("parameter_basicstatus_$drf"), children: [
-      Row(key: Key("parameter_basicstatus_onoff_$drf"), children: const [
-        Text("On/Off: ", style: labelsStyle, textAlign: TextAlign.right),
-        Text(".", style: onOffValueStyle)
-      ]),
-      Row(key: Key("parameter_basicstatus_readytripped_$drf"), children: const [
-        Text("Ready/Tripped: ", style: labelsStyle, textAlign: TextAlign.right),
-        Text("T", style: readyTrippedValueStyle)
-      ]),
-      Row(key: Key("parameter_basicstatus_remotelocal_$drf"), children: const [
-        Text("Remote/Local: ", style: labelsStyle, textAlign: TextAlign.right),
-        Text("L", style: remoteLocalValueStyle)
-      ]),
-      Row(
-          key: Key("parameter_basicstatus_positivenegative_$drf"),
-          children: const [
-            Text("Positive/Negative: ",
-                style: labelsStyle, textAlign: TextAlign.right),
-            Text("T", style: positiveNegativeValueStyle)
-          ])
-    ]);
+    if (digitalStatus.onOff != null) {
+      digitalStatusRows.add(_buildRow(
+          forProperty: "onoff",
+          withLabel: "On/Off: ",
+          withCharacter: digitalStatus.onOff!.character,
+          withColor: digitalStatus.onOff!.color));
+    }
+
+    if (digitalStatus.readyTripped != null) {
+      digitalStatusRows.add(_buildRow(
+          forProperty: "readytripped",
+          withLabel: "Ready/Tripped: ",
+          withCharacter: digitalStatus.readyTripped!.character,
+          withColor: digitalStatus.readyTripped!.color));
+    }
+
+    if (digitalStatus.remoteLocal != null) {
+      digitalStatusRows.add(_buildRow(
+          forProperty: "remotelocal",
+          withLabel: "Remote/Local: ",
+          withCharacter: digitalStatus.remoteLocal!.character,
+          withColor: digitalStatus.remoteLocal!.color));
+    }
+
+    if (digitalStatus.positiveNegative != null) {
+      digitalStatusRows.add(_buildRow(
+          forProperty: "positivenegative",
+          withLabel: "Positive/Negative: ",
+          withCharacter: digitalStatus.positiveNegative!.character,
+          withColor: digitalStatus.positiveNegative!.color));
+    }
+
+    return Column(
+        key: Key("parameter_basicstatus_$drf"), children: digitalStatusRows);
   }
+
+  Row _buildRow(
+      {required String forProperty,
+      required String withLabel,
+      required String withCharacter,
+      required StatusColor withColor}) {
+    const labelsStyle = TextStyle(color: Colors.grey, fontSize: _fontSize);
+    final valueStyle = TextStyle(
+        color: _convertToColor(fromStatusColor: withColor),
+        fontSize: _fontSize);
+
+    return Row(
+        key: Key("parameter_basicstatus_${forProperty}_$drf"),
+        children: [
+          Text(withLabel, style: labelsStyle, textAlign: TextAlign.right),
+          Text(withCharacter, style: valueStyle)
+        ]);
+  }
+
+  Color _convertToColor({required StatusColor fromStatusColor}) {
+    switch (fromStatusColor) {
+      case StatusColor.black:
+        return Colors.black;
+      case StatusColor.blue:
+        return Colors.blue;
+      case StatusColor.cyan:
+        return Colors.cyan;
+      case StatusColor.green:
+        return Colors.green;
+      case StatusColor.magenta:
+        return Colors.pink;
+      case StatusColor.red:
+        return Colors.red;
+      case StatusColor.white:
+        return Colors.white;
+      case StatusColor.yellow:
+        return Colors.yellow;
+    }
+  }
+
+  static const _fontSize = 12.0;
 }

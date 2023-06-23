@@ -203,4 +203,9 @@ class GraphQLDpmService extends DpmService {
       throw DPMGraphQLException(e.graphqlErrors.toString());
     }
   }
+
+  @override
+  Stream<DigitalStatus> monitorDigitalStatusDevices(List<String> drfs) {
+    return const Stream<DigitalStatus>.empty();
+  }
 }

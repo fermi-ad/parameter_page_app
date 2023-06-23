@@ -134,31 +134,11 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
               const SizedBox(width: 12.0),
               StreamBuilder(
                   stream: widget.dpm.monitorDevices([widget.drf]),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.active) {
-                      return _buildParam(
-                          _extractValueString(from: snapshot), readingUnits,
-                          key: Key("parameter_reading_${widget.drf}"));
-                    } else {
-                      return _buildParam(null, readingUnits,
-                          key: Key("parameter_nullreading_${widget.drf}"));
-                    }
-                  }),
+                  builder: _readingBuilder),
               const SizedBox(width: 12.0),
-              ParameterBasicStatusWidget(
-                  drf: widget.drf,
-                  digitalStatus: DigitalStatus(
-                      refId: 0,
-                      cycle: 0,
-                      timestamp: DateTime(2023),
-                      onOff: const BasicStatusAttribute(
-                          character: ".", color: StatusColor.green),
-                      readyTripped: const BasicStatusAttribute(
-                          character: "T", color: StatusColor.red),
-                      remoteLocal: const BasicStatusAttribute(
-                          character: "L", color: StatusColor.blue),
-                      positiveNegative: const BasicStatusAttribute(
-                          character: "T", color: StatusColor.magenta)))
+              StreamBuilder(
+                  stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
+                  builder: _basicStatusBuilder)
             ]),
             Visibility(
                 visible: widget.displayAlarmDetails,
@@ -168,6 +148,25 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                     : Container()),
           ])
         ]));
+  }
+
+  Widget _readingBuilder(context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.active) {
+      return _buildParam(_extractValueString(from: snapshot), readingUnits,
+          key: Key("parameter_reading_${widget.drf}"));
+    } else {
+      return _buildParam(null, readingUnits,
+          key: Key("parameter_nullreading_${widget.drf}"));
+    }
+  }
+
+  Widget _basicStatusBuilder(context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.active) {
+      return ParameterBasicStatusWidget(
+          drf: widget.drf, digitalStatus: snapshot.data!);
+    } else {
+      return Container();
+    }
   }
 
   Widget _buildNarrow(BuildContext context) {
