@@ -78,7 +78,7 @@ class MockDpmService extends DpmService {
   Stream<DigitalStatus> monitorDigitalStatusDevices(List<String> drfs) {
     if (useEmptyStream) {
       return const Stream<DigitalStatus>.empty();
-    } else {
+    } else if (drfs.contains("G:AMANDA")) {
       return Stream<DigitalStatus>.periodic(
         const Duration(seconds: 1),
         (count) {
@@ -96,6 +96,8 @@ class MockDpmService extends DpmService {
                   character: "T", color: StatusColor.magenta));
         },
       ).asBroadcastStream();
+    } else {
+      return const Stream<DigitalStatus>.empty();
     }
   }
 }
