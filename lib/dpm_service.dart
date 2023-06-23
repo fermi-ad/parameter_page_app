@@ -48,6 +48,32 @@ class DeviceInfoProperty {
       {required this.commonUnits, required this.primaryUnits});
 }
 
+class BasicStatusProperty {
+  final String character0;
+  final StatusColor color0;
+  final String character1;
+  final StatusColor color1;
+
+  const BasicStatusProperty(
+      {required this.character0,
+      required this.color0,
+      required this.character1,
+      required this.color1});
+}
+
+class DeviceInfoBasicStatus {
+  final BasicStatusProperty? onOffProperty;
+  final BasicStatusProperty? readyTrippedProperty;
+  final BasicStatusProperty? remoteLocalProperty;
+  final BasicStatusProperty? positiveNegativeProperty;
+
+  const DeviceInfoBasicStatus(
+      {this.onOffProperty,
+      this.readyTrippedProperty,
+      this.remoteLocalProperty,
+      this.positiveNegativeProperty});
+}
+
 class DeviceInfo {
   final int di;
   final String name;
@@ -55,6 +81,7 @@ class DeviceInfo {
   final DeviceInfoProperty? reading;
   final DeviceInfoProperty? setting;
   final DeviceInfoAnalogAlarm? alarm;
+  final DeviceInfoBasicStatus? basicStatus;
 
   const DeviceInfo(
       {required this.di,
@@ -62,7 +89,8 @@ class DeviceInfo {
       required this.description,
       this.reading,
       this.setting,
-      this.alarm});
+      this.alarm,
+      this.basicStatus});
 }
 
 class Reading {
