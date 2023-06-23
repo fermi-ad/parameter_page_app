@@ -145,20 +145,16 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                     }
                   }),
               const SizedBox(width: 12.0),
-              ParameterBasicStatusWidget(
-                  drf: widget.drf,
-                  digitalStatus: DigitalStatus(
-                      refId: 0,
-                      cycle: 0,
-                      timestamp: DateTime(2023),
-                      onOff: const BasicStatusAttribute(
-                          character: ".", color: StatusColor.green),
-                      readyTripped: const BasicStatusAttribute(
-                          character: "T", color: StatusColor.red),
-                      remoteLocal: const BasicStatusAttribute(
-                          character: "L", color: StatusColor.blue),
-                      positiveNegative: const BasicStatusAttribute(
-                          character: "T", color: StatusColor.magenta)))
+              StreamBuilder(
+                  stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.active) {
+                      return ParameterBasicStatusWidget(
+                          drf: widget.drf, digitalStatus: snapshot.data!);
+                    } else {
+                      return Container();
+                    }
+                  })
             ]),
             Visibility(
                 visible: widget.displayAlarmDetails,

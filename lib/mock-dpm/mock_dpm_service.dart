@@ -74,6 +74,7 @@ class MockDpmService extends DpmService {
     }
   }
 
+  @override
   Stream<DigitalStatus> monitorDigitalStatusDevices(List<String> drfs) {
     if (useEmptyStream) {
       return const Stream<DigitalStatus>.empty();

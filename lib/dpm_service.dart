@@ -120,4 +120,6 @@ abstract class DpmService {
   Future<List<DeviceInfo>> getDeviceInfo(List<String> devices);
 
   Stream<Reading> monitorDevices(List<String> drfs);
+
+  Stream<DigitalStatus> monitorDigitalStatusDevices(List<String> drfs);
 }
