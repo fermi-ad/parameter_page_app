@@ -4,6 +4,27 @@ import 'package:parameter_page/dpm_service.dart';
 import 'package:parameter_page/widgets/parameter_basic_status_widget.dart';
 
 void main() {
+  final allBasicStatus = DigitalStatus(
+      refId: 0,
+      cycle: 0,
+      timestamp: DateTime(2023),
+      onOff:
+          const BasicStatusAttribute(character: ".", color: StatusColor.green),
+      readyTripped:
+          const BasicStatusAttribute(character: "T", color: StatusColor.red),
+      remoteLocal:
+          const BasicStatusAttribute(character: "L", color: StatusColor.blue),
+      positiveNegative: const BasicStatusAttribute(
+          character: "T", color: StatusColor.magenta));
+
+  final readyTrippedBasicStatus = DigitalStatus(
+    refId: 0,
+    cycle: 0,
+    timestamp: DateTime(2023),
+    readyTripped:
+        const BasicStatusAttribute(character: ".", color: StatusColor.green),
+  );
+
   void assertBasicStatus(tester,
       {required String forDRF,
       required String property,
@@ -15,31 +36,38 @@ void main() {
   }
 
   group("ParameterBasicStatusWidget", () {
-    late MaterialApp app;
-
-    setUp(() {
-      app = MaterialApp(
+    testWidgets(
+        'Ready/Tripped basic status present, displays Ready/Tripped and nothing else',
+        (WidgetTester tester) async {
+      // Given a ParameterBasicStatusWidget instantiated for a device called G:AMANDA with only ready/tripped basic status
+      final app = MaterialApp(
           home: Scaffold(
               body: ParameterBasicStatusWidget(
-                  drf: "G:AMANDA",
-                  digitalStatus: DigitalStatus(
-                      refId: 0,
-                      cycle: 0,
-                      timestamp: DateTime(2023),
-                      onOff: const BasicStatusAttribute(
-                          character: ".", color: StatusColor.green),
-                      readyTripped: const BasicStatusAttribute(
-                          character: "T", color: StatusColor.red),
-                      remoteLocal: const BasicStatusAttribute(
-                          character: "L", color: StatusColor.blue),
-                      positiveNegative: const BasicStatusAttribute(
-                          character: "T", color: StatusColor.magenta)))));
-    });
+                  drf: "G:AMANDA", digitalStatus: readyTrippedBasicStatus)));
+      // When I display the basic status
+      await tester.pumpWidget(app);
 
+      // Then all of the attributes are displayed
+      assertBasicStatus(tester,
+          forDRF: "G:AMANDA", property: "onOff", isVisible: false);
+      assertBasicStatus(tester,
+          forDRF: "G:AMANDA",
+          property: "readyTripped",
+          isVisible: true,
+          characterIs: ".",
+          withColor: Colors.green);
+      assertBasicStatus(tester,
+          forDRF: "G:AMANDA", property: "remoteLocal", isVisible: false);
+      assertBasicStatus(tester,
+          forDRF: "G:AMANDA", property: "positiveNegative", isVisible: false);
+    });
     testWidgets('Pass all attributes, display all attributes',
         (WidgetTester tester) async {
       // Given a ParameterBasicStatusWidget instantiated for a device called G:AMANDA with all of it's basic status properties filled in
-
+      final app = MaterialApp(
+          home: Scaffold(
+              body: ParameterBasicStatusWidget(
+                  drf: "G:AMANDA", digitalStatus: allBasicStatus)));
       // When I display the basic status
       await tester.pumpWidget(app);
 
