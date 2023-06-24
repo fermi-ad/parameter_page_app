@@ -113,6 +113,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         constraints: const BoxConstraints(minHeight: 34.0),
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          _buildExpandButton(),
           Expanded(
               flex: 2,
               child: Tooltip(
@@ -148,6 +149,12 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                     : Container()),
           ])
         ]));
+  }
+
+  Widget _buildExpandButton() {
+    return (info == null || info!.basicStatus == null)
+        ? const SizedBox(width: 48.0)
+        : const Icon(Icons.expand_more);
   }
 
   Widget _readingBuilder(context, snapshot) {
