@@ -36,6 +36,41 @@ class MockDpmService extends DpmService {
                   commonUnits: "cUR", primaryUnits: "pUR"),
               setting: const DeviceInfoProperty(
                   commonUnits: "cUS", primaryUnits: "pUS"));
+        case "G:AMANDA":
+          return DeviceInfo(
+              di: 0,
+              name: drf,
+              description: "device description",
+              reading: const DeviceInfoProperty(
+                  commonUnits: "cUR", primaryUnits: "pUR"),
+              setting: const DeviceInfoProperty(
+                  commonUnits: "cUS", primaryUnits: "pUS"),
+              alarm: const DeviceInfoAnalogAlarm(
+                  nominal: "72.00",
+                  tolerance: "10.00",
+                  min: "62.00",
+                  max: "82.00"),
+              basicStatus: const DeviceInfoBasicStatus(
+                  onOffProperty: BasicStatusProperty(
+                      character0: ".",
+                      color0: StatusColor.green,
+                      character1: "*",
+                      color1: StatusColor.red),
+                  readyTrippedProperty: BasicStatusProperty(
+                      character0: ".",
+                      color0: StatusColor.green,
+                      character1: "T",
+                      color1: StatusColor.red),
+                  remoteLocalProperty: BasicStatusProperty(
+                      character0: ".",
+                      color0: StatusColor.blue,
+                      character1: "L",
+                      color1: StatusColor.blue),
+                  positiveNegativeProperty: BasicStatusProperty(
+                      character0: "*",
+                      color0: StatusColor.blue,
+                      character1: "T",
+                      color1: StatusColor.magenta)));
         default:
           return DeviceInfo(
               di: 0,
