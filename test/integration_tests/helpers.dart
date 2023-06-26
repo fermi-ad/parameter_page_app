@@ -247,6 +247,15 @@ void assertExpandDigitalStatusIcon(
       isVisible ? findsOneWidget : findsNothing);
 }
 
+void assertExtendedDigitalStatusDisplay(
+    {required String forDRF, required bool isVisible}) {
+  final extendedDigitalStatusFinder =
+      find.byKey(Key("parameter_extendeddigitalstatus_$forDRF"));
+
+  expect(
+      extendedDigitalStatusFinder, isVisible ? findsOneWidget : findsNothing);
+}
+
 Future<void> waitForDataToLoadFor(tester, parameter) async {
   final readingFinder = find.byKey(Key("parameter_reading_$parameter"));
   await pumpUntilFound(tester, readingFinder);
@@ -395,4 +404,8 @@ Future<void> tapPageEntry(tester, {required int atRowIndex}) async {
       rowsFinder.evaluate().isEmpty ? null : rowsFinder.at(atRowIndex);
 
   await tester.tap(rowFinder);
+}
+
+Future<void> expandDigitalStatus(tester, {required String forDRF}) async {
+  await tester.tap(find.byKey(Key("parameter_row_$forDRF")));
 }
