@@ -168,15 +168,19 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   Widget _buildExpandButton() {
     return (info == null || info!.basicStatus == null)
         ? const SizedBox(width: 48.0)
-        : IconButton(
-            icon: Icon(
+        : _displayExtendedStatus
+            ? IconButton(
+                key: Key("parameter_collapsedigitalstatus_${widget.drf}"),
+                icon: const Icon(Icons.expand_less),
+                onPressed: _toggleDigitalStatus)
+            : IconButton(
                 key: Key("parameter_expanddigitalstatus_${widget.drf}"),
-                _displayExtendedStatus ? Icons.expand_less : Icons.expand_more),
-            onPressed: _toggleDigitalStatus);
+                icon: const Icon(Icons.expand_more),
+                onPressed: _toggleDigitalStatus);
   }
 
   void _toggleDigitalStatus() {
-    setState(() => _displayExtendedStatus = true);
+    setState(() => _displayExtendedStatus = !_displayExtendedStatus);
   }
 
   Widget _readingBuilder(context, snapshot) {

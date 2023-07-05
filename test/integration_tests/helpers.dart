@@ -419,3 +419,8 @@ Future<void> expandDigitalStatus(tester, {required String forDRF}) async {
   await tester.tap(find.byKey(Key("parameter_expanddigitalstatus_$forDRF")));
   await tester.pumpAndSettle();
 }
+
+Future<void> collapseDigitalStatus(tester, {required String forDRF}) async {
+  await tester.tap(find.byKey(Key("parameter_collapsedigitalstatus_$forDRF")));
+  await tester.pumpAndSettle();
+}

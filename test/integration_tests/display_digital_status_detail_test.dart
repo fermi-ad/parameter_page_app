@@ -131,5 +131,25 @@ void main() {
         "0"
       ]);*/
     });
+
+    testWidgets('Click collapse icon, hides extended status', (tester) async {
+      // Given the test page is loaded and data for G:AMANDA is loaded
+      app.main();
+      await tester.pumpAndSettle();
+      await waitForDataToLoadFor(tester, "G:AMANDA");
+
+      // ... and the extended digital status is expanded
+      await expandDigitalStatus(tester, forDRF: "G:AMANDA");
+      assertExtendedDigitalStatusDisplay(forDRF: "G:AMANDA", isVisible: true);
+
+      // When I tap the collapse button
+      await collapseDigitalStatus(tester, forDRF: "G:AMANDA");
+
+      // Then the collapse button is replaced with the expand button
+      assertExpandDigitalStatusIcon(forDRF: "G:AMANDA", isVisible: true);
+
+      // ... and the extended digital status is hidden
+      assertExtendedDigitalStatusDisplay(forDRF: "G:AMANDA", isVisible: false);
+    });
   });
 }
