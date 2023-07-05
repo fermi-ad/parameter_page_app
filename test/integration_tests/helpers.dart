@@ -407,5 +407,6 @@ Future<void> tapPageEntry(tester, {required int atRowIndex}) async {
 }
 
 Future<void> expandDigitalStatus(tester, {required String forDRF}) async {
-  await tester.tap(find.byKey(Key("parameter_row_$forDRF")));
+  await tester.tap(find.byKey(Key("parameter_expanddigitalstatus_$forDRF")));
+  await tester.pumpAndSettle();
 }

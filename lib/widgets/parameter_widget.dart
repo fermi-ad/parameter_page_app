@@ -15,6 +15,7 @@ class ParameterWidget extends StatelessWidget {
   final bool wide;
   final bool displayAlarmDetails;
   final DisplayUnits displayUnits;
+  final bool displayExtendedStatus;
 
   const ParameterWidget(
       {required this.drf,
@@ -23,7 +24,8 @@ class ParameterWidget extends StatelessWidget {
       this.label,
       super.key,
       this.displayUnits = DisplayUnits.commonUnits,
-      this.displayAlarmDetails = false});
+      this.displayAlarmDetails = false,
+      this.displayExtendedStatus = false});
 
   Widget buildEditor(BuildContext context) {
     return ConstrainedBox(
@@ -41,7 +43,8 @@ class ParameterWidget extends StatelessWidget {
                 drf: drf,
                 wide: wide,
                 dpm: DataAcquisitionWidget.of(context),
-                displayAlarmDetails: displayAlarmDetails));
+                displayAlarmDetails: displayAlarmDetails,
+                displayExtendedStatus: displayExtendedStatus));
   }
 }
 
@@ -51,13 +54,15 @@ class _ActiveParamWidget extends StatefulWidget {
   final bool wide;
   final DisplayUnits displayUnits;
   final bool displayAlarmDetails;
+  final bool displayExtendedStatus;
 
   const _ActiveParamWidget(
       {required this.drf,
       required this.dpm,
       required this.wide,
       required this.displayUnits,
-      required this.displayAlarmDetails});
+      required this.displayAlarmDetails,
+      required this.displayExtendedStatus});
 
   @override
   _ActiveParamState createState() => _ActiveParamState();
@@ -66,6 +71,7 @@ class _ActiveParamWidget extends StatefulWidget {
 class _ActiveParamState extends State<_ActiveParamWidget> {
   late final Future<List<DeviceInfo>> _setup;
   DeviceInfo? info;
+  bool _displayExtendedStatus = false;
 
   String? get readingUnits {
     switch (widget.displayUnits) {
@@ -94,6 +100,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     _setup = widget.dpm.getDeviceInfo([widget.drf]);
 
     super.initState();
+    _displayExtendedStatus = widget.displayExtendedStatus;
   }
 
   Widget _buildParam(String? value, String? units, {required Key key}) {
@@ -111,50 +118,65 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   Widget _buildWide(BuildContext context) {
     return ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 34.0),
-        child:
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          _buildExpandButton(),
-          Expanded(
-              flex: 2,
-              child: Tooltip(
-                  message: widget.drf,
-                  child: Text(overflow: TextOverflow.ellipsis, widget.drf))),
-          Expanded(
-              flex: 2,
-              child: info != null
-                  ? Text(
-                      key: Key("parameter_description_${widget.drf}"),
-                      overflow: TextOverflow.ellipsis,
-                      info!.description)
-                  : Container()),
-          const Spacer(),
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(children: [
-              _buildParam(_settingValue, settingUnits,
-                  key: Key("parameter_setting_${widget.drf}")),
-              const SizedBox(width: 12.0),
-              StreamBuilder(
-                  stream: widget.dpm.monitorDevices([widget.drf]),
-                  builder: _readingBuilder),
-              const SizedBox(width: 12.0),
-              StreamBuilder(
-                  stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
-                  builder: _basicStatusBuilder)
-            ]),
-            Visibility(
-                visible: widget.displayAlarmDetails,
-                child: (info != null && info!.alarm != null)
-                    ? ParameterAlarmDetailsWidget(
-                        drf: widget.drf, alarmBlock: info!.alarm!)
+        child: Column(children: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            _buildExpandButton(),
+            Expanded(
+                flex: 2,
+                child: Tooltip(
+                    message: widget.drf,
+                    child: Text(overflow: TextOverflow.ellipsis, widget.drf))),
+            Expanded(
+                flex: 2,
+                child: info != null
+                    ? Text(
+                        key: Key("parameter_description_${widget.drf}"),
+                        overflow: TextOverflow.ellipsis,
+                        info!.description)
                     : Container()),
-          ])
+            const Spacer(),
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(children: [
+                _buildParam(_settingValue, settingUnits,
+                    key: Key("parameter_setting_${widget.drf}")),
+                const SizedBox(width: 12.0),
+                StreamBuilder(
+                    stream: widget.dpm.monitorDevices([widget.drf]),
+                    builder: _readingBuilder),
+                const SizedBox(width: 12.0),
+                StreamBuilder(
+                    stream:
+                        widget.dpm.monitorDigitalStatusDevices([widget.drf]),
+                    builder: _basicStatusBuilder)
+              ]),
+              Visibility(
+                  visible: widget.displayAlarmDetails,
+                  child: (info != null && info!.alarm != null)
+                      ? ParameterAlarmDetailsWidget(
+                          drf: widget.drf, alarmBlock: info!.alarm!)
+                      : Container()),
+            ])
+          ]),
+          _displayExtendedStatus
+              ? Row(
+                  key: Key("parameter_extendeddigitalstatus_${widget.drf}"),
+                  children: const [Text("Extended digital status")])
+              : Container()
         ]));
   }
 
   Widget _buildExpandButton() {
     return (info == null || info!.basicStatus == null)
         ? const SizedBox(width: 48.0)
-        : const Icon(Icons.expand_more);
+        : IconButton(
+            icon: Icon(
+                key: Key("parameter_expanddigitalstatus_${widget.drf}"),
+                Icons.expand_more),
+            onPressed: _toggleDigitalStatus);
+  }
+
+  void _toggleDigitalStatus() {
+    setState(() => _displayExtendedStatus = true);
   }
 
   Widget _readingBuilder(context, snapshot) {
