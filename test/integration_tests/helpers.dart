@@ -247,6 +247,15 @@ void assertExpandDigitalStatusIcon(
       isVisible ? findsOneWidget : findsNothing);
 }
 
+void assertCollapseDigitalStatusIcon(
+    {required String forDRF, required bool isVisible}) {
+  final row = find.byKey(Key("parameter_row_$forDRF"));
+
+  final collapseIconFinder = find.byIcon(Icons.expand_less);
+  expect(find.descendant(of: row, matching: collapseIconFinder),
+      isVisible ? findsOneWidget : findsNothing);
+}
+
 void assertExtendedDigitalStatusDisplay(
     {required String forDRF, required bool isVisible}) {
   final extendedDigitalStatusFinder =

@@ -103,7 +103,10 @@ void main() {
       // When I expand the parameter to display extended digital status
       await expandDigitalStatus(tester, forDRF: "G:AMANDA");
 
-      // Then the extended digitial status is displayed
+      // Then the expand button is now a collapse button
+      assertCollapseDigitalStatusIcon(forDRF: "G:AMANDA", isVisible: true);
+
+      // ... and the extended digitial status is displayed
       assertExtendedDigitalStatusDisplay(forDRF: "G:AMANDA", isVisible: true);
       /* hasDescriptions: [
         "Henk On/Off",

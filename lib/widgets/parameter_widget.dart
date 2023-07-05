@@ -171,7 +171,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         : IconButton(
             icon: Icon(
                 key: Key("parameter_expanddigitalstatus_${widget.drf}"),
-                Icons.expand_more),
+                _displayExtendedStatus ? Icons.expand_less : Icons.expand_more),
             onPressed: _toggleDigitalStatus);
   }
 
