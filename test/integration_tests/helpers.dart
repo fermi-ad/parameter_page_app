@@ -260,7 +260,8 @@ void assertExtendedDigitalStatusDisplay(
     {required String forDRF,
     required bool isVisible,
     List<String>? hasDescriptions,
-    List<String>? hasDisplayValues}) {
+    List<String>? hasDisplayValues,
+    List<String>? hasBinaryValues}) {
   final extendedDigitalStatusFinder =
       find.byKey(Key("parameter_extendeddigitalstatus_$forDRF"));
 
@@ -283,6 +284,15 @@ void assertExtendedDigitalStatusDisplay(
           find.descendant(
               of: extendedDigitalStatusFinder,
               matching: find.text(displayValue)),
+          findsOneWidget);
+    }
+  }
+
+  if (hasBinaryValues != null) {
+    for (String bitValue in hasBinaryValues) {
+      expect(
+          find.descendant(
+              of: extendedDigitalStatusFinder, matching: find.text(bitValue)),
           findsOneWidget);
     }
   }

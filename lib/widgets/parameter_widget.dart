@@ -184,12 +184,39 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
             Row(children: [
               Text("0: "),
               Text("Henk On/Off"),
+              Text("On"),
+              Text("1")
             ]),
-            Row(children: [Text("1: "), Text("Ready???")]),
-            Row(children: [Text("2: "), Text("Remote Henk")]),
-            Row(children: [Text("3: "), Text("Polarity")]),
-            Row(children: [Text("4: "), Text(" test 2")]),
-            Row(children: [Text("5: "), Text("testtest")]),
+            Row(children: [
+              Text("1: "),
+              Text("Ready???"),
+              Text("Always"),
+              Text("1")
+            ]),
+            Row(children: [
+              Text("2: "),
+              Text("Remote Henk"),
+              Text("L"),
+              Text("0")
+            ]),
+            Row(children: [
+              Text("3: "),
+              Text("Polarity"),
+              Text("Mono"),
+              Text("0")
+            ]),
+            Row(children: [
+              Text("4: "),
+              Text(" test 2"),
+              Text(" good"),
+              Text("0")
+            ]),
+            Row(children: [
+              Text("5: "),
+              Text("testtest"),
+              Text("GOOD"),
+              Text("0")
+            ]),
           ])
         ]);
   }

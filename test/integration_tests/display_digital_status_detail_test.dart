@@ -125,14 +125,15 @@ void main() {
             "Mono",
             " good",
             "GOOD"
-          ]); /*, hasBinaryValues: [
-        "1",
-        "1",
-        "0",
-        "0",
-        "0",
-        "0"
-      ]);*/
+          ],
+          hasBinaryValues: [
+            "1",
+            "1",
+            "0",
+            "0",
+            "0",
+            "0"
+          ]);
     });
 
     testWidgets('Click collapse icon, hides extended status', (tester) async {
