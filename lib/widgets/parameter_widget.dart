@@ -157,11 +157,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                       : Container()),
             ])
           ]),
-          _displayExtendedStatus
-              ? Row(
-                  key: Key("parameter_extendeddigitalstatus_${widget.drf}"),
-                  children: const [Text("Extended digital status")])
-              : Container()
+          _displayExtendedStatus ? _buildExtendedStatus() : Container()
         ]));
   }
 
@@ -177,6 +173,22 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                 key: Key("parameter_expanddigitalstatus_${widget.drf}"),
                 icon: const Icon(Icons.expand_more),
                 onPressed: _toggleDigitalStatus);
+  }
+
+  Widget _buildExtendedStatus() {
+    return Row(
+        key: Key("parameter_extendeddigitalstatus_${widget.drf}"),
+        children: const [
+          SizedBox(width: 48.0),
+          Column(children: [
+            Text("Henk On/Off"),
+            Text("Ready???"),
+            Text("Remote Henk"),
+            Text("Polarity"),
+            Text(" test 2"),
+            Text("testtest")
+          ])
+        ]);
   }
 
   void _toggleDigitalStatus() {
