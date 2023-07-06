@@ -159,44 +159,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
             ])
           ]),
           _displayExtendedStatus
-              ? ParameterExtendedStatusWidget(
-                  drf: widget.drf,
-                  digitalStatus: DigitalStatus(
-                      refId: 0,
-                      cycle: 0,
-                      timestamp: DateTime(2023),
-                      extendedStatus: [
-                        const ExtendedStatusAttribute(
-                            description: "Henk On/Off",
-                            value: "1",
-                            valueText: "On",
-                            color: StatusColor.green),
-                        const ExtendedStatusAttribute(
-                            description: "Ready???",
-                            value: "1",
-                            valueText: "Always",
-                            color: StatusColor.green),
-                        const ExtendedStatusAttribute(
-                            description: "Remote Henk",
-                            value: "0",
-                            valueText: "L",
-                            color: StatusColor.blue),
-                        const ExtendedStatusAttribute(
-                            description: "Polarity",
-                            value: "0",
-                            valueText: "Mono",
-                            color: StatusColor.red),
-                        const ExtendedStatusAttribute(
-                            description: " test 2",
-                            value: "0",
-                            valueText: " good",
-                            color: StatusColor.green),
-                        const ExtendedStatusAttribute(
-                            description: "testtest",
-                            value: "0",
-                            valueText: "GOOD",
-                            color: StatusColor.green)
-                      ]))
+              ? StreamBuilder(
+                  stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
+                  builder: _extendedStatusBuilder)
               : Container()
         ]));
   }
@@ -232,6 +197,15 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   Widget _basicStatusBuilder(context, snapshot) {
     if (snapshot.connectionState == ConnectionState.active) {
       return ParameterBasicStatusWidget(
+          drf: widget.drf, digitalStatus: snapshot.data!);
+    } else {
+      return Container();
+    }
+  }
+
+  Widget _extendedStatusBuilder(context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.active) {
+      return ParameterExtendedStatusWidget(
           drf: widget.drf, digitalStatus: snapshot.data!);
     } else {
       return Container();
