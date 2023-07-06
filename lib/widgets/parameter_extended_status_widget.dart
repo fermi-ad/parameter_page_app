@@ -40,8 +40,8 @@ class ParameterExtendedStatusWidget extends StatelessWidget {
       required String valueText,
       required String value,
       required Color valueColor}) {
-    const labelsStyle = TextStyle(color: Colors.grey, fontSize: 14.0);
-    final valueStyle = TextStyle(color: valueColor, fontSize: 14.0);
+    const labelsStyle = TextStyle(color: Colors.grey, fontSize: 16.0);
+    final valueStyle = TextStyle(color: valueColor, fontSize: 16.0);
 
     return Row(
         key: Key("parameter_extendeddigitalstatus_${drf}_bit$bitN"),
