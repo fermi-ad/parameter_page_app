@@ -256,12 +256,13 @@ void assertCollapseDigitalStatusIcon(
       isVisible ? findsOneWidget : findsNothing);
 }
 
-void assertExtendedDigitalStatusDisplay(
+void assertExtendedDigitalStatusDisplay(tester,
     {required String forDRF,
     required bool isVisible,
     List<String>? hasDescriptions,
     List<String>? hasDisplayValues,
-    List<String>? hasBinaryValues}) {
+    List<String>? hasBinaryValues,
+    List<Color>? hasColors}) {
   final extendedDigitalStatusFinder =
       find.byKey(Key("parameter_extendeddigitalstatus_$forDRF"));
 
@@ -298,6 +299,18 @@ void assertExtendedDigitalStatusDisplay(
           find.descendant(
               of: bitDetailFinder, matching: find.text(hasBinaryValues[i])),
           findsOneWidget);
+    }
+  }
+
+  if (hasColors != null && hasDisplayValues != null) {
+    for (int i = 0; i != hasColors.length; i++) {
+      final bitDetailFinder =
+          find.byKey(Key("parameter_extendeddigitalstatus_${forDRF}_bit$i"));
+      final displayValueTextFinder = find.descendant(
+          of: bitDetailFinder, matching: find.text(hasDisplayValues[i]));
+      expect(displayValueTextFinder, findsOneWidget);
+      final displayValueText = tester.widget<Text>(displayValueTextFinder);
+      expect(displayValueText.style.color, hasColors[i]);
     }
   }
 }

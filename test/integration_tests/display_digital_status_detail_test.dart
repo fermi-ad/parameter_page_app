@@ -107,7 +107,7 @@ void main() {
       assertCollapseDigitalStatusIcon(forDRF: "G:AMANDA", isVisible: true);
 
       // ... and the extended digitial status is displayed
-      assertExtendedDigitalStatusDisplay(
+      assertExtendedDigitalStatusDisplay(tester,
           forDRF: "G:AMANDA",
           isVisible: true,
           hasDescriptions: [
@@ -133,6 +133,14 @@ void main() {
             "0",
             "0",
             "0"
+          ],
+          hasColors: [
+            Colors.green,
+            Colors.green,
+            Colors.blue,
+            Colors.red,
+            Colors.green,
+            Colors.green
           ]);
     });
 
@@ -144,7 +152,8 @@ void main() {
 
       // ... and the extended digital status is expanded
       await expandDigitalStatus(tester, forDRF: "G:AMANDA");
-      assertExtendedDigitalStatusDisplay(forDRF: "G:AMANDA", isVisible: true);
+      assertExtendedDigitalStatusDisplay(tester,
+          forDRF: "G:AMANDA", isVisible: true);
 
       // When I tap the collapse button
       await collapseDigitalStatus(tester, forDRF: "G:AMANDA");
@@ -153,7 +162,8 @@ void main() {
       assertExpandDigitalStatusIcon(forDRF: "G:AMANDA", isVisible: true);
 
       // ... and the extended digital status is hidden
-      assertExtendedDigitalStatusDisplay(forDRF: "G:AMANDA", isVisible: false);
+      assertExtendedDigitalStatusDisplay(tester,
+          forDRF: "G:AMANDA", isVisible: false);
     });
   });
 }
