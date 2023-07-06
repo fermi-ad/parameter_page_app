@@ -280,11 +280,12 @@ void assertExtendedDigitalStatusDisplay(
   }
 
   if (hasDisplayValues != null) {
-    for (String displayValue in hasDisplayValues) {
+    for (int i = 0; i != hasDisplayValues.length; i++) {
+      final bitDetailFinder =
+          find.byKey(Key("parameter_extendeddigitalstatus_${forDRF}_bit$i"));
       expect(
           find.descendant(
-              of: extendedDigitalStatusFinder,
-              matching: find.text(displayValue)),
+              of: bitDetailFinder, matching: find.text(hasDisplayValues[i])),
           findsOneWidget);
     }
   }
