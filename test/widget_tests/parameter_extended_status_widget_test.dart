@@ -137,6 +137,41 @@ void main() {
           valueText: "On",
           valueColor: Colors.green,
           value: "1");
+      assertBitDetails(tester,
+          forDRF: "G:AMANDA",
+          bitNumber: 1,
+          description: "Ready???",
+          valueText: "Always",
+          valueColor: Colors.green,
+          value: "1");
+      assertBitDetails(tester,
+          forDRF: "G:AMANDA",
+          bitNumber: 2,
+          description: "Remote Henk",
+          valueText: "L",
+          valueColor: Colors.blue,
+          value: "0");
+      assertBitDetails(tester,
+          forDRF: "G:AMANDA",
+          bitNumber: 3,
+          description: "Polarity",
+          valueText: "Mono",
+          valueColor: Colors.red,
+          value: "0");
+      assertBitDetails(tester,
+          forDRF: "G:AMANDA",
+          bitNumber: 4,
+          description: " test 2",
+          valueText: " good",
+          valueColor: Colors.green,
+          value: "0");
+      assertBitDetails(tester,
+          forDRF: "G:AMANDA",
+          bitNumber: 5,
+          description: "testtest",
+          valueText: "GOOD",
+          valueColor: Colors.green,
+          value: "0");
     });
   });
 }
