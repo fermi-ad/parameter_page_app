@@ -10,81 +10,62 @@ class ParameterExtendedStatusWidget extends StatelessWidget {
       {super.key, required this.drf, required this.digitalStatus});
   @override
   Widget build(BuildContext context) {
-    const labelsStyle = TextStyle(color: Colors.grey, fontSize: 14.0);
-    const valueStyle = TextStyle(color: Colors.green, fontSize: 14.0);
-    const blueStyle = TextStyle(color: Colors.blue, fontSize: 14.0);
-    const redStyle = TextStyle(color: Colors.red, fontSize: 14.0);
-
     return Row(key: Key("parameter_extendeddigitalstatus_$drf"), children: [
       const SizedBox(width: 72.0),
-      Column(children: [
-        Row(
-            key: Key("parameter_extendeddigitalstatus_${drf}_bit0"),
-            children: const [
-              Text(
-                "0: ",
-                style: labelsStyle,
-                textAlign: TextAlign.left,
-              ),
-              Text(
-                "Henk On/Off",
-                style: labelsStyle,
-                textAlign: TextAlign.left,
-              ),
-              SizedBox(width: 48.0),
-              Text(
-                "On",
-                style: valueStyle,
-                textAlign: TextAlign.left,
-              ),
-              SizedBox(width: 8.0),
-              Text(
-                "1",
-                style: valueStyle,
-                textAlign: TextAlign.left,
-              )
-            ]),
-        Row(
-            key: Key("parameter_extendeddigitalstatus_${drf}_bit1"),
-            children: const [
-              Text("1: ", style: labelsStyle),
-              Text("Ready???", style: labelsStyle),
-              Text("Always", style: valueStyle),
-              Text("1", style: valueStyle)
-            ]),
-        Row(
-            key: Key("parameter_extendeddigitalstatus_${drf}_bit2"),
-            children: const [
-              Text("2: ", style: labelsStyle),
-              Text("Remote Henk", style: labelsStyle),
-              Text("L", style: blueStyle),
-              Text("0", style: blueStyle)
-            ]),
-        Row(
-            key: Key("parameter_extendeddigitalstatus_${drf}_bit3"),
-            children: const [
-              Text("3: ", style: labelsStyle),
-              Text("Polarity", style: labelsStyle),
-              Text("Mono", style: redStyle),
-              Text("0", style: redStyle)
-            ]),
-        Row(
-            key: Key("parameter_extendeddigitalstatus_${drf}_bit4"),
-            children: const [
-              Text("4: ", style: labelsStyle),
-              Text(" test 2", style: labelsStyle),
-              Text(" good", style: valueStyle),
-              Text("0", style: valueStyle)
-            ]),
-        Row(
-            key: Key("parameter_extendeddigitalstatus_${drf}_bit5"),
-            children: const [
-              Text("5: ", style: labelsStyle),
-              Text("testtest", style: labelsStyle),
-              Text("GOOD", style: valueStyle),
-              Text("0", style: valueStyle)
-            ]),
-      ])
+      Column(children: _buildRows())
     ]);
+  }
+
+  List<Row> _buildRows() {
+    List<Row> rows = List<Row>.empty(growable: true);
+
+    if (digitalStatus.extendedStatus != null) {
+      for (int i = 0; i < digitalStatus.extendedStatus!.length; i++) {
+        final attribute = digitalStatus.extendedStatus![i];
+        rows.add(_buildRow(
+            bitN: i,
+            description: attribute.description,
+            valueText: attribute.valueText,
+            value: attribute.value,
+            valueColor: Colors.green));
+      }
+    }
+    return rows;
+  }
+
+  Row _buildRow(
+      {required int bitN,
+      required String description,
+      required String valueText,
+      required String value,
+      required Color valueColor}) {
+    const labelsStyle = TextStyle(color: Colors.grey, fontSize: 14.0);
+    final valueStyle = TextStyle(color: valueColor, fontSize: 14.0);
+
+    return Row(
+        key: Key("parameter_extendeddigitalstatus_${drf}_bit$bitN"),
+        children: [
+          Text(
+            "$bitN: ",
+            style: labelsStyle,
+            textAlign: TextAlign.left,
+          ),
+          Text(
+            description,
+            style: labelsStyle,
+            textAlign: TextAlign.left,
+          ),
+          const SizedBox(width: 48.0),
+          Text(
+            valueText,
+            style: valueStyle,
+            textAlign: TextAlign.left,
+          ),
+          Text(
+            value,
+            style: valueStyle,
+            textAlign: TextAlign.left,
+          )
+        ]);
   }
 }

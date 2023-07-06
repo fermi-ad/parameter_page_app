@@ -4,7 +4,7 @@ import 'package:parameter_page/dpm_service.dart';
 import 'package:parameter_page/widgets/parameter_extended_status_widget.dart';
 
 void main() {
-  DigitalStatus singleBitStatus = DigitalStatus(
+  DigitalStatus allBits = DigitalStatus(
       refId: 0,
       cycle: 0,
       timestamp: DateTime(2023),
@@ -41,7 +41,7 @@ void main() {
             color: StatusColor.green)
       ]);
 
-  DigitalStatus allBits = DigitalStatus(
+  DigitalStatus singleBit = DigitalStatus(
       refId: 0,
       cycle: 0,
       timestamp: DateTime(2023),
@@ -96,7 +96,7 @@ void main() {
       final app = MaterialApp(
           home: Scaffold(
               body: ParameterExtendedStatusWidget(
-                  drf: "G:AMANDA", digitalStatus: singleBitStatus)));
+                  drf: "G:AMANDA", digitalStatus: singleBit)));
 
       // When I display the extended status
       await tester.pumpWidget(app);
