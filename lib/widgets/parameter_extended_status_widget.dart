@@ -13,6 +13,7 @@ class ParameterExtendedStatusWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(key: Key("parameter_extendeddigitalstatus_$drf"), children: [
       Container(
+          width: 400.0,
           padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,20 +51,26 @@ class ParameterExtendedStatusWidget extends StatelessWidget {
         key: Key("parameter_extendeddigitalstatus_${drf}_bit$bitN"),
         children: [
           Text(
-            "$bitN: ",
+            "Bit $bitN: ",
             style: labelsStyle,
             textAlign: TextAlign.left,
           ),
-          Text(
-            description,
-            style: labelsStyle,
-            textAlign: TextAlign.left,
-          ),
-          Text(
-            valueText,
-            style: valueStyle,
-            textAlign: TextAlign.left,
-          ),
+          Expanded(
+              flex: 2,
+              child: Text(
+                description,
+                style: labelsStyle,
+                textAlign: TextAlign.left,
+              )),
+          const Spacer(),
+          Expanded(
+              flex: 1,
+              child: Text(
+                valueText,
+                style: valueStyle,
+                textAlign: TextAlign.left,
+              )),
+          const Spacer(),
           Text(
             value,
             style: valueStyle,
