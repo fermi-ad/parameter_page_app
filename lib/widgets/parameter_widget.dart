@@ -178,45 +178,57 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   Widget _buildExtendedStatus() {
     return Row(
         key: Key("parameter_extendeddigitalstatus_${widget.drf}"),
-        children: const [
-          SizedBox(width: 48.0),
+        children: [
+          const SizedBox(width: 48.0),
           Column(children: [
-            Row(children: [
-              Text("0: "),
-              Text("Henk On/Off"),
-              Text("On"),
-              Text("1")
-            ]),
-            Row(children: [
-              Text("1: "),
-              Text("Ready???"),
-              Text("Always"),
-              Text("1")
-            ]),
-            Row(children: [
-              Text("2: "),
-              Text("Remote Henk"),
-              Text("L"),
-              Text("0")
-            ]),
-            Row(children: [
-              Text("3: "),
-              Text("Polarity"),
-              Text("Mono"),
-              Text("0")
-            ]),
-            Row(children: [
-              Text("4: "),
-              Text(" test 2"),
-              Text(" good"),
-              Text("0")
-            ]),
-            Row(children: [
-              Text("5: "),
-              Text("testtest"),
-              Text("GOOD"),
-              Text("0")
-            ]),
+            Row(
+                key: Key("parameter_extendeddigitalstatus_${widget.drf}_bit0"),
+                children: const [
+                  Text("0: "),
+                  Text("Henk On/Off"),
+                  Text("On"),
+                  Text("1")
+                ]),
+            Row(
+                key: Key("parameter_extendeddigitalstatus_${widget.drf}_bit1"),
+                children: const [
+                  Text("1: "),
+                  Text("Ready???"),
+                  Text("Always"),
+                  Text("1")
+                ]),
+            Row(
+                key: Key("parameter_extendeddigitalstatus_${widget.drf}_bit2"),
+                children: const [
+                  Text("2: "),
+                  Text("Remote Henk"),
+                  Text("L"),
+                  Text("0")
+                ]),
+            Row(
+                key: Key("parameter_extendeddigitalstatus_${widget.drf}_bit3"),
+                children: const [
+                  Text("3: "),
+                  Text("Polarity"),
+                  Text("Mono"),
+                  Text("0")
+                ]),
+            Row(
+                key: Key("parameter_extendeddigitalstatus_${widget.drf}_bit4"),
+                children: const [
+                  Text("4: "),
+                  Text(" test 2"),
+                  Text(" good"),
+                  Text("0")
+                ]),
+            Row(
+                key: Key("parameter_extendeddigitalstatus_${widget.drf}_bit5"),
+                children: const [
+                  Text("5: "),
+                  Text("testtest"),
+                  Text("GOOD"),
+                  Text("0")
+                ]),
           ])
         ]);
   }

@@ -269,11 +269,12 @@ void assertExtendedDigitalStatusDisplay(
       extendedDigitalStatusFinder, isVisible ? findsOneWidget : findsNothing);
 
   if (hasDescriptions != null) {
-    for (String bitDescription in hasDescriptions) {
+    for (int i = 0; i != hasDescriptions.length; i++) {
+      final bitDetailFinder =
+          find.byKey(Key("parameter_extendeddigitalstatus_${forDRF}_bit$i"));
       expect(
           find.descendant(
-              of: extendedDigitalStatusFinder,
-              matching: find.text(bitDescription)),
+              of: bitDetailFinder, matching: find.text(hasDescriptions[i])),
           findsOneWidget);
     }
   }
@@ -289,10 +290,12 @@ void assertExtendedDigitalStatusDisplay(
   }
 
   if (hasBinaryValues != null) {
-    for (String bitValue in hasBinaryValues) {
+    for (int i = 0; i != hasBinaryValues.length; i++) {
+      final bitDetailFinder =
+          find.byKey(Key("parameter_extendeddigitalstatus_${forDRF}_bit$i"));
       expect(
           find.descendant(
-              of: extendedDigitalStatusFinder, matching: find.text(bitValue)),
+              of: bitDetailFinder, matching: find.text(hasBinaryValues[i])),
           findsOneWidget);
     }
   }
