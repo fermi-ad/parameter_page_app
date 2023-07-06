@@ -12,8 +12,12 @@ class ParameterExtendedStatusWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(key: Key("parameter_extendeddigitalstatus_$drf"), children: [
-      const SizedBox(width: 72.0),
-      Column(children: _buildRows())
+      Container(
+          width: 400.0,
+          padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: _buildRows()))
     ]);
   }
 
@@ -40,28 +44,33 @@ class ParameterExtendedStatusWidget extends StatelessWidget {
       required String valueText,
       required String value,
       required Color valueColor}) {
-    const labelsStyle = TextStyle(color: Colors.grey, fontSize: 14.0);
-    final valueStyle = TextStyle(color: valueColor, fontSize: 14.0);
+    const labelsStyle = TextStyle(color: Colors.grey, fontSize: 16.0);
+    final valueStyle = TextStyle(color: valueColor, fontSize: 16.0);
 
     return Row(
         key: Key("parameter_extendeddigitalstatus_${drf}_bit$bitN"),
         children: [
           Text(
-            "$bitN: ",
+            "Bit $bitN: ",
             style: labelsStyle,
             textAlign: TextAlign.left,
           ),
-          Text(
-            description,
-            style: labelsStyle,
-            textAlign: TextAlign.left,
-          ),
-          const SizedBox(width: 48.0),
-          Text(
-            valueText,
-            style: valueStyle,
-            textAlign: TextAlign.left,
-          ),
+          Expanded(
+              flex: 2,
+              child: Text(
+                description,
+                style: labelsStyle,
+                textAlign: TextAlign.left,
+              )),
+          const Spacer(),
+          Expanded(
+              flex: 1,
+              child: Text(
+                valueText,
+                style: valueStyle,
+                textAlign: TextAlign.left,
+              )),
+          const Spacer(),
           Text(
             value,
             style: valueStyle,

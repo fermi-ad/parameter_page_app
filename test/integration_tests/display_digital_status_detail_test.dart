@@ -102,6 +102,7 @@ void main() {
 
       // When I expand the parameter to display extended digital status
       await expandDigitalStatus(tester, forDRF: "G:AMANDA");
+      await waitForDataToLoadFor(tester, "G:AMANDA");
 
       // Then the expand button is now a collapse button
       assertCollapseDigitalStatusIcon(forDRF: "G:AMANDA", isVisible: true);
@@ -144,7 +145,8 @@ void main() {
           ]);
     });
 
-    testWidgets('Click collapse icon, hides extended status', (tester) async {
+    testWidgets('Collapse extended status, hides extended status',
+        (tester) async {
       // Given the test page is loaded and data for G:AMANDA is loaded
       app.main();
       await tester.pumpAndSettle();
@@ -152,6 +154,7 @@ void main() {
 
       // ... and the extended digital status is expanded
       await expandDigitalStatus(tester, forDRF: "G:AMANDA");
+      await waitForDataToLoadFor(tester, "G:AMANDA");
       assertExtendedDigitalStatusDisplay(tester,
           forDRF: "G:AMANDA", isVisible: true);
 
