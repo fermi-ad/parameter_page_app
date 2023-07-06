@@ -117,14 +117,15 @@ void main() {
             "Polarity",
             " test 2",
             "testtest"
-          ]); /*, hasDisplayValues: [
-        "On",
-        "Always",
-        "L",
-        "Mono",
-        " good",
-        "GOOD"
-      ], hasBinaryValues: [
+          ],
+          hasDisplayValues: [
+            "On",
+            "Always",
+            "L",
+            "Mono",
+            " good",
+            "GOOD"
+          ]); /*, hasBinaryValues: [
         "1",
         "1",
         "0",
