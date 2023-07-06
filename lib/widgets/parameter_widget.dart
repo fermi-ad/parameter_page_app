@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:parameter_page/dpm_service.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
 import 'package:parameter_page/widgets/parameter_basic_status_widget.dart';
+import 'package:parameter_page/widgets/parameter_extended_status_widget.dart';
 
 import 'data_acquisition_widget.dart';
 import 'display_settings_widget.dart';
@@ -157,7 +158,46 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                       : Container()),
             ])
           ]),
-          _displayExtendedStatus ? _buildExtendedStatus() : Container()
+          _displayExtendedStatus
+              ? ParameterExtendedStatusWidget(
+                  drf: widget.drf,
+                  digitalStatus: DigitalStatus(
+                      refId: 0,
+                      cycle: 0,
+                      timestamp: DateTime(2023),
+                      extendedStatus: [
+                        const ExtendedStatusAttribute(
+                            description: "Henk On/Off",
+                            value: "1",
+                            valueText: "On",
+                            color: StatusColor.green),
+                        const ExtendedStatusAttribute(
+                            description: "Ready???",
+                            value: "1",
+                            valueText: "Always",
+                            color: StatusColor.green),
+                        const ExtendedStatusAttribute(
+                            description: "Remote Henk",
+                            value: "0",
+                            valueText: "L",
+                            color: StatusColor.blue),
+                        const ExtendedStatusAttribute(
+                            description: "Polarity",
+                            value: "0",
+                            valueText: "Mono",
+                            color: StatusColor.red),
+                        const ExtendedStatusAttribute(
+                            description: " test 2",
+                            value: "0",
+                            valueText: " good",
+                            color: StatusColor.green),
+                        const ExtendedStatusAttribute(
+                            description: "testtest",
+                            value: "0",
+                            valueText: "GOOD",
+                            color: StatusColor.green)
+                      ]))
+              : Container()
         ]));
   }
 
@@ -173,64 +213,6 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                 key: Key("parameter_expanddigitalstatus_${widget.drf}"),
                 icon: const Icon(Icons.expand_more),
                 onPressed: _toggleDigitalStatus);
-  }
-
-  Widget _buildExtendedStatus() {
-    return Row(
-        key: Key("parameter_extendeddigitalstatus_${widget.drf}"),
-        children: [
-          const SizedBox(width: 48.0),
-          Column(children: [
-            Row(
-                key: Key("parameter_extendeddigitalstatus_${widget.drf}_bit0"),
-                children: const [
-                  Text("0: "),
-                  Text("Henk On/Off"),
-                  Text("On"),
-                  Text("1")
-                ]),
-            Row(
-                key: Key("parameter_extendeddigitalstatus_${widget.drf}_bit1"),
-                children: const [
-                  Text("1: "),
-                  Text("Ready???"),
-                  Text("Always"),
-                  Text("1")
-                ]),
-            Row(
-                key: Key("parameter_extendeddigitalstatus_${widget.drf}_bit2"),
-                children: const [
-                  Text("2: "),
-                  Text("Remote Henk"),
-                  Text("L"),
-                  Text("0")
-                ]),
-            Row(
-                key: Key("parameter_extendeddigitalstatus_${widget.drf}_bit3"),
-                children: const [
-                  Text("3: "),
-                  Text("Polarity"),
-                  Text("Mono"),
-                  Text("0")
-                ]),
-            Row(
-                key: Key("parameter_extendeddigitalstatus_${widget.drf}_bit4"),
-                children: const [
-                  Text("4: "),
-                  Text(" test 2"),
-                  Text(" good"),
-                  Text("0")
-                ]),
-            Row(
-                key: Key("parameter_extendeddigitalstatus_${widget.drf}_bit5"),
-                children: const [
-                  Text("5: "),
-                  Text("testtest"),
-                  Text("GOOD"),
-                  Text("0")
-                ]),
-          ])
-        ]);
   }
 
   void _toggleDigitalStatus() {

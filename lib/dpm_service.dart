@@ -121,6 +121,19 @@ class BasicStatusAttribute {
   const BasicStatusAttribute({required this.character, required this.color});
 }
 
+class ExtendedStatusAttribute {
+  final String description;
+  final String value;
+  final String valueText;
+  final StatusColor color;
+
+  const ExtendedStatusAttribute(
+      {required this.description,
+      required this.value,
+      required this.valueText,
+      required this.color});
+}
+
 class DigitalStatus {
   final int refId;
   final int status;
@@ -130,6 +143,7 @@ class DigitalStatus {
   final BasicStatusAttribute? readyTripped;
   final BasicStatusAttribute? remoteLocal;
   final BasicStatusAttribute? positiveNegative;
+  final List<ExtendedStatusAttribute>? extendedStatus;
 
   const DigitalStatus(
       {required this.refId,
@@ -139,7 +153,8 @@ class DigitalStatus {
       this.onOff,
       this.readyTripped,
       this.remoteLocal,
-      this.positiveNegative});
+      this.positiveNegative,
+      this.extendedStatus});
 }
 
 abstract class DpmService {
