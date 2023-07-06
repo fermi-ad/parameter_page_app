@@ -257,12 +257,48 @@ void assertCollapseDigitalStatusIcon(
 }
 
 void assertExtendedDigitalStatusDisplay(
-    {required String forDRF, required bool isVisible}) {
+    {required String forDRF,
+    required bool isVisible,
+    List<String>? hasDescriptions,
+    List<String>? hasDisplayValues,
+    List<String>? hasBinaryValues}) {
   final extendedDigitalStatusFinder =
       find.byKey(Key("parameter_extendeddigitalstatus_$forDRF"));
 
   expect(
       extendedDigitalStatusFinder, isVisible ? findsOneWidget : findsNothing);
+
+  if (hasDescriptions != null) {
+    for (int i = 0; i != hasDescriptions.length; i++) {
+      final bitDetailFinder =
+          find.byKey(Key("parameter_extendeddigitalstatus_${forDRF}_bit$i"));
+      expect(
+          find.descendant(
+              of: bitDetailFinder, matching: find.text(hasDescriptions[i])),
+          findsOneWidget);
+    }
+  }
+
+  if (hasDisplayValues != null) {
+    for (String displayValue in hasDisplayValues) {
+      expect(
+          find.descendant(
+              of: extendedDigitalStatusFinder,
+              matching: find.text(displayValue)),
+          findsOneWidget);
+    }
+  }
+
+  if (hasBinaryValues != null) {
+    for (int i = 0; i != hasBinaryValues.length; i++) {
+      final bitDetailFinder =
+          find.byKey(Key("parameter_extendeddigitalstatus_${forDRF}_bit$i"));
+      expect(
+          find.descendant(
+              of: bitDetailFinder, matching: find.text(hasBinaryValues[i])),
+          findsOneWidget);
+    }
+  }
 }
 
 Future<void> waitForDataToLoadFor(tester, parameter) async {

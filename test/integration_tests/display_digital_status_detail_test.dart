@@ -107,29 +107,33 @@ void main() {
       assertCollapseDigitalStatusIcon(forDRF: "G:AMANDA", isVisible: true);
 
       // ... and the extended digitial status is displayed
-      assertExtendedDigitalStatusDisplay(forDRF: "G:AMANDA", isVisible: true);
-      /* hasDescriptions: [
-        "Henk On/Off",
-        "Ready???",
-        "Remote Henk",
-        "Polarity",
-        " test 2",
-        "testtest"
-      ], hasDisplayValues: [
-        "On",
-        "Always",
-        "L",
-        "Mono",
-        " good",
-        "GOOD"
-      ], hasBinaryValues: [
-        "1",
-        "1",
-        "0",
-        "0",
-        "0",
-        "0"
-      ]);*/
+      assertExtendedDigitalStatusDisplay(
+          forDRF: "G:AMANDA",
+          isVisible: true,
+          hasDescriptions: [
+            "Henk On/Off",
+            "Ready???",
+            "Remote Henk",
+            "Polarity",
+            " test 2",
+            "testtest"
+          ],
+          hasDisplayValues: [
+            "On",
+            "Always",
+            "L",
+            "Mono",
+            " good",
+            "GOOD"
+          ],
+          hasBinaryValues: [
+            "1",
+            "1",
+            "0",
+            "0",
+            "0",
+            "0"
+          ]);
     });
 
     testWidgets('Click collapse icon, hides extended status', (tester) async {
