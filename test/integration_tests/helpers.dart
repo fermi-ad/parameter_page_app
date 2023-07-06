@@ -257,12 +257,24 @@ void assertCollapseDigitalStatusIcon(
 }
 
 void assertExtendedDigitalStatusDisplay(
-    {required String forDRF, required bool isVisible}) {
+    {required String forDRF,
+    required bool isVisible,
+    List<String>? hasDescriptions}) {
   final extendedDigitalStatusFinder =
       find.byKey(Key("parameter_extendeddigitalstatus_$forDRF"));
 
   expect(
       extendedDigitalStatusFinder, isVisible ? findsOneWidget : findsNothing);
+
+  if (hasDescriptions != null) {
+    for (String bitDescription in hasDescriptions) {
+      expect(
+          find.descendant(
+              of: extendedDigitalStatusFinder,
+              matching: find.text(bitDescription)),
+          findsOneWidget);
+    }
+  }
 }
 
 Future<void> waitForDataToLoadFor(tester, parameter) async {
