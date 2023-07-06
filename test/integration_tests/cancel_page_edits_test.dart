@@ -9,6 +9,22 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Cancel Page Edits', () {
+    testWidgets('Add comment and cancel, new comment should be discarded',
+        (tester) async {
+      // Given the test page is loaded and I am in edit mode
+      app.main();
+      await tester.pumpAndSettle();
+      await enterEditMode(tester);
+
+      // When I add a new comment and cancel edit mode
+      const badComment = "I don't want to see this comment";
+      await addANewComment(tester, badComment);
+      await cancelEditMode(tester);
+
+      // Then the parameters return to their original positions
+      assertIsNotOnPage(comment: badComment);
+    });
+
     testWidgets('Outside edit mode, cancel button is not visible',
         (tester) async {
       // Given the test page is loaded and I am in edit mode
@@ -79,22 +95,6 @@ void main() {
       // Then the parameters return to their original positions
       assertParameterIsInRow("M:OUTTMP@e,02", 0);
       assertParameterIsInRow("G:AMANDA", 2);
-    });
-
-    testWidgets('Add comment and cancel, new comment should be discarded',
-        (tester) async {
-      // Given the test page is loaded and I am in edit mode
-      app.main();
-      await tester.pumpAndSettle();
-      await enterEditMode(tester);
-
-      // When I add a new comment and cancel edit mode
-      const badComment = "I don't want to see this comment";
-      await addANewComment(tester, badComment);
-      await cancelEditMode(tester);
-
-      // Then the parameters return to their original positions
-      assertIsNotOnPage(comment: badComment);
     });
   });
 }

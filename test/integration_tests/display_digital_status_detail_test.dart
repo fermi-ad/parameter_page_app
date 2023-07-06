@@ -93,5 +93,63 @@ void main() {
       // Then the option to expand the row to display digital status is present for G:AMANDA
       assertExpandDigitalStatusIcon(forDRF: "G:AMANDA", isVisible: true);
     });
+
+    testWidgets('Click expand icon, displays extended status', (tester) async {
+      // Given the test page is loaded and data for G:AMANDA is loaded
+      app.main();
+      await tester.pumpAndSettle();
+      await waitForDataToLoadFor(tester, "G:AMANDA");
+
+      // When I expand the parameter to display extended digital status
+      await expandDigitalStatus(tester, forDRF: "G:AMANDA");
+
+      // Then the expand button is now a collapse button
+      assertCollapseDigitalStatusIcon(forDRF: "G:AMANDA", isVisible: true);
+
+      // ... and the extended digitial status is displayed
+      assertExtendedDigitalStatusDisplay(forDRF: "G:AMANDA", isVisible: true);
+      /* hasDescriptions: [
+        "Henk On/Off",
+        "Ready???",
+        "Remote Henk",
+        "Polarity",
+        " test 2",
+        "testtest"
+      ], hasDisplayValues: [
+        "On",
+        "Always",
+        "L",
+        "Mono",
+        " good",
+        "GOOD"
+      ], hasBinaryValues: [
+        "1",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]);*/
+    });
+
+    testWidgets('Click collapse icon, hides extended status', (tester) async {
+      // Given the test page is loaded and data for G:AMANDA is loaded
+      app.main();
+      await tester.pumpAndSettle();
+      await waitForDataToLoadFor(tester, "G:AMANDA");
+
+      // ... and the extended digital status is expanded
+      await expandDigitalStatus(tester, forDRF: "G:AMANDA");
+      assertExtendedDigitalStatusDisplay(forDRF: "G:AMANDA", isVisible: true);
+
+      // When I tap the collapse button
+      await collapseDigitalStatus(tester, forDRF: "G:AMANDA");
+
+      // Then the collapse button is replaced with the expand button
+      assertExpandDigitalStatusIcon(forDRF: "G:AMANDA", isVisible: true);
+
+      // ... and the extended digital status is hidden
+      assertExtendedDigitalStatusDisplay(forDRF: "G:AMANDA", isVisible: false);
+    });
   });
 }
