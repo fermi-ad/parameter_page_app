@@ -181,12 +181,15 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         children: const [
           SizedBox(width: 48.0),
           Column(children: [
-            Text("Henk On/Off"),
-            Text("Ready???"),
-            Text("Remote Henk"),
-            Text("Polarity"),
-            Text(" test 2"),
-            Text("testtest")
+            Row(children: [
+              Text("0: "),
+              Text("Henk On/Off"),
+            ]),
+            Row(children: [Text("1: "), Text("Ready???")]),
+            Row(children: [Text("2: "), Text("Remote Henk")]),
+            Row(children: [Text("3: "), Text("Polarity")]),
+            Row(children: [Text("4: "), Text(" test 2")]),
+            Row(children: [Text("5: "), Text("testtest")]),
           ])
         ]);
   }
