@@ -124,10 +124,14 @@ class BasicStatusAttribute {
 class ExtendedStatusAttribute {
   final String description;
   final String value;
+  final String valueText;
   final StatusColor color;
 
   const ExtendedStatusAttribute(
-      {required this.description, required this.value, required this.color});
+      {required this.description,
+      required this.value,
+      required this.valueText,
+      required this.color});
 }
 
 class DigitalStatus {
