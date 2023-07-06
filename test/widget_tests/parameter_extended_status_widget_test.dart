@@ -32,7 +32,7 @@ void main() {
         const ExtendedStatusAttribute(
             description: " test 2",
             value: "0",
-            valueText: "good",
+            valueText: " good",
             color: StatusColor.green),
         const ExtendedStatusAttribute(
             description: "testtest",
