@@ -12,8 +12,11 @@ class ParameterExtendedStatusWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(key: Key("parameter_extendeddigitalstatus_$drf"), children: [
-      const SizedBox(width: 64.0),
-      Column(children: _buildRows())
+      Container(
+          padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: _buildRows()))
     ]);
   }
 
@@ -56,7 +59,6 @@ class ParameterExtendedStatusWidget extends StatelessWidget {
             style: labelsStyle,
             textAlign: TextAlign.left,
           ),
-          const SizedBox(width: 48.0),
           Text(
             valueText,
             style: valueStyle,
