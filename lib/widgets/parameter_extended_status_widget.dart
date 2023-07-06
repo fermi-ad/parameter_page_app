@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:parameter_page/widgets/util.dart';
 
 import '../dpm_service.dart';
 
@@ -27,31 +28,10 @@ class ParameterExtendedStatusWidget extends StatelessWidget {
             description: attribute.description,
             valueText: attribute.valueText,
             value: attribute.value,
-            valueColor: _mapColor(from: attribute.color)));
+            valueColor: Util.mapColor(from: attribute.color)));
       }
     }
     return rows;
-  }
-
-  Color _mapColor({required StatusColor from}) {
-    switch (from) {
-      case StatusColor.black:
-        return Colors.black;
-      case StatusColor.blue:
-        return Colors.blue;
-      case StatusColor.cyan:
-        return Colors.cyan;
-      case StatusColor.green:
-        return Colors.green;
-      case StatusColor.magenta:
-        return Colors.pink;
-      case StatusColor.red:
-        return Colors.red;
-      case StatusColor.white:
-        return Colors.white;
-      case StatusColor.yellow:
-        return Colors.yellow;
-    }
   }
 
   Row _buildRow(

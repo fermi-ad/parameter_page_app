@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:parameter_page/widgets/util.dart';
 
 import '../dpm_service.dart';
 
@@ -55,9 +56,8 @@ class ParameterBasicStatusWidget extends StatelessWidget {
       required String withCharacter,
       required StatusColor withColor}) {
     const labelsStyle = TextStyle(color: Colors.grey, fontSize: _fontSize);
-    final valueStyle = TextStyle(
-        color: _convertToColor(fromStatusColor: withColor),
-        fontSize: _fontSize);
+    final valueStyle =
+        TextStyle(color: Util.mapColor(from: withColor), fontSize: _fontSize);
 
     return Row(
         key: Key("parameter_basicstatus_${forProperty}_$drf"),
@@ -65,27 +65,6 @@ class ParameterBasicStatusWidget extends StatelessWidget {
           Text(withLabel, style: labelsStyle, textAlign: TextAlign.right),
           Text(withCharacter, style: valueStyle)
         ]);
-  }
-
-  Color _convertToColor({required StatusColor fromStatusColor}) {
-    switch (fromStatusColor) {
-      case StatusColor.black:
-        return Colors.black;
-      case StatusColor.blue:
-        return Colors.blue;
-      case StatusColor.cyan:
-        return Colors.cyan;
-      case StatusColor.green:
-        return Colors.green;
-      case StatusColor.magenta:
-        return Colors.pink;
-      case StatusColor.red:
-        return Colors.red;
-      case StatusColor.white:
-        return Colors.white;
-      case StatusColor.yellow:
-        return Colors.yellow;
-    }
   }
 
   static const _fontSize = 12.0;
