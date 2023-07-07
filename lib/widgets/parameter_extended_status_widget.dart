@@ -29,10 +29,14 @@ class ParameterExtendedStatusWidget extends StatelessWidget {
         final attribute = digitalStatus.extendedStatus![i];
         rows.add(_buildRow(
             bitN: i,
-            description: attribute.description,
-            valueText: attribute.valueText,
+            description:
+                attribute.description != null ? attribute.description! : "...",
+            valueText:
+                attribute.valueText != null ? attribute.valueText! : "...",
             value: attribute.value,
-            valueColor: Util.mapColor(from: attribute.color)));
+            valueColor: attribute.color != null
+                ? Util.mapColor(from: attribute.color!)
+                : Colors.grey));
       }
     }
     return rows;

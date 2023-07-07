@@ -4,6 +4,31 @@ import 'package:parameter_page/dpm_service.dart';
 import 'package:parameter_page/widgets/parameter_extended_status_widget.dart';
 
 void main() {
+  DigitalStatus emptyBits = DigitalStatus(
+      refId: 0,
+      cycle: 0,
+      timestamp: DateTime(2023),
+      extendedStatus: [
+        const ExtendedStatusAttribute(
+          value: "1",
+        ),
+        const ExtendedStatusAttribute(
+          value: "1",
+        ),
+        const ExtendedStatusAttribute(
+          value: "0",
+        ),
+        const ExtendedStatusAttribute(
+          value: "0",
+        ),
+        const ExtendedStatusAttribute(
+          value: "0",
+        ),
+        const ExtendedStatusAttribute(
+          value: "0",
+        )
+      ]);
+
   DigitalStatus allBits = DigitalStatus(
       refId: 0,
       cycle: 0,
@@ -73,18 +98,18 @@ void main() {
     expect(bitRowFinder, findsOneWidget);
 
     expect(find.descendant(of: bitRowFinder, matching: find.text(description)),
-        findsOneWidget);
+        findsAtLeastNWidgets(1));
 
     expect(find.descendant(of: bitRowFinder, matching: find.text(valueText)),
-        findsOneWidget);
+        findsAtLeastNWidgets(1));
 
     expect(find.descendant(of: bitRowFinder, matching: find.text(value)),
         findsOneWidget);
 
     final displayValueTextFinder =
         find.descendant(of: bitRowFinder, matching: find.text(valueText));
-    expect(displayValueTextFinder, findsOneWidget);
-    final displayValueText = tester.widget<Text>(displayValueTextFinder);
+    expect(displayValueTextFinder, findsAtLeastNWidgets(1));
+    final displayValueText = tester.firstWidget<Text>(displayValueTextFinder);
     expect(displayValueText.style.color, valueColor);
   }
 
@@ -171,6 +196,63 @@ void main() {
           description: "testtest",
           valueText: "GOOD",
           valueColor: Colors.green,
+          value: "0");
+    });
+
+    testWidgets(
+        'Parameter with 6 empty bits of extended status, shows dots for descriptions',
+        (WidgetTester tester) async {
+      // Given a ParameterExtendedStatusWidget instantiated for a device called G:AMANDA with undefined bits
+      final app = MaterialApp(
+          home: Scaffold(
+              body: ParameterExtendedStatusWidget(
+                  drf: "G:AMANDA", digitalStatus: emptyBits)));
+
+      // When I display the extended status
+      await tester.pumpWidget(app);
+
+      // Then the description and value text show dots and the color is grey
+      assertBitDetails(tester,
+          forDRF: "G:AMANDA",
+          bitNumber: 0,
+          description: "...",
+          valueText: "...",
+          valueColor: Colors.grey,
+          value: "1");
+      assertBitDetails(tester,
+          forDRF: "G:AMANDA",
+          bitNumber: 1,
+          description: "...",
+          valueText: "...",
+          valueColor: Colors.grey,
+          value: "1");
+      assertBitDetails(tester,
+          forDRF: "G:AMANDA",
+          bitNumber: 2,
+          description: "...",
+          valueText: "...",
+          valueColor: Colors.grey,
+          value: "0");
+      assertBitDetails(tester,
+          forDRF: "G:AMANDA",
+          bitNumber: 3,
+          description: "...",
+          valueText: "...",
+          valueColor: Colors.grey,
+          value: "0");
+      assertBitDetails(tester,
+          forDRF: "G:AMANDA",
+          bitNumber: 4,
+          description: "...",
+          valueText: "...",
+          valueColor: Colors.grey,
+          value: "0");
+      assertBitDetails(tester,
+          forDRF: "G:AMANDA",
+          bitNumber: 5,
+          description: "...",
+          valueText: "...",
+          valueColor: Colors.grey,
           value: "0");
     });
   });
