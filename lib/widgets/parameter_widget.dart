@@ -120,71 +120,93 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     return ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 34.0),
         child: Column(children: [
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            _buildExpandButton(),
-            Expanded(
-                flex: 2,
-                child: Tooltip(
-                    message: widget.drf,
-                    child: Text(overflow: TextOverflow.ellipsis, widget.drf))),
-            Expanded(
-                flex: 2,
-                child: info != null
-                    ? Text(
-                        key: Key("parameter_description_${widget.drf}"),
-                        overflow: TextOverflow.ellipsis,
-                        info!.description)
-                    : Container()),
-            const Spacer(),
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(children: [
-                _buildParam(_settingValue, settingUnits,
-                    key: Key("parameter_setting_${widget.drf}")),
-                const SizedBox(width: 12.0),
-                StreamBuilder(
-                    stream: widget.dpm.monitorDevices([widget.drf]),
-                    builder: _readingBuilder),
-                const SizedBox(width: 12.0),
-                StreamBuilder(
-                    stream:
-                        widget.dpm.monitorDigitalStatusDevices([widget.drf]),
-                    builder: _basicStatusBuilder)
-              ]),
-              Visibility(
-                  visible: widget.displayAlarmDetails,
-                  child: (info != null && info!.alarm != null)
-                      ? ParameterAlarmDetailsWidget(
-                          drf: widget.drf, alarmBlock: info!.alarm!)
-                      : Container()),
-            ])
-          ]),
-          _displayExtendedStatus
-              ? StreamBuilder(
-                  stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
-                  builder: _extendedStatusBuilder)
-              : Container()
+          _buildParameterDetailsRow(),
+          Visibility(
+              visible: _displayExtendedStatus, child: _buildExtendedStatusRow())
         ]));
   }
 
-  Widget _buildExpandButton() {
-    return SizedBox(
-        width: 48.0,
-        child: (info == null || info!.basicStatus == null)
-            ? Container()
-            : _displayExtendedStatus
-                ? SizedBox(
-                    width: 48.0,
-                    child: IconButton(
-                        key: Key(
-                            "parameter_collapsedigitalstatus_${widget.drf}"),
-                        icon: const Icon(Icons.expand_less),
-                        onPressed: _toggleDigitalStatus))
-                : SizedBox(
-                    width: 48.0,
-                    child: IconButton(
-                        key: Key("parameter_expanddigitalstatus_${widget.drf}"),
-                        icon: const Icon(Icons.expand_more),
-                        onPressed: _toggleDigitalStatus)));
+  Widget _buildParameterDetailsRow() {
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      Expanded(flex: 2, child: _buildName()),
+      Expanded(flex: 2, child: _buildDescription()),
+      const Spacer(),
+      _buildProperties(),
+      SizedBox(
+          width: 48.0, child: _buildExpandOrCollapseExtendedStatusButton()),
+    ]);
+  }
+
+  Widget _buildName() {
+    return Tooltip(
+        message: widget.drf,
+        child: Text(overflow: TextOverflow.ellipsis, widget.drf));
+  }
+
+  Widget _buildDescription() {
+    return info != null
+        ? Text(
+            key: Key("parameter_description_${widget.drf}"),
+            overflow: TextOverflow.ellipsis,
+            info!.description)
+        : Container();
+  }
+
+  Widget _buildProperties() {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Row(children: [
+        _buildParam(_settingValue, settingUnits,
+            key: Key("parameter_setting_${widget.drf}")),
+        const SizedBox(width: 12.0),
+        StreamBuilder(
+            stream: widget.dpm.monitorDevices([widget.drf]),
+            builder: _readingBuilder),
+        const SizedBox(width: 12.0),
+        StreamBuilder(
+            stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
+            builder: _basicStatusBuilder)
+      ]),
+      Visibility(
+          visible: widget.displayAlarmDetails,
+          child: (info != null && info!.alarm != null)
+              ? ParameterAlarmDetailsWidget(
+                  drf: widget.drf, alarmBlock: info!.alarm!)
+              : Container()),
+    ]);
+  }
+
+  Widget _buildExpandOrCollapseExtendedStatusButton() {
+    if (_hasExtendedStatusProperty()) {
+      return _displayExtendedStatus
+          ? _buildExpandExtendedStatusButton()
+          : _buildCollapseExtendedStatusButton();
+    } else {
+      return Container();
+    }
+  }
+
+  bool _hasExtendedStatusProperty() {
+    return !(info == null || info!.basicStatus == null);
+  }
+
+  Widget _buildExpandExtendedStatusButton() {
+    return IconButton(
+        key: Key("parameter_collapsedigitalstatus_${widget.drf}"),
+        icon: const Icon(Icons.expand_less),
+        onPressed: _toggleDigitalStatus);
+  }
+
+  Widget _buildCollapseExtendedStatusButton() {
+    return IconButton(
+        key: Key("parameter_expanddigitalstatus_${widget.drf}"),
+        icon: const Icon(Icons.expand_more),
+        onPressed: _toggleDigitalStatus);
+  }
+
+  Widget _buildExtendedStatusRow() {
+    return StreamBuilder(
+        stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
+        builder: _extendedStatusBuilder);
   }
 
   void _toggleDigitalStatus() {
