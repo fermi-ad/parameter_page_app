@@ -47,7 +47,9 @@ class ParameterBasicStatusWidget extends StatelessWidget {
     }
 
     return Column(
-        key: Key("parameter_basicstatus_$drf"), children: digitalStatusRows);
+        key: Key("parameter_basicstatus_$drf"),
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: digitalStatusRows);
   }
 
   Row _buildRow(
@@ -62,7 +64,9 @@ class ParameterBasicStatusWidget extends StatelessWidget {
     return Row(
         key: Key("parameter_basicstatus_${forProperty}_$drf"),
         children: [
-          Text(withLabel, style: labelsStyle, textAlign: TextAlign.right),
+          Expanded(
+              child: Text(withLabel,
+                  style: labelsStyle, textAlign: TextAlign.right)),
           Text(withCharacter, style: valueStyle)
         ]);
   }

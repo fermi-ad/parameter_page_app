@@ -167,17 +167,24 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   Widget _buildExpandButton() {
-    return (info == null || info!.basicStatus == null)
-        ? const SizedBox(width: 48.0)
-        : _displayExtendedStatus
-            ? IconButton(
-                key: Key("parameter_collapsedigitalstatus_${widget.drf}"),
-                icon: const Icon(Icons.expand_less),
-                onPressed: _toggleDigitalStatus)
-            : IconButton(
-                key: Key("parameter_expanddigitalstatus_${widget.drf}"),
-                icon: const Icon(Icons.expand_more),
-                onPressed: _toggleDigitalStatus);
+    return SizedBox(
+        width: 48.0,
+        child: (info == null || info!.basicStatus == null)
+            ? Container()
+            : _displayExtendedStatus
+                ? SizedBox(
+                    width: 48.0,
+                    child: IconButton(
+                        key: Key(
+                            "parameter_collapsedigitalstatus_${widget.drf}"),
+                        icon: const Icon(Icons.expand_less),
+                        onPressed: _toggleDigitalStatus))
+                : SizedBox(
+                    width: 48.0,
+                    child: IconButton(
+                        key: Key("parameter_expanddigitalstatus_${widget.drf}"),
+                        icon: const Icon(Icons.expand_more),
+                        onPressed: _toggleDigitalStatus)));
   }
 
   void _toggleDigitalStatus() {
@@ -196,10 +203,12 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
 
   Widget _basicStatusBuilder(context, snapshot) {
     if (snapshot.connectionState == ConnectionState.active) {
-      return ParameterBasicStatusWidget(
-          drf: widget.drf, digitalStatus: snapshot.data!);
+      return SizedBox(
+          width: 128.0,
+          child: ParameterBasicStatusWidget(
+              drf: widget.drf, digitalStatus: snapshot.data!));
     } else {
-      return Container();
+      return const SizedBox(width: 128.0);
     }
   }
 
