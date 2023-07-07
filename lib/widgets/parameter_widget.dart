@@ -121,7 +121,6 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         constraints: const BoxConstraints(minHeight: 34.0),
         child: Column(children: [
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            _buildExpandButton(),
             Expanded(
                 flex: 2,
                 child: Tooltip(
@@ -156,7 +155,8 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                       ? ParameterAlarmDetailsWidget(
                           drf: widget.drf, alarmBlock: info!.alarm!)
                       : Container()),
-            ])
+            ]),
+            _buildExpandButton(),
           ]),
           _displayExtendedStatus
               ? StreamBuilder(
