@@ -121,51 +121,52 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         constraints: const BoxConstraints(minHeight: 34.0),
         child: Column(children: [
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Expanded(flex: 2, child: _buildParameterName()),
-            Expanded(
-                flex: 2,
-                child: info != null
-                    ? Text(
-                        key: Key("parameter_description_${widget.drf}"),
-                        overflow: TextOverflow.ellipsis,
-                        info!.description)
-                    : Container()),
+            Expanded(flex: 2, child: _buildName()),
+            Expanded(flex: 2, child: _buildDescription()),
             const Spacer(),
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(children: [
-                _buildParam(_settingValue, settingUnits,
-                    key: Key("parameter_setting_${widget.drf}")),
-                const SizedBox(width: 12.0),
-                StreamBuilder(
-                    stream: widget.dpm.monitorDevices([widget.drf]),
-                    builder: _readingBuilder),
-                const SizedBox(width: 12.0),
-                StreamBuilder(
-                    stream:
-                        widget.dpm.monitorDigitalStatusDevices([widget.drf]),
-                    builder: _basicStatusBuilder)
-              ]),
-              Visibility(
-                  visible: widget.displayAlarmDetails,
-                  child: (info != null && info!.alarm != null)
-                      ? ParameterAlarmDetailsWidget(
-                          drf: widget.drf, alarmBlock: info!.alarm!)
-                      : Container()),
-            ]),
+            _buildProperties(),
             _buildExpandButton(),
           ]),
-          _displayExtendedStatus
-              ? StreamBuilder(
-                  stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
-                  builder: _extendedStatusBuilder)
-              : Container()
+          _buildExtendedStatus()
         ]));
   }
 
-  Widget _buildParameterName() {
+  Widget _buildName() {
     return Tooltip(
         message: widget.drf,
         child: Text(overflow: TextOverflow.ellipsis, widget.drf));
+  }
+
+  Widget _buildDescription() {
+    return info != null
+        ? Text(
+            key: Key("parameter_description_${widget.drf}"),
+            overflow: TextOverflow.ellipsis,
+            info!.description)
+        : Container();
+  }
+
+  Widget _buildProperties() {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Row(children: [
+        _buildParam(_settingValue, settingUnits,
+            key: Key("parameter_setting_${widget.drf}")),
+        const SizedBox(width: 12.0),
+        StreamBuilder(
+            stream: widget.dpm.monitorDevices([widget.drf]),
+            builder: _readingBuilder),
+        const SizedBox(width: 12.0),
+        StreamBuilder(
+            stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
+            builder: _basicStatusBuilder)
+      ]),
+      Visibility(
+          visible: widget.displayAlarmDetails,
+          child: (info != null && info!.alarm != null)
+              ? ParameterAlarmDetailsWidget(
+                  drf: widget.drf, alarmBlock: info!.alarm!)
+              : Container()),
+    ]);
   }
 
   Widget _buildExpandButton() {
@@ -187,6 +188,14 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                         key: Key("parameter_expanddigitalstatus_${widget.drf}"),
                         icon: const Icon(Icons.expand_more),
                         onPressed: _toggleDigitalStatus)));
+  }
+
+  Widget _buildExtendedStatus() {
+    return _displayExtendedStatus
+        ? StreamBuilder(
+            stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
+            builder: _extendedStatusBuilder)
+        : Container();
   }
 
   void _toggleDigitalStatus() {
