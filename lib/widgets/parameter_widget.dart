@@ -203,10 +203,12 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
 
   Widget _basicStatusBuilder(context, snapshot) {
     if (snapshot.connectionState == ConnectionState.active) {
-      return ParameterBasicStatusWidget(
-          drf: widget.drf, digitalStatus: snapshot.data!);
+      return SizedBox(
+          width: 128.0,
+          child: ParameterBasicStatusWidget(
+              drf: widget.drf, digitalStatus: snapshot.data!));
     } else {
-      return Container();
+      return const SizedBox(width: 128.0);
     }
   }
 
