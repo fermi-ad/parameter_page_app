@@ -120,17 +120,20 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     return ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 34.0),
         child: Column(children: [
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Expanded(flex: 2, child: _buildName()),
-            Expanded(flex: 2, child: _buildDescription()),
-            const Spacer(),
-            _buildProperties(),
-            SizedBox(
-                width: 48.0,
-                child: _buildExpandOrCollapseExtendedStatusButton()),
-          ]),
-          _buildExtendedStatus()
+          _buildParameterDetailsRow(),
+          _buildExtendedStatusRow()
         ]));
+  }
+
+  Widget _buildParameterDetailsRow() {
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      Expanded(flex: 2, child: _buildName()),
+      Expanded(flex: 2, child: _buildDescription()),
+      const Spacer(),
+      _buildProperties(),
+      SizedBox(
+          width: 48.0, child: _buildExpandOrCollapseExtendedStatusButton()),
+    ]);
   }
 
   Widget _buildName() {
@@ -199,7 +202,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         onPressed: _toggleDigitalStatus);
   }
 
-  Widget _buildExtendedStatus() {
+  Widget _buildExtendedStatusRow() {
     return _displayExtendedStatus
         ? StreamBuilder(
             stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
