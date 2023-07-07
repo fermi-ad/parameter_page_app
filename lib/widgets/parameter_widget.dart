@@ -121,11 +121,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         constraints: const BoxConstraints(minHeight: 34.0),
         child: Column(children: [
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Expanded(
-                flex: 2,
-                child: Tooltip(
-                    message: widget.drf,
-                    child: Text(overflow: TextOverflow.ellipsis, widget.drf))),
+            Expanded(flex: 2, child: _buildParameterName()),
             Expanded(
                 flex: 2,
                 child: info != null
@@ -164,6 +160,12 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                   builder: _extendedStatusBuilder)
               : Container()
         ]));
+  }
+
+  Widget _buildParameterName() {
+    return Tooltip(
+        message: widget.drf,
+        child: Text(overflow: TextOverflow.ellipsis, widget.drf));
   }
 
   Widget _buildExpandButton() {
