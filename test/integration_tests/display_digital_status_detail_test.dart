@@ -117,7 +117,8 @@ void main() {
             "Remote Henk",
             "Polarity",
             " test 2",
-            "testtest"
+            "testtest",
+            "..."
           ],
           hasDisplayValues: [
             "On",
@@ -125,11 +126,13 @@ void main() {
             "L",
             "Mono",
             " good",
-            "GOOD"
+            "GOOD",
+            "..."
           ],
           hasBinaryValues: [
             "1",
             "1",
+            "0",
             "0",
             "0",
             "0",
@@ -141,7 +144,8 @@ void main() {
             Colors.blue,
             Colors.red,
             Colors.green,
-            Colors.green
+            Colors.green,
+            Colors.grey
           ]);
     });
 

@@ -276,7 +276,7 @@ void assertExtendedDigitalStatusDisplay(tester,
       expect(
           find.descendant(
               of: bitDetailFinder, matching: find.text(hasDescriptions[i])),
-          findsOneWidget);
+          findsAtLeastNWidgets(1));
     }
   }
 
@@ -287,7 +287,7 @@ void assertExtendedDigitalStatusDisplay(tester,
       expect(
           find.descendant(
               of: bitDetailFinder, matching: find.text(hasDisplayValues[i])),
-          findsOneWidget);
+          findsAtLeastNWidgets(1));
     }
   }
 
@@ -308,8 +308,8 @@ void assertExtendedDigitalStatusDisplay(tester,
           find.byKey(Key("parameter_extendeddigitalstatus_${forDRF}_bit$i"));
       final displayValueTextFinder = find.descendant(
           of: bitDetailFinder, matching: find.text(hasDisplayValues[i]));
-      expect(displayValueTextFinder, findsOneWidget);
-      final displayValueText = tester.widget<Text>(displayValueTextFinder);
+      expect(displayValueTextFinder, findsAtLeastNWidgets(1));
+      final displayValueText = tester.firstWidget<Text>(displayValueTextFinder);
       expect(displayValueText.style.color, hasColors[i]);
     }
   }
