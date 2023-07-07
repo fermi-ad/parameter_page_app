@@ -117,6 +117,7 @@ class MockDpmService extends DpmService {
       return Stream<DigitalStatus>.periodic(
         const Duration(seconds: 1),
         (count) {
+          const emptyBit = ExtendedStatusAttribute(value: "0");
           return DigitalStatus(
               refId: 0,
               cycle: 0,
@@ -159,7 +160,17 @@ class MockDpmService extends DpmService {
                     description: "testtest",
                     value: "0",
                     valueText: "GOOD",
-                    color: StatusColor.green)
+                    color: StatusColor.green),
+                emptyBit,
+                emptyBit,
+                emptyBit,
+                emptyBit,
+                emptyBit,
+                emptyBit,
+                emptyBit,
+                emptyBit,
+                emptyBit,
+                emptyBit
               ]);
         },
       ).asBroadcastStream();
