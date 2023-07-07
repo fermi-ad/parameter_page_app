@@ -121,7 +121,8 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         constraints: const BoxConstraints(minHeight: 34.0),
         child: Column(children: [
           _buildParameterDetailsRow(),
-          _buildExtendedStatusRow()
+          Visibility(
+              visible: _displayExtendedStatus, child: _buildExtendedStatusRow())
         ]));
   }
 
@@ -203,11 +204,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   Widget _buildExtendedStatusRow() {
-    return _displayExtendedStatus
-        ? StreamBuilder(
-            stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
-            builder: _extendedStatusBuilder)
-        : Container();
+    return StreamBuilder(
+        stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
+        builder: _extendedStatusBuilder);
   }
 
   void _toggleDigitalStatus() {
