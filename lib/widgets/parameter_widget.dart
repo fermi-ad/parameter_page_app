@@ -104,6 +104,25 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     _displayExtendedStatus = widget.displayExtendedStatus;
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      // The FutureBuilder monitors our `getDeviceInfo` query. When it
+      // completes, we save the information.
+
+      future: _setup.then((value) {
+        info = value.first;
+        return value;
+      }),
+
+      // The builder function decides which renderer to call.
+
+      builder: (context, snapshot) {
+        return widget.wide ? _buildWide(context) : _buildNarrow(context);
+      },
+    );
+  }
+
   Widget _buildParam(String? value, String? units, {required Key key}) {
     return value == null
         ? Container()
@@ -298,26 +317,6 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
       case DisplayUnits.raw:
         return from.data!.rawValue;
     }
-  }
-
-  // Builds the widget.
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      // The FutureBuilder monitors our `getDeviceInfo` query. When it
-      // completes, we save the information.
-
-      future: _setup.then((value) {
-        info = value.first;
-        return value;
-      }),
-
-      // The builder function decides which renderer to call.
-
-      builder: (context, snapshot) {
-        return widget.wide ? _buildWide(context) : _buildNarrow(context);
-      },
-    );
   }
 
   String get _settingValue {
