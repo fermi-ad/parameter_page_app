@@ -125,7 +125,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
             Expanded(flex: 2, child: _buildDescription()),
             const Spacer(),
             _buildProperties(),
-            _buildExpandButton(),
+            _buildExpandOrCollapseExtendedStatusButton(),
           ]),
           _buildExtendedStatus()
         ]));
@@ -169,25 +169,20 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     ]);
   }
 
-  Widget _buildExpandButton() {
+  Widget _buildExpandOrCollapseExtendedStatusButton() {
     return SizedBox(
         width: 48.0,
         child: (info == null || info!.basicStatus == null)
             ? Container()
             : _displayExtendedStatus
-                ? SizedBox(
-                    width: 48.0,
-                    child: IconButton(
-                        key: Key(
-                            "parameter_collapsedigitalstatus_${widget.drf}"),
-                        icon: const Icon(Icons.expand_less),
-                        onPressed: _toggleDigitalStatus))
-                : SizedBox(
-                    width: 48.0,
-                    child: IconButton(
-                        key: Key("parameter_expanddigitalstatus_${widget.drf}"),
-                        icon: const Icon(Icons.expand_more),
-                        onPressed: _toggleDigitalStatus)));
+                ? IconButton(
+                    key: Key("parameter_collapsedigitalstatus_${widget.drf}"),
+                    icon: const Icon(Icons.expand_less),
+                    onPressed: _toggleDigitalStatus)
+                : IconButton(
+                    key: Key("parameter_expanddigitalstatus_${widget.drf}"),
+                    icon: const Icon(Icons.expand_more),
+                    onPressed: _toggleDigitalStatus));
   }
 
   Widget _buildExtendedStatus() {
