@@ -6,9 +6,13 @@ import '../dpm_service.dart';
 class ParameterBasicStatusWidget extends StatelessWidget {
   final DigitalStatus digitalStatus;
   final String drf;
+  final bool wide;
 
   const ParameterBasicStatusWidget(
-      {super.key, required this.drf, required this.digitalStatus});
+      {super.key,
+      required this.drf,
+      required this.digitalStatus,
+      this.wide = false});
 
   @override
   Widget build(BuildContext context) {

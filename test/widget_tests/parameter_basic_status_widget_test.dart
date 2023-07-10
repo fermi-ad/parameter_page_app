@@ -47,6 +47,16 @@ void main() {
     }
   }
 
+  void assertBasicStatusLabels({required bool areVisible}) {
+    expect(find.text("On/Off: "), areVisible ? findsOneWidget : findsNothing);
+    expect(find.text("Ready/Tripped: "),
+        areVisible ? findsOneWidget : findsNothing);
+    expect(find.text("Remote/Local: "),
+        areVisible ? findsOneWidget : findsNothing);
+    expect(find.text("Positive/Negative: "),
+        areVisible ? findsOneWidget : findsNothing);
+  }
+
   group("ParameterBasicStatusWidget", () {
     testWidgets(
         'Ready/Tripped basic status present, displays Ready/Tripped and nothing else',
@@ -59,7 +69,7 @@ void main() {
       // When I display the basic status
       await tester.pumpWidget(app);
 
-      // Then all of the attributes are displayed
+      // Then all of the attributes are displayed along with their labels
       assertBasicStatus(tester,
           forDRF: "G:AMANDA", property: "onoff", isVisible: false);
       assertBasicStatus(tester,
@@ -108,6 +118,27 @@ void main() {
           isVisible: true,
           characterIs: "T",
           withColor: Colors.pink);
+      assertBasicStatusLabels(areVisible: true);
+    });
+
+    testWidgets('When wide = false, labels are hidden',
+        (WidgetTester tester) async {
+      // Given a ParameterBasicStatusWidget instantiated for a device called G:AMANDA
+      // with all of it's basic status properties filled in
+      // and wide set to false
+      final app = MaterialApp(
+          home: Scaffold(
+              body: ParameterBasicStatusWidget(
+                  drf: "G:AMANDA",
+                  digitalStatus: allBasicStatus,
+                  wide: false)));
+
+      // When I display the basic status
+      await tester.pumpWidget(app);
+
+      // Then all of the attributes are displayed
+      // ... and the attribute labels are hidden
+      assertBasicStatusLabels(areVisible: false);
     });
   });
 }
