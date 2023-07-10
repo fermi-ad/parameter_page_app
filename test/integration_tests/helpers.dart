@@ -315,6 +315,8 @@ void assertExtendedDigitalStatusDisplay(tester,
   }
 }
 
+void assertOpenPage({required bool isVisible}) {}
+
 Future<void> waitForDataToLoadFor(tester, parameter) async {
   final readingFinder = find.byKey(Key("parameter_reading_$parameter"));
   await pumpUntilFound(tester, readingFinder);
@@ -472,5 +474,9 @@ Future<void> expandDigitalStatus(tester, {required String forDRF}) async {
 
 Future<void> collapseDigitalStatus(tester, {required String forDRF}) async {
   await tester.tap(find.byKey(Key("parameter_collapsedigitalstatus_$forDRF")));
+  await tester.pumpAndSettle();
+}
+
+Future<void> navigateToOpenPage(tester) async {
   await tester.pumpAndSettle();
 }
