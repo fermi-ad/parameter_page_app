@@ -12,14 +12,31 @@ class ParameterBasicStatusWidget extends StatelessWidget {
       {super.key,
       required this.drf,
       required this.digitalStatus,
-      this.wide = false});
+      this.wide = true});
 
   @override
   Widget build(BuildContext context) {
-    List<Row> digitalStatusRows = List<Row>.empty(growable: true);
+    return wide ? _buildWide(context) : _buildNarrow(context);
+  }
+
+  Widget _buildNarrow(BuildContext context) {
+    return Row(
+        key: Key("parameter_basicstatus_$drf"),
+        children: _buildBasicStatusWidgets());
+  }
+
+  Widget _buildWide(BuildContext context) {
+    return Column(
+        key: Key("parameter_basicstatus_$drf"),
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: _buildBasicStatusWidgets());
+  }
+
+  List<Widget> _buildBasicStatusWidgets() {
+    List<Widget> statusWidgets = List<Widget>.empty(growable: true);
 
     if (digitalStatus.onOff != null) {
-      digitalStatusRows.add(_buildRow(
+      statusWidgets.add(_buildRow(
           forProperty: "onoff",
           withLabel: "On/Off: ",
           withCharacter: digitalStatus.onOff!.character,
@@ -27,7 +44,7 @@ class ParameterBasicStatusWidget extends StatelessWidget {
     }
 
     if (digitalStatus.readyTripped != null) {
-      digitalStatusRows.add(_buildRow(
+      statusWidgets.add(_buildRow(
           forProperty: "readytripped",
           withLabel: "Ready/Tripped: ",
           withCharacter: digitalStatus.readyTripped!.character,
@@ -35,7 +52,7 @@ class ParameterBasicStatusWidget extends StatelessWidget {
     }
 
     if (digitalStatus.remoteLocal != null) {
-      digitalStatusRows.add(_buildRow(
+      statusWidgets.add(_buildRow(
           forProperty: "remotelocal",
           withLabel: "Remote/Local: ",
           withCharacter: digitalStatus.remoteLocal!.character,
@@ -43,17 +60,14 @@ class ParameterBasicStatusWidget extends StatelessWidget {
     }
 
     if (digitalStatus.positiveNegative != null) {
-      digitalStatusRows.add(_buildRow(
+      statusWidgets.add(_buildRow(
           forProperty: "positivenegative",
           withLabel: "Positive/Negative: ",
           withCharacter: digitalStatus.positiveNegative!.character,
           withColor: digitalStatus.positiveNegative!.color));
     }
 
-    return Column(
-        key: Key("parameter_basicstatus_$drf"),
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: digitalStatusRows);
+    return statusWidgets;
   }
 
   Row _buildRow(
@@ -68,10 +82,12 @@ class ParameterBasicStatusWidget extends StatelessWidget {
     return Row(
         key: Key("parameter_basicstatus_${forProperty}_$drf"),
         children: [
-          Expanded(
-              child: Text(withLabel,
-                  style: labelsStyle, textAlign: TextAlign.right)),
-          Text(withCharacter, style: valueStyle)
+          wide
+              ? Expanded(
+                  child: Text(withLabel,
+                      style: labelsStyle, textAlign: TextAlign.right))
+              : Container(),
+          SizedBox(width: 16.0, child: Text(withCharacter, style: valueStyle))
         ]);
   }
 

@@ -255,7 +255,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
       return SizedBox(
           width: 128.0,
           child: ParameterBasicStatusWidget(
-              drf: widget.drf, digitalStatus: snapshot.data!));
+              drf: widget.drf,
+              digitalStatus: snapshot.data!,
+              wide: widget.wide));
     } else {
       return const SizedBox(width: 128.0);
     }
