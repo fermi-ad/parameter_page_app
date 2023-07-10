@@ -288,7 +288,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
           const Spacer(),
           SizedBox(
               width: 48.0, child: _buildExpandOrCollapseExtendedStatusButton())
-        ])
+        ]),
+        Visibility(
+            visible: _displayExtendedStatus, child: _buildExtendedStatusRow())
       ]),
     );
   }
