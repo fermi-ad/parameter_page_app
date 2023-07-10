@@ -279,30 +279,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
           padding: const EdgeInsets.only(left: 8.0),
           child: _buildDescription(),
         ),
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-            _buildParam(_settingValue, settingUnits,
-                key: Key("parameter_setting_${widget.drf}")),
-            StreamBuilder(
-                stream: widget.dpm.monitorDevices([widget.drf]),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.active) {
-                    return _buildParam(
-                        _extractValueString(from: snapshot), readingUnits,
-                        key: Key("parameter_reading_${widget.drf}"));
-                  } else {
-                    return _buildParam(null, readingUnits,
-                        key: Key("parameter_nullreading_${widget.drf}"));
-                  }
-                })
-          ]),
-          Visibility(
-              visible: widget.displayAlarmDetails,
-              child: (info != null && info!.alarm != null)
-                  ? ParameterAlarmDetailsWidget(
-                      drf: widget.drf, alarmBlock: info!.alarm!)
-                  : Container()),
-        ])
+        _buildProperties()
       ]),
     );
   }
