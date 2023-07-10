@@ -281,9 +281,14 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
           padding: const EdgeInsets.only(left: 8.0),
           child: _buildDescription(),
         ),
-        Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: _buildProperties())
+        Row(children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: _buildProperties()),
+          const Spacer(),
+          SizedBox(
+              width: 48.0, child: _buildExpandOrCollapseExtendedStatusButton())
+        ])
       ]),
     );
   }
