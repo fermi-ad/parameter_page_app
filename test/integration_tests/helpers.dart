@@ -478,5 +478,11 @@ Future<void> collapseDigitalStatus(tester, {required String forDRF}) async {
 }
 
 Future<void> navigateToOpenPage(tester) async {
+  await _openMainMenu(tester);
+  await tester.pumpAndSettle();
+}
+
+Future<void> _openMainMenu(tester) async {
+  await tester.tap(find.byKey(const Key("main_menu_icon")));
   await tester.pumpAndSettle();
 }
