@@ -266,9 +266,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Tooltip(
-            message: widget.drf,
-            child: Text(overflow: TextOverflow.ellipsis, widget.drf)),
+        _buildName(),
         Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: Text(
