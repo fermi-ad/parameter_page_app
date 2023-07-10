@@ -151,12 +151,20 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   Widget _buildDescription() {
-    return info != null
-        ? Text(
-            key: Key("parameter_description_${widget.drf}"),
-            overflow: TextOverflow.ellipsis,
-            info!.description)
-        : Container();
+    if (info == null) {
+      return Container();
+    } else {
+      return Text(
+          key: Key("parameter_description_${widget.drf}"),
+          overflow: TextOverflow.ellipsis,
+          info?.description ?? "",
+          style: widget.wide
+              ? null
+              : Theme.of(context)
+                  .textTheme
+                  .bodySmall!
+                  .copyWith(fontStyle: FontStyle.italic, color: Colors.grey));
+    }
   }
 
   Widget _buildProperties() {
@@ -269,14 +277,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         _buildName(),
         Padding(
           padding: const EdgeInsets.only(left: 8.0),
-          child: Text(
-              key: Key("parameter_description_${widget.drf}"),
-              overflow: TextOverflow.ellipsis,
-              info?.description ?? "",
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall!
-                  .copyWith(fontStyle: FontStyle.italic, color: Colors.grey)),
+          child: _buildDescription(),
         ),
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
