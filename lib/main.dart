@@ -12,7 +12,7 @@ void main() {
       String.fromEnvironment("USE_MOCK_DPM_SERVICE", defaultValue: "false") !=
           "false";
 
-  runApp(const FermiApp(
+  runApp(FermiApp(
       title: "Parameter Page",
       child: BaseWidget(
           title: 'Parameter Page', useMockServices: useMockServices)));
@@ -43,15 +43,17 @@ class FermiApp extends StatelessWidget {
 }
 
 class BaseWidget extends StatelessWidget {
-  const BaseWidget(
-      {super.key, this.useMockServices = false, required this.title});
+  BaseWidget({super.key, this.useMockServices = false, required this.title});
 
   final bool useMockServices;
   final String title;
+  final _pageKey = GlobalKey<PageWidgetState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(title: Text(title)),
         drawer: _buildDrawer(context),
         body: _buildDPMService());
@@ -59,7 +61,7 @@ class BaseWidget extends StatelessWidget {
 
   Widget _buildDPMService() {
     final child = Center(
-        child: PageWidget(initialParameters: [
+        child: PageWidget(key: _pageKey, initialParameters: [
       ParameterEntry("M:OUTTMP@e,02",
           key: const Key("parameter_row_M:OUTTMP@e,02")),
       CommentEntry("This is our first comment!"),
@@ -72,7 +74,7 @@ class BaseWidget extends StatelessWidget {
       ParameterEntry("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY",
           key: const Key(
               "parameter_row_PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY"),
-          label: "Humidity"),
+          label: "Humidity")
     ]));
 
     return useMockServices
@@ -87,10 +89,16 @@ class BaseWidget extends StatelessWidget {
           const DrawerHeader(
               decoration: BoxDecoration(color: Colors.blue),
               child: Text("Parameter Page Menu")),
+          ListTile(title: const Text("New Page"), onTap: _newPage),
           ListTile(
               title: const Text("Open Page"),
               onTap: () => _navigateToOpenPage(context))
         ]));
+  }
+
+  void _newPage() async {
+    await _pageKey.currentState?.newPage();
+    _scaffoldKey.currentState?.closeDrawer();
   }
 
   void _navigateToOpenPage(BuildContext context) {

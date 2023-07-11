@@ -35,12 +35,12 @@ class PageWidget extends StatefulWidget {
   const PageWidget({required this.initialParameters, super.key});
 
   @override
-  State<PageWidget> createState() => _PageWidgetState();
+  State<PageWidget> createState() => PageWidgetState();
 }
 
 // The non-public state of the Parameter Page.
 
-class _PageWidgetState extends State<PageWidget> {
+class PageWidgetState extends State<PageWidget> {
   late ParameterPage _page;
 
   DisplaySettings _settings = DisplaySettings();
@@ -207,17 +207,6 @@ class _PageWidgetState extends State<PageWidget> {
         Padding(
             padding: const EdgeInsets.all(8.0),
             child: FloatingActionButton.small(
-                key: const Key('new_page_button'),
-                heroTag: null,
-                backgroundColor: Theme.of(context)
-                    .colorScheme
-                    .primary
-                    .withAlpha(_page.editing() ? 255 : 128),
-                onPressed: _newPage,
-                child: const Icon(Icons.description))),
-        Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FloatingActionButton.small(
                 key: const Key('enable_edit_mode_button'),
                 heroTag: null,
                 backgroundColor: Theme.of(context)
@@ -253,7 +242,7 @@ class _PageWidgetState extends State<PageWidget> {
     setState(() => _page.toggleEditing());
   }
 
-  void _newPage() async {
+  Future<void> newPage() async {
     if (_page.isDirty) {
       final dialogResponse = await shouldDiscardChanges(context);
       if (!(dialogResponse == null || !dialogResponse)) {
