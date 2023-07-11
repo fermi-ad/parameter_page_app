@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:parameter_page/theme/theme.dart';
 import 'package:parameter_page/widgets/data_acquisition_widget.dart';
+import 'package:parameter_page/widgets/open_page_widget.dart';
 import 'gql-dpm/graphql_dpm_service.dart';
 import 'mock-dpm/mock_dpm_service.dart';
 import 'page_entry.dart';
@@ -58,7 +59,17 @@ class BaseWidget extends StatelessWidget {
               const DrawerHeader(
                   decoration: BoxDecoration(color: Colors.blue),
                   child: Text("Parameter Page Menu")),
-              ListTile(title: const Text("Open Page"), onTap: () {})
+              ListTile(
+                  title: const Text("Open Page"),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => OpenPageWidget(
+                              key: const Key("open_page_route"),
+                              onOpen: () {})),
+                    );
+                  })
             ])),
         body:
             _buildDPMService()); // This trailing comma makes auto-formatting nicer for build methods.
