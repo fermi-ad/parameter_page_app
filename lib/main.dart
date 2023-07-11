@@ -52,6 +52,14 @@ class BaseWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text(title)),
+        drawer: Drawer(
+            key: const Key("main_menu_icon"),
+            child: ListView(padding: EdgeInsets.zero, children: [
+              const DrawerHeader(
+                  decoration: BoxDecoration(color: Colors.blue),
+                  child: Text("Parameter Page Menu")),
+              ListTile(title: const Text("Open Page"), onTap: () {})
+            ])),
         body:
             _buildDPMService()); // This trailing comma makes auto-formatting nicer for build methods.
   }

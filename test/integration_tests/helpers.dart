@@ -483,6 +483,6 @@ Future<void> navigateToOpenPage(tester) async {
 }
 
 Future<void> _openMainMenu(tester) async {
-  await tester.tap(find.byKey(const Key("main_menu_icon")));
+  await tester.tap(find.byIcon(Icons.menu));
   await tester.pumpAndSettle();
 }
