@@ -53,26 +53,8 @@ class BaseWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text(title)),
-        drawer: Drawer(
-            key: const Key("main_menu_icon"),
-            child: ListView(padding: EdgeInsets.zero, children: [
-              const DrawerHeader(
-                  decoration: BoxDecoration(color: Colors.blue),
-                  child: Text("Parameter Page Menu")),
-              ListTile(
-                  title: const Text("Open Page"),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => OpenPageWidget(
-                              key: const Key("open_page_route"),
-                              onOpen: () {})),
-                    );
-                  })
-            ])),
-        body:
-            _buildDPMService()); // This trailing comma makes auto-formatting nicer for build methods.
+        drawer: _buildDrawer(context),
+        body: _buildDPMService());
   }
 
   Widget _buildDPMService() {
@@ -96,5 +78,27 @@ class BaseWidget extends StatelessWidget {
     return useMockServices
         ? DataAcquisitionWidget(service: const MockDpmService(), child: child)
         : DataAcquisitionWidget(service: GraphQLDpmService(), child: child);
+  }
+
+  Widget _buildDrawer(BuildContext context) {
+    return Drawer(
+        key: const Key("main_menu_icon"),
+        child: ListView(padding: EdgeInsets.zero, children: [
+          const DrawerHeader(
+              decoration: BoxDecoration(color: Colors.blue),
+              child: Text("Parameter Page Menu")),
+          ListTile(
+              title: const Text("Open Page"),
+              onTap: () => _navigateToOpenPage(context))
+        ]));
+  }
+
+  void _navigateToOpenPage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) =>
+              OpenPageWidget(key: const Key("open_page_route"), onOpen: () {})),
+    );
   }
 }
