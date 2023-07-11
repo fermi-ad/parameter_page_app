@@ -315,7 +315,10 @@ void assertExtendedDigitalStatusDisplay(tester,
   }
 }
 
-void assertOpenPage({required bool isVisible}) {}
+void assertOpenPage({required bool isVisible}) {
+  expect(find.byKey(const Key("open_page_appbar")),
+      isVisible ? findsOneWidget : findsNothing);
+}
 
 Future<void> waitForDataToLoadFor(tester, parameter) async {
   final readingFinder = find.byKey(Key("parameter_reading_$parameter"));
@@ -479,6 +482,7 @@ Future<void> collapseDigitalStatus(tester, {required String forDRF}) async {
 
 Future<void> navigateToOpenPage(tester) async {
   await _openMainMenu(tester);
+  await tester.tap(find.text('Open Page'));
   await tester.pumpAndSettle();
 }
 
