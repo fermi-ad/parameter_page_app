@@ -45,12 +45,19 @@ class PageWidgetState extends State<PageWidget> {
 
   DisplaySettings settings = DisplaySettings();
 
-  // Initialize the state by copying the parameters sent it.
-
   @override
   void initState() {
     _page = ParameterPage(widget.initialParameters);
     super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DataSource(child: LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return _build(context, constraints.maxWidth > 600);
+      },
+    ));
   }
 
   // Moves an entry from one location to another in the parameter list. It
@@ -248,14 +255,5 @@ class PageWidgetState extends State<PageWidget> {
 
   void updateSettings(DisplaySettings newSettings) {
     setState(() => settings = newSettings);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return DataSource(child: LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        return _build(context, constraints.maxWidth > 600);
-      },
-    ));
   }
 }
