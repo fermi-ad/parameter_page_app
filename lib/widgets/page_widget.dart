@@ -173,50 +173,54 @@ class PageWidgetState extends State<PageWidget> {
                 return acc;
               })),
         ),
-        Visibility(
-            key: const Key("edit_mode_tools_visibility"),
-            visible: _page.editing(),
-            child: Column(children: [
-              Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Tooltip(
-                      message: "Cancel",
-                      child: FloatingActionButton.small(
-                          key: const Key('cancel_edit_mode_button'),
-                          heroTag: null,
-                          backgroundColor: Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withAlpha(128),
-                          onPressed: _cancelEditMode,
-                          child: const Icon(Icons.restore)))),
-              Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Tooltip(
-                      message: "Delete All",
-                      child: FloatingActionButton.small(
-                          key: const Key('clear_all_entries_button'),
-                          heroTag: null,
-                          backgroundColor: Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withAlpha(128),
-                          onPressed: _clearAllEntries,
-                          child: const Icon(Icons.delete))))
-            ])),
-        Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FloatingActionButton.small(
-                key: const Key('enable_edit_mode_button'),
-                heroTag: null,
-                backgroundColor: Theme.of(context)
-                    .colorScheme
-                    .primary
-                    .withAlpha(_page.editing() ? 255 : 128),
-                onPressed: _toggleEditMode,
-                child: const Icon(Icons.edit_note)))
+        _buildEditModeFloatingActionBar(),
+        _buildFloatingActionBar()
       ],
     );
+  }
+
+  Widget _buildFloatingActionBar() {
+    return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: FloatingActionButton.small(
+            key: const Key('enable_edit_mode_button'),
+            heroTag: null,
+            backgroundColor: Theme.of(context)
+                .colorScheme
+                .primary
+                .withAlpha(_page.editing() ? 255 : 128),
+            onPressed: _toggleEditMode,
+            child: const Icon(Icons.edit_note)));
+  }
+
+  Widget _buildEditModeFloatingActionBar() {
+    return Visibility(
+        key: const Key("edit_mode_tools_visibility"),
+        visible: _page.editing(),
+        child: Column(children: [
+          Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Tooltip(
+                  message: "Cancel",
+                  child: FloatingActionButton.small(
+                      key: const Key('cancel_edit_mode_button'),
+                      heroTag: null,
+                      backgroundColor:
+                          Theme.of(context).colorScheme.primary.withAlpha(128),
+                      onPressed: _cancelEditMode,
+                      child: const Icon(Icons.restore)))),
+          Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Tooltip(
+                  message: "Delete All",
+                  child: FloatingActionButton.small(
+                      key: const Key('clear_all_entries_button'),
+                      heroTag: null,
+                      backgroundColor:
+                          Theme.of(context).colorScheme.primary.withAlpha(128),
+                      onPressed: _clearAllEntries,
+                      child: const Icon(Icons.delete))))
+        ]));
   }
 
   void _clearAllEntries() {
