@@ -45,101 +45,20 @@ class PageWidgetState extends State<PageWidget> {
 
   DisplaySettings settings = DisplaySettings();
 
-  // Initialize the state by copying the parameters sent it.
-
   @override
   void initState() {
     _page = ParameterPage(widget.initialParameters);
     super.initState();
   }
 
-  // Moves an entry from one location to another in the parameter list. It
-  // also triggers a redraw.
-
-  void reorderEntry(oldIndex, newIndex) {
-    setState(() {
-      _page.reorderEntry(atIndex: oldIndex, toIndex: newIndex);
-    });
+  @override
+  Widget build(BuildContext context) {
+    return DataSource(child: LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return _build(context, constraints.maxWidth > 600);
+      },
+    ));
   }
-
-  // Prompts the user to see if they want to remove a row. Return `true` or
-  // `false` based on response.
-
-  Future<bool?> shouldDeleteRow(BuildContext context) {
-    return showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: const Text('Delete Row'),
-        content: const Text('Are you sure you want to delete the row?'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Prompts the user to see if they want to discard changes to the page.
-  // Return `true` or `false` based on response.
-
-  Future<bool?> shouldDiscardChanges(BuildContext context) {
-    return showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: const Text('Discard Changes'),
-        content: const Text(
-            'This page has unsaved changes that will be discarded.  Do you wish to continue?'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Continue'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Builds a single row of the parameter page.
-
-  Widget buildRow(BuildContext context, PageEntry entry, int index, bool wide) {
-    return Padding(
-      padding: const EdgeInsets.all(2.0),
-      child: _page.editing()
-          ? Row(children: [
-              Expanded(
-                  child: entry.buildEntry(
-                      context, _page.editing(), wide, settings)),
-              const SizedBox(width: 8.0),
-              GestureDetector(
-                  onTap: () async {
-                    var result = await shouldDeleteRow(context);
-
-                    if (result ?? false) {
-                      setState(() {
-                        _page.removeEntry(at: index);
-                      });
-                    }
-                  },
-                  child: const IconButton(
-                      visualDensity: VisualDensity.compact,
-                      onPressed: null,
-                      icon: Icon(Icons.delete)))
-            ])
-          : entry.buildEntry(context, _page.editing(), wide, settings),
-    );
-  }
-
-  // Build the widget for wide screens.
 
   Widget _build(BuildContext context, bool wide) {
     final bool movable = _page.editing() && _page.numberOfEntries > 1;
@@ -160,10 +79,10 @@ class PageWidgetState extends State<PageWidget> {
                       })
                   : null,
               buildDefaultDragHandles: false,
-              onReorder: reorderEntry,
+              onReorder: _reorderEntry,
               children: _page.entriesAsList().fold([], (acc, entry) {
                 acc.add(Row(key: entry.key, children: [
-                  Expanded(child: buildRow(context, entry, acc.length, wide)),
+                  Expanded(child: _buildRow(context, entry, acc.length, wide)),
                   movable
                       ? ReorderableDragStartListener(
                           index: acc.length,
@@ -173,50 +92,117 @@ class PageWidgetState extends State<PageWidget> {
                 return acc;
               })),
         ),
-        Visibility(
-            key: const Key("edit_mode_tools_visibility"),
-            visible: _page.editing(),
-            child: Column(children: [
-              Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Tooltip(
-                      message: "Cancel",
-                      child: FloatingActionButton.small(
-                          key: const Key('cancel_edit_mode_button'),
-                          heroTag: null,
-                          backgroundColor: Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withAlpha(128),
-                          onPressed: _cancelEditMode,
-                          child: const Icon(Icons.restore)))),
-              Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Tooltip(
-                      message: "Delete All",
-                      child: FloatingActionButton.small(
-                          key: const Key('clear_all_entries_button'),
-                          heroTag: null,
-                          backgroundColor: Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withAlpha(128),
-                          onPressed: _clearAllEntries,
-                          child: const Icon(Icons.delete))))
-            ])),
-        Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FloatingActionButton.small(
-                key: const Key('enable_edit_mode_button'),
-                heroTag: null,
-                backgroundColor: Theme.of(context)
-                    .colorScheme
-                    .primary
-                    .withAlpha(_page.editing() ? 255 : 128),
-                onPressed: _toggleEditMode,
-                child: const Icon(Icons.edit_note)))
+        _buildEditModeFloatingActionBar(),
+        _buildFloatingActionBar()
       ],
     );
+  }
+
+  Widget _buildRow(
+      BuildContext context, PageEntry entry, int index, bool wide) {
+    return Padding(
+      padding: const EdgeInsets.all(2.0),
+      child: _page.editing()
+          ? Row(children: [
+              Expanded(
+                  child: entry.buildEntry(
+                      context, _page.editing(), wide, settings)),
+              const SizedBox(width: 8.0),
+              GestureDetector(
+                  onTap: () async {
+                    var result = await _shouldDeleteRow(context);
+
+                    if (result ?? false) {
+                      setState(() {
+                        _page.removeEntry(at: index);
+                      });
+                    }
+                  },
+                  child: const IconButton(
+                      visualDensity: VisualDensity.compact,
+                      onPressed: null,
+                      icon: Icon(Icons.delete)))
+            ])
+          : entry.buildEntry(context, _page.editing(), wide, settings),
+    );
+  }
+
+  // Moves an entry from one location to another in the parameter list. It
+  // also triggers a redraw.
+  void _reorderEntry(oldIndex, newIndex) {
+    setState(() {
+      _page.reorderEntry(atIndex: oldIndex, toIndex: newIndex);
+    });
+  }
+
+  // Prompts the user to see if they want to remove a row. Return `true` or
+  // `false` based on response.
+  Future<bool?> _shouldDeleteRow(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('Delete Row'),
+        content: const Text('Are you sure you want to delete the row?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFloatingActionBar() {
+    return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: FloatingActionButton.small(
+            key: const Key('enable_edit_mode_button'),
+            heroTag: null,
+            backgroundColor: Theme.of(context)
+                .colorScheme
+                .primary
+                .withAlpha(_page.editing() ? 255 : 128),
+            onPressed: _toggleEditMode,
+            child: const Icon(Icons.edit_note)));
+  }
+
+  void _toggleEditMode() {
+    setState(() => _page.toggleEditing());
+  }
+
+  Widget _buildEditModeFloatingActionBar() {
+    return Visibility(
+        key: const Key("edit_mode_tools_visibility"),
+        visible: _page.editing(),
+        child: Column(children: [
+          Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Tooltip(
+                  message: "Cancel",
+                  child: FloatingActionButton.small(
+                      key: const Key('cancel_edit_mode_button'),
+                      heroTag: null,
+                      backgroundColor:
+                          Theme.of(context).colorScheme.primary.withAlpha(128),
+                      onPressed: _cancelEditMode,
+                      child: const Icon(Icons.restore)))),
+          Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Tooltip(
+                  message: "Delete All",
+                  child: FloatingActionButton.small(
+                      key: const Key('clear_all_entries_button'),
+                      heroTag: null,
+                      backgroundColor:
+                          Theme.of(context).colorScheme.primary.withAlpha(128),
+                      onPressed: _clearAllEntries,
+                      child: const Icon(Icons.delete))))
+        ]));
   }
 
   void _clearAllEntries() {
@@ -227,13 +213,9 @@ class PageWidgetState extends State<PageWidget> {
     setState(() => _page.cancelEditing());
   }
 
-  void _toggleEditMode() {
-    setState(() => _page.toggleEditing());
-  }
-
   Future<void> newPage() async {
     if (_page.isDirty) {
-      final dialogResponse = await shouldDiscardChanges(context);
+      final dialogResponse = await _shouldDiscardChanges(context);
       if (!(dialogResponse == null || !dialogResponse)) {
         setState(() => _page = ParameterPage());
       }
@@ -242,16 +224,30 @@ class PageWidgetState extends State<PageWidget> {
     }
   }
 
-  void updateSettings(DisplaySettings newSettings) {
-    setState(() => settings = newSettings);
+  // Prompts the user to see if they want to discard changes to the page.
+  // Return `true` or `false` based on response.
+  Future<bool?> _shouldDiscardChanges(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('Discard Changes'),
+        content: const Text(
+            'This page has unsaved changes that will be discarded.  Do you wish to continue?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Continue'),
+          ),
+        ],
+      ),
+    );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return DataSource(child: LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        return _build(context, constraints.maxWidth > 600);
-      },
-    ));
+  void updateSettings(DisplaySettings newSettings) {
+    setState(() => settings = newSettings);
   }
 }

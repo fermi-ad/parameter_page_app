@@ -58,9 +58,9 @@ class BaseWidget extends StatelessWidget {
         appBar: AppBar(title: Text(title), actions: [
           Tooltip(
               message: "Display Settings",
-              child: IconButton(
+              child: TextButton(
                 key: const Key('display_settings_button'),
-                icon: const Icon(Icons.settings),
+                child: const Text("Display Settings"),
                 onPressed: () => _navigateToDisplaySettings(context),
               )),
         ]),
