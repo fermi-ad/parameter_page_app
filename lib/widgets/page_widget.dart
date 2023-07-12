@@ -171,6 +171,10 @@ class PageWidgetState extends State<PageWidget> {
             child: const Icon(Icons.edit_note)));
   }
 
+  void _toggleEditMode() {
+    setState(() => _page.toggleEditing());
+  }
+
   Widget _buildEditModeFloatingActionBar() {
     return Visibility(
         key: const Key("edit_mode_tools_visibility"),
@@ -207,10 +211,6 @@ class PageWidgetState extends State<PageWidget> {
 
   void _cancelEditMode() {
     setState(() => _page.cancelEditing());
-  }
-
-  void _toggleEditMode() {
-    setState(() => _page.toggleEditing());
   }
 
   Future<void> newPage() async {
