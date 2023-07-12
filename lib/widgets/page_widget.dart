@@ -79,10 +79,10 @@ class PageWidgetState extends State<PageWidget> {
                       })
                   : null,
               buildDefaultDragHandles: false,
-              onReorder: reorderEntry,
+              onReorder: _reorderEntry,
               children: _page.entriesAsList().fold([], (acc, entry) {
                 acc.add(Row(key: entry.key, children: [
-                  Expanded(child: buildRow(context, entry, acc.length, wide)),
+                  Expanded(child: _buildRow(context, entry, acc.length, wide)),
                   movable
                       ? ReorderableDragStartListener(
                           index: acc.length,
@@ -98,7 +98,8 @@ class PageWidgetState extends State<PageWidget> {
     );
   }
 
-  Widget buildRow(BuildContext context, PageEntry entry, int index, bool wide) {
+  Widget _buildRow(
+      BuildContext context, PageEntry entry, int index, bool wide) {
     return Padding(
       padding: const EdgeInsets.all(2.0),
       child: _page.editing()
@@ -128,8 +129,7 @@ class PageWidgetState extends State<PageWidget> {
 
   // Moves an entry from one location to another in the parameter list. It
   // also triggers a redraw.
-
-  void reorderEntry(oldIndex, newIndex) {
+  void _reorderEntry(oldIndex, newIndex) {
     setState(() {
       _page.reorderEntry(atIndex: oldIndex, toIndex: newIndex);
     });
