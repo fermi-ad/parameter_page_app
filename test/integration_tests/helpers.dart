@@ -328,6 +328,12 @@ Future<void> waitForDataToLoadFor(tester, parameter) async {
   await pumpUntilFound(tester, settingFinder);
 }
 
+Future<void> waitForExtendedStatusDataToLoadFor(tester, parameter) async {
+  final extendedStatusFinder =
+      find.byKey(Key("parameter_extendeddigitalstatus_$parameter"));
+  await pumpUntilFound(tester, extendedStatusFinder);
+}
+
 Future<void> enterEditMode(tester) async {
   await tester.tap(find.byKey(const Key("enable_edit_mode_button")));
   await tester.pumpAndSettle();
