@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:parameter_page/theme/theme.dart';
 import 'package:parameter_page/widgets/data_acquisition_widget.dart';
+import 'package:parameter_page/widgets/display_settings_widget.dart';
 import 'package:parameter_page/widgets/open_page_widget.dart';
 import 'gql-dpm/graphql_dpm_service.dart';
 import 'mock-dpm/mock_dpm_service.dart';
@@ -54,7 +55,15 @@ class BaseWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         key: _scaffoldKey,
-        appBar: AppBar(title: Text(title)),
+        appBar: AppBar(title: Text(title), actions: [
+          Tooltip(
+              message: "Display Settings",
+              child: IconButton(
+                key: const Key('display_settings_button'),
+                icon: const Icon(Icons.settings),
+                onPressed: () => _navigateToDisplaySettings(context),
+              )),
+        ]),
         drawer: _buildDrawer(context),
         body: _buildDPMService());
   }
@@ -108,5 +117,20 @@ class BaseWidget extends StatelessWidget {
           builder: (context) =>
               OpenPageWidget(key: const Key("open_page_route"), onOpen: () {})),
     );
+  }
+
+  void _navigateToDisplaySettings(BuildContext context) {
+    final initialSettings = _pageKey.currentState != null
+        ? _pageKey.currentState!.settings
+        : DisplaySettings();
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => DisplaySettingsWidget(
+                  initialSettings: initialSettings,
+                  key: const Key("display_settings_route"),
+                  onChanged: (DisplaySettings newSettings) =>
+                      _pageKey.currentState?.updateSettings(newSettings),
+                )));
   }
 }

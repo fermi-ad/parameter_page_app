@@ -43,7 +43,7 @@ class PageWidget extends StatefulWidget {
 class PageWidgetState extends State<PageWidget> {
   late ParameterPage _page;
 
-  DisplaySettings _settings = DisplaySettings();
+  DisplaySettings settings = DisplaySettings();
 
   // Initialize the state by copying the parameters sent it.
 
@@ -118,7 +118,7 @@ class PageWidgetState extends State<PageWidget> {
           ? Row(children: [
               Expanded(
                   child: entry.buildEntry(
-                      context, _page.editing(), wide, _settings)),
+                      context, _page.editing(), wide, settings)),
               const SizedBox(width: 8.0),
               GestureDetector(
                   onTap: () async {
@@ -135,7 +135,7 @@ class PageWidgetState extends State<PageWidget> {
                       onPressed: null,
                       icon: Icon(Icons.delete)))
             ])
-          : entry.buildEntry(context, _page.editing(), wide, _settings),
+          : entry.buildEntry(context, _page.editing(), wide, settings),
     );
   }
 
@@ -214,18 +214,7 @@ class PageWidgetState extends State<PageWidget> {
                     .primary
                     .withAlpha(_page.editing() ? 255 : 128),
                 onPressed: _toggleEditMode,
-                child: const Icon(Icons.edit_note))),
-        Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FloatingActionButton.small(
-                key: const Key('display_settings_button'),
-                heroTag: null,
-                backgroundColor: Theme.of(context)
-                    .colorScheme
-                    .primary
-                    .withAlpha(_page.editing() ? 255 : 128),
-                onPressed: _navigateToDisplaySettings,
-                child: const Icon(Icons.settings)))
+                child: const Icon(Icons.edit_note)))
       ],
     );
   }
@@ -253,17 +242,8 @@ class PageWidgetState extends State<PageWidget> {
     }
   }
 
-  void _navigateToDisplaySettings() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => DisplaySettingsWidget(
-              initialSettings: _settings,
-              key: const Key("display_settings_route"),
-              onChanged: (DisplaySettings newSettings) {
-                setState(() => _settings = newSettings);
-              })),
-    );
+  void updateSettings(DisplaySettings newSettings) {
+    setState(() => settings = newSettings);
   }
 
   @override
