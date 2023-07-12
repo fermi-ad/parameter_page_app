@@ -157,29 +157,6 @@ class PageWidgetState extends State<PageWidget> {
     );
   }
 
-  // Prompts the user to see if they want to discard changes to the page.
-  // Return `true` or `false` based on response.
-  Future<bool?> _shouldDiscardChanges(BuildContext context) {
-    return showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: const Text('Discard Changes'),
-        content: const Text(
-            'This page has unsaved changes that will be discarded.  Do you wish to continue?'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Continue'),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildFloatingActionBar() {
     return Padding(
         padding: const EdgeInsets.all(8.0),
@@ -245,6 +222,29 @@ class PageWidgetState extends State<PageWidget> {
     } else {
       setState(() => _page = ParameterPage());
     }
+  }
+
+  // Prompts the user to see if they want to discard changes to the page.
+  // Return `true` or `false` based on response.
+  Future<bool?> _shouldDiscardChanges(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('Discard Changes'),
+        content: const Text(
+            'This page has unsaved changes that will be discarded.  Do you wish to continue?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Continue'),
+          ),
+        ],
+      ),
+    );
   }
 
   void updateSettings(DisplaySettings newSettings) {
