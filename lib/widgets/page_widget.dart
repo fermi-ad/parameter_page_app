@@ -60,6 +60,72 @@ class PageWidgetState extends State<PageWidget> {
     ));
   }
 
+  Widget _build(BuildContext context, bool wide) {
+    final bool movable = _page.editing() && _page.numberOfEntries > 1;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Expanded(
+          child: ReorderableListView(
+              padding: const EdgeInsets.fromLTRB(4.0, 4.0, 4.0, 4.0),
+              footer: _page.editing()
+                  ? NewEntryEditorWidget(
+                      key: const Key('add-entry-textfield'),
+                      onSubmitted: (PageEntry newEntry) {
+                        setState(() {
+                          _page.add(newEntry);
+                        });
+                      })
+                  : null,
+              buildDefaultDragHandles: false,
+              onReorder: reorderEntry,
+              children: _page.entriesAsList().fold([], (acc, entry) {
+                acc.add(Row(key: entry.key, children: [
+                  Expanded(child: buildRow(context, entry, acc.length, wide)),
+                  movable
+                      ? ReorderableDragStartListener(
+                          index: acc.length,
+                          child: const Icon(Icons.drag_handle))
+                      : Container()
+                ]));
+                return acc;
+              })),
+        ),
+        _buildEditModeFloatingActionBar(),
+        _buildFloatingActionBar()
+      ],
+    );
+  }
+
+  Widget buildRow(BuildContext context, PageEntry entry, int index, bool wide) {
+    return Padding(
+      padding: const EdgeInsets.all(2.0),
+      child: _page.editing()
+          ? Row(children: [
+              Expanded(
+                  child: entry.buildEntry(
+                      context, _page.editing(), wide, settings)),
+              const SizedBox(width: 8.0),
+              GestureDetector(
+                  onTap: () async {
+                    var result = await shouldDeleteRow(context);
+
+                    if (result ?? false) {
+                      setState(() {
+                        _page.removeEntry(at: index);
+                      });
+                    }
+                  },
+                  child: const IconButton(
+                      visualDensity: VisualDensity.compact,
+                      onPressed: null,
+                      icon: Icon(Icons.delete)))
+            ])
+          : entry.buildEntry(context, _page.editing(), wide, settings),
+    );
+  }
+
   // Moves an entry from one location to another in the parameter list. It
   // also triggers a redraw.
 
@@ -113,76 +179,6 @@ class PageWidgetState extends State<PageWidget> {
           ),
         ],
       ),
-    );
-  }
-
-  // Builds a single row of the parameter page.
-
-  Widget buildRow(BuildContext context, PageEntry entry, int index, bool wide) {
-    return Padding(
-      padding: const EdgeInsets.all(2.0),
-      child: _page.editing()
-          ? Row(children: [
-              Expanded(
-                  child: entry.buildEntry(
-                      context, _page.editing(), wide, settings)),
-              const SizedBox(width: 8.0),
-              GestureDetector(
-                  onTap: () async {
-                    var result = await shouldDeleteRow(context);
-
-                    if (result ?? false) {
-                      setState(() {
-                        _page.removeEntry(at: index);
-                      });
-                    }
-                  },
-                  child: const IconButton(
-                      visualDensity: VisualDensity.compact,
-                      onPressed: null,
-                      icon: Icon(Icons.delete)))
-            ])
-          : entry.buildEntry(context, _page.editing(), wide, settings),
-    );
-  }
-
-  // Build the widget for wide screens.
-
-  Widget _build(BuildContext context, bool wide) {
-    final bool movable = _page.editing() && _page.numberOfEntries > 1;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Expanded(
-          child: ReorderableListView(
-              padding: const EdgeInsets.fromLTRB(4.0, 4.0, 4.0, 4.0),
-              footer: _page.editing()
-                  ? NewEntryEditorWidget(
-                      key: const Key('add-entry-textfield'),
-                      onSubmitted: (PageEntry newEntry) {
-                        setState(() {
-                          _page.add(newEntry);
-                        });
-                      })
-                  : null,
-              buildDefaultDragHandles: false,
-              onReorder: reorderEntry,
-              children: _page.entriesAsList().fold([], (acc, entry) {
-                acc.add(Row(key: entry.key, children: [
-                  Expanded(child: buildRow(context, entry, acc.length, wide)),
-                  movable
-                      ? ReorderableDragStartListener(
-                          index: acc.length,
-                          child: const Icon(Icons.drag_handle))
-                      : Container()
-                ]));
-                return acc;
-              })),
-        ),
-        _buildEditModeFloatingActionBar(),
-        _buildFloatingActionBar()
-      ],
     );
   }
 
