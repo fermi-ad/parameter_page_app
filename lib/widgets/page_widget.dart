@@ -110,7 +110,7 @@ class PageWidgetState extends State<PageWidget> {
               const SizedBox(width: 8.0),
               GestureDetector(
                   onTap: () async {
-                    var result = await shouldDeleteRow(context);
+                    var result = await _shouldDeleteRow(context);
 
                     if (result ?? false) {
                       setState(() {
@@ -137,8 +137,7 @@ class PageWidgetState extends State<PageWidget> {
 
   // Prompts the user to see if they want to remove a row. Return `true` or
   // `false` based on response.
-
-  Future<bool?> shouldDeleteRow(BuildContext context) {
+  Future<bool?> _shouldDeleteRow(BuildContext context) {
     return showDialog<bool>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
