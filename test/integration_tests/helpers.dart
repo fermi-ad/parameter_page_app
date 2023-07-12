@@ -419,7 +419,8 @@ Future<void> clearAll(tester) async {
 }
 
 Future<void> newPage(tester, {bool? confirmDiscardChanges}) async {
-  await tester.tap(find.byKey(const Key("new_page_button")));
+  await _openMainMenu(tester);
+  await tester.tap(find.text("New Page"));
   await tester.pumpAndSettle();
 
   if (confirmDiscardChanges != null) {
