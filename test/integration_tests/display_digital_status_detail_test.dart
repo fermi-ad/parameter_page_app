@@ -102,7 +102,7 @@ void main() {
 
       // When I expand the parameter to display extended digital status
       await expandDigitalStatus(tester, forDRF: "G:AMANDA");
-      await waitForDataToLoadFor(tester, "G:AMANDA");
+      await waitForExtendedStatusDataToLoadFor(tester, "G:AMANDA");
 
       // Then the expand button is now a collapse button
       assertCollapseDigitalStatusIcon(forDRF: "G:AMANDA", isVisible: true);
@@ -158,7 +158,7 @@ void main() {
 
       // ... and the extended digital status is expanded
       await expandDigitalStatus(tester, forDRF: "G:AMANDA");
-      await waitForDataToLoadFor(tester, "G:AMANDA");
+      await waitForExtendedStatusDataToLoadFor(tester, "G:AMANDA");
       assertExtendedDigitalStatusDisplay(tester,
           forDRF: "G:AMANDA", isVisible: true);
 
