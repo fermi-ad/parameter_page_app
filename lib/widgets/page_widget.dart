@@ -159,8 +159,7 @@ class PageWidgetState extends State<PageWidget> {
 
   // Prompts the user to see if they want to discard changes to the page.
   // Return `true` or `false` based on response.
-
-  Future<bool?> shouldDiscardChanges(BuildContext context) {
+  Future<bool?> _shouldDiscardChanges(BuildContext context) {
     return showDialog<bool>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
@@ -239,7 +238,7 @@ class PageWidgetState extends State<PageWidget> {
 
   Future<void> newPage() async {
     if (_page.isDirty) {
-      final dialogResponse = await shouldDiscardChanges(context);
+      final dialogResponse = await _shouldDiscardChanges(context);
       if (!(dialogResponse == null || !dialogResponse)) {
         setState(() => _page = ParameterPage());
       }
