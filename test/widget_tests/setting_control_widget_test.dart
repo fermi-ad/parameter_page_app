@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/widgets/setting_control_widget.dart';
 
@@ -70,6 +71,23 @@ void main() {
 
       // Then 72.0 is displayed inside of a text input field
       assertSettingInput(isVisible: true, value: "72.0");
+    });
+
+    testWidgets('Press escape while editing, return to text display',
+        (WidgetTester tester) async {
+      // Given I am editing a setting inside of a SettingControlWidget...
+      MaterialApp app = initialize(
+          const SettingControlWidget(drf: "Z:BTE200_TEMP", value: "72.0"));
+      await tester.pumpWidget(app);
+      await tester.tap(find.text("72.0"));
+      await tester.pumpAndSettle();
+      assertSettingInput(isVisible: true, value: "72.0");
+
+      // When I press the escape key
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+
+      // Then the text field changes back to a text display
+      assertSettingDisplay(isVisible: true, value: "72.0");
     });
   });
 }
