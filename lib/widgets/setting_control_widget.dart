@@ -12,6 +12,8 @@ class SettingControlWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(key: key, textAlign: TextAlign.end, value);
+    return Container(
+        key: Key("parameter_settingdisplay_$drf"),
+        child: Text(key: key, textAlign: TextAlign.end, value));
   }
 }

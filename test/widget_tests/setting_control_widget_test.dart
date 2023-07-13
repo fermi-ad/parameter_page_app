@@ -11,12 +11,20 @@ void main() {
                 children: [child])));
   }
 
-  void assertSettingDisplayIs(String value) {
-    expect(
-        find.descendant(
-            of: find.byKey(const Key("parameter_setting_Z:BTE200_TEMP")),
-            matching: find.text(value)),
-        findsOneWidget);
+  void assertSettingDisplay({required bool isVisible, String? value}) {
+    if (isVisible) {
+      expect(find.byKey(const Key("parameter_settingdisplay_Z:BTE200_TEMP")),
+          findsOneWidget);
+    }
+
+    if (isVisible && value != null) {
+      expect(
+          find.descendant(
+              of: find
+                  .byKey(const Key("parameter_settingdisplay_Z:BTE200_TEMP")),
+              matching: find.text(value)),
+          findsOneWidget);
+    }
   }
 
   group("SettingControlWidget", () {
@@ -30,7 +38,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // Then 0.0 is displayed
-      assertSettingDisplayIs("0.0");
+      assertSettingDisplay(isVisible: true, value: "0.0");
     });
 
     testWidgets('Provide an initial value, displays that value',
@@ -43,7 +51,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // Then 72.0 is displayed
-      assertSettingDisplayIs("72.0");
+      assertSettingDisplay(isVisible: true, value: "72.0");
     });
   });
 }
