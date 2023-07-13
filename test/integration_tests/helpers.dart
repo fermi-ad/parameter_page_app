@@ -323,8 +323,9 @@ void assertOpenPage({required bool isVisible}) {
 void assertUndo(
     {required String forDRF, required bool isVisible, String? isValue}) {}
 
-void assertSettingTextInput(
-    {required String forDRF, required bool isVisible}) {}
+void assertSettingTextInput({required String forDRF, required bool isVisible}) {
+  expect(find.byKey(Key("parameter_settinginput_$forDRF")), findsOneWidget);
+}
 
 Future<void> waitForDataToLoadFor(tester, parameter) async {
   final readingFinder = find.byKey(Key("parameter_reading_$parameter"));
