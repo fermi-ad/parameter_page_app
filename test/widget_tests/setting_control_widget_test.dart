@@ -11,6 +11,14 @@ void main() {
                 children: [child])));
   }
 
+  void assertSettingDisplayIs(String value) {
+    expect(
+        find.descendant(
+            of: find.byKey(const Key("parameter_setting_Z:BTE200_TEMP")),
+            matching: find.text(value)),
+        findsOneWidget);
+  }
+
   group("SettingControlWidget", () {
     testWidgets('Provide no initial value, displays 0.0',
         (WidgetTester tester) async {
@@ -22,28 +30,20 @@ void main() {
       await tester.pumpWidget(app);
 
       // Then 0.0 is displayed
-      expect(
-          find.descendant(
-              of: find.byKey(const Key("parameter_setting_Z:BTE200_TEMP")),
-              matching: find.text("0.0")),
-          findsOneWidget);
+      assertSettingDisplayIs("0.0");
     });
 
     testWidgets('Provide an initial value, displays that value',
         (WidgetTester tester) async {
-      // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP
+      // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP with an initial value of "72.0"
       MaterialApp app = initialize(
           const SettingControlWidget(drf: "Z:BTE200_TEMP", value: "72.0"));
 
       // When I display the setting
       await tester.pumpWidget(app);
 
-      // Then 0.0 is displayed
-      expect(
-          find.descendant(
-              of: find.byKey(const Key("parameter_setting_Z:BTE200_TEMP")),
-              matching: find.text("72.0")),
-          findsOneWidget);
+      // Then 72.0 is displayed
+      assertSettingDisplayIs("72.0");
     });
   });
 }
