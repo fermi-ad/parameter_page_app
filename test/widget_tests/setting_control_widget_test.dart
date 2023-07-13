@@ -6,9 +6,10 @@ void main() {
   MaterialApp initialize(Widget child) {
     return MaterialApp(
         home: Scaffold(
-            body: Row(
+            body: SizedBox(
                 key: const Key("parameter_setting_Z:BTE200_TEMP"),
-                children: [child])));
+                width: 100.0,
+                child: child)));
   }
 
   void assertSettingDisplay({required bool isVisible, String? value}) {
@@ -62,8 +63,10 @@ void main() {
       MaterialApp app = initialize(
           const SettingControlWidget(drf: "Z:BTE200_TEMP", value: "72.0"));
 
-      // When I display the setting
+      // When I display the setting and tap on it
       await tester.pumpWidget(app);
+      await tester.tap(find.text("72.0"));
+      await tester.pumpAndSettle();
 
       // Then 72.0 is displayed inside of a text input field
       assertSettingInput(isVisible: true, value: "72.0");

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class SettingControlWidget extends StatelessWidget {
+class SettingControlWidget extends StatefulWidget {
   final String drf;
 
   final String value;
@@ -11,9 +11,40 @@ class SettingControlWidget extends StatelessWidget {
       {super.key, required this.drf, this.value = "0.0", this.wide = true});
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-        key: Key("parameter_settingdisplay_$drf"),
-        child: Text(key: key, textAlign: TextAlign.end, value));
+  State<StatefulWidget> createState() {
+    return _SettingControlState();
   }
+}
+
+class _SettingControlState extends State<SettingControlWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return _entryMode ? _buildInput() : _buildDisplay();
+  }
+
+  Widget _buildDisplay() {
+    return Container(
+        key: Key("parameter_settingdisplay_${widget.drf}"),
+        child: GestureDetector(
+            onTap: _handleDisplayTap,
+            child:
+                Text(key: widget.key, textAlign: TextAlign.end, widget.value)));
+  }
+
+  void _handleDisplayTap() {
+    setState(() {
+      _entryMode = true;
+    });
+  }
+
+  Widget _buildInput() {
+    return Container(
+      key: Key("parameter_settinginput_${widget.drf}"),
+      child: TextFormField(
+          decoration: const InputDecoration(border: UnderlineInputBorder()),
+          initialValue: widget.value),
+    );
+  }
+
+  bool _entryMode = false;
 }
