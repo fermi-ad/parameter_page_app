@@ -12,10 +12,8 @@ void main() {
   }
 
   void assertSettingDisplay({required bool isVisible, String? value}) {
-    if (isVisible) {
-      expect(find.byKey(const Key("parameter_settingdisplay_Z:BTE200_TEMP")),
-          findsOneWidget);
-    }
+    expect(find.byKey(const Key("parameter_settingdisplay_Z:BTE200_TEMP")),
+        isVisible ? findsOneWidget : findsNothing);
 
     if (isVisible && value != null) {
       expect(
@@ -25,6 +23,11 @@ void main() {
               matching: find.text(value)),
           findsOneWidget);
     }
+  }
+
+  void assertSettingInput({required bool isVisible, String? value}) {
+    expect(
+        find.byType(TextFormField), isVisible ? findsOneWidget : findsNothing);
   }
 
   group("SettingControlWidget", () {
@@ -52,6 +55,18 @@ void main() {
 
       // Then 72.0 is displayed
       assertSettingDisplay(isVisible: true, value: "72.0");
+    });
+
+    testWidgets('Tap, change to text input', (WidgetTester tester) async {
+      // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP with an initial value of "72.0"
+      MaterialApp app = initialize(
+          const SettingControlWidget(drf: "Z:BTE200_TEMP", value: "72.0"));
+
+      // When I display the setting
+      await tester.pumpWidget(app);
+
+      // Then 72.0 is displayed inside of a text input field
+      assertSettingInput(isVisible: true, value: "72.0");
     });
   });
 }
