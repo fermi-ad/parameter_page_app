@@ -7,10 +7,13 @@ void main() {
   MaterialApp initialize(Widget child) {
     return MaterialApp(
         home: Scaffold(
-            body: SizedBox(
-                key: const Key("parameter_setting_Z:BTE200_TEMP"),
-                width: 100.0,
-                child: child)));
+            body: Column(children: [
+      SizedBox(
+          key: const Key("parameter_setting_Z:BTE200_TEMP"),
+          width: 100.0,
+          child: child),
+      const SizedBox(key: Key("test_empty_box"), width: 100.0)
+    ])));
   }
 
   void assertSettingDisplay({required bool isVisible, String? value}) {
@@ -87,6 +90,26 @@ void main() {
       await tester.tap(find.text("72.0"));
       await tester.pumpAndSettle();
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+
+      // Then the text field changes back to a text display
+      assertSettingDisplay(isVisible: true, value: "72.0");
+    });
+
+    testWidgets('Tap outside while editing, return to text display',
+        (WidgetTester tester) async {
+      // Given I am editing a setting inside of a SettingControlWidget...
+      MaterialApp app = initialize(
+          const SettingControlWidget(drf: "Z:BTE200_TEMP", value: "72.0"));
+      await tester.pumpWidget(app);
+      await tester.tap(find.text("72.0"));
+      await tester.pumpAndSettle();
+      assertSettingInput(isVisible: true, value: "72.0");
+
+      // When give the input field focus but then abort by tapping outside of the control
+      await tester.tap(find.text("72.0"));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key("test_empty_box")));
       await tester.pumpAndSettle();
 
       // Then the text field changes back to a text display
