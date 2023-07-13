@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class SettingControlWidget extends StatefulWidget {
   final String drf;
@@ -39,11 +40,24 @@ class _SettingControlState extends State<SettingControlWidget> {
 
   Widget _buildInput() {
     return Container(
-      key: Key("parameter_settinginput_${widget.drf}"),
-      child: TextFormField(
-          decoration: const InputDecoration(border: UnderlineInputBorder()),
-          initialValue: widget.value),
-    );
+        key: Key("parameter_settinginput_${widget.drf}"),
+        child: RawKeyboardListener(
+          focusNode: FocusNode(),
+          onKey: (key) {
+            if (key.isKeyPressed(LogicalKeyboardKey.escape)) {
+              _handleAbort();
+            }
+          },
+          child: TextFormField(
+              decoration: const InputDecoration(border: UnderlineInputBorder()),
+              initialValue: widget.value),
+        ));
+  }
+
+  void _handleAbort() {
+    setState(() {
+      _entryMode = false;
+    });
   }
 
   bool _entryMode = false;

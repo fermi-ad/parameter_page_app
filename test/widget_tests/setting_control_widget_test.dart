@@ -83,8 +83,11 @@ void main() {
       await tester.pumpAndSettle();
       assertSettingInput(isVisible: true, value: "72.0");
 
-      // When I press the escape key
+      // When give the input field focus but then abort by pressing the escape key
+      await tester.tap(find.text("72.0"));
+      await tester.pumpAndSettle();
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
 
       // Then the text field changes back to a text display
       assertSettingDisplay(isVisible: true, value: "72.0");
