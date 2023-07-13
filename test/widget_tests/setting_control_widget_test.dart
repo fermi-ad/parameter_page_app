@@ -12,7 +12,11 @@ void main() {
           key: const Key("parameter_setting_Z:BTE200_TEMP"),
           width: 100.0,
           child: child),
-      const SizedBox(key: Key("test_empty_box"), width: 100.0)
+      const SizedBox(
+          key: Key("test_empty_box"),
+          height: 100.0,
+          width: 100.0,
+          child: Text("Abort"))
     ])));
   }
 

@@ -49,6 +49,7 @@ class _SettingControlState extends State<SettingControlWidget> {
             }
           },
           child: TextFormField(
+              onTapOutside: (event) => _handleAbort(),
               decoration: const InputDecoration(border: UnderlineInputBorder()),
               initialValue: widget.value),
         ));
