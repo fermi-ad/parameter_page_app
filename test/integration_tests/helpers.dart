@@ -320,6 +320,12 @@ void assertOpenPage({required bool isVisible}) {
       isVisible ? findsOneWidget : findsNothing);
 }
 
+void assertUndo(
+    {required String forDRF, required bool isVisible, String? isValue}) {}
+
+void assertSettingTextInput(
+    {required String forDRF, required bool isVisible}) {}
+
 Future<void> waitForDataToLoadFor(tester, parameter) async {
   final readingFinder = find.byKey(Key("parameter_reading_$parameter"));
   await pumpUntilFound(tester, readingFinder);
@@ -495,5 +501,10 @@ Future<void> navigateToOpenPage(tester) async {
 
 Future<void> _openMainMenu(tester) async {
   await tester.tap(find.byIcon(Icons.menu));
+  await tester.pumpAndSettle();
+}
+
+Future<void> tapSetting(tester, {required String forDRF}) async {
+  await tester.tap(find.byKey(Key("parameter_setting_$forDRF")));
   await tester.pumpAndSettle();
 }
