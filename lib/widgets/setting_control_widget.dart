@@ -80,6 +80,10 @@ class _SettingControlState extends State<SettingControlWidget> {
     if (widget.onSubmitted != null) {
       widget.onSubmitted!(_textFieldController.text);
     }
+
+    setState(() {
+      _entryMode = false;
+    });
   }
 
   void _handleAbort() {
