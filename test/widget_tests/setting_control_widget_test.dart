@@ -143,5 +143,20 @@ void main() {
       // Then the onSubmit handler is called and passed "75.0" as the new value
       expect(newValue, equals("75.0"));
     });
+
+    testWidgets('Provide units, display units', (WidgetTester tester) async {
+      //Given a SettingControlWidget constructed with units provided
+      MaterialApp app = initialize(const SettingControlWidget(
+        drf: "Z:BTE200_TEMP",
+        value: "72.0",
+        units: "degF",
+      ));
+
+      // When I display
+      await tester.pumpWidget(app);
+
+      // Then the units are displayed
+      expect(find.text('cUS'), findsOneWidget);
+    });
   });
 }

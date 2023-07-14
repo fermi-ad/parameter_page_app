@@ -6,6 +6,8 @@ class SettingControlWidget extends StatefulWidget {
 
   final String value;
 
+  final String? units;
+
   final bool wide;
 
   final Function(String)? onSubmitted;
@@ -15,6 +17,7 @@ class SettingControlWidget extends StatefulWidget {
       required this.drf,
       this.onSubmitted,
       this.value = "0.0",
+      this.units,
       this.wide = true});
 
   @override
