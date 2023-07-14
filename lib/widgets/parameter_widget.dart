@@ -191,19 +191,11 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   Widget _buildSettingProperty() {
-    return (settingUnits == null
-        ? SettingControlWidget(
-            key: Key("parameter_setting_${widget.drf}"),
-            drf: widget.drf,
-            value: _settingValue)
-        : Row(children: [
-            SettingControlWidget(
-                key: Key("parameter_setting_${widget.drf}"),
-                drf: widget.drf,
-                value: _settingValue),
-            const SizedBox(width: 6.0),
-            Text(settingUnits!, style: const TextStyle(color: Colors.grey))
-          ]));
+    return SettingControlWidget(
+        key: Key("parameter_setting_${widget.drf}"),
+        drf: widget.drf,
+        value: _settingValue,
+        units: settingUnits);
   }
 
   Widget _buildParam(String? value, String? units, {required Key key}) {

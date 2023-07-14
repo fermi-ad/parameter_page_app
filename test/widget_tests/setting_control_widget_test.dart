@@ -10,13 +10,13 @@ void main() {
             body: Column(children: [
       SizedBox(
           key: const Key("parameter_setting_Z:BTE200_TEMP"),
-          width: 100.0,
+          width: 200.0,
           height: 34.0,
           child: child),
       const SizedBox(
           key: Key("test_empty_box"),
           height: 100.0,
-          width: 100.0,
+          width: 200.0,
           child: Text("Abort"))
     ])));
   }
@@ -156,7 +156,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // Then the units are displayed
-      expect(find.text('cUS'), findsOneWidget);
+      expect(find.text("degF"), findsOneWidget);
     });
   });
 }

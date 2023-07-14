@@ -29,10 +29,16 @@ class SettingControlWidget extends StatefulWidget {
 class _SettingControlState extends State<SettingControlWidget> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-        height: 34.0,
-        width: 100.0,
-        child: _entryMode ? _buildInput() : _buildDisplay());
+    return Row(children: [
+      SizedBox(
+          height: 34.0,
+          width: 100.0,
+          child: _entryMode ? _buildInput() : _buildDisplay()),
+      const SizedBox(width: 6.0),
+      widget.units == null
+          ? Container()
+          : Text(widget.units!, style: const TextStyle(color: Colors.grey))
+    ]);
   }
 
   Widget _buildDisplay() {
