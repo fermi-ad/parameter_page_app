@@ -4,6 +4,7 @@ import 'package:parameter_page/dpm_service.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
 import 'package:parameter_page/widgets/parameter_basic_status_widget.dart';
 import 'package:parameter_page/widgets/parameter_extended_status_widget.dart';
+import 'package:parameter_page/widgets/setting_control_widget.dart';
 
 import 'data_acquisition_widget.dart';
 import 'display_settings_widget.dart';
@@ -170,8 +171,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   Widget _buildProperties() {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(children: [
-        _buildParam(_settingValue, settingUnits,
-            key: Key("parameter_setting_${widget.drf}")),
+        _buildSettingProperty(),
         const SizedBox(width: 12.0),
         StreamBuilder(
             stream: widget.dpm.monitorDevices([widget.drf]),
@@ -188,6 +188,22 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                   drf: widget.drf, alarmBlock: info!.alarm!)
               : Container()),
     ]);
+  }
+
+  Widget _buildSettingProperty() {
+    return (settingUnits == null
+        ? SettingControlWidget(
+            key: Key("parameter_setting_${widget.drf}"),
+            drf: widget.drf,
+            value: _settingValue)
+        : Row(children: [
+            SettingControlWidget(
+                key: Key("parameter_setting_${widget.drf}"),
+                drf: widget.drf,
+                value: _settingValue),
+            const SizedBox(width: 6.0),
+            Text(settingUnits!, style: const TextStyle(color: Colors.grey))
+          ]));
   }
 
   Widget _buildParam(String? value, String? units, {required Key key}) {

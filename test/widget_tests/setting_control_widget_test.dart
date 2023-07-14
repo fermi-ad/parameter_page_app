@@ -121,7 +121,7 @@ void main() {
       assertSettingDisplay(isVisible: true, value: "72.0");
     });
 
-    testWidgets('Enter new value and submit, onSubmit is called with new vale',
+    testWidgets('Enter new value and submit, onSubmit is called',
         (WidgetTester tester) async {
       //Given a SettingControlWidget with an onSubmitted handler that updates newValue
       String newValue = "";

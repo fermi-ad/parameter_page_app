@@ -26,7 +26,10 @@ class SettingControlWidget extends StatefulWidget {
 class _SettingControlState extends State<SettingControlWidget> {
   @override
   Widget build(BuildContext context) {
-    return _entryMode ? _buildInput() : _buildDisplay();
+    return SizedBox(
+        height: 34.0,
+        width: 100.0,
+        child: _entryMode ? _buildInput() : _buildDisplay());
   }
 
   Widget _buildDisplay() {
@@ -34,8 +37,7 @@ class _SettingControlState extends State<SettingControlWidget> {
         key: Key("parameter_settingdisplay_${widget.drf}"),
         child: GestureDetector(
             onTap: _handleDisplayTap,
-            child:
-                Text(key: widget.key, textAlign: TextAlign.end, widget.value)));
+            child: Text(textAlign: TextAlign.end, widget.value)));
   }
 
   void _handleDisplayTap() {
