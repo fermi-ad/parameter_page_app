@@ -44,6 +44,28 @@ void main() {
     });
 
     // Test submit setting success & active undo update
+    testWidgets(
+        'Submit a new setting successfully, see the update reflect in the display and the old value provided in the undo column',
+        (tester) async {
+      // Given the test page is loaded
+      app.main();
+      await tester.pumpAndSettle();
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+
+      // When I submit a new setting...
+      await tapSetting(tester, forDRF: "Z:BTE200_TEMP");
+      await submitSetting(tester, forDRF: "Z:BTE200_TEMP", newValue: "75.0");
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+
+      // Then the text field goes away
+      assertSettingTextInput(forDRF: "Z:BTE200_TEMP", isVisible: false);
+
+      // ... and the display shows the new value
+      assertParameterHasDetails("Z:BTE200_TEMP", settingValue: "75.0");
+
+      // ... and the undo display shows the old value
+      assertUndo(forDRF: "Z:BTE200_TEMP", isVisible: true, isValue: "72.0");
+    });
 
     // Test submit setting failure
 

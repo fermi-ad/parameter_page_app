@@ -510,3 +510,14 @@ Future<void> tapSetting(tester, {required String forDRF}) async {
   await tester.tap(find.byKey(Key("parameter_setting_$forDRF")));
   await tester.pumpAndSettle();
 }
+
+Future<void> submitSetting(tester,
+    {required String forDRF, required String newValue}) async {
+  await tester.enterText(
+      find.descendant(
+          of: find.byKey(Key("parameter_setting_$forDRF")),
+          matching: find.byType(TextFormField)),
+      newValue);
+  await tester.testTextInput.receiveAction(TextInputAction.done);
+  await tester.pumpAndSettle();
+}
