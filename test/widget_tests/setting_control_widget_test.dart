@@ -11,6 +11,7 @@ void main() {
       SizedBox(
           key: const Key("parameter_setting_Z:BTE200_TEMP"),
           width: 100.0,
+          height: 34.0,
           child: child),
       const SizedBox(
           key: Key("test_empty_box"),

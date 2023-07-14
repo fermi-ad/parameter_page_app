@@ -41,6 +41,7 @@ class _SettingControlState extends State<SettingControlWidget> {
   void _handleDisplayTap() {
     setState(() {
       _entryMode = true;
+      _textFieldController.text = widget.value;
     });
   }
 
@@ -56,16 +57,17 @@ class _SettingControlState extends State<SettingControlWidget> {
           },
           child: TextFormField(
               key: Key("parameter_settingtextfield_${widget.drf}"),
+              controller: _textFieldController,
               onTapOutside: (event) => _handleAbort(),
               onEditingComplete: () => _handleSubmitted(),
-              decoration: const InputDecoration(border: UnderlineInputBorder()),
-              initialValue: widget.value),
+              decoration:
+                  const InputDecoration(border: UnderlineInputBorder())),
         ));
   }
 
   void _handleSubmitted() {
     if (widget.onSubmitted != null) {
-      widget.onSubmitted!("75.0");
+      widget.onSubmitted!(_textFieldController.text);
     }
   }
 
@@ -76,4 +78,6 @@ class _SettingControlState extends State<SettingControlWidget> {
   }
 
   bool _entryMode = false;
+
+  final _textFieldController = TextEditingController();
 }
