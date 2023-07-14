@@ -121,7 +121,8 @@ void main() {
       assertSettingDisplay(isVisible: true, value: "72.0");
     });
 
-    testWidgets('Enter new value and submit, onSubmit is called',
+    testWidgets(
+        'Enter new value and submit, onSubmit is called and the text field is replaced with the display',
         (WidgetTester tester) async {
       //Given a SettingControlWidget with an onSubmitted handler that updates newValue
       String newValue = "";
@@ -142,6 +143,7 @@ void main() {
 
       // Then the onSubmit handler is called and passed "75.0" as the new value
       expect(newValue, equals("75.0"));
+      assertSettingDisplay(isVisible: true);
     });
 
     testWidgets('Provide units, display units', (WidgetTester tester) async {
