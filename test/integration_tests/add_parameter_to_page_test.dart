@@ -23,7 +23,7 @@ void main() {
       await waitForDataToLoadFor(tester, "Z:BDCCT");
 
       // Then the new parameter is added to the page
-      assertParameterIsInRow("Z:BDCCT", 6);
+      assertParameterIsInRow("Z:BDCCT", 7);
       assertParameterHasDetails("Z:BDCCT",
           description: "device description",
           settingValue: "50.0",

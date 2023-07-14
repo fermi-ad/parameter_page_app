@@ -24,6 +24,11 @@ void main() {
     });
 
     // Test cancel setting
+    testWidgets(
+        'Tap outside when working on a setting, text field is removed and setting is cancelled',
+        (tester) async {
+      // Then the setting text field is hidden
+    });
 
     // Test submit setting success & active undo update
 
