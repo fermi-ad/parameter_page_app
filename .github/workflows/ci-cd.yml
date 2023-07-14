@@ -32,6 +32,7 @@ jobs:
           - display_parameter_alarms_test
           - display_digital_status_detail_test
           - recall_parameter_page_test
+          - write_to_parameter_test
 
     steps:
       - name: Checkout code

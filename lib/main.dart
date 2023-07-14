@@ -83,7 +83,9 @@ class BaseWidget extends StatelessWidget {
       ParameterEntry("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY",
           key: const Key(
               "parameter_row_PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY"),
-          label: "Humidity")
+          label: "Humidity"),
+      ParameterEntry("Z:BTE200_TEMP",
+          key: const Key("parameter_row_BTE200_TEMP"))
     ]));
 
     return useMockServices
