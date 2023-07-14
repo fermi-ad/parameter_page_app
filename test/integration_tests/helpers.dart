@@ -324,7 +324,8 @@ void assertUndo(
     {required String forDRF, required bool isVisible, String? isValue}) {}
 
 void assertSettingTextInput({required String forDRF, required bool isVisible}) {
-  expect(find.byKey(Key("parameter_settinginput_$forDRF")), findsOneWidget);
+  expect(find.byKey(Key("parameter_settinginput_$forDRF")),
+      isVisible ? findsOneWidget : findsNothing);
 }
 
 Future<void> waitForDataToLoadFor(tester, parameter) async {
