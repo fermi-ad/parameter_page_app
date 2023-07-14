@@ -119,5 +119,28 @@ void main() {
       // Then the text field changes back to a text display
       assertSettingDisplay(isVisible: true, value: "72.0");
     });
+
+    testWidgets('Enter new value and submit, onSubmit is called with new vale',
+        (WidgetTester tester) async {
+      //Given a SettingControlWidget with an onSubmitted handler that updates newValue
+      String newValue = "";
+      MaterialApp app = initialize(SettingControlWidget(
+          drf: "Z:BTE200_TEMP",
+          value: "72.0",
+          onSubmitted: (String submitted) {
+            newValue = submitted;
+          }));
+      await tester.pumpWidget(app);
+
+      // When I tap on the setting and enter a new value
+      await tester.tap(find.text("72.0"));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextFormField), "75.0");
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+
+      // Then the onSubmit handler is called and passed "75.0" as the new value
+      expect(newValue, equals("75.0"));
+    });
   });
 }

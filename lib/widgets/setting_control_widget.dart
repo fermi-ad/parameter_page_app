@@ -8,8 +8,14 @@ class SettingControlWidget extends StatefulWidget {
 
   final bool wide;
 
+  final Function(String)? onSubmitted;
+
   const SettingControlWidget(
-      {super.key, required this.drf, this.value = "0.0", this.wide = true});
+      {super.key,
+      required this.drf,
+      this.onSubmitted,
+      this.value = "0.0",
+      this.wide = true});
 
   @override
   State<StatefulWidget> createState() {
@@ -49,10 +55,18 @@ class _SettingControlState extends State<SettingControlWidget> {
             }
           },
           child: TextFormField(
+              key: Key("parameter_settingtextfield_${widget.drf}"),
               onTapOutside: (event) => _handleAbort(),
+              onEditingComplete: () => _handleSubmitted(),
               decoration: const InputDecoration(border: UnderlineInputBorder()),
               initialValue: widget.value),
         ));
+  }
+
+  void _handleSubmitted() {
+    if (widget.onSubmitted != null) {
+      widget.onSubmitted!("75.0");
+    }
   }
 
   void _handleAbort() {
