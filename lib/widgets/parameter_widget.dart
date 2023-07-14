@@ -171,7 +171,11 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   Widget _buildProperties() {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(children: [
-        _buildSettingProperty(),
+        SettingControlWidget(
+            key: Key("parameter_setting_${widget.drf}"),
+            drf: widget.drf,
+            value: _settingValue,
+            units: settingUnits),
         const SizedBox(width: 12.0),
         StreamBuilder(
             stream: widget.dpm.monitorDevices([widget.drf]),
@@ -188,14 +192,6 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                   drf: widget.drf, alarmBlock: info!.alarm!)
               : Container()),
     ]);
-  }
-
-  Widget _buildSettingProperty() {
-    return SettingControlWidget(
-        key: Key("parameter_setting_${widget.drf}"),
-        drf: widget.drf,
-        value: _settingValue,
-        units: settingUnits);
   }
 
   Widget _buildParam(String? value, String? units, {required Key key}) {
