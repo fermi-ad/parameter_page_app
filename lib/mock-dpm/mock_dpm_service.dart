@@ -178,4 +178,6 @@ class MockDpmService extends DpmService {
       return const Stream<DigitalStatus>.empty();
     }
   }
+
+  void succeedAllSettings() {}
 }

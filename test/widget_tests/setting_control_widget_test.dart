@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:parameter_page/mock-dpm/mock_dpm_service.dart';
+import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 import 'package:parameter_page/widgets/setting_control_widget.dart';
 
 void main() {
@@ -157,6 +159,32 @@ void main() {
 
       // ... and the pending indicator is shown
       assertSettingPendingIndicator(isVisible: true);
+    });
+
+    testWidgets(
+        'On setting success, transition back to displaying the current setting',
+        (WidgetTester tester) async {
+      // Given I have submitted a new setting for Z:BTE200_TEMP
+      MockDpmService testDPM = const MockDpmService();
+      MaterialApp app = initialize(DataAcquisitionWidget(
+          service: testDPM,
+          child: const SettingControlWidget(
+            drf: "Z:BTE200_TEMP",
+            value: "72.0",
+          )));
+      await tester.pumpWidget(app);
+      await tester.tap(find.text("72.0"));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextFormField), "75.0");
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+
+      // When the setting is successful
+      testDPM.succeedAllSettings();
+      await tester.pumpAndSettle();
+
+      // Then the pending indicator goes away
+      assertSettingPendingIndicator(isVisible: false);
     });
 
     testWidgets('Provide units, display units', (WidgetTester tester) async {
