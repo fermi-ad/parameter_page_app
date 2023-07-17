@@ -40,6 +40,14 @@ void main() {
         find.byType(TextFormField), isVisible ? findsOneWidget : findsNothing);
   }
 
+  void assertSettingPendingIndicator({required bool isVisible}) {
+    expect(
+        find.descendant(
+            of: find.byKey(const Key("parameter_setting_Z:BTE200_TEMP")),
+            matching: find.byIcon(Icons.pending)),
+        isVisible ? findsOneWidget : findsNothing);
+  }
+
   group("SettingControlWidget", () {
     testWidgets('Provide no initial value, displays 0.0',
         (WidgetTester tester) async {
@@ -122,7 +130,7 @@ void main() {
     });
 
     testWidgets(
-        'Enter new value and submit, onSubmit is called and the text field is replaced with the display',
+        'Enter new value and submit, onSubmit is called and widget shows the setting is pending',
         (WidgetTester tester) async {
       //Given a SettingControlWidget with an onSubmitted handler that updates newValue
       String newValue = "";
@@ -143,7 +151,12 @@ void main() {
 
       // Then the onSubmit handler is called and passed "75.0" as the new value
       expect(newValue, equals("75.0"));
-      assertSettingDisplay(isVisible: true);
+
+      // ... the display is showing the new value
+      assertSettingDisplay(isVisible: true, value: "75.0");
+
+      // ... and the pending indicator is shown
+      assertSettingPendingIndicator(isVisible: true);
     });
 
     testWidgets('Provide units, display units', (WidgetTester tester) async {

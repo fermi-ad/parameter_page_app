@@ -101,12 +101,14 @@ class _SettingControlState extends State<SettingControlWidget> {
   }
 
   void _handleSubmitted() {
+    final newValue = _textFieldController.text;
     if (widget.onSubmitted != null) {
-      widget.onSubmitted!(_textFieldController.text);
+      widget.onSubmitted!(newValue);
     }
+    _pendingSettingValue = newValue;
 
     setState(() {
-      _state = _SettingControlInternalState.displaying;
+      _state = _SettingControlInternalState.settingPending;
     });
   }
 
@@ -117,10 +119,16 @@ class _SettingControlState extends State<SettingControlWidget> {
   }
 
   Widget _buildSettingPendingState() {
-    return Container();
+    return Row(key: Key("parameter_settingdisplay_${widget.drf}"), children: [
+      Text(textAlign: TextAlign.end, _pendingSettingValue!),
+      const SizedBox(width: 8.0),
+      const Icon(Icons.pending)
+    ]);
   }
 
   _SettingControlInternalState _state = _SettingControlInternalState.displaying;
+
+  String? _pendingSettingValue;
 
   final _textFieldController = TextEditingController();
 }
