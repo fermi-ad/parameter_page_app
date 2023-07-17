@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:parameter_page/dpm_service.dart';
 import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 
 class SettingControlWidget extends StatefulWidget {
@@ -105,17 +106,14 @@ class _SettingControlState extends State<SettingControlWidget> {
     final newValue = _textFieldController.text;
 
     final DataAcquisitionWidget daqWidget = DataAcquisitionWidget.of(context);
-    daqWidget.submit(forDRF: widget.drf, newSetting: newValue).listen((status) {
-      if (status.facilityCode == 1 && status.errorCode == 0) {
-        setState(() {
-          _state = _SettingControlInternalState.displaying;
-        });
-      }
-    });
+    daqWidget
+        .submit(forDRF: widget.drf, newSetting: newValue)
+        .listen(_handleSettingUpdate);
 
     if (widget.onSubmitted != null) {
       widget.onSubmitted!(newValue);
     }
+
     _pendingSettingValue = newValue;
 
     setState(() {
@@ -127,6 +125,14 @@ class _SettingControlState extends State<SettingControlWidget> {
     setState(() {
       _state = _SettingControlInternalState.displaying;
     });
+  }
+
+  void _handleSettingUpdate(SettingStatus status) {
+    if (status.facilityCode == 1 && status.errorCode == 0) {
+      setState(() {
+        _state = _SettingControlInternalState.displaying;
+      });
+    }
   }
 
   Widget _buildSettingPendingState() {
