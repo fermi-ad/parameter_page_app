@@ -26,14 +26,13 @@ class SettingControlWidget extends StatefulWidget {
   }
 }
 
+enum _SettingControlInternalState { display, editing, setting_pending }
+
 class _SettingControlState extends State<SettingControlWidget> {
   @override
   Widget build(BuildContext context) {
     return Row(children: [
-      SizedBox(
-          height: 34.0,
-          width: 100.0,
-          child: _entryMode ? _buildInput() : _buildDisplay()),
+      SizedBox(height: 34.0, width: 100.0, child: _buildStates()),
       const SizedBox(width: 6.0),
       widget.units == null
           ? Container()
@@ -41,7 +40,20 @@ class _SettingControlState extends State<SettingControlWidget> {
     ]);
   }
 
-  Widget _buildDisplay() {
+  Widget _buildStates() {
+    switch (_state) {
+      case _SettingControlInternalState.display:
+        return _buildDisplayState();
+
+      case _SettingControlInternalState.editing:
+        return _buildEditingState();
+
+      case _SettingControlInternalState.setting_pending:
+        return _buildSettingPendingState();
+    }
+  }
+
+  Widget _buildDisplayState() {
     return Container(
         key: Key("parameter_settingdisplay_${widget.drf}"),
         child: GestureDetector(
@@ -51,12 +63,12 @@ class _SettingControlState extends State<SettingControlWidget> {
 
   void _handleDisplayTap() {
     setState(() {
-      _entryMode = true;
+      _state = _SettingControlInternalState.editing;
       _textFieldController.text = widget.value;
     });
   }
 
-  Widget _buildInput() {
+  Widget _buildEditingState() {
     return Container(
         key: Key("parameter_settinginput_${widget.drf}"),
         child: RawKeyboardListener(
@@ -82,17 +94,21 @@ class _SettingControlState extends State<SettingControlWidget> {
     }
 
     setState(() {
-      _entryMode = false;
+      _state = _SettingControlInternalState.display;
     });
   }
 
   void _handleAbort() {
     setState(() {
-      _entryMode = false;
+      _state = _SettingControlInternalState.display;
     });
   }
 
-  bool _entryMode = false;
+  Widget _buildSettingPendingState() {
+    return Container();
+  }
+
+  _SettingControlInternalState _state = _SettingControlInternalState.display;
 
   final _textFieldController = TextEditingController();
 }
