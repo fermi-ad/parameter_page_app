@@ -120,9 +120,9 @@ class _SettingControlState extends State<SettingControlWidget> {
 
   Widget _buildSettingPendingState() {
     return Row(key: Key("parameter_settingdisplay_${widget.drf}"), children: [
-      Text(textAlign: TextAlign.end, _pendingSettingValue!),
+      const Icon(Icons.pending),
       const SizedBox(width: 8.0),
-      const Icon(Icons.pending)
+      Text(textAlign: TextAlign.end, _pendingSettingValue!)
     ]);
   }
 
