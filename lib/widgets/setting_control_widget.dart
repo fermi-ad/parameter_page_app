@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 
 class SettingControlWidget extends StatefulWidget {
   final String drf;
@@ -37,7 +38,7 @@ class _SettingControlState extends State<SettingControlWidget> {
   @override
   Widget build(BuildContext context) {
     return Row(children: [
-      SizedBox(height: 34.0, width: 100.0, child: _buildStates()),
+      SizedBox(height: 34.0, width: 100.0, child: _buildStates(context)),
       const SizedBox(width: 6.0),
       widget.units == null
           ? Container()
@@ -45,7 +46,7 @@ class _SettingControlState extends State<SettingControlWidget> {
     ]);
   }
 
-  Widget _buildStates() {
+  Widget _buildStates(BuildContext context) {
     switch (_state) {
       case _SettingControlInternalState.displaying:
         return _buildDisplayingState();
@@ -54,7 +55,7 @@ class _SettingControlState extends State<SettingControlWidget> {
         return _buildDisplayingErrorState();
 
       case _SettingControlInternalState.editing:
-        return _buildEditingState();
+        return _buildEditingState(context);
 
       case _SettingControlInternalState.settingPending:
         return _buildSettingPendingState();
@@ -80,7 +81,7 @@ class _SettingControlState extends State<SettingControlWidget> {
     return Container();
   }
 
-  Widget _buildEditingState() {
+  Widget _buildEditingState(BuildContext context) {
     return Container(
         key: Key("parameter_settinginput_${widget.drf}"),
         child: RawKeyboardListener(
@@ -94,14 +95,24 @@ class _SettingControlState extends State<SettingControlWidget> {
               key: Key("parameter_settingtextfield_${widget.drf}"),
               controller: _textFieldController,
               onTapOutside: (event) => _handleAbort(),
-              onEditingComplete: () => _handleSubmitted(),
+              onEditingComplete: () => _handleSubmitted(context),
               decoration:
                   const InputDecoration(border: UnderlineInputBorder())),
         ));
   }
 
-  void _handleSubmitted() {
+  void _handleSubmitted(BuildContext context) {
     final newValue = _textFieldController.text;
+
+    final DataAcquisitionWidget daqWidget = DataAcquisitionWidget.of(context);
+    daqWidget.submit(forDRF: widget.drf, newSetting: newValue).listen((status) {
+      if (status.facilityCode == 1 && status.errorCode == 0) {
+        setState(() {
+          _state = _SettingControlInternalState.displaying;
+        });
+      }
+    });
+
     if (widget.onSubmitted != null) {
       widget.onSubmitted!(newValue);
     }

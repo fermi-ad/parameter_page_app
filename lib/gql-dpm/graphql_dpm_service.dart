@@ -208,4 +208,10 @@ class GraphQLDpmService extends DpmService {
   Stream<DigitalStatus> monitorDigitalStatusDevices(List<String> drfs) {
     return const Stream<DigitalStatus>.empty();
   }
+
+  @override
+  Stream<SettingStatus> submit(
+      {required String forDRF, required String newSetting}) {
+    throw UnimplementedError();
+  }
 }

@@ -5,7 +5,7 @@ import 'package:parameter_page/dpm_service.dart';
 class MockDpmService extends DpmService {
   final bool useEmptyStream;
 
-  const MockDpmService({this.useEmptyStream = false});
+  MockDpmService({this.useEmptyStream = false});
 
   @override
   Future<List<DeviceInfo>> getDeviceInfo(List<String> devices) async {
@@ -179,5 +179,26 @@ class MockDpmService extends DpmService {
     }
   }
 
-  void succeedAllSettings() {}
+  void succeedAllPendingSettings() {
+    _pendingSettingsStream.forEach((drf, controller) {
+      controller.add(const SettingStatus(facilityCode: 1, errorCode: 0));
+      controller.close();
+    });
+    _pendingSettingsStream.clear();
+  }
+
+  @override
+  Stream<SettingStatus> submit(
+      {required String forDRF, required String newSetting}) {
+    if (useEmptyStream) {
+      return const Stream<SettingStatus>.empty();
+    } else {
+      final newStream = StreamController<SettingStatus>();
+      _pendingSettingsStream[forDRF] = newStream;
+      return newStream.stream;
+    }
+  }
+
+  final Map<String, StreamController<SettingStatus>> _pendingSettingsStream =
+      {};
 }

@@ -165,7 +165,7 @@ void main() {
         'On setting success, transition back to displaying the current setting',
         (WidgetTester tester) async {
       // Given I have submitted a new setting for Z:BTE200_TEMP
-      MockDpmService testDPM = const MockDpmService();
+      MockDpmService testDPM = MockDpmService();
       MaterialApp app = initialize(DataAcquisitionWidget(
           service: testDPM,
           child: const SettingControlWidget(
@@ -180,7 +180,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // When the setting is successful
-      testDPM.succeedAllSettings();
+      testDPM.succeedAllPendingSettings();
       await tester.pumpAndSettle();
 
       // Then the pending indicator goes away

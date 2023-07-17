@@ -74,12 +74,12 @@ void main() {
         (WidgetTester tester) async {
       // Given nothing...
       // When I instantiate and display a ParameterEntry with showAlarmDetails = false
-      const scaffold = Scaffold(
+      Scaffold scaffold = Scaffold(
           body: DataAcquisitionWidget(
               service: MockDpmService(useEmptyStream: true),
-              child: ParameterWidget(
+              child: const ParameterWidget(
                   drf: "M:OUTTMP", editMode: false, wide: true)));
-      const app = MaterialApp(home: scaffold);
+      MaterialApp app = MaterialApp(home: scaffold);
       await tester.pumpWidget(app);
 
       // Then the alarm details are not displayed
@@ -91,11 +91,11 @@ void main() {
         (WidgetTester tester) async {
       // Given a parameter with no alarms block (Z:NO_ALARMS)
       // When I instantiate and display a ParameterWidget with showAlarmDetails = true
-      const app = MaterialApp(
+      MaterialApp app = MaterialApp(
           home: Scaffold(
               body: DataAcquisitionWidget(
                   service: MockDpmService(useEmptyStream: true),
-                  child: ParameterWidget(
+                  child: const ParameterWidget(
                     drf: "Z:NO_ALARMS",
                     editMode: false,
                     wide: true,
@@ -112,11 +112,11 @@ void main() {
         (WidgetTester tester) async {
       // Given nothing...
       // When I instantiate and display a ParameterEntry with showAlarmDetails = true
-      const app = MaterialApp(
+      MaterialApp app = MaterialApp(
           home: Scaffold(
               body: DataAcquisitionWidget(
                   service: MockDpmService(useEmptyStream: true),
-                  child: ParameterWidget(
+                  child: const ParameterWidget(
                     drf: "M:OUTTMP",
                     editMode: false,
                     wide: true,
@@ -136,11 +136,11 @@ void main() {
         (WidgetTester tester) async {
       // Given M:OUTTMP is a device with an alarm block
       // When I instantiate and display a ParameterEntry with showAlarmDetails = true and wide mode turned off
-      const app = MaterialApp(
+      MaterialApp app = MaterialApp(
           home: Scaffold(
               body: DataAcquisitionWidget(
                   service: MockDpmService(useEmptyStream: true),
-                  child: ParameterWidget(
+                  child: const ParameterWidget(
                     drf: "M:OUTTMP",
                     editMode: false,
                     wide: false,

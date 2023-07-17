@@ -51,4 +51,9 @@ class DataAcquisitionWidget extends InheritedWidget {
     assert(result != null, 'no DataAcquisitionWidget found in context');
     return result!;
   }
+
+  Stream<SettingStatus> submit(
+      {required String forDRF, required String newSetting}) {
+    return service.submit(forDRF: forDRF, newSetting: newSetting);
+  }
 }
