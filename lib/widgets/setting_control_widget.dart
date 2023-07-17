@@ -26,7 +26,12 @@ class SettingControlWidget extends StatefulWidget {
   }
 }
 
-enum _SettingControlInternalState { display, editing, setting_pending }
+enum _SettingControlInternalState {
+  displaying,
+  displayingError,
+  editing,
+  settingPending
+}
 
 class _SettingControlState extends State<SettingControlWidget> {
   @override
@@ -42,18 +47,21 @@ class _SettingControlState extends State<SettingControlWidget> {
 
   Widget _buildStates() {
     switch (_state) {
-      case _SettingControlInternalState.display:
-        return _buildDisplayState();
+      case _SettingControlInternalState.displaying:
+        return _buildDisplayingState();
+
+      case _SettingControlInternalState.displayingError:
+        return _buildDisplayingErrorState();
 
       case _SettingControlInternalState.editing:
         return _buildEditingState();
 
-      case _SettingControlInternalState.setting_pending:
+      case _SettingControlInternalState.settingPending:
         return _buildSettingPendingState();
     }
   }
 
-  Widget _buildDisplayState() {
+  Widget _buildDisplayingState() {
     return Container(
         key: Key("parameter_settingdisplay_${widget.drf}"),
         child: GestureDetector(
@@ -66,6 +74,10 @@ class _SettingControlState extends State<SettingControlWidget> {
       _state = _SettingControlInternalState.editing;
       _textFieldController.text = widget.value;
     });
+  }
+
+  Widget _buildDisplayingErrorState() {
+    return Container();
   }
 
   Widget _buildEditingState() {
@@ -94,13 +106,13 @@ class _SettingControlState extends State<SettingControlWidget> {
     }
 
     setState(() {
-      _state = _SettingControlInternalState.display;
+      _state = _SettingControlInternalState.displaying;
     });
   }
 
   void _handleAbort() {
     setState(() {
-      _state = _SettingControlInternalState.display;
+      _state = _SettingControlInternalState.displaying;
     });
   }
 
@@ -108,7 +120,7 @@ class _SettingControlState extends State<SettingControlWidget> {
     return Container();
   }
 
-  _SettingControlInternalState _state = _SettingControlInternalState.display;
+  _SettingControlInternalState _state = _SettingControlInternalState.displaying;
 
   final _textFieldController = TextEditingController();
 }
