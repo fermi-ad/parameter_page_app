@@ -210,6 +210,8 @@ class MockDpmService extends DpmService {
     }
   }
 
+  void updateSetting({required String forDRF, required String newValue}) {}
+
   final Map<String, StreamController<SettingStatus>> _pendingSettingsStream =
       {};
 }
