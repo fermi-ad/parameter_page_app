@@ -233,9 +233,20 @@ class MockDpmService extends DpmService {
         rawValue: rawValue));
   }
 
+  void enablePeriodSettingStream({double withDefaultSettingValue = 50.0}) {
+    Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      _settings.add(Reading(
+          refId: 0,
+          cycle: 0,
+          timestamp: DateTime.now(),
+          value: withDefaultSettingValue,
+          primaryValue: withDefaultSettingValue / 10.0,
+          rawValue: "ffff"));
+    });
+  }
+
   final Map<String, StreamController<SettingStatus>> _pendingSettingsStream =
       {};
 
-  final StreamController<Reading> _settings =
-      StreamController<Reading>.broadcast();
+  StreamController<Reading> _settings = StreamController<Reading>.broadcast();
 }
