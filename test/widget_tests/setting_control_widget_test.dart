@@ -250,8 +250,7 @@ void main() {
       assertErrorCodeDisplay(isVisible: true, facilityCode: 57, errorCode: -30);
 
       // ... and after three seconds the error code goes away
-      await tester.pumpWidget(
-          app, const Duration(seconds: 3, milliseconds: 100));
+      await tester.pumpWidget(app, const Duration(seconds: 3, milliseconds: 1));
       assertErrorCodeDisplay(isVisible: false);
 
       // ... and the original setting is displayed again

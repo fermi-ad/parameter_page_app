@@ -40,6 +40,7 @@ class _SettingControlState extends State<SettingControlWidget> {
   @override
   void dispose() {
     _errorDisplayTimeoutTimer?.cancel();
+    _editingTimeoutTimer?.cancel();
     super.dispose();
   }
 
@@ -102,6 +103,8 @@ class _SettingControlState extends State<SettingControlWidget> {
   }
 
   Widget _buildEditingState(BuildContext context) {
+    _startEditingTimeoutTimer();
+
     return Container(
         key: Key("parameter_settinginput_${widget.drf}"),
         child: RawKeyboardListener(
@@ -114,11 +117,21 @@ class _SettingControlState extends State<SettingControlWidget> {
           child: TextFormField(
               key: Key("parameter_settingtextfield_${widget.drf}"),
               controller: _textFieldController,
+              onChanged: (event) => _startEditingTimeoutTimer(),
               onTapOutside: (event) => _handleAbort(),
               onEditingComplete: () => _handleSubmitted(context),
               decoration:
                   const InputDecoration(border: UnderlineInputBorder())),
         ));
+  }
+
+  void _startEditingTimeoutTimer() {
+    _editingTimeoutTimer?.cancel();
+    _editingTimeoutTimer = Timer(const Duration(seconds: 3), () {
+      setState(() {
+        _state = _SettingControlInternalState.displaying;
+      });
+    });
   }
 
   void _handleSubmitted(BuildContext context) {
@@ -179,4 +192,6 @@ class _SettingControlState extends State<SettingControlWidget> {
   int? _errorCode;
 
   Timer? _errorDisplayTimeoutTimer;
+
+  Timer? _editingTimeoutTimer;
 }
