@@ -110,6 +110,15 @@ class MockDpmService extends DpmService {
   }
 
   @override
+  Stream<Reading> monitorSettingProperty(List<String> drfs) {
+    if (useEmptyStream) {
+      return const Stream<Reading>.empty();
+    } else {
+      return _settings.stream; //  + count * 0.1);
+    }
+  }
+
+  @override
   Stream<DigitalStatus> monitorDigitalStatusDevices(List<String> drfs) {
     if (useEmptyStream) {
       return const Stream<DigitalStatus>.empty();
@@ -210,8 +219,23 @@ class MockDpmService extends DpmService {
     }
   }
 
-  void updateSetting({required String forDRF, required String newValue}) {}
+  void updateSetting(
+      {required String forDRF,
+      required double value,
+      required double primaryValue,
+      required String rawValue}) {
+    _settings.add(Reading(
+        refId: 0,
+        cycle: 0,
+        timestamp: DateTime.now(),
+        value: value,
+        primaryValue: primaryValue,
+        rawValue: rawValue));
+  }
 
   final Map<String, StreamController<SettingStatus>> _pendingSettingsStream =
       {};
+
+  final StreamController<Reading> _settings =
+      StreamController<Reading>.broadcast();
 }

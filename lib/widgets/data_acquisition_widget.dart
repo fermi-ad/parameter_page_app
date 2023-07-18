@@ -15,6 +15,10 @@ class DataAcquisitionWidget extends InheritedWidget {
     return service.monitorDevices(drfs);
   }
 
+  Stream<Reading> monitorSettingProperty(List<String> drfs) {
+    return service.monitorSettingProperty(drfs);
+  }
+
   Stream<DigitalStatus> monitorDigitalStatusDevices(List<String> drfs) {
     return service.monitorDigitalStatusDevices(drfs);
   }

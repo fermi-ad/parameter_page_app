@@ -47,12 +47,31 @@ class _SettingControlState extends State<SettingControlWidget> {
   @override
   Widget build(BuildContext context) {
     return Row(children: [
+      StreamBuilder(
+          builder: _undoDisplayBuilder,
+          stream: DataAcquisitionWidget.of(context)
+              .monitorSettingProperty([widget.drf])),
+      const SizedBox(width: 6.0),
       SizedBox(height: 34.0, width: 100.0, child: _buildStates(context)),
       const SizedBox(width: 6.0),
       widget.units == null
           ? Container()
           : Text(widget.units!, style: const TextStyle(color: Colors.grey))
     ]);
+  }
+
+  Widget _undoDisplayBuilder(context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.active) {
+      var newSetting = snapshot.data!.value.toStringAsPrecision(4);
+
+      return newSetting != widget.value
+          ? Container(
+              key: Key("parameter_settingundo_${widget.drf}"),
+              child: Text(widget.value))
+          : Container();
+    } else {
+      return Container();
+    }
   }
 
   Widget _buildStates(BuildContext context) {

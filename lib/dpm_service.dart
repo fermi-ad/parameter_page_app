@@ -168,6 +168,8 @@ abstract class DpmService {
 
   Stream<Reading> monitorDevices(List<String> drfs);
 
+  Stream<Reading> monitorSettingProperty(List<String> drfs);
+
   Stream<DigitalStatus> monitorDigitalStatusDevices(List<String> drfs);
 
   Stream<SettingStatus> submit(

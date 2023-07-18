@@ -290,7 +290,11 @@ void main() {
       await tester.pumpWidget(app);
 
       // When a new setting arrives
-      testDPM.updateSetting(forDRF: "Z:BTE200_TEMP", newValue: "75.0");
+      testDPM.updateSetting(
+          forDRF: "Z:BTE200_TEMP",
+          value: 75.0,
+          primaryValue: 7.5,
+          rawValue: "8888");
       await tester.pumpAndSettle();
 
       // Then the Undo display shows the original setting value
