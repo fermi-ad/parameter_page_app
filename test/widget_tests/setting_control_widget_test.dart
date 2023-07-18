@@ -304,7 +304,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Then the Undo display shows the original setting value
-      assertUndoSettingDisplay(isVisible: true, value: "72.0");
+      assertUndoSettingDisplay(isVisible: true, value: "72.00");
     });
   });
 }

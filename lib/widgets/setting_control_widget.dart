@@ -67,13 +67,17 @@ class _SettingControlState extends State<SettingControlWidget> {
       _initialSettingValue ??= newSettingValue;
 
       return newSettingValue != _initialSettingValue
-          ? Container(
-              key: Key("parameter_settingundo_${widget.drf}"),
-              child: Text(widget.value))
+          ? _buildUndoDisplay()
           : Container();
     } else {
       return Container();
     }
+  }
+
+  Widget _buildUndoDisplay() {
+    return Container(
+        key: Key("parameter_settingundo_${widget.drf}"),
+        child: Text(_initialSettingValue!));
   }
 
   Widget _buildStates(BuildContext context) {
