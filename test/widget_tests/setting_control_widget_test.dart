@@ -66,6 +66,19 @@ void main() {
     }
   }
 
+  void assertUndoSettingDisplay({required bool isVisible, String? value}) {
+    expect(find.byKey(const Key("parameter_settingundo_Z:BTE200_TEMP")),
+        isVisible ? findsOneWidget : findsNothing);
+
+    if (isVisible && value != null) {
+      expect(
+          find.descendant(
+              of: find.byKey(const Key("parameter_settingundo_Z:BTE200_TEMP")),
+              matching: find.text(value)),
+          findsOneWidget);
+    }
+  }
+
   group("SettingControlWidget", () {
     testWidgets('Provide no initial value, displays 0.0',
         (WidgetTester tester) async {
@@ -265,6 +278,28 @@ void main() {
 
       // Then the setting is cancelled and the setting display returns
       assertSettingDisplay(isVisible: true, value: "72.0");
+    });
+
+    testWidgets('Submit new setting, undo display shows the original setting',
+        (WidgetTester tester) async {
+      // Given the original setting for Z:BTE200_TEMP is 72.0
+      MaterialApp app = initialize(const SettingControlWidget(
+        drf: "Z:BTE200_TEMP",
+        value: "72.0",
+      ));
+
+      // When I successfully submit a new setting
+      await tester.pumpWidget(app);
+      await tester.tap(find.text("72.0"));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextFormField), "75.0");
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+      testDPM.succeedAllPendingSettings();
+      await tester.pumpAndSettle();
+
+      // Then the Undo display shows the original setting value
+      assertUndoSettingDisplay(isVisible: true, value: "72.0");
     });
   });
 }
