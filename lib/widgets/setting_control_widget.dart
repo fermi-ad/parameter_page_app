@@ -7,8 +7,6 @@ import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 class SettingControlWidget extends StatefulWidget {
   final String drf;
 
-  final String value;
-
   final String? units;
 
   final bool wide;
@@ -19,7 +17,6 @@ class SettingControlWidget extends StatefulWidget {
       {super.key,
       required this.drf,
       this.onSubmitted,
-      this.value = "0.0",
       this.units,
       this.wide = true});
 
@@ -101,13 +98,25 @@ class _SettingControlState extends State<SettingControlWidget> {
         key: Key("parameter_settingdisplay_${widget.drf}"),
         child: GestureDetector(
             onTap: _handleDisplayTap,
-            child: Text(textAlign: TextAlign.end, widget.value)));
+            child: StreamBuilder(
+                builder: _settingDisplayBuilder,
+                stream: DataAcquisitionWidget.of(context)
+                    .monitorSettingProperty([widget.drf]))));
+  }
+
+  Widget _settingDisplayBuilder(context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.active) {
+      _lastSettingValue = snapshot.data!.value.toStringAsPrecision(4);
+      return Text(textAlign: TextAlign.end, _lastSettingValue!);
+    } else {
+      return const Text("0.0");
+    }
   }
 
   void _handleDisplayTap() {
     setState(() {
       _state = _SettingControlInternalState.editing;
-      _textFieldController.text = widget.value;
+      _textFieldController.text = _lastSettingValue!;
     });
   }
 
@@ -221,4 +230,6 @@ class _SettingControlState extends State<SettingControlWidget> {
   Timer? _editingTimeoutTimer;
 
   String? _initialSettingValue;
+
+  String? _lastSettingValue;
 }

@@ -174,7 +174,6 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         SettingControlWidget(
             key: Key("parameter_setting_${widget.drf}"),
             drf: widget.drf,
-            value: _settingValue,
             units: settingUnits),
         const SizedBox(width: 12.0),
         StreamBuilder(
@@ -307,17 +306,6 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         return from.data!.primaryValue.toStringAsPrecision(4);
       case DisplayUnits.raw:
         return from.data!.rawValue;
-    }
-  }
-
-  String get _settingValue {
-    switch (widget.displayUnits) {
-      case DisplayUnits.commonUnits:
-        return "50.0";
-      case DisplayUnits.primaryUnits:
-        return "5.0";
-      case DisplayUnits.raw:
-        return "8888";
     }
   }
 }

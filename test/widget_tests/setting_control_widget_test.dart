@@ -25,6 +25,16 @@ void main() {
     ])));
   }
 
+  Future<void> sendSettingTestData(WidgetTester tester,
+      {required double settingValue}) async {
+    testDPM.updateSetting(
+        forDRF: "Z:BTE200_TEMP",
+        value: settingValue,
+        primaryValue: settingValue / 10.0,
+        rawValue: "7777");
+    await tester.pumpAndSettle();
+  }
+
   void assertSettingDisplay({required bool isVisible, String? value}) {
     expect(find.byKey(const Key("parameter_settingdisplay_Z:BTE200_TEMP")),
         isVisible ? findsOneWidget : findsNothing);
@@ -96,68 +106,74 @@ void main() {
     testWidgets('Provide an initial value, displays that value',
         (WidgetTester tester) async {
       // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP with an initial value of "72.0"
-      MaterialApp app = initialize(
-          const SettingControlWidget(drf: "Z:BTE200_TEMP", value: "72.0"));
-
-      // When I display the setting
+      MaterialApp app =
+          initialize(const SettingControlWidget(drf: "Z:BTE200_TEMP"));
       await tester.pumpWidget(app);
 
+      // When setting data arrives
+      await sendSettingTestData(tester, settingValue: 72.0);
+
       // Then 72.0 is displayed
-      assertSettingDisplay(isVisible: true, value: "72.0");
+      assertSettingDisplay(isVisible: true, value: "72.00");
     });
 
     testWidgets('Tap, change to text input', (WidgetTester tester) async {
       // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP with an initial value of "72.0"
-      MaterialApp app = initialize(
-          const SettingControlWidget(drf: "Z:BTE200_TEMP", value: "72.0"));
+      MaterialApp app =
+          initialize(const SettingControlWidget(drf: "Z:BTE200_TEMP"));
+      await tester.pumpWidget(app);
 
       // When I display the setting and tap on it
-      await tester.pumpWidget(app);
-      await tester.tap(find.text("72.0"));
+      await sendSettingTestData(tester, settingValue: 72.0);
+      await tester.tap(find.text("72.00"));
       await tester.pumpAndSettle();
 
       // Then 72.0 is displayed inside of a text input field
-      assertSettingInput(isVisible: true, value: "72.0");
+      assertSettingInput(isVisible: true, value: "72.00");
     });
 
     testWidgets('Press escape while editing, return to text display',
         (WidgetTester tester) async {
       // Given I am editing a setting inside of a SettingControlWidget...
-      MaterialApp app = initialize(
-          const SettingControlWidget(drf: "Z:BTE200_TEMP", value: "72.0"));
+      MaterialApp app =
+          initialize(const SettingControlWidget(drf: "Z:BTE200_TEMP"));
       await tester.pumpWidget(app);
-      await tester.tap(find.text("72.0"));
+      await sendSettingTestData(tester, settingValue: 72.0);
+      await tester.tap(find.text("72.00"));
       await tester.pumpAndSettle();
-      assertSettingInput(isVisible: true, value: "72.0");
+      assertSettingInput(isVisible: true, value: "72.00");
 
       // When give the input field focus but then abort by pressing the escape key
-      await tester.tap(find.text("72.0"));
+      await tester.tap(find.text("72.00"));
       await tester.pumpAndSettle();
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pumpAndSettle();
 
       // Then the text field changes back to a text display
-      assertSettingDisplay(isVisible: true, value: "72.0");
+      await sendSettingTestData(tester, settingValue: 72.0);
+      assertSettingDisplay(isVisible: true, value: "72.00");
     });
 
     testWidgets('Tap outside while editing, return to text display',
         (WidgetTester tester) async {
       // Given I am editing a setting inside of a SettingControlWidget...
-      MaterialApp app = initialize(
-          const SettingControlWidget(drf: "Z:BTE200_TEMP", value: "72.0"));
+      MaterialApp app =
+          initialize(const SettingControlWidget(drf: "Z:BTE200_TEMP"));
       await tester.pumpWidget(app);
-      await tester.tap(find.text("72.0"));
+      await sendSettingTestData(tester, settingValue: 72.0);
+      await tester.tap(find.text("72.00"));
       await tester.pumpAndSettle();
-      assertSettingInput(isVisible: true, value: "72.0");
+      assertSettingInput(isVisible: true, value: "72.00");
 
       // When give the input field focus but then abort by tapping outside of the control
-      await tester.tap(find.text("72.0"));
+      await tester.tap(find.text("72.00"));
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key("test_empty_box")));
       await tester.pumpAndSettle();
 
-      // Then the text field changes back to a text display
-      assertSettingDisplay(isVisible: true, value: "72.0");
+      // Then after recieving an update the text field changes back to a text display
+      await sendSettingTestData(tester, settingValue: 72.0);
+      assertSettingDisplay(isVisible: true, value: "72.00");
     });
 
     testWidgets(
@@ -167,14 +183,14 @@ void main() {
       String newValue = "";
       MaterialApp app = initialize(SettingControlWidget(
           drf: "Z:BTE200_TEMP",
-          value: "72.0",
           onSubmitted: (String submitted) {
             newValue = submitted;
           }));
       await tester.pumpWidget(app);
+      await sendSettingTestData(tester, settingValue: 72.0);
 
       // When I tap on the setting and enter a new value
-      await tester.tap(find.text("72.0"));
+      await tester.tap(find.text("72.00"));
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextFormField), "75.0");
       await tester.testTextInput.receiveAction(TextInputAction.done);
@@ -196,10 +212,10 @@ void main() {
       // Given I have submitted a new setting for Z:BTE200_TEMP
       MaterialApp app = initialize(const SettingControlWidget(
         drf: "Z:BTE200_TEMP",
-        value: "72.0",
       ));
       await tester.pumpWidget(app);
-      await tester.tap(find.text("72.0"));
+      await sendSettingTestData(tester, settingValue: 72.0);
+      await tester.tap(find.text("72.00"));
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextFormField), "75.0");
       await tester.testTextInput.receiveAction(TextInputAction.done);
@@ -217,12 +233,17 @@ void main() {
       //Given a SettingControlWidget constructed with units provided
       MaterialApp app = initialize(const SettingControlWidget(
         drf: "Z:BTE200_TEMP",
-        value: "72.0",
         units: "degF",
       ));
 
       // When I display
       await tester.pumpWidget(app);
+      testDPM.updateSetting(
+          forDRF: "Z:BTE200_TEMP",
+          value: 72.0,
+          primaryValue: 7.2,
+          rawValue: "7777");
+      await tester.pumpAndSettle();
 
       // Then the units are displayed
       expect(find.text("degF"), findsOneWidget);
@@ -234,10 +255,10 @@ void main() {
       // Given I have submitted a new setting for Z:BTE200_TEMP
       MaterialApp app = initialize(const SettingControlWidget(
         drf: "Z:BTE200_TEMP",
-        value: "72.0",
       ));
       await tester.pumpWidget(app);
-      await tester.tap(find.text("72.0"));
+      await sendSettingTestData(tester, settingValue: 72.0);
+      await tester.tap(find.text("72.00"));
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextFormField), "75.0");
       await tester.testTextInput.receiveAction(TextInputAction.done);
@@ -258,7 +279,8 @@ void main() {
       assertErrorCodeDisplay(isVisible: false);
 
       // ... and the original setting is displayed again
-      assertSettingDisplay(isVisible: true, value: "72.0");
+      await sendSettingTestData(tester, settingValue: 72.0);
+      assertSettingDisplay(isVisible: true, value: "72.00");
     });
 
     testWidgets(
@@ -267,17 +289,18 @@ void main() {
       // Given I am editing a setting property
       MaterialApp app = initialize(const SettingControlWidget(
         drf: "Z:BTE200_TEMP",
-        value: "72.0",
       ));
       await tester.pumpWidget(app);
-      await tester.tap(find.text("72.0"));
+      await sendSettingTestData(tester, settingValue: 72.0);
+      await tester.tap(find.text("72.00"));
       await tester.pumpAndSettle();
 
       // When I wait 3 seconds without making a change
       await tester.pumpWidget(app, const Duration(seconds: 6, milliseconds: 1));
 
       // Then the setting is cancelled and the setting display returns
-      assertSettingDisplay(isVisible: true, value: "72.0");
+      await sendSettingTestData(tester, settingValue: 72.0);
+      assertSettingDisplay(isVisible: true, value: "72.00");
     });
 
     testWidgets('On new setting, undo display shows the original setting',
@@ -285,23 +308,12 @@ void main() {
       // Given the original setting for Z:BTE200_TEMP is 72.0
       MaterialApp app = initialize(const SettingControlWidget(
         drf: "Z:BTE200_TEMP",
-        value: "72.0",
       ));
       await tester.pumpWidget(app);
-      testDPM.updateSetting(
-          forDRF: "Z:BTE200_TEMP",
-          value: 72.0,
-          primaryValue: 7.2,
-          rawValue: "7777");
-      await tester.pumpAndSettle();
+      await sendSettingTestData(tester, settingValue: 72.0);
 
       // When a new setting arrives
-      testDPM.updateSetting(
-          forDRF: "Z:BTE200_TEMP",
-          value: 75.0,
-          primaryValue: 7.5,
-          rawValue: "8888");
-      await tester.pumpAndSettle();
+      await sendSettingTestData(tester, settingValue: 75.0);
 
       // Then the Undo display shows the original setting value
       assertUndoSettingDisplay(isVisible: true, value: "72.00");
