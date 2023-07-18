@@ -288,6 +288,12 @@ void main() {
         value: "72.0",
       ));
       await tester.pumpWidget(app);
+      testDPM.updateSetting(
+          forDRF: "Z:BTE200_TEMP",
+          value: 72.0,
+          primaryValue: 7.2,
+          rawValue: "7777");
+      await tester.pumpAndSettle();
 
       // When a new setting arrives
       testDPM.updateSetting(

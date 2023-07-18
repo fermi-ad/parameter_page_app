@@ -62,9 +62,11 @@ class _SettingControlState extends State<SettingControlWidget> {
 
   Widget _undoDisplayBuilder(context, snapshot) {
     if (snapshot.connectionState == ConnectionState.active) {
-      var newSetting = snapshot.data!.value.toStringAsPrecision(4);
+      var newSettingValue = snapshot.data!.value.toStringAsPrecision(4);
 
-      return newSetting != widget.value
+      _initialSettingValue ??= newSettingValue;
+
+      return newSettingValue != _initialSettingValue
           ? Container(
               key: Key("parameter_settingundo_${widget.drf}"),
               child: Text(widget.value))
@@ -213,4 +215,6 @@ class _SettingControlState extends State<SettingControlWidget> {
   Timer? _errorDisplayTimeoutTimer;
 
   Timer? _editingTimeoutTimer;
+
+  String? _initialSettingValue;
 }
