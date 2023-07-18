@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:parameter_page/dpm_service.dart';
 import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 
 class SettingControlWidget extends StatefulWidget {
@@ -111,9 +110,7 @@ class _SettingControlState extends State<SettingControlWidget> {
         newSetting: newValue,
         onSuccess: _handleSettingUpdate);
 
-    if (widget.onSubmitted != null) {
-      widget.onSubmitted!(newValue);
-    }
+    widget.onSubmitted?.call(newValue);
 
     _pendingSettingValue = newValue;
 
