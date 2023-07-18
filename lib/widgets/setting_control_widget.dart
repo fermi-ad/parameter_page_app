@@ -144,6 +144,8 @@ class _SettingControlState extends State<SettingControlWidget> {
         onSuccess: _handleSettingUpdate,
         onFailure: _handleSettingFailure);
 
+    _editingTimeoutTimer?.cancel();
+
     widget.onSubmitted?.call(newValue);
 
     _pendingSettingValue = newValue;
