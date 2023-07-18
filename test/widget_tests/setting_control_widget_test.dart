@@ -6,7 +6,7 @@ import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 import 'package:parameter_page/widgets/setting_control_widget.dart';
 
 void main() {
-  MockDpmService _testDPM = MockDpmService();
+  MockDpmService testDPM = MockDpmService();
 
   MaterialApp initialize(Widget child) {
     return MaterialApp(
@@ -16,7 +16,7 @@ void main() {
           key: const Key("parameter_setting_Z:BTE200_TEMP"),
           width: 200.0,
           height: 34.0,
-          child: child),
+          child: DataAcquisitionWidget(service: testDPM, child: child)),
       const SizedBox(
           key: Key("test_empty_box"),
           height: 100.0,
@@ -152,14 +152,12 @@ void main() {
         (WidgetTester tester) async {
       //Given a SettingControlWidget with an onSubmitted handler that updates newValue
       String newValue = "";
-      MaterialApp app = initialize(DataAcquisitionWidget(
-          service: _testDPM,
-          child: SettingControlWidget(
-              drf: "Z:BTE200_TEMP",
-              value: "72.0",
-              onSubmitted: (String submitted) {
-                newValue = submitted;
-              })));
+      MaterialApp app = initialize(SettingControlWidget(
+          drf: "Z:BTE200_TEMP",
+          value: "72.0",
+          onSubmitted: (String submitted) {
+            newValue = submitted;
+          }));
       await tester.pumpWidget(app);
 
       // When I tap on the setting and enter a new value
@@ -183,12 +181,10 @@ void main() {
         'On setting success, transition back to displaying the current setting',
         (WidgetTester tester) async {
       // Given I have submitted a new setting for Z:BTE200_TEMP
-      MaterialApp app = initialize(DataAcquisitionWidget(
-          service: _testDPM,
-          child: const SettingControlWidget(
-            drf: "Z:BTE200_TEMP",
-            value: "72.0",
-          )));
+      MaterialApp app = initialize(const SettingControlWidget(
+        drf: "Z:BTE200_TEMP",
+        value: "72.0",
+      ));
       await tester.pumpWidget(app);
       await tester.tap(find.text("72.0"));
       await tester.pumpAndSettle();
@@ -197,7 +193,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // When the setting is successful
-      _testDPM.succeedAllPendingSettings();
+      testDPM.succeedAllPendingSettings();
       await tester.pumpAndSettle();
 
       // Then the pending indicator goes away
@@ -223,12 +219,10 @@ void main() {
         'On setting failure, display error for three seconds then transition back to display',
         (WidgetTester tester) async {
       // Given I have submitted a new setting for Z:BTE200_TEMP
-      MaterialApp app = initialize(DataAcquisitionWidget(
-          service: _testDPM,
-          child: const SettingControlWidget(
-            drf: "Z:BTE200_TEMP",
-            value: "72.0",
-          )));
+      MaterialApp app = initialize(const SettingControlWidget(
+        drf: "Z:BTE200_TEMP",
+        value: "72.0",
+      ));
       await tester.pumpWidget(app);
       await tester.tap(find.text("72.0"));
       await tester.pumpAndSettle();
@@ -237,7 +231,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // When the setting fails and returns a 57 -30 error
-      _testDPM.failAllPendingSettings(facilityCode: 57, errorCode: -30);
+      testDPM.failAllPendingSettings(facilityCode: 57, errorCode: -30);
       await tester.pumpAndSettle();
 
       // Then the pending indicator goes away
@@ -258,12 +252,10 @@ void main() {
         'After 6 seconds with no changes in edit state, return to display state',
         (WidgetTester tester) async {
       // Given I am editing a setting property
-      MaterialApp app = initialize(DataAcquisitionWidget(
-          service: _testDPM,
-          child: const SettingControlWidget(
-            drf: "Z:BTE200_TEMP",
-            value: "72.0",
-          )));
+      MaterialApp app = initialize(const SettingControlWidget(
+        drf: "Z:BTE200_TEMP",
+        value: "72.0",
+      ));
       await tester.pumpWidget(app);
       await tester.tap(find.text("72.0"));
       await tester.pumpAndSettle();

@@ -148,9 +148,8 @@ class _SettingControlState extends State<SettingControlWidget> {
 
     widget.onSubmitted?.call(newValue);
 
-    _pendingSettingValue = newValue;
-
     setState(() {
+      _pendingSettingValue = newValue;
       _state = _SettingControlInternalState.settingPending;
     });
   }
