@@ -250,10 +250,33 @@ void main() {
       assertErrorCodeDisplay(isVisible: true, facilityCode: 57, errorCode: -30);
 
       // ... and after three seconds the error code goes away
-      await tester.pumpWidget(app, const Duration(seconds: 4));
+      await tester.pumpWidget(
+          app, const Duration(seconds: 3, milliseconds: 100));
       assertErrorCodeDisplay(isVisible: false);
 
       // ... and the original setting is displayed again
+      assertSettingDisplay(isVisible: true, value: "72.0");
+    });
+
+    testWidgets(
+        'After 3 seconds with no changes in edit state, return to display state',
+        (WidgetTester tester) async {
+      // Given I am editing a setting property
+      MockDpmService testDPM = MockDpmService();
+      MaterialApp app = initialize(DataAcquisitionWidget(
+          service: testDPM,
+          child: const SettingControlWidget(
+            drf: "Z:BTE200_TEMP",
+            value: "72.0",
+          )));
+      await tester.pumpWidget(app);
+      await tester.tap(find.text("72.0"));
+      await tester.pumpAndSettle();
+
+      // When I wait 3 seconds without making a change
+      await tester.pumpWidget(app, const Duration(seconds: 3, milliseconds: 1));
+
+      // Then the setting is cancelled and the setting display returns
       assertSettingDisplay(isVisible: true, value: "72.0");
     });
   });
