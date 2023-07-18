@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -258,7 +256,7 @@ void main() {
     });
 
     testWidgets(
-        'After 3 seconds with no changes in edit state, return to display state',
+        'After 6 seconds with no changes in edit state, return to display state',
         (WidgetTester tester) async {
       // Given I am editing a setting property
       MockDpmService testDPM = MockDpmService();
@@ -273,7 +271,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // When I wait 3 seconds without making a change
-      await tester.pumpWidget(app, const Duration(seconds: 3, milliseconds: 1));
+      await tester.pumpWidget(app, const Duration(seconds: 6, milliseconds: 1));
 
       // Then the setting is cancelled and the setting display returns
       assertSettingDisplay(isVisible: true, value: "72.0");

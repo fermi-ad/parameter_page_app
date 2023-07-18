@@ -127,7 +127,7 @@ class _SettingControlState extends State<SettingControlWidget> {
 
   void _startEditingTimeoutTimer() {
     _editingTimeoutTimer?.cancel();
-    _editingTimeoutTimer = Timer(const Duration(seconds: 3), () {
+    _editingTimeoutTimer = Timer(const Duration(seconds: 6), () {
       setState(() {
         _state = _SettingControlInternalState.displaying;
       });
