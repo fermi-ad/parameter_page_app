@@ -6,6 +6,8 @@ import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 import 'package:parameter_page/widgets/setting_control_widget.dart';
 
 void main() {
+  MockDpmService _testDPM = MockDpmService();
+
   MaterialApp initialize(Widget child) {
     return MaterialApp(
         home: Scaffold(
@@ -150,9 +152,8 @@ void main() {
         (WidgetTester tester) async {
       //Given a SettingControlWidget with an onSubmitted handler that updates newValue
       String newValue = "";
-      MockDpmService testDPM = MockDpmService();
       MaterialApp app = initialize(DataAcquisitionWidget(
-          service: testDPM,
+          service: _testDPM,
           child: SettingControlWidget(
               drf: "Z:BTE200_TEMP",
               value: "72.0",
@@ -182,9 +183,8 @@ void main() {
         'On setting success, transition back to displaying the current setting',
         (WidgetTester tester) async {
       // Given I have submitted a new setting for Z:BTE200_TEMP
-      MockDpmService testDPM = MockDpmService();
       MaterialApp app = initialize(DataAcquisitionWidget(
-          service: testDPM,
+          service: _testDPM,
           child: const SettingControlWidget(
             drf: "Z:BTE200_TEMP",
             value: "72.0",
@@ -197,7 +197,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // When the setting is successful
-      testDPM.succeedAllPendingSettings();
+      _testDPM.succeedAllPendingSettings();
       await tester.pumpAndSettle();
 
       // Then the pending indicator goes away
@@ -223,9 +223,8 @@ void main() {
         'On setting failure, display error for three seconds then transition back to display',
         (WidgetTester tester) async {
       // Given I have submitted a new setting for Z:BTE200_TEMP
-      MockDpmService testDPM = MockDpmService();
       MaterialApp app = initialize(DataAcquisitionWidget(
-          service: testDPM,
+          service: _testDPM,
           child: const SettingControlWidget(
             drf: "Z:BTE200_TEMP",
             value: "72.0",
@@ -238,7 +237,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // When the setting fails and returns a 57 -30 error
-      testDPM.failAllPendingSettings(facilityCode: 57, errorCode: -30);
+      _testDPM.failAllPendingSettings(facilityCode: 57, errorCode: -30);
       await tester.pumpAndSettle();
 
       // Then the pending indicator goes away
@@ -259,9 +258,8 @@ void main() {
         'After 6 seconds with no changes in edit state, return to display state',
         (WidgetTester tester) async {
       // Given I am editing a setting property
-      MockDpmService testDPM = MockDpmService();
       MaterialApp app = initialize(DataAcquisitionWidget(
-          service: testDPM,
+          service: _testDPM,
           child: const SettingControlWidget(
             drf: "Z:BTE200_TEMP",
             value: "72.0",
