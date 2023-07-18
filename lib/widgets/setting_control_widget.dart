@@ -106,9 +106,10 @@ class _SettingControlState extends State<SettingControlWidget> {
     final newValue = _textFieldController.text;
 
     final DataAcquisitionWidget daqWidget = DataAcquisitionWidget.of(context);
-    daqWidget
-        .submit(forDRF: widget.drf, newSetting: newValue)
-        .listen(_handleSettingUpdate);
+    daqWidget.submit(
+        forDRF: widget.drf,
+        newSetting: newValue,
+        onSuccess: _handleSettingUpdate);
 
     if (widget.onSubmitted != null) {
       widget.onSubmitted!(newValue);
@@ -127,12 +128,10 @@ class _SettingControlState extends State<SettingControlWidget> {
     });
   }
 
-  void _handleSettingUpdate(SettingStatus status) {
-    if (status.facilityCode == 1 && status.errorCode == 0) {
-      setState(() {
-        _state = _SettingControlInternalState.displaying;
-      });
-    }
+  void _handleSettingUpdate() {
+    setState(() {
+      _state = _SettingControlInternalState.displaying;
+    });
   }
 
   Widget _buildSettingPendingState() {

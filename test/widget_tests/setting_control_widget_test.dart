@@ -136,12 +136,15 @@ void main() {
         (WidgetTester tester) async {
       //Given a SettingControlWidget with an onSubmitted handler that updates newValue
       String newValue = "";
-      MaterialApp app = initialize(SettingControlWidget(
-          drf: "Z:BTE200_TEMP",
-          value: "72.0",
-          onSubmitted: (String submitted) {
-            newValue = submitted;
-          }));
+      MockDpmService testDPM = MockDpmService();
+      MaterialApp app = initialize(DataAcquisitionWidget(
+          service: testDPM,
+          child: SettingControlWidget(
+              drf: "Z:BTE200_TEMP",
+              value: "72.0",
+              onSubmitted: (String submitted) {
+                newValue = submitted;
+              })));
       await tester.pumpWidget(app);
 
       // When I tap on the setting and enter a new value

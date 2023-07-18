@@ -52,8 +52,19 @@ class DataAcquisitionWidget extends InheritedWidget {
     return result!;
   }
 
-  Stream<SettingStatus> submit(
-      {required String forDRF, required String newSetting}) {
-    return service.submit(forDRF: forDRF, newSetting: newSetting);
+  void submit(
+      {required String forDRF,
+      required String newSetting,
+      Function? onSuccess,
+      Function(int, int)? onFailure}) {
+    service
+        .submit(forDRF: forDRF, newSetting: newSetting)
+        .listen((SettingStatus status) {
+      if (status.errorCode == 0) {
+        onSuccess?.call();
+      } else {
+        onFailure?.call(status.facilityCode, status.errorCode);
+      }
+    });
   }
 }
