@@ -250,11 +250,11 @@ void main() {
       assertErrorCodeDisplay(isVisible: true, facilityCode: 57, errorCode: -30);
 
       // ... and after three seconds the error code goes away
-      // sleep(const Duration(seconds: 3));
-      // assertErrorCodeDisplay(isVisible: false);
+      sleep(const Duration(seconds: 3));
+      assertErrorCodeDisplay(isVisible: false);
 
       // ... and the original setting is displayed again
-      // assertSettingDisplay(isVisible: true, value: "72.0");
+      assertSettingDisplay(isVisible: true, value: "72.0");
     });
   });
 }
