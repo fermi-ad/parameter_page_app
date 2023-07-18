@@ -78,7 +78,9 @@ class _SettingControlState extends State<SettingControlWidget> {
   }
 
   Widget _buildDisplayingErrorState() {
-    return Container();
+    return Container(
+        key: Key("parameter_settingerror_${widget.drf}"),
+        child: Text(textAlign: TextAlign.end, "$_facilityCode $_errorCode"));
   }
 
   Widget _buildEditingState(BuildContext context) {
@@ -108,7 +110,8 @@ class _SettingControlState extends State<SettingControlWidget> {
     daqWidget.submit(
         forDRF: widget.drf,
         newSetting: newValue,
-        onSuccess: _handleSettingUpdate);
+        onSuccess: _handleSettingUpdate,
+        onFailure: _handleSettingFailure);
 
     widget.onSubmitted?.call(newValue);
 
@@ -131,6 +134,14 @@ class _SettingControlState extends State<SettingControlWidget> {
     });
   }
 
+  void _handleSettingFailure(int facilityCode, int errorCode) {
+    setState(() {
+      _facilityCode = facilityCode;
+      _errorCode = errorCode;
+      _state = _SettingControlInternalState.displayingError;
+    });
+  }
+
   Widget _buildSettingPendingState() {
     return Row(key: Key("parameter_settingdisplay_${widget.drf}"), children: [
       const Icon(Icons.pending),
@@ -144,4 +155,8 @@ class _SettingControlState extends State<SettingControlWidget> {
   String? _pendingSettingValue;
 
   final _textFieldController = TextEditingController();
+
+  int? _facilityCode;
+
+  int? _errorCode;
 }

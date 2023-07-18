@@ -187,6 +187,16 @@ class MockDpmService extends DpmService {
     _pendingSettingsStream.clear();
   }
 
+  void failAllPendingSettings(
+      {required int facilityCode, required int errorCode}) {
+    _pendingSettingsStream.forEach((drf, controller) {
+      controller
+          .add(SettingStatus(facilityCode: facilityCode, errorCode: errorCode));
+      controller.close();
+    });
+    _pendingSettingsStream.clear();
+  }
+
   @override
   Stream<SettingStatus> submit(
       {required String forDRF, required String newSetting}) {

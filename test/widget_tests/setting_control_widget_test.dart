@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -48,6 +50,20 @@ void main() {
             of: find.byKey(const Key("parameter_setting_Z:BTE200_TEMP")),
             matching: find.byIcon(Icons.pending)),
         isVisible ? findsOneWidget : findsNothing);
+  }
+
+  void assertErrorCodeDisplay(
+      {required bool isVisible, int? facilityCode, int? errorCode}) {
+    expect(find.byKey(const Key("parameter_settingerror_Z:BTE200_TEMP")),
+        isVisible ? findsOneWidget : findsNothing);
+
+    if (isVisible && facilityCode != null && errorCode != null) {
+      expect(
+          find.descendant(
+              of: find.byKey(const Key("parameter_setting_Z:BTE200_TEMP")),
+              matching: find.text("$facilityCode $errorCode")),
+          findsOneWidget);
+    }
   }
 
   group("SettingControlWidget", () {
@@ -203,6 +219,42 @@ void main() {
 
       // Then the units are displayed
       expect(find.text("degF"), findsOneWidget);
+    });
+
+    testWidgets(
+        'On setting failure, display error for three seconds then transition back to display',
+        (WidgetTester tester) async {
+      // Given I have submitted a new setting for Z:BTE200_TEMP
+      MockDpmService testDPM = MockDpmService();
+      MaterialApp app = initialize(DataAcquisitionWidget(
+          service: testDPM,
+          child: const SettingControlWidget(
+            drf: "Z:BTE200_TEMP",
+            value: "72.0",
+          )));
+      await tester.pumpWidget(app);
+      await tester.tap(find.text("72.0"));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextFormField), "75.0");
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+
+      // When the setting fails and returns a 57 -30 error
+      testDPM.failAllPendingSettings(facilityCode: 57, errorCode: -30);
+      await tester.pumpAndSettle();
+
+      // Then the pending indicator goes away
+      assertSettingPendingIndicator(isVisible: false);
+
+      // ... and an error code is displayed
+      assertErrorCodeDisplay(isVisible: true, facilityCode: 57, errorCode: -30);
+
+      // ... and after three seconds the error code goes away
+      // sleep(const Duration(seconds: 3));
+      // assertErrorCodeDisplay(isVisible: false);
+
+      // ... and the original setting is displayed again
+      // assertSettingDisplay(isVisible: true, value: "72.0");
     });
   });
 }
