@@ -205,6 +205,7 @@ class MockDpmService extends DpmService {
     } else {
       final newStream = StreamController<SettingStatus>();
       _pendingSettingsStream[forDRF] = newStream;
+
       return newStream.stream;
     }
   }

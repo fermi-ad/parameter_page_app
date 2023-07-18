@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:parameter_page/widgets/data_acquisition_widget.dart';
@@ -35,6 +37,12 @@ enum _SettingControlInternalState {
 }
 
 class _SettingControlState extends State<SettingControlWidget> {
+  @override
+  void dispose() {
+    _errorDisplayTimeoutTimer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(children: [
@@ -78,9 +86,19 @@ class _SettingControlState extends State<SettingControlWidget> {
   }
 
   Widget _buildDisplayingErrorState() {
+    _startErrorDisplayTimer();
+
     return Container(
         key: Key("parameter_settingerror_${widget.drf}"),
         child: Text(textAlign: TextAlign.end, "$_facilityCode $_errorCode"));
+  }
+
+  void _startErrorDisplayTimer() {
+    _errorDisplayTimeoutTimer = Timer(const Duration(seconds: 3), () {
+      setState(() {
+        _state = _SettingControlInternalState.displaying;
+      });
+    });
   }
 
   Widget _buildEditingState(BuildContext context) {
@@ -159,4 +177,6 @@ class _SettingControlState extends State<SettingControlWidget> {
   int? _facilityCode;
 
   int? _errorCode;
+
+  Timer? _errorDisplayTimeoutTimer;
 }
