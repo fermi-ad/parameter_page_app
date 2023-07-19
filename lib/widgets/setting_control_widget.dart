@@ -82,14 +82,12 @@ class _SettingControlState extends State<SettingControlWidget> {
   }
 
   Widget _buildDisplayingState() {
-    return Container(
-        key: Key("parameter_settingdisplay_${widget.drf}"),
-        child: GestureDetector(
-            onTap: _handleDisplayTap,
-            child: StreamBuilder(
-                builder: _settingDisplayBuilder,
-                stream: DataAcquisitionWidget.of(context)
-                    .monitorSettingProperty([widget.drf]))));
+    return GestureDetector(
+        onTap: _handleDisplayTap,
+        child: StreamBuilder(
+            builder: _settingDisplayBuilder,
+            stream: DataAcquisitionWidget.of(context)
+                .monitorSettingProperty([widget.drf])));
   }
 
   Widget _buildDisplayingErrorState() {
@@ -154,9 +152,13 @@ class _SettingControlState extends State<SettingControlWidget> {
   Widget _settingDisplayBuilder(context, snapshot) {
     if (snapshot.connectionState == ConnectionState.active) {
       _lastSettingValue = snapshot.data!.value.toStringAsPrecision(4);
-      return Text(textAlign: TextAlign.end, _lastSettingValue!);
+      return Container(
+          key: Key("parameter_settingdisplay_${widget.drf}"),
+          child: Text(textAlign: TextAlign.end, _lastSettingValue!));
     } else {
-      return const Text("0.0");
+      return Container(
+          key: Key("parameter_settingloading_${widget.drf}"),
+          child: const Text("Loading..."));
     }
   }
 

@@ -49,6 +49,11 @@ void main() {
     }
   }
 
+  void assertSettingLoading({required bool isVisible}) {
+    expect(find.byKey(const Key("parameter_settingloading_Z:BTE200_TEMP")),
+        isVisible ? findsOneWidget : findsNothing);
+  }
+
   void assertSettingInput({required bool isVisible, String? value}) {
     expect(
         find.byType(TextFormField), isVisible ? findsOneWidget : findsNothing);
@@ -90,7 +95,7 @@ void main() {
   }
 
   group("SettingControlWidget", () {
-    testWidgets('Provide no initial value, displays 0.0',
+    testWidgets('No data from stream yet, displays Loading...',
         (WidgetTester tester) async {
       // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP
       MaterialApp app =
@@ -100,7 +105,8 @@ void main() {
       await tester.pumpWidget(app);
 
       // Then 0.0 is displayed
-      assertSettingDisplay(isVisible: true, value: "0.0");
+      assertSettingDisplay(isVisible: false);
+      assertSettingLoading(isVisible: true);
     });
 
     testWidgets('Provide an initial value, displays that value',
