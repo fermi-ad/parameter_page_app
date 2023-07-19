@@ -5,7 +5,7 @@ import 'package:parameter_page/dpm_service.dart';
 class MockDpmService extends DpmService {
   final bool useEmptyStream;
 
-  const MockDpmService({this.useEmptyStream = false});
+  MockDpmService({this.useEmptyStream = false});
 
   @override
   Future<List<DeviceInfo>> getDeviceInfo(List<String> devices) async {
@@ -110,6 +110,15 @@ class MockDpmService extends DpmService {
   }
 
   @override
+  Stream<Reading> monitorSettingProperty(List<String> drfs) {
+    if (useEmptyStream) {
+      return const Stream<Reading>.empty();
+    } else {
+      return _settings.stream; //  + count * 0.1);
+    }
+  }
+
+  @override
   Stream<DigitalStatus> monitorDigitalStatusDevices(List<String> drfs) {
     if (useEmptyStream) {
       return const Stream<DigitalStatus>.empty();
@@ -178,4 +187,81 @@ class MockDpmService extends DpmService {
       return const Stream<DigitalStatus>.empty();
     }
   }
+
+  void succeedAllPendingSettings() {
+    _pendingSettingsStream.forEach((drf, controller) {
+      controller.add(const SettingStatus(facilityCode: 1, errorCode: 0));
+      controller.close();
+    });
+    _pendingSettingsStream.clear();
+    _settingValue = _pendingSettingValue!;
+  }
+
+  void failAllPendingSettings(
+      {required int facilityCode, required int errorCode}) {
+    _pendingSettingsStream.forEach((drf, controller) {
+      controller
+          .add(SettingStatus(facilityCode: facilityCode, errorCode: errorCode));
+      controller.close();
+    });
+    _pendingSettingsStream.clear();
+    _pendingSettingValue = null;
+  }
+
+  @override
+  Stream<SettingStatus> submit(
+      {required String forDRF, required String newSetting}) {
+    if (useEmptyStream) {
+      return const Stream<SettingStatus>.empty();
+    } else {
+      _pendingSettingValue = double.parse(newSetting);
+
+      final newStream = StreamController<SettingStatus>();
+      _pendingSettingsStream[forDRF] = newStream;
+
+      return newStream.stream;
+    }
+  }
+
+  void updateSetting(
+      {required String forDRF,
+      required double value,
+      required double primaryValue,
+      required String rawValue}) {
+    _settings.add(Reading(
+        refId: 0,
+        cycle: 0,
+        timestamp: DateTime.now(),
+        value: value,
+        primaryValue: primaryValue,
+        rawValue: rawValue));
+  }
+
+  void enablePeriodSettingStream({double withDefaultSettingValue = 50.0}) {
+    _settingValue = withDefaultSettingValue;
+
+    Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      _settings.add(Reading(
+          refId: 0,
+          cycle: 0,
+          timestamp: DateTime.now(),
+          value: _settingValue,
+          primaryValue: _settingValue / 10.0,
+          rawValue: "8888"));
+
+      if (_pendingSettingsStream.isNotEmpty) {
+        succeedAllPendingSettings();
+      }
+    });
+  }
+
+  final Map<String, StreamController<SettingStatus>> _pendingSettingsStream =
+      {};
+
+  final StreamController<Reading> _settings =
+      StreamController<Reading>.broadcast();
+
+  double _settingValue = 0.0;
+
+  double? _pendingSettingValue;
 }

@@ -154,6 +154,13 @@ class DigitalStatus {
       this.extendedStatus});
 }
 
+class SettingStatus {
+  final int facilityCode;
+  final int errorCode;
+
+  const SettingStatus({required this.facilityCode, required this.errorCode});
+}
+
 abstract class DpmService {
   const DpmService();
 
@@ -161,5 +168,10 @@ abstract class DpmService {
 
   Stream<Reading> monitorDevices(List<String> drfs);
 
+  Stream<Reading> monitorSettingProperty(List<String> drfs);
+
   Stream<DigitalStatus> monitorDigitalStatusDevices(List<String> drfs);
+
+  Stream<SettingStatus> submit(
+      {required String forDRF, required String newSetting});
 }

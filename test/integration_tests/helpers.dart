@@ -321,10 +321,21 @@ void assertOpenPage({required bool isVisible}) {
 }
 
 void assertUndo(
-    {required String forDRF, required bool isVisible, String? isValue}) {}
+    {required String forDRF, required bool isVisible, String? isValue}) {
+  expect(find.byKey(Key("parameter_settingundo_$forDRF")),
+      isVisible ? findsOneWidget : findsNothing);
+  if (isVisible && isValue != null) {
+    expect(
+        find.descendant(
+            of: find.byKey(Key("parameter_settingundo_$forDRF")),
+            matching: find.text(isValue)),
+        findsOneWidget);
+  }
+}
 
 void assertSettingTextInput({required String forDRF, required bool isVisible}) {
-  expect(find.byKey(Key("parameter_settinginput_$forDRF")), findsOneWidget);
+  expect(find.byKey(Key("parameter_settinginput_$forDRF")),
+      isVisible ? findsOneWidget : findsNothing);
 }
 
 Future<void> waitForDataToLoadFor(tester, parameter) async {
@@ -339,6 +350,11 @@ Future<void> waitForExtendedStatusDataToLoadFor(tester, parameter) async {
   final extendedStatusFinder =
       find.byKey(Key("parameter_extendeddigitalstatus_$parameter"));
   await pumpUntilFound(tester, extendedStatusFinder);
+}
+
+Future<void> waitForSettingDataToLoad(tester, {required String forDRF}) async {
+  final settingFinder = find.byKey(Key("parameter_settingdisplay_$forDRF"));
+  await pumpUntilFound(tester, settingFinder);
 }
 
 Future<void> enterEditMode(tester) async {
@@ -507,5 +523,16 @@ Future<void> _openMainMenu(tester) async {
 
 Future<void> tapSetting(tester, {required String forDRF}) async {
   await tester.tap(find.byKey(Key("parameter_setting_$forDRF")));
+  await tester.pumpAndSettle();
+}
+
+Future<void> submitSetting(tester,
+    {required String forDRF, required String newValue}) async {
+  await tester.enterText(
+      find.descendant(
+          of: find.byKey(Key("parameter_setting_$forDRF")),
+          matching: find.byType(TextFormField)),
+      newValue);
+  await tester.testTextInput.receiveAction(TextInputAction.done);
   await tester.pumpAndSettle();
 }

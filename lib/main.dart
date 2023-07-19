@@ -3,6 +3,7 @@ import 'package:parameter_page/theme/theme.dart';
 import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 import 'package:parameter_page/widgets/display_settings_widget.dart';
 import 'package:parameter_page/widgets/open_page_widget.dart';
+import 'dpm_service.dart';
 import 'gql-dpm/graphql_dpm_service.dart';
 import 'mock-dpm/mock_dpm_service.dart';
 import 'page_entry.dart';
@@ -88,9 +89,16 @@ class BaseWidget extends StatelessWidget {
           key: const Key("parameter_row_BTE200_TEMP"))
     ]));
 
-    return useMockServices
-        ? DataAcquisitionWidget(service: const MockDpmService(), child: child)
-        : DataAcquisitionWidget(service: GraphQLDpmService(), child: child);
+    DpmService service;
+    if (useMockServices) {
+      MockDpmService mock = MockDpmService();
+      mock.enablePeriodSettingStream();
+      service = mock;
+    } else {
+      service = GraphQLDpmService();
+    }
+
+    return DataAcquisitionWidget(service: service, child: child);
   }
 
   Widget _buildDrawer(BuildContext context) {
