@@ -345,5 +345,20 @@ void main() {
       // Then the primary value is displayed
       assertSettingDisplay(isVisible: true, value: "5.000");
     });
+
+    testWidgets('Set displayUnits to raw, see Settings data in raw units',
+        (WidgetTester tester) async {
+      // Given I am displaying the setting for Z:BTE200_TEMP with displayUnits set to raw units
+      MaterialApp app = initialize(const SettingControlWidget(
+          drf: "Z:BTE200_TEMP", displayUnits: DisplayUnits.raw));
+      await tester.pumpWidget(app);
+
+      // When I display new data
+      await sendSettingTestData(tester, settingValue: 50.0);
+      await tester.pumpAndSettle();
+
+      // Then the primary value is displayed
+      assertSettingDisplay(isVisible: true, value: "7777");
+    });
   });
 }
