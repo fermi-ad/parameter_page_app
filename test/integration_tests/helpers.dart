@@ -328,7 +328,7 @@ void assertUndo(
     expect(
         find.descendant(
             of: find.byKey(Key("parameter_settingundo_$forDRF")),
-            matching: find.text(isValue!)),
+            matching: find.text(isValue)),
         findsOneWidget);
   }
 }
