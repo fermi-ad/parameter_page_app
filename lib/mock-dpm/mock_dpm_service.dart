@@ -248,6 +248,10 @@ class MockDpmService extends DpmService {
           value: _settingValue,
           primaryValue: _settingValue / 10.0,
           rawValue: "ffff"));
+
+      if (_pendingSettingsStream.isNotEmpty) {
+        succeedAllPendingSettings();
+      }
     });
   }
 
