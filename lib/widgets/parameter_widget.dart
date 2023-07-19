@@ -177,6 +177,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         SettingControlWidget(
             key: Key("parameter_setting_${widget.drf}"),
             drf: widget.drf,
+            displayUnits: widget.displayUnits,
             units: settingUnits),
         const SizedBox(width: 12.0),
         StreamBuilder(

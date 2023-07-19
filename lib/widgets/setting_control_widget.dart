@@ -3,11 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:parameter_page/widgets/data_acquisition_widget.dart';
+import 'package:parameter_page/widgets/display_settings_widget.dart';
 
 class SettingControlWidget extends StatefulWidget {
   final String drf;
 
   final String? units;
+
+  final DisplayUnits displayUnits;
 
   final bool wide;
 
@@ -18,6 +21,7 @@ class SettingControlWidget extends StatefulWidget {
       required this.drf,
       this.onSubmitted,
       this.units,
+      required this.displayUnits,
       this.wide = true});
 
   @override

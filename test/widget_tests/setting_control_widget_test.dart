@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/mock-dpm/mock_dpm_service.dart';
 import 'package:parameter_page/widgets/data_acquisition_widget.dart';
+import 'package:parameter_page/widgets/display_settings_widget.dart';
 import 'package:parameter_page/widgets/setting_control_widget.dart';
 
 void main() {
@@ -107,8 +108,8 @@ void main() {
     testWidgets('No data from stream yet, displays Loading...',
         (WidgetTester tester) async {
       // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP
-      MaterialApp app =
-          initialize(const SettingControlWidget(drf: "Z:BTE200_TEMP"));
+      MaterialApp app = initialize(const SettingControlWidget(
+          drf: "Z:BTE200_TEMP", displayUnits: DisplayUnits.commonUnits));
 
       // When I display the setting
       await tester.pumpWidget(app);
@@ -121,8 +122,8 @@ void main() {
     testWidgets('Provide an initial value, displays that value',
         (WidgetTester tester) async {
       // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP with an initial value of "72.0"
-      MaterialApp app =
-          initialize(const SettingControlWidget(drf: "Z:BTE200_TEMP"));
+      MaterialApp app = initialize(const SettingControlWidget(
+          drf: "Z:BTE200_TEMP", displayUnits: DisplayUnits.commonUnits));
       await tester.pumpWidget(app);
 
       // When setting data arrives
@@ -134,8 +135,8 @@ void main() {
 
     testWidgets('Tap, change to text input', (WidgetTester tester) async {
       // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP with an initial value of "72.0"
-      MaterialApp app =
-          initialize(const SettingControlWidget(drf: "Z:BTE200_TEMP"));
+      MaterialApp app = initialize(const SettingControlWidget(
+          drf: "Z:BTE200_TEMP", displayUnits: DisplayUnits.commonUnits));
       await tester.pumpWidget(app);
 
       // When I display the setting and tap on it
@@ -150,8 +151,8 @@ void main() {
     testWidgets('Press escape while editing, return to text display',
         (WidgetTester tester) async {
       // Given I am editing a setting inside of a SettingControlWidget...
-      MaterialApp app =
-          initialize(const SettingControlWidget(drf: "Z:BTE200_TEMP"));
+      MaterialApp app = initialize(const SettingControlWidget(
+          drf: "Z:BTE200_TEMP", displayUnits: DisplayUnits.commonUnits));
       await tester.pumpWidget(app);
       await sendSettingTestData(tester, settingValue: 72.0);
       await tester.tap(find.text("72.00"));
@@ -172,8 +173,8 @@ void main() {
     testWidgets('Tap outside while editing, return to text display',
         (WidgetTester tester) async {
       // Given I am editing a setting inside of a SettingControlWidget...
-      MaterialApp app =
-          initialize(const SettingControlWidget(drf: "Z:BTE200_TEMP"));
+      MaterialApp app = initialize(const SettingControlWidget(
+          drf: "Z:BTE200_TEMP", displayUnits: DisplayUnits.commonUnits));
       await tester.pumpWidget(app);
       await sendSettingTestData(tester, settingValue: 72.0);
       await tester.tap(find.text("72.00"));
@@ -198,6 +199,7 @@ void main() {
       String newValue = "";
       MaterialApp app = initialize(SettingControlWidget(
           drf: "Z:BTE200_TEMP",
+          displayUnits: DisplayUnits.commonUnits,
           onSubmitted: (String submitted) {
             newValue = submitted;
           }));
@@ -223,8 +225,7 @@ void main() {
         (WidgetTester tester) async {
       // Given I have submitted a new setting for Z:BTE200_TEMP
       MaterialApp app = initialize(const SettingControlWidget(
-        drf: "Z:BTE200_TEMP",
-      ));
+          drf: "Z:BTE200_TEMP", displayUnits: DisplayUnits.commonUnits));
       await tester.pumpWidget(app);
       await sendSettingTestData(tester, settingValue: 72.0);
       await tester.tap(find.text("72.00"));
@@ -245,6 +246,7 @@ void main() {
       //Given a SettingControlWidget constructed with units provided
       MaterialApp app = initialize(const SettingControlWidget(
         drf: "Z:BTE200_TEMP",
+        displayUnits: DisplayUnits.commonUnits,
         units: "degF",
       ));
 
@@ -266,8 +268,7 @@ void main() {
         (WidgetTester tester) async {
       // Given I have submitted a new setting for Z:BTE200_TEMP
       MaterialApp app = initialize(const SettingControlWidget(
-        drf: "Z:BTE200_TEMP",
-      ));
+          drf: "Z:BTE200_TEMP", displayUnits: DisplayUnits.commonUnits));
       await tester.pumpWidget(app);
       await sendSettingTestData(tester, settingValue: 72.0);
       await tester.tap(find.text("72.00"));
@@ -300,8 +301,7 @@ void main() {
         (WidgetTester tester) async {
       // Given I am editing a setting property
       MaterialApp app = initialize(const SettingControlWidget(
-        drf: "Z:BTE200_TEMP",
-      ));
+          drf: "Z:BTE200_TEMP", displayUnits: DisplayUnits.commonUnits));
       await tester.pumpWidget(app);
       await sendSettingTestData(tester, settingValue: 72.0);
       await tester.tap(find.text("72.00"));
@@ -319,8 +319,7 @@ void main() {
         (WidgetTester tester) async {
       // Given the original setting for Z:BTE200_TEMP is 72.0
       MaterialApp app = initialize(const SettingControlWidget(
-        drf: "Z:BTE200_TEMP",
-      ));
+          drf: "Z:BTE200_TEMP", displayUnits: DisplayUnits.commonUnits));
       await tester.pumpWidget(app);
       await sendSettingTestData(tester, settingValue: 72.0);
 
@@ -329,6 +328,22 @@ void main() {
 
       // Then the Undo display shows the original setting value
       assertUndoSettingDisplay(isVisible: true, value: "72.00");
+    });
+
+    testWidgets(
+        'Set displayUnits to Primary, see Settings data in Primary units',
+        (WidgetTester tester) async {
+      // Given I am displaying the setting for Z:BTE200_TEMP with displayUnits set to primary units
+      MaterialApp app = initialize(const SettingControlWidget(
+          drf: "Z:BTE200_TEMP", displayUnits: DisplayUnits.primaryUnits));
+      await tester.pumpWidget(app);
+
+      // When I display new data
+      await sendSettingTestData(tester, settingValue: 50.0);
+      await tester.pumpAndSettle();
+
+      // Then the primary value is displayed
+      assertSettingDisplay(isVisible: true, value: "5.00");
     });
   });
 }
