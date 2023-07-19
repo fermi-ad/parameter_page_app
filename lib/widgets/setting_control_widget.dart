@@ -44,10 +44,7 @@ class _SettingControlState extends State<SettingControlWidget> {
   @override
   Widget build(BuildContext context) {
     return Row(children: [
-      StreamBuilder(
-          builder: _undoDisplayBuilder,
-          stream: DataAcquisitionWidget.of(context)
-              .monitorSettingProperty([widget.drf])),
+      _buildUndo(context),
       const SizedBox(width: 6.0),
       SizedBox(height: 34.0, width: 100.0, child: _buildStates(context)),
       const SizedBox(width: 6.0),
@@ -55,6 +52,13 @@ class _SettingControlState extends State<SettingControlWidget> {
           ? Container()
           : Text(widget.units!, style: const TextStyle(color: Colors.grey))
     ]);
+  }
+
+  Widget _buildUndo(BuildContext context) {
+    return StreamBuilder(
+        builder: _undoDisplayBuilder,
+        stream: DataAcquisitionWidget.of(context)
+            .monitorSettingProperty([widget.drf]));
   }
 
   Widget _undoDisplayBuilder(context, snapshot) {
