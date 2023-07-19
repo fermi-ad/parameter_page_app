@@ -194,6 +194,7 @@ class MockDpmService extends DpmService {
       controller.close();
     });
     _pendingSettingsStream.clear();
+    _settingValue = _pendingSettingValue!;
   }
 
   void failAllPendingSettings(
@@ -204,6 +205,7 @@ class MockDpmService extends DpmService {
       controller.close();
     });
     _pendingSettingsStream.clear();
+    _pendingSettingValue = null;
   }
 
   @override
@@ -212,6 +214,8 @@ class MockDpmService extends DpmService {
     if (useEmptyStream) {
       return const Stream<SettingStatus>.empty();
     } else {
+      _pendingSettingValue = double.parse(newSetting);
+
       final newStream = StreamController<SettingStatus>();
       _pendingSettingsStream[forDRF] = newStream;
 
@@ -234,13 +238,15 @@ class MockDpmService extends DpmService {
   }
 
   void enablePeriodSettingStream({double withDefaultSettingValue = 50.0}) {
+    _settingValue = withDefaultSettingValue;
+
     Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       _settings.add(Reading(
           refId: 0,
           cycle: 0,
           timestamp: DateTime.now(),
-          value: withDefaultSettingValue,
-          primaryValue: withDefaultSettingValue / 10.0,
+          value: _settingValue,
+          primaryValue: _settingValue / 10.0,
           rawValue: "ffff"));
     });
   }
@@ -248,5 +254,10 @@ class MockDpmService extends DpmService {
   final Map<String, StreamController<SettingStatus>> _pendingSettingsStream =
       {};
 
-  StreamController<Reading> _settings = StreamController<Reading>.broadcast();
+  final StreamController<Reading> _settings =
+      StreamController<Reading>.broadcast();
+
+  double _settingValue = 0.0;
+
+  double? _pendingSettingValue;
 }
