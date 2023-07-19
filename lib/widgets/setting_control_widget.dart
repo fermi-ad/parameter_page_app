@@ -48,9 +48,7 @@ class _SettingControlState extends State<SettingControlWidget> {
       const SizedBox(width: 6.0),
       SizedBox(height: 34.0, width: 100.0, child: _buildStates(context)),
       const SizedBox(width: 6.0),
-      widget.units == null
-          ? Container()
-          : Text(widget.units!, style: const TextStyle(color: Colors.grey))
+      _buildUnits()
     ]);
   }
 
@@ -59,26 +57,6 @@ class _SettingControlState extends State<SettingControlWidget> {
         builder: _undoDisplayBuilder,
         stream: DataAcquisitionWidget.of(context)
             .monitorSettingProperty([widget.drf]));
-  }
-
-  Widget _undoDisplayBuilder(context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.active) {
-      var newSettingValue = snapshot.data!.value.toStringAsPrecision(4);
-
-      _initialSettingValue ??= newSettingValue;
-
-      return newSettingValue != _initialSettingValue
-          ? _buildUndoDisplay()
-          : Container();
-    } else {
-      return Container();
-    }
-  }
-
-  Widget _buildUndoDisplay() {
-    return Container(
-        key: Key("parameter_settingundo_${widget.drf}"),
-        child: Text(_initialSettingValue!));
   }
 
   Widget _buildStates(BuildContext context) {
@@ -97,6 +75,12 @@ class _SettingControlState extends State<SettingControlWidget> {
     }
   }
 
+  Widget _buildUnits() {
+    return widget.units == null
+        ? Container()
+        : Text(widget.units!, style: const TextStyle(color: Colors.grey));
+  }
+
   Widget _buildDisplayingState() {
     return Container(
         key: Key("parameter_settingdisplay_${widget.drf}"),
@@ -108,36 +92,12 @@ class _SettingControlState extends State<SettingControlWidget> {
                     .monitorSettingProperty([widget.drf]))));
   }
 
-  Widget _settingDisplayBuilder(context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.active) {
-      _lastSettingValue = snapshot.data!.value.toStringAsPrecision(4);
-      return Text(textAlign: TextAlign.end, _lastSettingValue!);
-    } else {
-      return const Text("0.0");
-    }
-  }
-
-  void _handleDisplayTap() {
-    setState(() {
-      _state = _SettingControlInternalState.editing;
-      _textFieldController.text = _lastSettingValue!;
-    });
-  }
-
   Widget _buildDisplayingErrorState() {
     _startErrorDisplayTimer();
 
     return Container(
         key: Key("parameter_settingerror_${widget.drf}"),
         child: Text(textAlign: TextAlign.end, "$_facilityCode $_errorCode"));
-  }
-
-  void _startErrorDisplayTimer() {
-    _errorDisplayTimeoutTimer = Timer(const Duration(seconds: 3), () {
-      setState(() {
-        _state = _SettingControlInternalState.displaying;
-      });
-    });
   }
 
   Widget _buildEditingState(BuildContext context) {
@@ -161,6 +121,58 @@ class _SettingControlState extends State<SettingControlWidget> {
               decoration:
                   const InputDecoration(border: UnderlineInputBorder())),
         ));
+  }
+
+  Widget _buildSettingPendingState() {
+    return Row(key: Key("parameter_settingdisplay_${widget.drf}"), children: [
+      const Icon(Icons.pending),
+      const SizedBox(width: 8.0),
+      Text(textAlign: TextAlign.end, _pendingSettingValue!)
+    ]);
+  }
+
+  Widget _undoDisplayBuilder(context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.active) {
+      var newSettingValue = snapshot.data!.value.toStringAsPrecision(4);
+
+      _initialSettingValue ??= newSettingValue;
+
+      return newSettingValue != _initialSettingValue
+          ? _buildUndoDisplay()
+          : Container();
+    } else {
+      return Container();
+    }
+  }
+
+  Widget _buildUndoDisplay() {
+    return Container(
+        key: Key("parameter_settingundo_${widget.drf}"),
+        child: Text(_initialSettingValue!));
+  }
+
+  Widget _settingDisplayBuilder(context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.active) {
+      _lastSettingValue = snapshot.data!.value.toStringAsPrecision(4);
+      return Text(textAlign: TextAlign.end, _lastSettingValue!);
+    } else {
+      return const Text("0.0");
+    }
+  }
+
+  void _handleDisplayTap() {
+    setState(() {
+      _state = _SettingControlInternalState.editing;
+      _textFieldController.text = _lastSettingValue!;
+    });
+  }
+
+  void _startErrorDisplayTimer() {
+    _errorDisplayTimeoutTimer = Timer(const Duration(seconds: 3), () {
+      setState(() {
+        _state = _SettingControlInternalState.displaying;
+      });
+    });
   }
 
   void _startEditingTimeoutTimer() {
@@ -209,14 +221,6 @@ class _SettingControlState extends State<SettingControlWidget> {
       _errorCode = errorCode;
       _state = _SettingControlInternalState.displayingError;
     });
-  }
-
-  Widget _buildSettingPendingState() {
-    return Row(key: Key("parameter_settingdisplay_${widget.drf}"), children: [
-      const Icon(Icons.pending),
-      const SizedBox(width: 8.0),
-      Text(textAlign: TextAlign.end, _pendingSettingValue!)
-    ]);
   }
 
   _SettingControlInternalState _state = _SettingControlInternalState.displaying;
