@@ -135,14 +135,17 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   Widget _buildParameterDetailsRow() {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      Expanded(flex: 2, child: _buildName()),
-      Expanded(flex: 2, child: _buildDescription()),
-      const Spacer(),
-      _buildProperties(),
-      SizedBox(
-          width: 48.0, child: _buildExpandOrCollapseExtendedStatusButton()),
-    ]);
+    return Row(
+        key: Key("parameter_row_${widget.drf}"),
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(flex: 2, child: _buildName()),
+          Expanded(flex: 2, child: _buildDescription()),
+          const Spacer(),
+          _buildProperties(),
+          SizedBox(
+              width: 48.0, child: _buildExpandOrCollapseExtendedStatusButton()),
+        ]);
   }
 
   Widget _buildName() {

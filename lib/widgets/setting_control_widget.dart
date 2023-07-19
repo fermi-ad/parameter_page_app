@@ -122,11 +122,13 @@ class _SettingControlState extends State<SettingControlWidget> {
   }
 
   Widget _buildSettingPendingState() {
-    return Row(key: Key("parameter_settingdisplay_${widget.drf}"), children: [
-      const Icon(Icons.pending),
-      const SizedBox(width: 8.0),
-      Text(textAlign: TextAlign.end, _pendingSettingValue!)
-    ]);
+    return Row(
+        key: Key("parameter_settingpendingdisplay_${widget.drf}"),
+        children: [
+          const Icon(Icons.pending),
+          const SizedBox(width: 8.0),
+          Text(textAlign: TextAlign.end, _pendingSettingValue!)
+        ]);
   }
 
   Widget _undoDisplayBuilder(context, snapshot) {

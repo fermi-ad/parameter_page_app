@@ -321,7 +321,17 @@ void assertOpenPage({required bool isVisible}) {
 }
 
 void assertUndo(
-    {required String forDRF, required bool isVisible, String? isValue}) {}
+    {required String forDRF, required bool isVisible, String? isValue}) {
+  expect(find.byKey(Key("parameter_settingundo_$forDRF")),
+      isVisible ? findsOneWidget : findsNothing);
+  if (isVisible && isValue != null) {
+    expect(
+        find.descendant(
+            of: find.byKey(Key("parameter_settingundo_$forDRF")),
+            matching: find.text(isValue!)),
+        findsOneWidget);
+  }
+}
 
 void assertSettingTextInput({required String forDRF, required bool isVisible}) {
   expect(find.byKey(Key("parameter_settinginput_$forDRF")),

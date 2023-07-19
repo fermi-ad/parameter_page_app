@@ -56,15 +56,16 @@ void main() {
       await tapSetting(tester, forDRF: "Z:BTE200_TEMP");
       await submitSetting(tester, forDRF: "Z:BTE200_TEMP", newValue: "75.0");
       await waitForSettingDataToLoad(tester, forDRF: "Z:BTE200_TEMP");
+      await tester.pumpAndSettle();
 
       // Then the text field goes away
       assertSettingTextInput(forDRF: "Z:BTE200_TEMP", isVisible: false);
 
       // ... and the display shows the new value
-      assertParameterHasDetails("Z:BTE200_TEMP", settingValue: "75.0");
+      assertParameterHasDetails("Z:BTE200_TEMP", settingValue: "75.00");
 
       // ... and the undo display shows the old value
-      assertUndo(forDRF: "Z:BTE200_TEMP", isVisible: true, isValue: "50.0");
+      assertUndo(forDRF: "Z:BTE200_TEMP", isVisible: true, isValue: "50.00");
     });
 
     // Test submit setting failure

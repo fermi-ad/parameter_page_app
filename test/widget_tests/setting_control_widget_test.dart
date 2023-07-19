@@ -59,12 +59,21 @@ void main() {
         find.byType(TextFormField), isVisible ? findsOneWidget : findsNothing);
   }
 
-  void assertSettingPendingIndicator({required bool isVisible}) {
+  void assertSettingPendingIndicator({required bool isVisible, String? value}) {
     expect(
         find.descendant(
             of: find.byKey(const Key("parameter_setting_Z:BTE200_TEMP")),
             matching: find.byIcon(Icons.pending)),
         isVisible ? findsOneWidget : findsNothing);
+
+    if (isVisible && value != null) {
+      expect(
+          find.descendant(
+              of: find.byKey(
+                  const Key("parameter_settingpendingdisplay_Z:BTE200_TEMP")),
+              matching: find.text(value)),
+          findsOneWidget);
+    }
   }
 
   void assertErrorCodeDisplay(
@@ -205,11 +214,8 @@ void main() {
       // Then the onSubmit handler is called and passed "75.0" as the new value
       expect(newValue, equals("75.0"));
 
-      // ... the display is showing the new value
-      assertSettingDisplay(isVisible: true, value: "75.0");
-
-      // ... and the pending indicator is shown
-      assertSettingPendingIndicator(isVisible: true);
+      // ... and the display is showing the new value as pending
+      assertSettingPendingIndicator(isVisible: true, value: "75.0");
     });
 
     testWidgets(
