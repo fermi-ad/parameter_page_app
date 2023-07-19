@@ -247,7 +247,7 @@ class MockDpmService extends DpmService {
           timestamp: DateTime.now(),
           value: _settingValue,
           primaryValue: _settingValue / 10.0,
-          rawValue: "ffff"));
+          rawValue: "8888"));
 
       if (_pendingSettingsStream.isNotEmpty) {
         succeedAllPendingSettings();

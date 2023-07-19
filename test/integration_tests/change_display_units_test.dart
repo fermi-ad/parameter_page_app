@@ -53,7 +53,7 @@ void main() {
 
       // Then the M:OUTTMP units change to Volts
       assertParameterHasDetails("M:OUTTMP@e,02",
-          settingValue: "5.00",
+          settingValue: "5.000",
           settingUnits: "pUS",
           readingValue: "10.00",
           readingUnits: "pUR");
