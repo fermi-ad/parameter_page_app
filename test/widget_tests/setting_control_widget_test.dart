@@ -343,7 +343,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Then the primary value is displayed
-      assertSettingDisplay(isVisible: true, value: "5.00");
+      assertSettingDisplay(isVisible: true, value: "5.000");
     });
   });
 }

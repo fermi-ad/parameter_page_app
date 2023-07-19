@@ -137,7 +137,7 @@ class _SettingControlState extends State<SettingControlWidget> {
 
   Widget _undoDisplayBuilder(context, snapshot) {
     if (snapshot.connectionState == ConnectionState.active) {
-      var newSettingValue = snapshot.data!.value.toStringAsPrecision(4);
+      var newSettingValue = _extractValueString(from: snapshot);
 
       _initialSettingValue ??= newSettingValue;
 
@@ -157,7 +157,7 @@ class _SettingControlState extends State<SettingControlWidget> {
 
   Widget _settingDisplayBuilder(context, snapshot) {
     if (snapshot.connectionState == ConnectionState.active) {
-      _lastSettingValue = snapshot.data!.value.toStringAsPrecision(4);
+      _lastSettingValue = _extractValueString(from: snapshot);
       return Container(
           key: Key("parameter_settingdisplay_${widget.drf}"),
           child: Text(textAlign: TextAlign.end, _lastSettingValue!));
@@ -165,6 +165,17 @@ class _SettingControlState extends State<SettingControlWidget> {
       return Container(
           key: Key("parameter_settingloading_${widget.drf}"),
           child: const Text("Loading..."));
+    }
+  }
+
+  String _extractValueString({required from}) {
+    switch (widget.displayUnits) {
+      case DisplayUnits.commonUnits:
+        return from.data!.value.toStringAsPrecision(4);
+      case DisplayUnits.primaryUnits:
+        return from.data!.primaryValue.toStringAsPrecision(4);
+      case DisplayUnits.raw:
+        return from.data!.rawValue;
     }
   }
 
