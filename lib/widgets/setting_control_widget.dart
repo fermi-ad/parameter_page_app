@@ -160,13 +160,6 @@ class _SettingControlState extends State<SettingControlWidget> {
     }
   }
 
-  void _handleDisplayTap() {
-    setState(() {
-      _state = _SettingControlInternalState.editing;
-      _textFieldController.text = _lastSettingValue!;
-    });
-  }
-
   void _startErrorDisplayTimer() {
     _errorDisplayTimeoutTimer = Timer(const Duration(seconds: 3), () {
       setState(() {
@@ -181,6 +174,13 @@ class _SettingControlState extends State<SettingControlWidget> {
       setState(() {
         _state = _SettingControlInternalState.displaying;
       });
+    });
+  }
+
+  void _handleDisplayTap() {
+    setState(() {
+      _state = _SettingControlInternalState.editing;
+      _textFieldController.text = _lastSettingValue!;
     });
   }
 
