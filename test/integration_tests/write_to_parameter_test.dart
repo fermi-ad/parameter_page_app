@@ -69,6 +69,26 @@ void main() {
     });
 
     // Test submit setting failure
+    testWidgets('Failed setting, displays error message for three seconds',
+        (tester) async {
+      // Given the test page is loaded with a device whose setting is broken
+      app.main();
+      await tester.pumpAndSettle();
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+
+      // When I attempt to set a device that will always fail
+      await tapSetting(tester, forDRF: "Z:BTE200_TEMP");
+      await submitSetting(tester, forDRF: "Z:BTE200_TEMP", newValue: "75.0");
+      await waitForSettingErrorToBeReturned(tester, forDRF: "Z:BTE200_TEMP");
+      await tester.pumpAndSettle();
+
+      // Then the error code is displayed
+      assertSettingError(
+          forDRF: "Z:BTE200_TEMP",
+          isVisible: true,
+          facilityCode: 57,
+          errorCode: -10);
+    });
 
     // Test undo setting
 
