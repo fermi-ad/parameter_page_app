@@ -86,7 +86,9 @@ class BaseWidget extends StatelessWidget {
               "parameter_row_PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY"),
           label: "Humidity"),
       ParameterEntry("Z:BTE200_TEMP",
-          key: const Key("parameter_row_BTE200_TEMP"))
+          key: const Key("parameter_row_BTE200_TEMP")),
+      ParameterEntry("Z:INC_SETTING",
+          key: const Key("parameter_row_Z:INC_SETTING"))
     ]));
 
     DpmService service;

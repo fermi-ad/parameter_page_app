@@ -15,13 +15,13 @@ void main() {
             body: Column(children: [
       SizedBox(
           key: const Key("parameter_setting_Z:BTE200_TEMP"),
-          width: 200.0,
+          width: 300.0,
           height: 34.0,
           child: DataAcquisitionWidget(service: testDPM, child: child)),
       const SizedBox(
           key: Key("test_empty_box"),
           height: 100.0,
-          width: 200.0,
+          width: 300.0,
           child: Text("Abort"))
     ])));
   }
@@ -170,7 +170,7 @@ void main() {
       assertSettingDisplay(isVisible: true, value: "72.00");
     });
 
-    testWidgets('Tap outside while editing, return to text display',
+    testWidgets('Tap cancel while editing, return to text display',
         (WidgetTester tester) async {
       // Given I am editing a setting inside of a SettingControlWidget...
       MaterialApp app = initialize(const SettingControlWidget(
@@ -184,7 +184,7 @@ void main() {
       // When give the input field focus but then abort by tapping outside of the control
       await tester.tap(find.text("72.00"));
       await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const Key("test_empty_box")));
+      await tester.tap(find.byIcon(Icons.cancel));
       await tester.pumpAndSettle();
 
       // Then after recieving an update the text field changes back to a text display
@@ -218,6 +218,31 @@ void main() {
 
       // ... and the display is showing the new value as pending
       assertSettingPendingIndicator(isVisible: true, value: "75.0");
+    });
+
+    testWidgets(
+        'Enter new value and submit with submit button, onSubmit is called',
+        (WidgetTester tester) async {
+      //Given a SettingControlWidget with an onSubmitted handler that updates newValue
+      String newValue = "";
+      MaterialApp app = initialize(SettingControlWidget(
+          drf: "Z:BTE200_TEMP",
+          displayUnits: DisplayUnits.commonUnits,
+          onSubmitted: (String submitted) {
+            newValue = submitted;
+          }));
+      await tester.pumpWidget(app);
+      await sendSettingTestData(tester, settingValue: 72.0);
+
+      // When I tap on the setting, enter a new value and tap the submit button
+      await tester.tap(find.text("72.00"));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextFormField), "75.0");
+      await tester.tap(find.byIcon(Icons.check_circle));
+      await tester.pumpAndSettle();
+
+      // Then the onSubmit handler is called and passed "75.0" as the new value
+      expect(newValue, equals("75.0"));
     });
 
     testWidgets(
@@ -359,6 +384,24 @@ void main() {
 
       // Then the primary value is displayed
       assertSettingDisplay(isVisible: true, value: "7777");
+    });
+
+    testWidgets('Tap undo, submits setting', (WidgetTester tester) async {
+      // Given I have submitted a new setting for Z:BTE200_TEMP
+      MaterialApp app = initialize(const SettingControlWidget(
+          drf: "Z:BTE200_TEMP", displayUnits: DisplayUnits.commonUnits));
+      await tester.pumpWidget(app);
+      await sendSettingTestData(tester, settingValue: 72.0);
+      await sendSettingTestData(tester, settingValue: 75.0);
+      await tester.pumpAndSettle();
+
+      // When I tap the undo value
+      await tester.tap(find.text("72.00"));
+      await tester.pumpAndSettle();
+
+      // Then the undo value is submitted as a new setting
+      assertSettingPendingIndicator(isVisible: true);
+      expect(testDPM.pendingSettingValue, equals(72.0));
     });
   });
 }

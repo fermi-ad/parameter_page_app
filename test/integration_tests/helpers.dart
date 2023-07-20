@@ -72,9 +72,11 @@ void assertParameterHasDetails(String parameter,
   }
 
   if (settingValue != null) {
-    final settingValueFinder = find.text(settingValue);
+    final settingFinder =
+        find.byKey(Key("parameter_settingdisplay_$parameter"));
     expect(
-        find.descendant(of: row, matching: settingValueFinder), findsOneWidget);
+        find.descendant(of: settingFinder, matching: find.text(settingValue)),
+        findsOneWidget);
   }
 
   if (settingUnits != null) {
@@ -380,6 +382,11 @@ Future<void> waitForSettingErrorToBeReturned(tester,
   await pumpUntilFound(tester, settingFinder);
 }
 
+Future<void> waitForUndoToDisplay(tester, {required String forDRF}) async {
+  final settingFinder = find.byKey(Key("parameter_settingundo_$forDRF"));
+  await pumpUntilFound(tester, settingFinder);
+}
+
 Future<void> enterEditMode(tester) async {
   await tester.tap(find.byKey(const Key("enable_edit_mode_button")));
   await tester.pumpAndSettle();
@@ -557,5 +564,17 @@ Future<void> submitSetting(tester,
           matching: find.byType(TextFormField)),
       newValue);
   await tester.testTextInput.receiveAction(TextInputAction.done);
+  await tester.pumpAndSettle();
+}
+
+Future<void> undoSetting(tester, {required String forDRF}) async {
+  await tester.tap(find.byKey(Key("parameter_settingundo_$forDRF")));
+  await tester.pumpAndSettle();
+}
+
+Future<void> cancelSetting(tester, {required String forDRF}) async {
+  await tester.tap(find.descendant(
+      of: find.byKey(Key("parameter_setting_$forDRF")),
+      matching: find.byIcon(Icons.cancel)));
   await tester.pumpAndSettle();
 }

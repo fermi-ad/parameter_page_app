@@ -50,9 +50,13 @@ class _SettingControlState extends State<SettingControlWidget> {
     return Row(children: [
       _buildUndo(context),
       const SizedBox(width: 6.0),
-      SizedBox(height: 34.0, width: 100.0, child: _buildStates(context)),
+      SizedBox(width: 128.0, child: _buildStates(context)),
       const SizedBox(width: 6.0),
-      _buildUnits()
+      _buildUnits(),
+      const SizedBox(width: 6.0),
+      _buildSubmitButton(context),
+      const SizedBox(width: 6.0),
+      _buildCancelButton()
     ]);
   }
 
@@ -83,6 +87,22 @@ class _SettingControlState extends State<SettingControlWidget> {
     return widget.units == null
         ? Container()
         : Text(widget.units!, style: const TextStyle(color: Colors.grey));
+  }
+
+  Widget _buildSubmitButton(BuildContext context) {
+    return _state == _SettingControlInternalState.editing
+        ? GestureDetector(
+            onTap: () => _handleSubmitted(context),
+            child: const Icon(Icons.check_circle, color: Colors.blue))
+        : const SizedBox(width: 32.0);
+  }
+
+  Widget _buildCancelButton() {
+    return _state == _SettingControlInternalState.editing
+        ? GestureDetector(
+            onTap: _handleAbort,
+            child: const Icon(Icons.cancel, color: Colors.red))
+        : const SizedBox(width: 32.0);
   }
 
   Widget _buildDisplayingState() {
@@ -116,9 +136,9 @@ class _SettingControlState extends State<SettingControlWidget> {
           },
           child: TextFormField(
               key: Key("parameter_settingtextfield_${widget.drf}"),
+              textAlign: TextAlign.end,
               controller: _textFieldController,
               onChanged: (event) => _startEditingTimeoutTimer(),
-              onTapOutside: (event) => _handleAbort(),
               onEditingComplete: () => _handleSubmitted(context),
               decoration:
                   const InputDecoration(border: UnderlineInputBorder())),
@@ -129,6 +149,7 @@ class _SettingControlState extends State<SettingControlWidget> {
     return Row(
         key: Key("parameter_settingpendingdisplay_${widget.drf}"),
         children: [
+          const Spacer(),
           const Icon(Icons.pending),
           const SizedBox(width: 8.0),
           Text(textAlign: TextAlign.end, _pendingSettingValue!)
@@ -152,7 +173,12 @@ class _SettingControlState extends State<SettingControlWidget> {
   Widget _buildUndoDisplay() {
     return Container(
         key: Key("parameter_settingundo_${widget.drf}"),
-        child: Text(_initialSettingValue!));
+        child: GestureDetector(
+            onTap: _handleUndoTap,
+            child: Text(
+                textAlign: TextAlign.end,
+                style: const TextStyle(color: Colors.purple),
+                _initialSettingValue!)));
   }
 
   Widget _settingDisplayBuilder(context, snapshot) {
@@ -164,7 +190,7 @@ class _SettingControlState extends State<SettingControlWidget> {
     } else {
       return Container(
           key: Key("parameter_settingloading_${widget.drf}"),
-          child: const Text("Loading..."));
+          child: const Text(textAlign: TextAlign.end, "Loading..."));
     }
   }
 
@@ -196,6 +222,10 @@ class _SettingControlState extends State<SettingControlWidget> {
     });
   }
 
+  void _handleUndoTap() {
+    _submitSetting(_initialSettingValue!);
+  }
+
   void _handleDisplayTap() {
     setState(() {
       _state = _SettingControlInternalState.editing;
@@ -204,14 +234,22 @@ class _SettingControlState extends State<SettingControlWidget> {
   }
 
   void _handleSubmitted(BuildContext context) {
-    final newValue = _textFieldController.text;
+    _submitSetting(_textFieldController.text);
+  }
 
+  void _handleAbort() {
+    setState(() {
+      _state = _SettingControlInternalState.displaying;
+    });
+  }
+
+  void _submitSetting(String newValue) {
     final DataAcquisitionWidget daqWidget = DataAcquisitionWidget.of(context);
     daqWidget.submit(
         forDRF: widget.drf,
         newSetting: newValue,
-        onSuccess: _handleSettingUpdate,
-        onFailure: _handleSettingFailure);
+        onSuccess: _settingSuccess,
+        onFailure: _settingFailure);
 
     widget.onSubmitted?.call(newValue);
 
@@ -222,19 +260,13 @@ class _SettingControlState extends State<SettingControlWidget> {
     });
   }
 
-  void _handleAbort() {
+  void _settingSuccess() {
     setState(() {
       _state = _SettingControlInternalState.displaying;
     });
   }
 
-  void _handleSettingUpdate() {
-    setState(() {
-      _state = _SettingControlInternalState.displaying;
-    });
-  }
-
-  void _handleSettingFailure(int facilityCode, int errorCode) {
+  void _settingFailure(int facilityCode, int errorCode) {
     setState(() {
       _facilityCode = facilityCode;
       _errorCode = errorCode;

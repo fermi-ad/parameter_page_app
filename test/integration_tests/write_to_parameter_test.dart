@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
@@ -26,7 +25,7 @@ void main() {
 
     // Test cancel setting
     testWidgets(
-        'Tap outside when working on a setting, text field is removed and setting is cancelled',
+        'Tap cancel when working on a setting, text field is removed and setting is cancelled',
         (tester) async {
       // Given I am attempting to set Z:BTE200_TEMP
       app.main();
@@ -34,10 +33,8 @@ void main() {
       await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
       await tapSetting(tester, forDRF: "Z:BTE200_TEMP");
 
-      // When I tap outside of the setting text field
-      await tester
-          .tap(find.byKey(const Key("parameter_description_Z:BTE200_TEMP")));
-      await tester.pumpAndSettle();
+      // When I cancel the setting
+      await cancelSetting(tester, forDRF: "Z:BTE200_TEMP");
 
       // Then the setting text field is hidden
       assertSettingTextInput(forDRF: "Z:BTE200_TEMP", isVisible: false);
@@ -90,8 +87,40 @@ void main() {
           errorCode: -10);
     });
 
-    // Test undo setting
-
     // Test passive undo update
+    testWidgets('Setting changes, undo displays the original setting value',
+        (tester) async {
+      // Given the test page is loaded with a device whose setting increments once a second
+      app.main();
+      await tester.pumpAndSettle();
+      await waitForDataToLoadFor(tester, "Z:INC_SETTING");
+      assertUndo(forDRF: "Z:INC_SETTING", isVisible: false);
+
+      // When I wait one second for the setting to change
+      await waitForUndoToDisplay(tester, forDRF: "Z:INC_SETTING");
+
+      // Then the undo is dispayed showing the original setting
+      assertUndo(forDRF: "Z:INC_SETTING", isVisible: true);
+    });
+
+    // Test undo setting
+    testWidgets('Click Undo display, original value is submitted and set',
+        (tester) async {
+      // Given I have set a new value for the G:AMANDA device
+      app.main();
+      await tester.pumpAndSettle();
+      await waitForDataToLoadFor(tester, "G:AMANDA");
+      await tapSetting(tester, forDRF: "G:AMANDA");
+      await submitSetting(tester, forDRF: "G:AMANDA", newValue: "51.0");
+      await waitForSettingDataToLoad(tester, forDRF: "G:AMANDA");
+      await waitForUndoToDisplay(tester, forDRF: "G:AMANDA");
+
+      // When I tap the undo value
+      await undoSetting(tester, forDRF: "G:AMANDA");
+
+      // Then the original value is restored successfully
+      await waitForSettingDataToLoad(tester, forDRF: "G:AMANDA");
+      assertParameterHasDetails("G:AMANDA", settingValue: "50.00");
+    });
   });
 }
