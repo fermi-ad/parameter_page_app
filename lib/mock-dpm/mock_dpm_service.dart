@@ -250,7 +250,11 @@ class MockDpmService extends DpmService {
           rawValue: "8888"));
 
       if (_pendingSettingsStream.isNotEmpty) {
-        succeedAllPendingSettings();
+        if (_pendingSettingsStream.keys.contains("Z:BTE200_TEMP")) {
+          failAllPendingSettings(facilityCode: 57, errorCode: -10);
+        } else {
+          succeedAllPendingSettings();
+        }
       }
     });
   }
