@@ -26,7 +26,7 @@ void main() {
 
     // Test cancel setting
     testWidgets(
-        'Tap outside when working on a setting, text field is removed and setting is cancelled',
+        'Tap cancel when working on a setting, text field is removed and setting is cancelled',
         (tester) async {
       // Given I am attempting to set Z:BTE200_TEMP
       app.main();
@@ -34,10 +34,8 @@ void main() {
       await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
       await tapSetting(tester, forDRF: "Z:BTE200_TEMP");
 
-      // When I tap outside of the setting text field
-      await tester
-          .tap(find.byKey(const Key("parameter_description_Z:BTE200_TEMP")));
-      await tester.pumpAndSettle();
+      // When I cancel the setting
+      await cancelSetting(tester, forDRF: "Z:BTE200_TEMP");
 
       // Then the setting text field is hidden
       assertSettingTextInput(forDRF: "Z:BTE200_TEMP", isVisible: false);

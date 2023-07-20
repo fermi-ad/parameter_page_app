@@ -571,3 +571,10 @@ Future<void> undoSetting(tester, {required String forDRF}) async {
   await tester.tap(find.byKey(Key("parameter_settingundo_$forDRF")));
   await tester.pumpAndSettle();
 }
+
+Future<void> cancelSetting(tester, {required String forDRF}) async {
+  await tester.tap(find.descendant(
+      of: find.byKey(Key("parameter_setting_$forDRF")),
+      matching: find.byIcon(Icons.cancel)));
+  await tester.pumpAndSettle();
+}
