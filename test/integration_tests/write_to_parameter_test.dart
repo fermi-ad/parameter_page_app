@@ -50,25 +50,45 @@ void main() {
       // Given the test page is loaded
       app.main();
       await tester.pumpAndSettle();
-      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      await waitForDataToLoadFor(tester, "G:AMANDA");
 
       // When I submit a new setting...
-      await tapSetting(tester, forDRF: "Z:BTE200_TEMP");
-      await submitSetting(tester, forDRF: "Z:BTE200_TEMP", newValue: "75.0");
-      await waitForSettingDataToLoad(tester, forDRF: "Z:BTE200_TEMP");
+      await tapSetting(tester, forDRF: "G:AMANDA");
+      await submitSetting(tester, forDRF: "G:AMANDA", newValue: "75.0");
+      await waitForSettingDataToLoad(tester, forDRF: "G:AMANDA");
       await tester.pumpAndSettle();
 
       // Then the text field goes away
-      assertSettingTextInput(forDRF: "Z:BTE200_TEMP", isVisible: false);
+      assertSettingTextInput(forDRF: "G:AMANDA", isVisible: false);
 
       // ... and the display shows the new value
-      assertParameterHasDetails("Z:BTE200_TEMP", settingValue: "75.00");
+      assertParameterHasDetails("G:AMANDA", settingValue: "75.00");
 
       // ... and the undo display shows the old value
-      assertUndo(forDRF: "Z:BTE200_TEMP", isVisible: true, isValue: "50.00");
+      assertUndo(forDRF: "G:AMANDA", isVisible: true, isValue: "50.00");
     });
 
     // Test submit setting failure
+    testWidgets('Failed setting, displays error message for three seconds',
+        (tester) async {
+      // Given the test page is loaded with a device whose setting is broken
+      app.main();
+      await tester.pumpAndSettle();
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+
+      // When I attempt to set a device that will always fail
+      await tapSetting(tester, forDRF: "Z:BTE200_TEMP");
+      await submitSetting(tester, forDRF: "Z:BTE200_TEMP", newValue: "75.0");
+      await waitForSettingErrorToBeReturned(tester, forDRF: "Z:BTE200_TEMP");
+      await tester.pumpAndSettle();
+
+      // Then the error code is displayed
+      assertSettingError(
+          forDRF: "Z:BTE200_TEMP",
+          isVisible: true,
+          facilityCode: 57,
+          errorCode: -10);
+    });
 
     // Test undo setting
 

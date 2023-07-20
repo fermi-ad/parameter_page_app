@@ -333,6 +333,23 @@ void assertUndo(
   }
 }
 
+void assertSettingError(
+    {required String forDRF,
+    required bool isVisible,
+    int? facilityCode,
+    int? errorCode}) {
+  expect(find.byKey(Key("parameter_settingerror_$forDRF")),
+      isVisible ? findsOneWidget : findsNothing);
+
+  if (isVisible && facilityCode != null && errorCode != null) {
+    expect(
+        find.descendant(
+            of: find.byKey(Key("parameter_setting_$forDRF")),
+            matching: find.text("$facilityCode $errorCode")),
+        findsOneWidget);
+  }
+}
+
 void assertSettingTextInput({required String forDRF, required bool isVisible}) {
   expect(find.byKey(Key("parameter_settinginput_$forDRF")),
       isVisible ? findsOneWidget : findsNothing);
@@ -354,6 +371,12 @@ Future<void> waitForExtendedStatusDataToLoadFor(tester, parameter) async {
 
 Future<void> waitForSettingDataToLoad(tester, {required String forDRF}) async {
   final settingFinder = find.byKey(Key("parameter_settingdisplay_$forDRF"));
+  await pumpUntilFound(tester, settingFinder);
+}
+
+Future<void> waitForSettingErrorToBeReturned(tester,
+    {required String forDRF}) async {
+  final settingFinder = find.byKey(Key("parameter_settingerror_$forDRF"));
   await pumpUntilFound(tester, settingFinder);
 }
 
