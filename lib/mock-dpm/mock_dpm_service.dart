@@ -113,6 +113,8 @@ class MockDpmService extends DpmService {
   Stream<Reading> monitorSettingProperty(List<String> drfs) {
     if (useEmptyStream) {
       return const Stream<Reading>.empty();
+    } else if (drfs.contains("Z:INC_SETTING")) {
+      return _incSettings.stream;
     } else {
       return _settings.stream; //  + count * 0.1);
     }
@@ -239,6 +241,7 @@ class MockDpmService extends DpmService {
 
   void enablePeriodSettingStream({double withDefaultSettingValue = 50.0}) {
     _settingValue = withDefaultSettingValue;
+    _incrementingSettingValue = withDefaultSettingValue;
 
     Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       _settings.add(Reading(
@@ -249,6 +252,14 @@ class MockDpmService extends DpmService {
           primaryValue: _settingValue / 10.0,
           rawValue: "8888"));
 
+      _incSettings.add(Reading(
+          refId: 0,
+          cycle: 0,
+          timestamp: DateTime.now(),
+          value: _incrementingSettingValue,
+          primaryValue: _incrementingSettingValue / 10.0,
+          rawValue: "8888"));
+
       if (_pendingSettingsStream.isNotEmpty) {
         if (_pendingSettingsStream.keys.contains("Z:BTE200_TEMP")) {
           failAllPendingSettings(facilityCode: 57, errorCode: -10);
@@ -256,6 +267,8 @@ class MockDpmService extends DpmService {
           succeedAllPendingSettings();
         }
       }
+
+      _incrementingSettingValue += 1;
     });
   }
 
@@ -265,7 +278,12 @@ class MockDpmService extends DpmService {
   final StreamController<Reading> _settings =
       StreamController<Reading>.broadcast();
 
+  final StreamController<Reading> _incSettings =
+      StreamController<Reading>.broadcast();
+
   double _settingValue = 0.0;
+
+  double _incrementingSettingValue = 0.0;
 
   double? _pendingSettingValue;
 }
