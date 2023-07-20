@@ -54,9 +54,9 @@ class _SettingControlState extends State<SettingControlWidget> {
       const SizedBox(width: 6.0),
       _buildUnits(),
       const SizedBox(width: 6.0),
-      _buildSubmitButton(context),
+      SizedBox(width: 32.0, child: _buildSubmitButton(context)),
       const SizedBox(width: 6.0),
-      _buildCancelButton()
+      SizedBox(width: 32.0, child: _buildCancelButton())
     ]);
   }
 
@@ -94,7 +94,7 @@ class _SettingControlState extends State<SettingControlWidget> {
         ? GestureDetector(
             onTap: () => _handleSubmitted(context),
             child: const Icon(Icons.check_circle, color: Colors.blue))
-        : const SizedBox(width: 32.0);
+        : Container();
   }
 
   Widget _buildCancelButton() {
@@ -102,7 +102,7 @@ class _SettingControlState extends State<SettingControlWidget> {
         ? GestureDetector(
             onTap: _handleAbort,
             child: const Icon(Icons.cancel, color: Colors.red))
-        : const SizedBox(width: 32.0);
+        : Container();
   }
 
   Widget _buildDisplayingState() {
@@ -119,7 +119,10 @@ class _SettingControlState extends State<SettingControlWidget> {
 
     return Container(
         key: Key("parameter_settingerror_${widget.drf}"),
-        child: Text(textAlign: TextAlign.end, "$_facilityCode $_errorCode"));
+        child: Text(
+            textAlign: TextAlign.start,
+            style: const TextStyle(color: Colors.red),
+            "$_facilityCode $_errorCode"));
   }
 
   Widget _buildEditingState(BuildContext context) {
@@ -190,7 +193,10 @@ class _SettingControlState extends State<SettingControlWidget> {
     } else {
       return Container(
           key: Key("parameter_settingloading_${widget.drf}"),
-          child: const Text(textAlign: TextAlign.end, "Loading..."));
+          child: const Text(
+              textAlign: TextAlign.end,
+              style: TextStyle(color: Colors.grey),
+              "Loading..."));
     }
   }
 
