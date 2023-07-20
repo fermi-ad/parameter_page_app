@@ -54,7 +54,7 @@ class _SettingControlState extends State<SettingControlWidget> {
       const SizedBox(width: 6.0),
       _buildUnits(),
       const SizedBox(width: 6.0),
-      _buildSubmitButton()
+      _buildSubmitButton(context)
     ]);
   }
 
@@ -87,10 +87,10 @@ class _SettingControlState extends State<SettingControlWidget> {
         : Text(widget.units!, style: const TextStyle(color: Colors.grey));
   }
 
-  Widget _buildSubmitButton() {
+  Widget _buildSubmitButton(BuildContext context) {
     return _state == _SettingControlInternalState.editing
         ? GestureDetector(
-            onTap: () {},
+            onTap: () => _handleSubmitted(context),
             child: const Icon(Icons.check_circle, color: Colors.blue))
         : const SizedBox(width: 32.0);
   }
@@ -129,7 +129,6 @@ class _SettingControlState extends State<SettingControlWidget> {
               textAlign: TextAlign.end,
               controller: _textFieldController,
               onChanged: (event) => _startEditingTimeoutTimer(),
-              onTapOutside: (event) => _handleAbort(),
               onEditingComplete: () => _handleSubmitted(context),
               decoration:
                   const InputDecoration(border: UnderlineInputBorder())),
