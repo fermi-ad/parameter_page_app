@@ -107,5 +107,23 @@ void main() {
     });
 
     // Test undo setting
+    testWidgets('Click Undo display, original value is submitted and set',
+        (tester) async {
+      // Given I have set a new value for the G:AMANDA device
+      app.main();
+      await tester.pumpAndSettle();
+      await waitForDataToLoadFor(tester, "G:AMANDA");
+      await tapSetting(tester, forDRF: "G:AMANDA");
+      await submitSetting(tester, forDRF: "G:AMANDA", newValue: "51.0");
+      await waitForSettingDataToLoad(tester, forDRF: "G:AMANDA");
+      await waitForUndoToDisplay(tester, forDRF: "G:AMANDA");
+
+      // When I tap the undo value
+      await undoSetting(tester, forDRF: "G:AMANDA");
+
+      // Then the original value is restored successfully
+      await waitForSettingDataToLoad(tester, forDRF: "G:AMANDA");
+      assertParameterHasDetails("G:AMANDA", settingValue: "50.00");
+    });
   });
 }

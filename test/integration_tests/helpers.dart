@@ -72,9 +72,11 @@ void assertParameterHasDetails(String parameter,
   }
 
   if (settingValue != null) {
-    final settingValueFinder = find.text(settingValue);
+    final settingFinder =
+        find.byKey(Key("parameter_settingdisplay_$parameter"));
     expect(
-        find.descendant(of: row, matching: settingValueFinder), findsOneWidget);
+        find.descendant(of: settingFinder, matching: find.text(settingValue)),
+        findsOneWidget);
   }
 
   if (settingUnits != null) {
@@ -562,5 +564,10 @@ Future<void> submitSetting(tester,
           matching: find.byType(TextFormField)),
       newValue);
   await tester.testTextInput.receiveAction(TextInputAction.done);
+  await tester.pumpAndSettle();
+}
+
+Future<void> undoSetting(tester, {required String forDRF}) async {
+  await tester.tap(find.byKey(Key("parameter_settingundo_$forDRF")));
   await tester.pumpAndSettle();
 }
