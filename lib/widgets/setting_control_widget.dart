@@ -50,7 +50,7 @@ class _SettingControlState extends State<SettingControlWidget> {
     return Row(children: [
       _buildUndo(context),
       const SizedBox(width: 6.0),
-      SizedBox(height: 34.0, width: 128.0, child: _buildStates(context)),
+      SizedBox(width: 128.0, child: _buildStates(context)),
       const SizedBox(width: 6.0),
       _buildUnits()
     ]);
