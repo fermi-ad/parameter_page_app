@@ -156,7 +156,10 @@ class _SettingControlState extends State<SettingControlWidget> {
         key: Key("parameter_settingundo_${widget.drf}"),
         child: GestureDetector(
             onTap: _handleUndoTap,
-            child: Text(textAlign: TextAlign.end, _initialSettingValue!)));
+            child: Text(
+                textAlign: TextAlign.end,
+                style: const TextStyle(color: Colors.purple),
+                _initialSettingValue!)));
   }
 
   Widget _settingDisplayBuilder(context, snapshot) {
