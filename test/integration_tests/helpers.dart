@@ -380,6 +380,11 @@ Future<void> waitForSettingErrorToBeReturned(tester,
   await pumpUntilFound(tester, settingFinder);
 }
 
+Future<void> waitForUndoToDisplay(tester, {required String forDRF}) async {
+  final settingFinder = find.byKey(Key("parameter_settingundo_$forDRF"));
+  await pumpUntilFound(tester, settingFinder);
+}
+
 Future<void> enterEditMode(tester) async {
   await tester.tap(find.byKey(const Key("enable_edit_mode_button")));
   await tester.pumpAndSettle();

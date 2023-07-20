@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -90,8 +92,22 @@ void main() {
           errorCode: -10);
     });
 
-    // Test undo setting
-
     // Test passive undo update
+    testWidgets('Setting changes, undo displays the original setting value',
+        (tester) async {
+      // Given the test page is loaded with a device whose setting increments once a second
+      app.main();
+      await tester.pumpAndSettle();
+      await waitForDataToLoadFor(tester, "Z:INC_SETTING");
+      assertUndo(forDRF: "Z:INC_SETTING", isVisible: false);
+
+      // When I wait one second for the setting to change
+      await waitForUndoToDisplay(tester, forDRF: "Z:INC_SETTING");
+
+      // Then the undo is dispayed showing the original setting
+      assertUndo(forDRF: "Z:INC_SETTING", isVisible: true);
+    });
+
+    // Test undo setting
   });
 }
