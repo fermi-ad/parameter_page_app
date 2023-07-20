@@ -119,7 +119,10 @@ class _SettingControlState extends State<SettingControlWidget> {
 
     return Container(
         key: Key("parameter_settingerror_${widget.drf}"),
-        child: Text(textAlign: TextAlign.end, "$_facilityCode $_errorCode"));
+        child: Text(
+            textAlign: TextAlign.start,
+            style: const TextStyle(color: Colors.red),
+            "$_facilityCode $_errorCode"));
   }
 
   Widget _buildEditingState(BuildContext context) {
