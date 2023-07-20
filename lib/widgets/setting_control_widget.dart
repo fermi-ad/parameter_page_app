@@ -50,7 +50,7 @@ class _SettingControlState extends State<SettingControlWidget> {
     return Row(children: [
       _buildUndo(context),
       const SizedBox(width: 6.0),
-      SizedBox(height: 34.0, width: 100.0, child: _buildStates(context)),
+      SizedBox(height: 34.0, width: 128.0, child: _buildStates(context)),
       const SizedBox(width: 6.0),
       _buildUnits()
     ]);
@@ -152,7 +152,8 @@ class _SettingControlState extends State<SettingControlWidget> {
   Widget _buildUndoDisplay() {
     return Container(
         key: Key("parameter_settingundo_${widget.drf}"),
-        child: Text(_initialSettingValue!));
+        child: GestureDetector(
+            onTap: _handleUndoTap, child: Text(_initialSettingValue!)));
   }
 
   Widget _settingDisplayBuilder(context, snapshot) {
@@ -196,6 +197,10 @@ class _SettingControlState extends State<SettingControlWidget> {
     });
   }
 
+  void _handleUndoTap() {
+    _submitSetting(_initialSettingValue!);
+  }
+
   void _handleDisplayTap() {
     setState(() {
       _state = _SettingControlInternalState.editing;
@@ -204,14 +209,22 @@ class _SettingControlState extends State<SettingControlWidget> {
   }
 
   void _handleSubmitted(BuildContext context) {
-    final newValue = _textFieldController.text;
+    _submitSetting(_textFieldController.text);
+  }
 
+  void _handleAbort() {
+    setState(() {
+      _state = _SettingControlInternalState.displaying;
+    });
+  }
+
+  void _submitSetting(String newValue) {
     final DataAcquisitionWidget daqWidget = DataAcquisitionWidget.of(context);
     daqWidget.submit(
         forDRF: widget.drf,
         newSetting: newValue,
-        onSuccess: _handleSettingUpdate,
-        onFailure: _handleSettingFailure);
+        onSuccess: _settingSuccess,
+        onFailure: _settingFailure);
 
     widget.onSubmitted?.call(newValue);
 
@@ -222,19 +235,13 @@ class _SettingControlState extends State<SettingControlWidget> {
     });
   }
 
-  void _handleAbort() {
+  void _settingSuccess() {
     setState(() {
       _state = _SettingControlInternalState.displaying;
     });
   }
 
-  void _handleSettingUpdate() {
-    setState(() {
-      _state = _SettingControlInternalState.displaying;
-    });
-  }
-
-  void _handleSettingFailure(int facilityCode, int errorCode) {
+  void _settingFailure(int facilityCode, int errorCode) {
     setState(() {
       _facilityCode = facilityCode;
       _errorCode = errorCode;

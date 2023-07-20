@@ -15,13 +15,13 @@ void main() {
             body: Column(children: [
       SizedBox(
           key: const Key("parameter_setting_Z:BTE200_TEMP"),
-          width: 200.0,
+          width: 300.0,
           height: 34.0,
           child: DataAcquisitionWidget(service: testDPM, child: child)),
       const SizedBox(
           key: Key("test_empty_box"),
           height: 100.0,
-          width: 200.0,
+          width: 300.0,
           child: Text("Abort"))
     ])));
   }
