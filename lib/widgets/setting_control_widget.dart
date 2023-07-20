@@ -153,7 +153,8 @@ class _SettingControlState extends State<SettingControlWidget> {
     return Container(
         key: Key("parameter_settingundo_${widget.drf}"),
         child: GestureDetector(
-            onTap: _handleUndoTap, child: Text(_initialSettingValue!)));
+            onTap: _handleUndoTap,
+            child: Text(textAlign: TextAlign.end, _initialSettingValue!)));
   }
 
   Widget _settingDisplayBuilder(context, snapshot) {
@@ -165,7 +166,7 @@ class _SettingControlState extends State<SettingControlWidget> {
     } else {
       return Container(
           key: Key("parameter_settingloading_${widget.drf}"),
-          child: const Text("Loading..."));
+          child: const Text(textAlign: TextAlign.end, "Loading..."));
     }
   }
 
