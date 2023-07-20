@@ -360,5 +360,23 @@ void main() {
       // Then the primary value is displayed
       assertSettingDisplay(isVisible: true, value: "7777");
     });
+
+    testWidgets('Tap undo, submits setting', (WidgetTester tester) async {
+      // Given I have submitted a new setting for Z:BTE200_TEMP
+      MaterialApp app = initialize(const SettingControlWidget(
+          drf: "Z:BTE200_TEMP", displayUnits: DisplayUnits.commonUnits));
+      await tester.pumpWidget(app);
+      await sendSettingTestData(tester, settingValue: 72.0);
+      await sendSettingTestData(tester, settingValue: 75.0);
+      await tester.pumpAndSettle();
+
+      // When I tap the undo value
+      await tester.tap(find.text("72.00"));
+      await tester.pumpAndSettle();
+
+      // Then the undo value is submitted as a new setting
+      assertSettingPendingIndicator(isVisible: true);
+      expect(testDPM.pendingSettingValue, equals(72.0));
+    });
   });
 }
