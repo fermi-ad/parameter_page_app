@@ -54,9 +54,9 @@ class _SettingControlState extends State<SettingControlWidget> {
       const SizedBox(width: 6.0),
       _buildUnits(),
       const SizedBox(width: 6.0),
-      _buildSubmitButton(context),
+      SizedBox(width: 32.0, child: _buildSubmitButton(context)),
       const SizedBox(width: 6.0),
-      _buildCancelButton()
+      SizedBox(width: 32.0, child: _buildCancelButton())
     ]);
   }
 
@@ -94,7 +94,7 @@ class _SettingControlState extends State<SettingControlWidget> {
         ? GestureDetector(
             onTap: () => _handleSubmitted(context),
             child: const Icon(Icons.check_circle, color: Colors.blue))
-        : const SizedBox(width: 32.0);
+        : Container();
   }
 
   Widget _buildCancelButton() {
@@ -102,7 +102,7 @@ class _SettingControlState extends State<SettingControlWidget> {
         ? GestureDetector(
             onTap: _handleAbort,
             child: const Icon(Icons.cancel, color: Colors.red))
-        : const SizedBox(width: 32.0);
+        : Container();
   }
 
   Widget _buildDisplayingState() {
