@@ -52,7 +52,9 @@ class _SettingControlState extends State<SettingControlWidget> {
       const SizedBox(width: 6.0),
       SizedBox(width: 128.0, child: _buildStates(context)),
       const SizedBox(width: 6.0),
-      _buildUnits()
+      _buildUnits(),
+      const SizedBox(width: 6.0),
+      _buildSubmitButton()
     ]);
   }
 
@@ -83,6 +85,14 @@ class _SettingControlState extends State<SettingControlWidget> {
     return widget.units == null
         ? Container()
         : Text(widget.units!, style: const TextStyle(color: Colors.grey));
+  }
+
+  Widget _buildSubmitButton() {
+    return _state == _SettingControlInternalState.editing
+        ? GestureDetector(
+            onTap: () {},
+            child: const Icon(Icons.check_circle, color: Colors.blue))
+        : const SizedBox(width: 32.0);
   }
 
   Widget _buildDisplayingState() {
