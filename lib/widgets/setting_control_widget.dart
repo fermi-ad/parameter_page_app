@@ -193,7 +193,10 @@ class _SettingControlState extends State<SettingControlWidget> {
     } else {
       return Container(
           key: Key("parameter_settingloading_${widget.drf}"),
-          child: const Text(textAlign: TextAlign.end, "Loading..."));
+          child: const Text(
+              textAlign: TextAlign.end,
+              style: TextStyle(color: Colors.grey),
+              "Loading..."));
     }
   }
 
