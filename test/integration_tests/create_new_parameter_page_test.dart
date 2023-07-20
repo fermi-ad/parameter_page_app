@@ -39,7 +39,7 @@ void main() {
       await newPage(tester, confirmDiscardChanges: false);
 
       // Then I should be returned to the page
-      assertNumberOfEntriesOnPageIs(8);
+      assertNumberOfEntriesOnPageIs(9);
       assertParameterIsInRow("M:OUTTMP@e,02", 0);
     });
 
