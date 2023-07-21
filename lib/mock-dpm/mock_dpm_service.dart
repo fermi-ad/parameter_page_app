@@ -70,7 +70,19 @@ class MockDpmService extends DpmService {
                       character0: "*",
                       color0: StatusColor.blue,
                       character1: "T",
-                      color1: StatusColor.magenta)));
+                      color1: StatusColor.magenta)),
+              digControl: [
+                const DeviceInfoDigitalControl(
+                    value: 0, shortName: "RESET", longName: "Reset"),
+                const DeviceInfoDigitalControl(
+                    value: 1, shortName: "ON", longName: "On"),
+                const DeviceInfoDigitalControl(
+                    value: 2, shortName: "OFF", longName: "Off"),
+                const DeviceInfoDigitalControl(
+                    value: 3, shortName: "POSITIVE", longName: "Positive"),
+                const DeviceInfoDigitalControl(
+                    value: 4, shortName: "NEGATIVE", longName: "Negative")
+              ]);
         default:
           return DeviceInfo(
               di: 0,

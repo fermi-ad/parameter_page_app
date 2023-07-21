@@ -72,15 +72,15 @@ class _ActiveParamWidget extends StatefulWidget {
 
 class _ActiveParamState extends State<_ActiveParamWidget> {
   late final Future<List<DeviceInfo>> _setup;
-  DeviceInfo? info;
+  DeviceInfo? deviceInfo;
   bool _displayExtendedStatus = false;
 
   String? get readingUnits {
     switch (widget.displayUnits) {
       case DisplayUnits.commonUnits:
-        return info?.reading?.commonUnits;
+        return deviceInfo?.reading?.commonUnits;
       case DisplayUnits.primaryUnits:
-        return info?.reading?.primaryUnits;
+        return deviceInfo?.reading?.primaryUnits;
       case DisplayUnits.raw:
         return null;
     }
@@ -89,9 +89,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   String? get settingUnits {
     switch (widget.displayUnits) {
       case DisplayUnits.commonUnits:
-        return info?.setting?.commonUnits;
+        return deviceInfo?.setting?.commonUnits;
       case DisplayUnits.primaryUnits:
-        return info?.setting?.primaryUnits;
+        return deviceInfo?.setting?.primaryUnits;
       case DisplayUnits.raw:
         return null;
     }
@@ -112,7 +112,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
       // completes, we save the information.
 
       future: _setup.then((value) {
-        info = value.first;
+        deviceInfo = value.first;
         return value;
       }),
 
@@ -155,13 +155,13 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   Widget _buildDescription() {
-    if (info == null) {
+    if (deviceInfo == null) {
       return Container();
     } else {
       return Text(
           key: Key("parameter_description_${widget.drf}"),
           overflow: TextOverflow.ellipsis,
-          info?.description ?? "",
+          deviceInfo?.description ?? "",
           style: widget.wide
               ? null
               : Theme.of(context)
@@ -190,9 +190,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
       ]),
       Visibility(
           visible: widget.displayAlarmDetails,
-          child: (info != null && info!.alarm != null)
+          child: (deviceInfo != null && deviceInfo!.alarm != null)
               ? ParameterAlarmDetailsWidget(
-                  drf: widget.drf, alarmBlock: info!.alarm!)
+                  drf: widget.drf, alarmBlock: deviceInfo!.alarm!)
               : Container()),
     ]);
   }
@@ -220,7 +220,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   bool _hasExtendedStatusProperty() {
-    return !(info == null || info!.basicStatus == null);
+    return !(deviceInfo == null || deviceInfo!.basicStatus == null);
   }
 
   Widget _buildExpandExtendedStatusButton() {
@@ -238,9 +238,12 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   Widget _buildExtendedStatusRow() {
-    return StreamBuilder(
-        stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
-        builder: _extendedStatusBuilder);
+    return Column(children: [
+      StreamBuilder(
+          stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
+          builder: _extendedStatusBuilder),
+      _buildCommandButtons()
+    ]);
   }
 
   void _toggleDigitalStatus() {
@@ -277,6 +280,20 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     } else {
       return Container();
     }
+  }
+
+  Widget _buildCommandButtons() {
+    return Column(key: Key("parameter_commands_${widget.drf}"), children: [
+      _buildCommandButton(value: 0, longName: "Reset"),
+      _buildCommandButton(value: 1, longName: "On"),
+      _buildCommandButton(value: 2, longName: "Off"),
+      _buildCommandButton(value: 3, longName: "Positive"),
+      _buildCommandButton(value: 4, longName: "Negative")
+    ]);
+  }
+
+  Widget _buildCommandButton({required int value, required String longName}) {
+    return ElevatedButton(child: Text(longName), onPressed: () {});
   }
 
   Widget _buildNarrow(BuildContext context) {
