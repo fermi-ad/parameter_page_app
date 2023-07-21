@@ -336,3 +336,16 @@ void assertSettingTextInput({required String forDRF, required bool isVisible}) {
   expect(find.byKey(Key("parameter_settinginput_$forDRF")),
       isVisible ? findsOneWidget : findsNothing);
 }
+
+void assertCommandButtons(
+    {required bool areVisible,
+    required String forDRF,
+    required List<String> withText}) {
+  for (String commandText in withText) {
+    expect(
+        find.descendant(
+            of: find.byKey(Key("parameter_commands_$forDRF")),
+            matching: find.text(commandText)),
+        areVisible ? findsOneWidget : findsNothing);
+  }
+}
