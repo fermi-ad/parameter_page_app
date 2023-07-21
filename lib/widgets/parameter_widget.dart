@@ -283,17 +283,27 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   Widget _buildCommandButtons() {
-    return Column(key: Key("parameter_commands_${widget.drf}"), children: [
-      _buildCommandButton(value: 0, longName: "Reset"),
-      _buildCommandButton(value: 1, longName: "On"),
-      _buildCommandButton(value: 2, longName: "Off"),
-      _buildCommandButton(value: 3, longName: "Positive"),
-      _buildCommandButton(value: 4, longName: "Negative")
-    ]);
+    return SizedBox(
+        width: 400.0,
+        child: Column(key: Key("parameter_commands_${widget.drf}"), children: [
+          _buildCommandButton(value: 0, longName: "Reset"),
+          _buildCommandButton(value: 1, longName: "On"),
+          _buildCommandButton(value: 2, longName: "Off"),
+          _buildCommandButton(value: 3, longName: "Positive"),
+          _buildCommandButton(value: 4, longName: "Negative")
+        ]));
   }
 
   Widget _buildCommandButton({required int value, required String longName}) {
-    return ElevatedButton(child: Text(longName), onPressed: () {});
+    return Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                elevation: 0.0,
+                minimumSize: const Size.fromHeight(40)),
+            child: Text(style: const TextStyle(color: Colors.white), longName),
+            onPressed: () {}));
   }
 
   Widget _buildNarrow(BuildContext context) {
