@@ -3,7 +3,8 @@ import 'package:integration_test/integration_test.dart';
 
 import 'package:parameter_page/main.dart' as app;
 
-import 'helpers.dart';
+import 'helpers/assertions.dart';
+import 'helpers/actions.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -39,7 +40,7 @@ void main() {
       await newPage(tester, confirmDiscardChanges: false);
 
       // Then I should be returned to the page
-      assertNumberOfEntriesOnPageIs(8);
+      assertNumberOfEntriesOnPageIs(9);
       assertParameterIsInRow("M:OUTTMP@e,02", 0);
     });
 

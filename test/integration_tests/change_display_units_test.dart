@@ -3,7 +3,8 @@ import 'package:integration_test/integration_test.dart';
 
 import 'package:parameter_page/main.dart' as app;
 
-import 'helpers.dart';
+import 'helpers/assertions.dart';
+import 'helpers/actions.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +19,7 @@ void main() {
 
       // Then M:OUTTMP should show units of degF
       assertParameterHasDetails("M:OUTTMP@e,02",
-          settingValue: "50.0",
+          settingValue: "50.00",
           settingUnits: "cUS",
           readingValue: "100.0",
           readingUnits: "cUR");
@@ -53,7 +54,7 @@ void main() {
 
       // Then the M:OUTTMP units change to Volts
       assertParameterHasDetails("M:OUTTMP@e,02",
-          settingValue: "5.0",
+          settingValue: "5.000",
           settingUnits: "pUS",
           readingValue: "10.00",
           readingUnits: "pUR");

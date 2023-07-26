@@ -3,7 +3,8 @@ import 'package:integration_test/integration_test.dart';
 
 import 'package:parameter_page/main.dart' as app;
 
-import 'helpers.dart';
+import 'helpers/assertions.dart';
+import 'helpers/actions.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -23,10 +24,10 @@ void main() {
       await waitForDataToLoadFor(tester, "Z:BDCCT");
 
       // Then the new parameter is added to the page
-      assertParameterIsInRow("Z:BDCCT", 7);
+      assertParameterIsInRow("Z:BDCCT", 8);
       assertParameterHasDetails("Z:BDCCT",
           description: "device description",
-          settingValue: "50.0",
+          settingValue: "50.00",
           readingValue: "100.0");
     });
   });

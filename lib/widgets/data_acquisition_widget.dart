@@ -15,6 +15,10 @@ class DataAcquisitionWidget extends InheritedWidget {
     return service.monitorDevices(drfs);
   }
 
+  Stream<Reading> monitorSettingProperty(List<String> drfs) {
+    return service.monitorSettingProperty(drfs);
+  }
+
   Stream<DigitalStatus> monitorDigitalStatusDevices(List<String> drfs) {
     return service.monitorDigitalStatusDevices(drfs);
   }
@@ -50,5 +54,21 @@ class DataAcquisitionWidget extends InheritedWidget {
 
     assert(result != null, 'no DataAcquisitionWidget found in context');
     return result!;
+  }
+
+  void submit(
+      {required String forDRF,
+      required String newSetting,
+      Function? onSuccess,
+      Function(int, int)? onFailure}) {
+    service
+        .submit(forDRF: forDRF, newSetting: newSetting)
+        .listen((SettingStatus status) {
+      if (status.errorCode == 0) {
+        onSuccess?.call();
+      } else {
+        onFailure?.call(status.facilityCode, status.errorCode);
+      }
+    });
   }
 }

@@ -88,12 +88,21 @@ class BaseWidget extends StatelessWidget {
               "parameter_row_PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY"),
           label: "Humidity"),
       ParameterEntry("Z:BTE200_TEMP",
-          key: const Key("parameter_row_BTE200_TEMP"))
+          key: const Key("parameter_row_BTE200_TEMP")),
+      ParameterEntry("Z:INC_SETTING",
+          key: const Key("parameter_row_Z:INC_SETTING"))
     ]));
 
-    return useMockServices
-        ? DataAcquisitionWidget(service: const MockDpmService(), child: child)
-        : DataAcquisitionWidget(service: GraphQLDpmService(), child: child);
+    DpmService service;
+    if (useMockServices) {
+      MockDpmService mock = MockDpmService();
+      mock.enablePeriodSettingStream();
+      service = mock;
+    } else {
+      service = GraphQLDpmService();
+    }
+
+    return DataAcquisitionWidget(service: service, child: child);
   }
 
   Widget _buildDrawer(BuildContext context) {

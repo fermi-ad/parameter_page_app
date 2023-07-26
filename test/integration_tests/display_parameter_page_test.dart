@@ -3,7 +3,8 @@ import 'package:integration_test/integration_test.dart';
 
 import 'package:parameter_page/main.dart' as app;
 
-import 'helpers.dart';
+import 'helpers/assertions.dart';
+import 'helpers/actions.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -37,11 +38,11 @@ void main() {
       // Then the descript and reading values should be...
       assertParameterHasDetails("M:OUTTMP@e,02",
           description: "device description",
-          settingValue: "50.0",
+          settingValue: "50.00",
           readingValue: "100.0");
       assertParameterHasDetails("G:AMANDA",
           description: "device description",
-          settingValue: "50.0",
+          settingValue: "50.00",
           readingValue: "100.0");
     });
 
@@ -59,7 +60,7 @@ void main() {
       // Then the description and values should be...
       assertParameterHasDetails("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE",
           description: "device description",
-          settingValue: "50.0",
+          settingValue: "50.00",
           readingValue: "100.0");
     });
   });

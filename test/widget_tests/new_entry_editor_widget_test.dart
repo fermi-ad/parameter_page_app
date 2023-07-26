@@ -15,7 +15,7 @@ void main() {
       editor = MaterialApp(
           home: Scaffold(
               body: DataAcquisitionWidget(
-                  service: const MockDpmService(),
+                  service: MockDpmService(),
                   child:
                       NewEntryEditorWidget(onSubmitted: (PageEntry submitted) {
                     newEntry = submitted;
