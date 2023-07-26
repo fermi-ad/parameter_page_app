@@ -22,6 +22,19 @@ class CommandButtonWidget extends StatefulWidget {
 class _CommandButtonState extends State<CommandButtonWidget> {
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(onPressed: () {}, child: Text(widget.longName));
+    return Stack(alignment: Alignment.center, children: [
+      if (_isPending) const Icon(Icons.pending),
+      ElevatedButton(
+          onPressed: _isPending ? null : _handlePress,
+          child: Text(widget.longName))
+    ]);
   }
+
+  void _handlePress() {
+    setState(() {
+      _isPending = true;
+    });
+  }
+
+  bool _isPending = false;
 }
