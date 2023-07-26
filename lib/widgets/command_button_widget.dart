@@ -22,7 +22,6 @@ class CommandButtonWidget extends StatefulWidget {
 class _CommandButtonState extends State<CommandButtonWidget> {
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-        onPressed: () {}, child: const Text("Command Button"));
+    return ElevatedButton(onPressed: () {}, child: Text(widget.longName));
   }
 }

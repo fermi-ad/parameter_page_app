@@ -18,9 +18,18 @@ void main() {
     ])));
   }
 
-  void tap() {}
+  Future<void> tap(WidgetTester tester,
+      {required String buttonWithText}) async {
+    await tester.tap(find.text(buttonWithText));
+    await tester.pumpAndSettle();
+  }
 
-  void assertButton({required bool isEnabled}) {}
+  void assertButton(WidgetTester tester, {required bool isEnabled}) {
+    final finder = find.byType(ElevatedButton);
+
+    // Verify that the ElevatedButton is disabled
+    expect(tester.widget<ElevatedButton>(finder).enabled, isEnabled);
+  }
 
   void assertPendingIndicator({required bool isVisible}) {}
 
@@ -32,10 +41,10 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I tap the button
-      tap();
+      await tap(tester, buttonWithText: "Reset");
 
       // Then the button is disabled and the pending icon is shown
-      assertButton(isEnabled: false);
+      assertButton(tester, isEnabled: false);
       assertPendingIndicator(isVisible: true);
     });
   });
