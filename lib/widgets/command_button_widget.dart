@@ -22,12 +22,19 @@ class CommandButtonWidget extends StatefulWidget {
 class _CommandButtonState extends State<CommandButtonWidget> {
   @override
   Widget build(BuildContext context) {
-    return Stack(alignment: Alignment.center, children: [
-      if (_isPending) const Icon(Icons.pending),
-      ElevatedButton(
-          onPressed: _isPending ? null : _handlePress,
-          child: Text(widget.longName))
-    ]);
+    return Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Stack(alignment: Alignment.center, children: [
+          if (_isPending) const Icon(Icons.pending),
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  elevation: 0.0,
+                  minimumSize: const Size.fromHeight(40)),
+              onPressed: _isPending ? null : _handlePress,
+              child: Text(
+                  style: const TextStyle(color: Colors.white), widget.longName))
+        ]));
   }
 
   void _handlePress() {
