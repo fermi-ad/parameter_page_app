@@ -31,7 +31,10 @@ void main() {
     expect(tester.widget<ElevatedButton>(finder).enabled, isEnabled);
   }
 
-  void assertPendingIndicator({required bool isVisible}) {}
+  void assertPendingIndicator({required bool isVisible}) {
+    expect(
+        find.byIcon(Icons.pending), isVisible ? findsOneWidget : findsNothing);
+  }
 
   group("CommandButtWidget", () {
     testWidgets('Tap, displays pending icon', (WidgetTester tester) async {
