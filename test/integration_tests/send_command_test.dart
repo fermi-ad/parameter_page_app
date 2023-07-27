@@ -9,6 +9,13 @@ import 'helpers/actions.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
+  Future<void> expandAndAssertCommandButtons(tester,
+      {required String forDRF, required List<String> haveText}) async {
+    await expandDigitalStatus(tester, forDRF: forDRF);
+    assertCommandButtons(areVisible: true, forDRF: forDRF, withText: haveText);
+    await collapseDigitalStatus(tester, forDRF: forDRF);
+  }
+
   group('Send Command', () {
     testWidgets('Expand extended status, show command buttons', (tester) async {
       // Given the test page is loaded
@@ -17,13 +24,12 @@ void main() {
       await waitForDataToLoadFor(tester, "G:AMANDA");
 
       // When I expand the extended status display for the device
-      await expandDigitalStatus(tester, forDRF: "G:AMANDA");
-
       // Then buttons for the following commands are displayed
-      assertCommandButtons(
-          areVisible: true,
+      await expandAndAssertCommandButtons(tester,
           forDRF: "G:AMANDA",
-          withText: ["Reset", "On", "Off", "Positive", "Negative"]);
+          haveText: ["Reset", "On", "Off", "Positive", "Negative"]);
+      await expandAndAssertCommandButtons(tester,
+          forDRF: "Z:BTE200_TEMP", haveText: ["On", "Off", "Heat", "Cool"]);
     });
   });
 }
