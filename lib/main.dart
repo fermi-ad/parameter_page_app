@@ -3,6 +3,7 @@ import 'package:parameter_page/theme/theme.dart';
 import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 import 'package:parameter_page/widgets/display_settings_widget.dart';
 import 'package:parameter_page/widgets/open_page_widget.dart';
+import 'dpm_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'gql-dpm/graphql_dpm_service.dart';
 import 'mock-dpm/mock_dpm_service.dart';
