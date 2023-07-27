@@ -50,7 +50,7 @@ jobs:
           cache: true
       
       - name: Installing chromedriver (needed for Integration tests)
-        uses: nanasess/setup-chromedriver@v1
+        uses: nanasess/setup-chromedriver@v2
 
       - name: Starting chromedriver and executing integration test
         run: |

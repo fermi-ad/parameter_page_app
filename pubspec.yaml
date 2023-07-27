@@ -58,7 +58,6 @@ dev_dependencies:
     test: ^1.22.0
     ferry_generator: ^0.8.0+1
     build_runner: ^2.3.3
-    fake_async: ^1.2.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

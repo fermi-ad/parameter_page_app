@@ -71,4 +71,20 @@ class DataAcquisitionWidget extends InheritedWidget {
       }
     });
   }
+
+  void sendCommand(
+      {required String toDRF,
+      required int value,
+      Function? onSuccess,
+      Function(int, int)? onFailure}) {
+    service
+        .sendCommand(toDRF: toDRF, value: value)
+        .listen((SettingStatus status) {
+      if (status.errorCode == 0) {
+        onSuccess?.call();
+      } else {
+        onFailure?.call(status.facilityCode, status.errorCode);
+      }
+    });
+  }
 }

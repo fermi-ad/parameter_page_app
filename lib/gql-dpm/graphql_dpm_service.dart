@@ -219,4 +219,10 @@ class GraphQLDpmService extends DpmService {
       {required String forDRF, required String newSetting}) {
     throw UnimplementedError();
   }
+
+  @override
+  Stream<SettingStatus> sendCommand(
+      {required String toDRF, required int value}) {
+    throw UnimplementedError();
+  }
 }
