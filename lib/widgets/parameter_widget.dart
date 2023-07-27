@@ -6,6 +6,7 @@ import 'package:parameter_page/widgets/parameter_basic_status_widget.dart';
 import 'package:parameter_page/widgets/parameter_extended_status_widget.dart';
 import 'package:parameter_page/widgets/setting_control_widget.dart';
 
+import 'command_button_widget.dart';
 import 'data_acquisition_widget.dart';
 import 'display_settings_widget.dart';
 import 'parameter_alarm_details_widget.dart';
@@ -286,24 +287,12 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     return SizedBox(
         width: 400.0,
         child: Column(key: Key("parameter_commands_${widget.drf}"), children: [
-          _buildCommandButton(value: 0, longName: "Reset"),
-          _buildCommandButton(value: 1, longName: "On"),
-          _buildCommandButton(value: 2, longName: "Off"),
-          _buildCommandButton(value: 3, longName: "Positive"),
-          _buildCommandButton(value: 4, longName: "Negative")
+          CommandButtonWidget(drf: widget.drf, value: 0, longName: "Reset"),
+          CommandButtonWidget(drf: widget.drf, value: 1, longName: "On"),
+          CommandButtonWidget(drf: widget.drf, value: 2, longName: "Off"),
+          CommandButtonWidget(drf: widget.drf, value: 3, longName: "Positive"),
+          CommandButtonWidget(drf: widget.drf, value: 4, longName: "Negative")
         ]));
-  }
-
-  Widget _buildCommandButton({required int value, required String longName}) {
-    return Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                elevation: 0.0,
-                minimumSize: const Size.fromHeight(40)),
-            child: Text(style: const TextStyle(color: Colors.white), longName),
-            onPressed: () {}));
   }
 
   Widget _buildNarrow(BuildContext context) {
