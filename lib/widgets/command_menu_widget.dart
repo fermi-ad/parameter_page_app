@@ -12,14 +12,18 @@ class CommandButtonMenuWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return SizedBox(
+        width: 400.0,
+        child: Column(
+            key: Key("parameter_commands_$drf"), children: _buildButtons()));
+  }
+
+  List<Widget> _buildButtons() {
     List<CommandButtonWidget> buttons = [];
     for (DeviceInfoDigitalControl command in deviceInfo.digControl) {
       buttons.add(CommandButtonWidget(
           drf: drf, value: command.value, longName: command.longName));
     }
-
-    return SizedBox(
-        width: 400.0,
-        child: Column(key: Key("parameter_commands_$drf"), children: buttons));
+    return buttons;
   }
 }
