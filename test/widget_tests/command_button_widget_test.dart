@@ -95,8 +95,8 @@ void main() {
 
       // Then the button indicates an error for three seconds
       assertErrorIndicator(isVisible: true, facilityCode: 57, errorCode: -10);
-      // tester.pumpAndSettle(const Duration(seconds: 3, milliseconds: 10));
-      // assertErrorIndicator(tester, isVisible: false);
+      await tester.pumpAndSettle(const Duration(seconds: 3, milliseconds: 10));
+      assertErrorIndicator(isVisible: false, facilityCode: 57, errorCode: -10);
     });
   });
 }
