@@ -12,8 +12,8 @@ class CommandButtonMenuWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-        width: 400.0,
+    return ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 400),
         child: Column(
             key: Key("parameter_commands_$drf"), children: _buildButtons()));
   }
