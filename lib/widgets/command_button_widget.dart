@@ -20,19 +20,24 @@ class CommandButtonWidget extends StatefulWidget {
   }
 }
 
+enum _CommandButtonDisplayState { ready, pending, error }
+
 class _CommandButtonState extends State<CommandButtonWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.all(4.0),
         child: Stack(alignment: Alignment.center, children: [
-          if (_isPending) const Icon(Icons.pending),
+          if (_displayState == _CommandButtonDisplayState.pending)
+            const Icon(Icons.pending),
           ElevatedButton(
               style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                   elevation: 0.0,
                   minimumSize: const Size.fromHeight(40)),
-              onPressed: _isPending ? null : _handlePress,
+              onPressed: _displayState != _CommandButtonDisplayState.ready
+                  ? null
+                  : _handlePress,
               child: Text(
                   style: const TextStyle(color: Colors.white), widget.longName))
         ]));
@@ -42,7 +47,7 @@ class _CommandButtonState extends State<CommandButtonWidget> {
     _sendCommand();
 
     setState(() {
-      _isPending = true;
+      _displayState = _CommandButtonDisplayState.pending;
     });
 
     // widget.onSubmitted?.call(newValue);
@@ -59,11 +64,15 @@ class _CommandButtonState extends State<CommandButtonWidget> {
 
   void _sendCommandSuccess() {
     setState(() {
-      _isPending = false;
+      _displayState = _CommandButtonDisplayState.ready;
     });
   }
 
-  void _sendCommandFailure(int facilityCode, int errorCode) {}
+  void _sendCommandFailure(int facilityCode, int errorCode) {
+    setState(() {
+      _displayState = _CommandButtonDisplayState.error;
+    });
+  }
 
-  bool _isPending = false;
+  _CommandButtonDisplayState _displayState = _CommandButtonDisplayState.ready;
 }
