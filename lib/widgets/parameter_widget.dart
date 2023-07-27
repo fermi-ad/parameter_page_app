@@ -253,6 +253,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
           child: StreamBuilder(
               stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
               builder: _extendedStatusBuilder)),
+      const Spacer(),
       deviceInfo != null
           ? SizedBox(
               width: 400,
