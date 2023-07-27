@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:parameter_page/dpm_service.dart';
+import 'package:parameter_page/widgets/command_menu_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
 import 'package:parameter_page/widgets/parameter_basic_status_widget.dart';
 import 'package:parameter_page/widgets/parameter_extended_status_widget.dart';
 import 'package:parameter_page/widgets/setting_control_widget.dart';
 
-import 'command_button_widget.dart';
 import 'data_acquisition_widget.dart';
 import 'display_settings_widget.dart';
 import 'parameter_alarm_details_widget.dart';
@@ -243,7 +243,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
       StreamBuilder(
           stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
           builder: _extendedStatusBuilder),
-      _buildCommandButtons()
+      deviceInfo != null
+          ? CommandButtonMenuWidget(drf: widget.drf, deviceInfo: deviceInfo!)
+          : Container()
     ]);
   }
 
@@ -281,18 +283,6 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     } else {
       return Container();
     }
-  }
-
-  Widget _buildCommandButtons() {
-    return SizedBox(
-        width: 400.0,
-        child: Column(key: Key("parameter_commands_${widget.drf}"), children: [
-          CommandButtonWidget(drf: widget.drf, value: 0, longName: "Reset"),
-          CommandButtonWidget(drf: widget.drf, value: 1, longName: "On"),
-          CommandButtonWidget(drf: widget.drf, value: 2, longName: "Off"),
-          CommandButtonWidget(drf: widget.drf, value: 3, longName: "Positive"),
-          CommandButtonWidget(drf: widget.drf, value: 4, longName: "Negative")
-        ]));
   }
 
   Widget _buildNarrow(BuildContext context) {
