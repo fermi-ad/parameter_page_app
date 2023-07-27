@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 
@@ -75,9 +77,19 @@ class _CommandButtonState extends State<CommandButtonWidget> {
   }
 
   void _sendCommandFailure(int facilityCode, int errorCode) {
+    _startErrorDisplayTimeoutTimer();
+
     setState(() {
       _displayState = _CommandButtonDisplayState.error;
       _errorMessage = "$facilityCode $errorCode";
+    });
+  }
+
+  void _startErrorDisplayTimeoutTimer() {
+    Timer(const Duration(seconds: 3), () {
+      setState(() {
+        _displayState = _CommandButtonDisplayState.ready;
+      });
     });
   }
 

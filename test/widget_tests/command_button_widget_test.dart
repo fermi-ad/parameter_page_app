@@ -78,8 +78,7 @@ void main() {
       assertPendingIndicator(isVisible: false);
     });
 
-    testWidgets(
-        'On command failure, display a red background and error code for three seconds',
+    testWidgets('On command failure, display an error code for three seconds',
         (WidgetTester tester) async {
       // Given a command button that is in the pending state
       MaterialApp app = initialize(const CommandButtonWidget(
