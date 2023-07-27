@@ -83,8 +83,6 @@ class _CommandButtonState extends State<CommandButtonWidget> {
     setState(() {
       _displayState = _CommandButtonDisplayState.pending;
     });
-
-    // widget.onSubmitted?.call(newValue);
   }
 
   void _sendCommand() {
