@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 
 class CommandButtonWidget extends StatefulWidget {
   final String drf;
@@ -38,10 +39,31 @@ class _CommandButtonState extends State<CommandButtonWidget> {
   }
 
   void _handlePress() {
+    _sendCommand();
+
     setState(() {
       _isPending = true;
     });
+
+    // widget.onSubmitted?.call(newValue);
   }
+
+  void _sendCommand() {
+    final DataAcquisitionWidget daqWidget = DataAcquisitionWidget.of(context);
+    daqWidget.sendCommand(
+        toDRF: widget.drf,
+        value: widget.value,
+        onSuccess: _sendCommandSuccess,
+        onFailure: _sendCommandFailure);
+  }
+
+  void _sendCommandSuccess() {
+    setState(() {
+      _isPending = false;
+    });
+  }
+
+  void _sendCommandFailure(int facilityCode, int errorCode) {}
 
   bool _isPending = false;
 }

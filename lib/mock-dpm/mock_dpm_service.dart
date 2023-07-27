@@ -208,7 +208,9 @@ class MockDpmService extends DpmService {
       controller.close();
     });
     _pendingSettingsStream.clear();
-    _settingValue = pendingSettingValue!;
+    if (pendingSettingValue != null) {
+      _settingValue = pendingSettingValue!;
+    }
   }
 
   void failAllPendingSettings(
@@ -232,6 +234,19 @@ class MockDpmService extends DpmService {
 
       final newStream = StreamController<SettingStatus>();
       _pendingSettingsStream[forDRF] = newStream;
+
+      return newStream.stream;
+    }
+  }
+
+  @override
+  Stream<SettingStatus> sendCommand(
+      {required String toDRF, required int value}) {
+    if (useEmptyStream) {
+      return const Stream<SettingStatus>.empty();
+    } else {
+      final newStream = StreamController<SettingStatus>();
+      _pendingSettingsStream[toDRF] = newStream;
 
       return newStream.stream;
     }

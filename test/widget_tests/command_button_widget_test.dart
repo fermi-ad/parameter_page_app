@@ -50,5 +50,24 @@ void main() {
       assertButton(tester, isEnabled: false);
       assertPendingIndicator(isVisible: true);
     });
+
+    testWidgets('On command success, transitions back to enabled state',
+        (WidgetTester tester) async {
+      // Given a command button that is in the pending state
+      MaterialApp app = initialize(const CommandButtonWidget(
+          drf: "G:AMANDA", value: 0, longName: "Reset"));
+      await tester.pumpWidget(app);
+      await tap(tester, buttonWithText: "Reset");
+      assertButton(tester, isEnabled: false);
+      assertPendingIndicator(isVisible: true);
+
+      // When the command returns a successful status
+      testDPM.succeedAllPendingSettings();
+      await tester.pumpAndSettle();
+
+      // The the button is enabled and the pending icon is gone
+      assertButton(tester, isEnabled: true);
+      assertPendingIndicator(isVisible: false);
+    });
   });
 }

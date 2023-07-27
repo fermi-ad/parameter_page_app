@@ -185,4 +185,7 @@ abstract class DpmService {
 
   Stream<SettingStatus> submit(
       {required String forDRF, required String newSetting});
+
+  Stream<SettingStatus> sendCommand(
+      {required String toDRF, required int value});
 }
