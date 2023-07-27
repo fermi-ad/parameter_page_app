@@ -240,6 +240,30 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   Widget _buildExtendedStatusRow() {
+    return widget.wide
+        ? _buildExtendedStatusRowWide()
+        : _buildExtendedStatusRowNarrow();
+  }
+
+  Widget _buildExtendedStatusRowWide() {
+    return Row(children: [
+      const Spacer(),
+      SizedBox(
+          width: 400,
+          child: StreamBuilder(
+              stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
+              builder: _extendedStatusBuilder)),
+      deviceInfo != null
+          ? SizedBox(
+              width: 400,
+              child: CommandButtonMenuWidget(
+                  drf: widget.drf, deviceInfo: deviceInfo!))
+          : Container(),
+      const Spacer()
+    ]);
+  }
+
+  Widget _buildExtendedStatusRowNarrow() {
     return Column(children: [
       StreamBuilder(
           stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
