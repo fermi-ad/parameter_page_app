@@ -240,9 +240,11 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   Widget _buildExtendedStatusRow() {
-    return widget.wide
-        ? _buildExtendedStatusRowWide()
-        : _buildExtendedStatusRowNarrow();
+    return LayoutBuilder(builder: (context, constraints) {
+      return constraints.maxWidth > 800
+          ? _buildExtendedStatusRowWide()
+          : _buildExtendedStatusRowNarrow();
+    });
   }
 
   Widget _buildExtendedStatusRowWide() {
