@@ -32,14 +32,20 @@ class _CommandButtonState extends State<CommandButtonWidget> {
             const Icon(Icons.pending),
           ElevatedButton(
               style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
+                  backgroundColor:
+                      _displayState == _CommandButtonDisplayState.error
+                          ? Colors.red
+                          : Colors.blue,
                   elevation: 0.0,
                   minimumSize: const Size.fromHeight(40)),
-              onPressed: _displayState != _CommandButtonDisplayState.ready
+              onPressed: _displayState == _CommandButtonDisplayState.pending
                   ? null
                   : _handlePress,
               child: Text(
-                  style: const TextStyle(color: Colors.white), widget.longName))
+                  style: const TextStyle(color: Colors.white),
+                  _displayState == _CommandButtonDisplayState.error
+                      ? _errorMessage!
+                      : widget.longName))
         ]));
   }
 
@@ -71,8 +77,11 @@ class _CommandButtonState extends State<CommandButtonWidget> {
   void _sendCommandFailure(int facilityCode, int errorCode) {
     setState(() {
       _displayState = _CommandButtonDisplayState.error;
+      _errorMessage = "$facilityCode $errorCode";
     });
   }
 
   _CommandButtonDisplayState _displayState = _CommandButtonDisplayState.ready;
+
+  String? _errorMessage;
 }
