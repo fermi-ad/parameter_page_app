@@ -61,10 +61,12 @@ class _SettingControlState extends State<SettingControlWidget> {
   }
 
   Widget _buildUndo(BuildContext context) {
-    return StreamBuilder(
-        builder: _undoDisplayBuilder,
-        stream: DataAcquisitionWidget.of(context)
-            .monitorSettingProperty([widget.drf]));
+    return ConstrainedBox(
+        constraints: const BoxConstraints(minWidth: 48.0),
+        child: StreamBuilder(
+            builder: _undoDisplayBuilder,
+            stream: DataAcquisitionWidget.of(context)
+                .monitorSettingProperty([widget.drf])));
   }
 
   Widget _buildStates(BuildContext context) {
