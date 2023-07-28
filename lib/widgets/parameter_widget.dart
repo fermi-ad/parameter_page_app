@@ -228,18 +228,6 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     }
   }
 
-  Widget _buildParam(String? value, String? units, {required Key key}) {
-    return value == null
-        ? Container()
-        : (units == null
-            ? Text(key: key, textAlign: TextAlign.end, value)
-            : Row(key: key, children: [
-                Text(textAlign: TextAlign.end, value),
-                const SizedBox(width: 6.0),
-                Text(units, style: const TextStyle(color: Colors.grey))
-              ]));
-  }
-
   bool _hasExtendedStatusProperty() {
     return !(deviceInfo == null || deviceInfo!.basicStatus == null);
   }
@@ -330,6 +318,18 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     } else {
       return Container();
     }
+  }
+
+  Widget _buildParam(String? value, String? units, {required Key key}) {
+    return value == null
+        ? Container()
+        : (units == null
+            ? Text(key: key, textAlign: TextAlign.end, value)
+            : Row(key: key, children: [
+                Text(textAlign: TextAlign.end, value),
+                const SizedBox(width: 6.0),
+                Text(units, style: const TextStyle(color: Colors.grey))
+              ]));
   }
 
   String _extractValueString({required from}) {
