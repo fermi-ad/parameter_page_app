@@ -49,13 +49,13 @@ class _SettingControlState extends State<SettingControlWidget> {
   Widget build(BuildContext context) {
     return Row(children: [
       _buildUndo(context),
-      const SizedBox(width: 6.0),
+      const SizedBox(width: 4.0),
       SizedBox(width: 128.0, child: _buildStates(context)),
-      const SizedBox(width: 6.0),
-      _buildUnits(),
-      const SizedBox(width: 6.0),
+      const SizedBox(width: 4.0),
+      SizedBox(width: 48.0, child: _buildUnits()),
+      const SizedBox(width: 4.0),
       SizedBox(width: 32.0, child: _buildSubmitButton(context)),
-      const SizedBox(width: 6.0),
+      const SizedBox(width: 4.0),
       SizedBox(width: 32.0, child: _buildCancelButton())
     ]);
   }
