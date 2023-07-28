@@ -135,6 +135,26 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         ]));
   }
 
+  Widget _buildNarrow(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        _buildName(),
+        _buildDescription(),
+        Row(children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: _buildProperties()),
+          const Spacer(),
+          SizedBox(
+              width: 24.0, child: _buildExpandOrCollapseExtendedStatusButton())
+        ]),
+        Visibility(
+            visible: _displayExtendedStatus, child: _buildExtendedStatusRow())
+      ]),
+    );
+  }
+
   Widget _buildParameterDetailsRow() {
     return Row(
         key: Key("parameter_row_${widget.drf}"),
@@ -142,7 +162,6 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         children: [
           Expanded(flex: 2, child: _buildName()),
           Expanded(flex: 2, child: _buildDescription()),
-          const Spacer(),
           _buildProperties(),
           _buildExpandOrCollapseExtendedStatusButton(),
         ]);
@@ -311,26 +330,6 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     } else {
       return Container();
     }
-  }
-
-  Widget _buildNarrow(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        _buildName(),
-        _buildDescription(),
-        Row(children: [
-          Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: _buildProperties()),
-          const Spacer(),
-          SizedBox(
-              width: 24.0, child: _buildExpandOrCollapseExtendedStatusButton())
-        ]),
-        Visibility(
-            visible: _displayExtendedStatus, child: _buildExtendedStatusRow())
-      ]),
-    );
   }
 
   String _extractValueString({required from}) {
