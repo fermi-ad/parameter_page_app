@@ -36,6 +36,36 @@ class MockDpmService extends DpmService {
                   commonUnits: "cUR", primaryUnits: "pUR"),
               setting: const DeviceInfoProperty(
                   commonUnits: "cUS", primaryUnits: "pUS"));
+        case "Z:BTE200_TEMP":
+          return DeviceInfo(
+              di: 0,
+              name: drf,
+              description: "device description",
+              reading: const DeviceInfoProperty(
+                  commonUnits: "cUR", primaryUnits: "pUR"),
+              setting: const DeviceInfoProperty(
+                  commonUnits: "cUS", primaryUnits: "pUS"),
+              alarm: const DeviceInfoAnalogAlarm(
+                  nominal: "72.00",
+                  tolerance: "10.00",
+                  min: "62.00",
+                  max: "82.00"),
+              basicStatus: const DeviceInfoBasicStatus(
+                  onOffProperty: BasicStatusProperty(
+                      character0: ".",
+                      color0: StatusColor.green,
+                      character1: "*",
+                      color1: StatusColor.red)),
+              digControl: [
+                const DeviceInfoDigitalControl(
+                    value: 0, shortName: "On", longName: "On"),
+                const DeviceInfoDigitalControl(
+                    value: 1, shortName: "OFF", longName: "Off"),
+                const DeviceInfoDigitalControl(
+                    value: 2, shortName: "HEAT", longName: "Heat"),
+                const DeviceInfoDigitalControl(
+                    value: 3, shortName: "COOL", longName: "Cool")
+              ]);
         case "G:AMANDA":
           return DeviceInfo(
               di: 0,
@@ -70,7 +100,19 @@ class MockDpmService extends DpmService {
                       character0: "*",
                       color0: StatusColor.blue,
                       character1: "T",
-                      color1: StatusColor.magenta)));
+                      color1: StatusColor.magenta)),
+              digControl: [
+                const DeviceInfoDigitalControl(
+                    value: 0, shortName: "RESET", longName: "Reset"),
+                const DeviceInfoDigitalControl(
+                    value: 1, shortName: "ON", longName: "On"),
+                const DeviceInfoDigitalControl(
+                    value: 2, shortName: "OFF", longName: "Off"),
+                const DeviceInfoDigitalControl(
+                    value: 3, shortName: "POSITIVE", longName: "Positive"),
+                const DeviceInfoDigitalControl(
+                    value: 4, shortName: "NEGATIVE", longName: "Negative")
+              ]);
         default:
           return DeviceInfo(
               di: 0,
@@ -124,6 +166,45 @@ class MockDpmService extends DpmService {
   Stream<DigitalStatus> monitorDigitalStatusDevices(List<String> drfs) {
     if (useEmptyStream) {
       return const Stream<DigitalStatus>.empty();
+    } else if (drfs.contains("Z:BTE200_TEMP")) {
+      return Stream<DigitalStatus>.periodic(
+        const Duration(seconds: 1),
+        (count) {
+          const emptyBit = ExtendedStatusAttribute(value: "0");
+          return DigitalStatus(
+              refId: 0,
+              cycle: 0,
+              timestamp: DateTime(2023),
+              onOff: const BasicStatusAttribute(
+                  character: ".", color: StatusColor.green),
+              extendedStatus: [
+                const ExtendedStatusAttribute(
+                    description: "On/Off",
+                    value: "1",
+                    valueText: "On",
+                    color: StatusColor.green),
+                const ExtendedStatusAttribute(
+                    description: "Cool/Heat",
+                    value: "1",
+                    valueText: "Cooling",
+                    color: StatusColor.blue),
+                emptyBit,
+                emptyBit,
+                emptyBit,
+                emptyBit,
+                emptyBit,
+                emptyBit,
+                emptyBit,
+                emptyBit,
+                emptyBit,
+                emptyBit,
+                emptyBit,
+                emptyBit,
+                emptyBit,
+                emptyBit
+              ]);
+        },
+      ).asBroadcastStream();
     } else if (drfs.contains("G:AMANDA")) {
       return Stream<DigitalStatus>.periodic(
         const Duration(seconds: 1),
@@ -196,7 +277,9 @@ class MockDpmService extends DpmService {
       controller.close();
     });
     _pendingSettingsStream.clear();
-    _settingValue = pendingSettingValue!;
+    if (pendingSettingValue != null) {
+      _settingValue = pendingSettingValue!;
+    }
   }
 
   void failAllPendingSettings(
@@ -220,6 +303,19 @@ class MockDpmService extends DpmService {
 
       final newStream = StreamController<SettingStatus>();
       _pendingSettingsStream[forDRF] = newStream;
+
+      return newStream.stream;
+    }
+  }
+
+  @override
+  Stream<SettingStatus> sendCommand(
+      {required String toDRF, required int value}) {
+    if (useEmptyStream) {
+      return const Stream<SettingStatus>.empty();
+    } else {
+      final newStream = StreamController<SettingStatus>();
+      _pendingSettingsStream[toDRF] = newStream;
 
       return newStream.stream;
     }

@@ -74,6 +74,15 @@ class DeviceInfoBasicStatus {
       this.positiveNegativeProperty});
 }
 
+class DeviceInfoDigitalControl {
+  final int value;
+  final String shortName;
+  final String longName;
+
+  const DeviceInfoDigitalControl(
+      {required this.value, required this.shortName, required this.longName});
+}
+
 class DeviceInfo {
   final int di;
   final String name;
@@ -82,6 +91,7 @@ class DeviceInfo {
   final DeviceInfoProperty? setting;
   final DeviceInfoAnalogAlarm? alarm;
   final DeviceInfoBasicStatus? basicStatus;
+  final List<DeviceInfoDigitalControl> digControl;
 
   const DeviceInfo(
       {required this.di,
@@ -90,7 +100,8 @@ class DeviceInfo {
       this.reading,
       this.setting,
       this.alarm,
-      this.basicStatus});
+      this.basicStatus,
+      this.digControl = const []});
 }
 
 class Reading {
@@ -174,4 +185,7 @@ abstract class DpmService {
 
   Stream<SettingStatus> submit(
       {required String forDRF, required String newSetting});
+
+  Stream<SettingStatus> sendCommand(
+      {required String toDRF, required int value});
 }

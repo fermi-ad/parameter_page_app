@@ -87,7 +87,7 @@ class ParameterBasicStatusWidget extends StatelessWidget {
                   child: Text(withLabel,
                       style: labelsStyle, textAlign: TextAlign.right))
               : Container(),
-          SizedBox(width: 16.0, child: Text(withCharacter, style: valueStyle))
+          SizedBox(width: 8.0, child: Text(withCharacter, style: valueStyle))
         ]);
   }
 

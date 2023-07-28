@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:parameter_page/dpm_service.dart';
+import 'package:parameter_page/widgets/command_menu_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
 import 'package:parameter_page/widgets/parameter_basic_status_widget.dart';
 import 'package:parameter_page/widgets/parameter_extended_status_widget.dart';
@@ -72,15 +73,15 @@ class _ActiveParamWidget extends StatefulWidget {
 
 class _ActiveParamState extends State<_ActiveParamWidget> {
   late final Future<List<DeviceInfo>> _setup;
-  DeviceInfo? info;
+  DeviceInfo? deviceInfo;
   bool _displayExtendedStatus = false;
 
   String? get readingUnits {
     switch (widget.displayUnits) {
       case DisplayUnits.commonUnits:
-        return info?.reading?.commonUnits;
+        return deviceInfo?.reading?.commonUnits;
       case DisplayUnits.primaryUnits:
-        return info?.reading?.primaryUnits;
+        return deviceInfo?.reading?.primaryUnits;
       case DisplayUnits.raw:
         return null;
     }
@@ -89,9 +90,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   String? get settingUnits {
     switch (widget.displayUnits) {
       case DisplayUnits.commonUnits:
-        return info?.setting?.commonUnits;
+        return deviceInfo?.setting?.commonUnits;
       case DisplayUnits.primaryUnits:
-        return info?.setting?.primaryUnits;
+        return deviceInfo?.setting?.primaryUnits;
       case DisplayUnits.raw:
         return null;
     }
@@ -112,7 +113,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
       // completes, we save the information.
 
       future: _setup.then((value) {
-        info = value.first;
+        deviceInfo = value.first;
         return value;
       }),
 
@@ -134,6 +135,26 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         ]));
   }
 
+  Widget _buildNarrow(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        _buildName(),
+        _buildDescription(),
+        Row(children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: _buildProperties()),
+          const Spacer(),
+          SizedBox(
+              width: 24.0, child: _buildExpandOrCollapseExtendedStatusButton())
+        ]),
+        Visibility(
+            visible: _displayExtendedStatus, child: _buildExtendedStatusRow())
+      ]),
+    );
+  }
+
   Widget _buildParameterDetailsRow() {
     return Row(
         key: Key("parameter_row_${widget.drf}"),
@@ -141,10 +162,8 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         children: [
           Expanded(flex: 2, child: _buildName()),
           Expanded(flex: 2, child: _buildDescription()),
-          const Spacer(),
           _buildProperties(),
-          SizedBox(
-              width: 48.0, child: _buildExpandOrCollapseExtendedStatusButton()),
+          _buildExpandOrCollapseExtendedStatusButton(),
         ]);
   }
 
@@ -155,13 +174,13 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   Widget _buildDescription() {
-    if (info == null) {
+    if (deviceInfo == null) {
       return Container();
     } else {
       return Text(
           key: Key("parameter_description_${widget.drf}"),
           overflow: TextOverflow.ellipsis,
-          info?.description ?? "",
+          deviceInfo?.description ?? "",
           style: widget.wide
               ? null
               : Theme.of(context)
@@ -179,48 +198,38 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
             drf: widget.drf,
             displayUnits: widget.displayUnits,
             units: settingUnits),
-        const SizedBox(width: 12.0),
+        const SizedBox(width: 8.0),
         StreamBuilder(
             stream: widget.dpm.monitorDevices([widget.drf]),
             builder: _readingBuilder),
-        const SizedBox(width: 12.0),
+        const SizedBox(width: 8.0),
         StreamBuilder(
             stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
             builder: _basicStatusBuilder)
       ]),
       Visibility(
           visible: widget.displayAlarmDetails,
-          child: (info != null && info!.alarm != null)
+          child: (deviceInfo != null && deviceInfo!.alarm != null)
               ? ParameterAlarmDetailsWidget(
-                  drf: widget.drf, alarmBlock: info!.alarm!)
+                  drf: widget.drf, alarmBlock: deviceInfo!.alarm!)
               : Container()),
     ]);
   }
 
-  Widget _buildParam(String? value, String? units, {required Key key}) {
-    return value == null
-        ? Container()
-        : (units == null
-            ? Text(key: key, textAlign: TextAlign.end, value)
-            : Row(key: key, children: [
-                Text(textAlign: TextAlign.end, value),
-                const SizedBox(width: 6.0),
-                Text(units, style: const TextStyle(color: Colors.grey))
-              ]));
-  }
-
   Widget _buildExpandOrCollapseExtendedStatusButton() {
     if (_hasExtendedStatusProperty()) {
-      return _displayExtendedStatus
-          ? _buildExpandExtendedStatusButton()
-          : _buildCollapseExtendedStatusButton();
+      return SizedBox(
+          width: 32.0,
+          child: _displayExtendedStatus
+              ? _buildExpandExtendedStatusButton()
+              : _buildCollapseExtendedStatusButton());
     } else {
-      return Container();
+      return const SizedBox(width: 32.0);
     }
   }
 
   bool _hasExtendedStatusProperty() {
-    return !(info == null || info!.basicStatus == null);
+    return !(deviceInfo == null || deviceInfo!.basicStatus == null);
   }
 
   Widget _buildExpandExtendedStatusButton() {
@@ -238,9 +247,41 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   Widget _buildExtendedStatusRow() {
-    return StreamBuilder(
-        stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
-        builder: _extendedStatusBuilder);
+    return LayoutBuilder(builder: (context, constraints) {
+      return constraints.maxWidth > 800
+          ? _buildExtendedStatusRowWide()
+          : _buildExtendedStatusRowNarrow();
+    });
+  }
+
+  Widget _buildExtendedStatusRowWide() {
+    return Row(children: [
+      const Spacer(),
+      SizedBox(
+          width: 400,
+          child: StreamBuilder(
+              stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
+              builder: _extendedStatusBuilder)),
+      const Spacer(),
+      deviceInfo != null
+          ? SizedBox(
+              width: 400,
+              child: CommandButtonMenuWidget(
+                  drf: widget.drf, deviceInfo: deviceInfo!))
+          : Container(),
+      const Spacer()
+    ]);
+  }
+
+  Widget _buildExtendedStatusRowNarrow() {
+    return Column(children: [
+      StreamBuilder(
+          stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
+          builder: _extendedStatusBuilder),
+      deviceInfo != null
+          ? CommandButtonMenuWidget(drf: widget.drf, deviceInfo: deviceInfo!)
+          : Container()
+    ]);
   }
 
   void _toggleDigitalStatus() {
@@ -260,13 +301,13 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   Widget _basicStatusBuilder(context, snapshot) {
     if (snapshot.connectionState == ConnectionState.active) {
       return SizedBox(
-          width: 128.0,
+          width: widget.wide ? 128.0 : 32.0,
           child: ParameterBasicStatusWidget(
               drf: widget.drf,
               digitalStatus: snapshot.data!,
               wide: widget.wide));
     } else {
-      return const SizedBox(width: 128.0);
+      return SizedBox(width: widget.wide ? 128.0 : 32.0);
     }
   }
 
@@ -279,27 +320,16 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     }
   }
 
-  Widget _buildNarrow(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        _buildName(),
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: _buildDescription(),
-        ),
-        Row(children: [
-          Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: _buildProperties()),
-          const Spacer(),
-          SizedBox(
-              width: 48.0, child: _buildExpandOrCollapseExtendedStatusButton())
-        ]),
-        Visibility(
-            visible: _displayExtendedStatus, child: _buildExtendedStatusRow())
-      ]),
-    );
+  Widget _buildParam(String? value, String? units, {required Key key}) {
+    return value == null
+        ? Container()
+        : (units == null
+            ? Text(key: key, textAlign: TextAlign.end, value)
+            : Row(key: key, children: [
+                Text(textAlign: TextAlign.end, value),
+                const SizedBox(width: 6.0),
+                Text(units, style: const TextStyle(color: Colors.grey))
+              ]));
   }
 
   String _extractValueString({required from}) {
