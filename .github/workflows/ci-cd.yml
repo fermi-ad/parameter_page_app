@@ -10,13 +10,14 @@ on:
       - "main"
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  # cancel-in-progress: true
+  cancel-in-progress: true
 
 jobs:
 
   Integration-tests:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         test: 
           - smoke_test
