@@ -224,7 +224,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
               ? _buildExpandExtendedStatusButton()
               : _buildCollapseExtendedStatusButton());
     } else {
-      return Container();
+      return const SizedBox(width: 32.0);
     }
   }
 
