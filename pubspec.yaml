@@ -44,6 +44,9 @@ dependencies:
     built_collection: ^5.1.1
     built_value: ^8.4.4
     settings_ui: ^2.0.2
+    graphql_flutter: ^5.2.0-beta.5
+    logger: ^1.1.0
+    flutter_dotenv: ^5.1.0
 
 dev_dependencies:
     integration_test:
@@ -64,6 +67,8 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+    assets:
+        - .env
     # The following line ensures that the Material Icons font is
     # included with your application, so that you can use the icons in
     # the material Icons class.
