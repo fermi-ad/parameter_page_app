@@ -15,7 +15,7 @@ void main() {
       // Given the test page is loaded
       //   and I am not in edit mode
       app.main();
-      await tester.pumpAndSettle();
+      await waitForMainPageToLoad(tester);
 
       // Then the clear all button is not on the page
       assertClearAllButton(isVisible: false);
@@ -25,7 +25,7 @@ void main() {
         (tester) async {
       // Given the test page is loaded
       app.main();
-      await tester.pumpAndSettle();
+      await waitForMainPageToLoad(tester);
 
       // When I enter edit mode
       await enterEditMode(tester);
@@ -38,7 +38,7 @@ void main() {
         (tester) async {
       // Given the test page is loaded and I am in edit mode
       app.main();
-      await tester.pumpAndSettle();
+      await waitForMainPageToLoad(tester);
       await enterEditMode(tester);
 
       // When I tap the clear all button...

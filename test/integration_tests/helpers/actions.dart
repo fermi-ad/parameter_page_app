@@ -22,6 +22,10 @@ Future<void> pumpUntilFound(
   timer.cancel();
 }
 
+Future<void> waitForMainPageToLoad(tester) async {
+  await pumpUntilFound(tester, find.byKey(const Key("parameter_page_layout")));
+}
+
 Future<void> waitForDataToLoadFor(tester, parameter) async {
   final readingFinder = find.byKey(Key("parameter_reading_$parameter"));
   await pumpUntilFound(tester, readingFinder);

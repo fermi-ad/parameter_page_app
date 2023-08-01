@@ -53,7 +53,9 @@ class PageWidgetState extends State<PageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return DataSource(child: LayoutBuilder(
+    return DataSource(
+        child: LayoutBuilder(
+      key: const Key("parameter_page_layout"),
       builder: (BuildContext context, BoxConstraints constraints) {
         return _build(context, constraints.maxWidth > 600);
       },

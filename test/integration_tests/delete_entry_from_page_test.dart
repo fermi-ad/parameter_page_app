@@ -15,7 +15,7 @@ void main() {
       //   the 'G:AMANDA' device is on the page
       //   and I am in edit mode
       app.main();
-      await tester.pumpAndSettle();
+      await waitForMainPageToLoad(tester);
       assertParametersAreOnPage(["G:AMANDA"]);
       await enterEditMode(tester);
 
@@ -31,7 +31,7 @@ void main() {
       //    the 'G:AMANDA' device is on the page
       //    and I am in the edit mode
       app.main();
-      await tester.pumpAndSettle();
+      await waitForMainPageToLoad(tester);
       assertParametersAreOnPage(["G:AMANDA"]);
       await enterEditMode(tester);
 
