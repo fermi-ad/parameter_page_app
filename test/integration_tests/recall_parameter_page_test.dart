@@ -15,7 +15,7 @@ void main() {
         (tester) async {
       // Given the test page is loaded
       app.main();
-      await tester.pumpAndSettle();
+      await waitForMainPageToLoad(tester);
 
       // When I navigate to Open Page
       await navigateToOpenPage(tester);
