@@ -4,6 +4,8 @@ import 'package:integration_test/integration_test.dart';
 
 import 'package:parameter_page/main.dart' as app;
 
+import 'helpers/actions.dart';
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -12,7 +14,7 @@ void main() {
         (tester) async {
       // Given the app is running
       app.main();
-      await tester.pumpAndSettle();
+      await waitForMainPageToLoad(tester);
 
       // Then 'Parameter Page' is displayed in the title bar
       _assertAppBarTitleIs('Parameter Page');
