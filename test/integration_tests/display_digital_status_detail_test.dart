@@ -86,7 +86,7 @@ void main() {
         (tester) async {
       // Given the test page is loaded
       app.main();
-      await tester.pumpAndSettle();
+      await waitForMainPageToLoad(tester);
 
       // When I wait for the parametr data to update
       await waitForDataToLoadFor(tester, "G:AMANDA");
@@ -98,7 +98,7 @@ void main() {
     testWidgets('Click expand icon, displays extended status', (tester) async {
       // Given the test page is loaded and data for G:AMANDA is loaded
       app.main();
-      await tester.pumpAndSettle();
+      await waitForMainPageToLoad(tester);
       await waitForDataToLoadFor(tester, "G:AMANDA");
 
       // When I expand the parameter to display extended digital status
@@ -154,7 +154,7 @@ void main() {
         (tester) async {
       // Given the test page is loaded and data for G:AMANDA is loaded
       app.main();
-      await tester.pumpAndSettle();
+      await waitForMainPageToLoad(tester);
       await waitForDataToLoadFor(tester, "G:AMANDA");
 
       // ... and the extended digital status is expanded
