@@ -300,6 +300,9 @@ void assertExtendedDigitalStatusDisplay(tester,
 void assertOpenPage({required bool isVisible}) {
   expect(find.byKey(const Key("open_page_appbar")),
       isVisible ? findsOneWidget : findsNothing);
+
+  expect(find.text("Open Parameter Page"),
+      isVisible ? findsOneWidget : findsNothing);
 }
 
 void assertUndo(
