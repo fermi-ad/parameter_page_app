@@ -14,7 +14,7 @@ void main() {
         (tester) async {
       // Given the test page is loaded
       app.main();
-      await tester.pumpAndSettle();
+      await waitForMainPageToLoad(tester);
       await waitForDataToLoadFor(tester, "M:OUTTMP@e,02");
 
       // Then M:OUTTMP should show units of degF
@@ -29,7 +29,7 @@ void main() {
         (tester) async {
       // Given the test page is loaded
       app.main();
-      await tester.pumpAndSettle();
+      await waitForMainPageToLoad(tester);
 
       // When I navigate to the display settings page
       await navigateToDisplaySettings(tester);
@@ -44,7 +44,7 @@ void main() {
         (tester) async {
       // Given the test page is loaded and I am on the Display Settings page
       app.main();
-      await tester.pumpAndSettle();
+      await waitForMainPageToLoad(tester);
       await navigateToDisplaySettings(tester);
 
       // When I change Units to Primary Units and exit Display Settings
@@ -65,7 +65,7 @@ void main() {
         (tester) async {
       // Given I have changed the DisplaySettings to Primary Units and returned to the parameter page
       app.main();
-      await tester.pumpAndSettle();
+      await waitForMainPageToLoad(tester);
       await navigateToDisplaySettings(tester);
       await changeDisplaySettingsUnits(tester, to: "Primary Units");
       await navigateBackwards(tester);
@@ -82,7 +82,7 @@ void main() {
         (tester) async {
       // Given the test page is loaded and I am on the Display Settings page
       app.main();
-      await tester.pumpAndSettle();
+      await waitForMainPageToLoad(tester);
       await navigateToDisplaySettings(tester);
 
       // When I change Units to Raw and exit Display Settings
