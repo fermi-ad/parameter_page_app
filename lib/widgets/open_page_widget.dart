@@ -10,7 +10,7 @@ class OpenPageWidget extends StatefulWidget {
   final Function() onOpen;
 
   const OpenPageWidget({super.key, required this.onOpen});
-  final String title = 'Parameter Page Titles';
+  final String title = 'Open Parameter Page';
 
   @override
   State<OpenPageWidget> createState() => _OpenPageWidgetState();
