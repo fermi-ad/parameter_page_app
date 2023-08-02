@@ -40,6 +40,12 @@ Change Display Units
 Display Digital Status Detail
  - None
 
+ Write to Parameter
+ - None
+
+ Send Command
+ - None
+
 Other
  - Re-run acceptance tests in narrow mode
  - Proof-of-Concept, integrate acceptance test suite with JAMA
