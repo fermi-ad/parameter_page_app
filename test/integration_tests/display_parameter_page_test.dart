@@ -14,7 +14,7 @@ void main() {
         (tester) async {
       // Given the test page is loaded
       app.main();
-      await tester.pumpAndSettle();
+      await waitForMainPageToLoad(tester);
 
       // Then the following parameters should be displayed...
       assertParametersAreOnPage([
@@ -29,7 +29,7 @@ void main() {
         (tester) async {
       // Given the test page is loaded
       app.main();
-      await tester.pumpAndSettle();
+      await waitForMainPageToLoad(tester);
 
       // When I wait for the parametr data to update
       await waitForDataToLoadFor(tester, "M:OUTTMP@e,02");
@@ -51,7 +51,7 @@ void main() {
         (tester) async {
       // Given the test page is loaded
       app.main();
-      await tester.pumpAndSettle();
+      await waitForMainPageToLoad(tester);
 
       // When I wait for the readings to update
       await waitForDataToLoadFor(

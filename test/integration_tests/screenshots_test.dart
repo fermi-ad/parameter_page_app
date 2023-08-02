@@ -4,6 +4,8 @@ import 'package:integration_test/integration_test.dart';
 
 import 'package:parameter_page/main.dart' as app;
 
+import 'helpers/actions.dart';
+
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding();
 
@@ -14,7 +16,7 @@ void main() {
       // Given the app is running
       tester.view.physicalSize = const Size(600, 600);
       app.main();
-      await tester.pumpAndSettle();
+      await waitForMainPageToLoad(tester);
 
       // Wait 1 second for data to arrive
       await Future.delayed(const Duration(seconds: 1));

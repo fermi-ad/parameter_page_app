@@ -14,7 +14,7 @@ void main() {
         (tester) async {
       // Given the test page is loaded
       app.main();
-      await tester.pumpAndSettle();
+      await waitForMainPageToLoad(tester);
       await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
 
       // When I tap the setting property for M:OUTTMP
@@ -30,7 +30,7 @@ void main() {
         (tester) async {
       // Given I am attempting to set Z:BTE200_TEMP
       app.main();
-      await tester.pumpAndSettle();
+      await waitForMainPageToLoad(tester);
       await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
       await tapSetting(tester, forDRF: "Z:BTE200_TEMP");
 
@@ -47,7 +47,7 @@ void main() {
         (tester) async {
       // Given the test page is loaded
       app.main();
-      await tester.pumpAndSettle();
+      await waitForMainPageToLoad(tester);
       await waitForDataToLoadFor(tester, "G:AMANDA");
 
       // When I submit a new setting...
@@ -71,7 +71,7 @@ void main() {
         (tester) async {
       // Given the test page is loaded with a device whose setting is broken
       app.main();
-      await tester.pumpAndSettle();
+      await waitForMainPageToLoad(tester);
       await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
 
       // When I attempt to set a device that will always fail
@@ -93,7 +93,7 @@ void main() {
         (tester) async {
       // Given the test page is loaded with a device whose setting increments once a second
       app.main();
-      await tester.pumpAndSettle();
+      await waitForMainPageToLoad(tester);
       await waitForDataToLoadFor(tester, "Z:INC_SETTING");
       assertUndo(forDRF: "Z:INC_SETTING", isVisible: false);
 
@@ -109,7 +109,7 @@ void main() {
         (tester) async {
       // Given I have set a new value for the G:AMANDA device
       app.main();
-      await tester.pumpAndSettle();
+      await waitForMainPageToLoad(tester);
       await waitForDataToLoadFor(tester, "G:AMANDA");
       await tapSetting(tester, forDRF: "G:AMANDA");
       await submitSetting(tester, forDRF: "G:AMANDA", newValue: "51.0");
