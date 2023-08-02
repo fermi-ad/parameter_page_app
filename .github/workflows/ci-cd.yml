@@ -51,9 +51,10 @@ jobs:
           cache: true
 
       - name: Install Chrome beta
+        id: setup-chrome
         uses: browser-actions/setup-chrome@v1
         with:
-            chrome-version: beta
+          chrome-version: beta
       
       - name: Installing chromedriver (needed for Integration tests)
         uses: nanasess/setup-chromedriver@v2
@@ -63,7 +64,7 @@ jobs:
       - name: Starting chromedriver and executing integration test
         run: |
           chromedriver --port=4444 &
-          flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/${{ matrix.test }}.dart -d web-server --dart-define=USE_MOCK_DPM_SERVICE=true
+          CHROME_EXECUTABLE=${{ steps.setup-chrome.outputs.chrome-path }} flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/${{ matrix.test }}.dart -d web-server --dart-define=USE_MOCK_DPM_SERVICE=true
 
   Linter-UnitTest-SmokeTest:
     runs-on: ubuntu-latest
