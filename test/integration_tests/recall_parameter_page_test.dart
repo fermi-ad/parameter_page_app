@@ -23,5 +23,18 @@ void main() {
       // Then the user should be presented with the open page screen
       assertOpenPage(isVisible: true);
     });
+
+    testWidgets('Navigate to Open Page, should see a list of saved pages',
+        (WidgetTester tester) async {
+      // Given the test page is loaded
+      app.main();
+      await waitForMainPageToLoad(tester);
+
+      // When I navigate to Open Page
+      await navigateToOpenPage(tester);
+
+      // Then I should be presented with a list of pages, including...
+      assertOpenPageList(containsTitles: ['New Page 1']);
+    });
   });
 }

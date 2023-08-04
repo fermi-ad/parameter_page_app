@@ -352,3 +352,13 @@ void assertCommandButtons(
         areVisible ? findsOneWidget : findsNothing);
   }
 }
+
+void assertOpenPageList({required List<String> containsTitles}) {
+  for (String title in containsTitles) {
+    expect(
+        find.descendant(
+            of: find.byKey(const Key("open_page_pages_listview")),
+            matching: find.text(title)),
+        findsOneWidget);
+  }
+}
