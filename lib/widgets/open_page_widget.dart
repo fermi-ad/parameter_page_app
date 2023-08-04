@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:logger/logger.dart';
+import 'package:parameter_page/gql_param/graphql_parameter_page_service.dart';
 import '../gqlconnect.dart';
 import '../gql_param/queries.dart';
+import '../parameter_page_service.dart';
 import 'titlequerywrapper_widget.dart';
 import 'newtitledialog_widget.dart';
 
@@ -94,20 +96,15 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
   }
 
   Future<void> _fetchData() async {
-    final QueryOptions options = QueryOptions(
-      document: gql(titlequery),
-      fetchPolicy: FetchPolicy.noCache,
-    );
-
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      logger.e('GraphQL Error: ${result.exception}');
-    } else {
+    _service.fetchPages(onFailure: (String errorMessage) {
+      logger.e('fetchPages failure: $errorMessage');
+    }, onSuccess: (List<dynamic> newTitles) {
       setState(() {
-        titles = [];
-        titles = result.data?['allTitles'];
+        titles = newTitles;
       });
-    }
-  } //fetchData function
+    });
+  }
+
+  final ParameterPageService _service =
+      GraphQLParameterPageService(); //fetchData function
 }
