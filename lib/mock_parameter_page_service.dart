@@ -5,9 +5,11 @@ class MockParameterPageService extends ParameterPageService {
   Future<void> fetchPages(
       {required Function(String errorMessage) onFailure,
       required Function(List pageTitles) onSuccess}) async {
-    onSuccess.call([
-      {"pageid": "1", "title": 'west tower'},
-      {"pageid": "2", "title": 'east tower'}
-    ]);
+    onSuccess.call(_testPages);
   }
+
+  static const _testPages = [
+    {"pageid": "1", "title": 'west tower'},
+    {"pageid": "2", "title": 'east tower'}
+  ];
 }
