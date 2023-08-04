@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:logger/logger.dart';
-import 'package:parameter_page/gql_param/graphql_parameter_page_service.dart';
-import '../gqlconnect.dart';
-import '../gql_param/queries.dart';
 import '../parameter_page_service.dart';
 import 'titlequerywrapper_widget.dart';
 import 'newtitledialog_widget.dart';
@@ -11,7 +7,10 @@ import 'newtitledialog_widget.dart';
 class OpenPageWidget extends StatefulWidget {
   final Function() onOpen;
 
-  const OpenPageWidget({super.key, required this.onOpen});
+  final ParameterPageService service;
+
+  const OpenPageWidget(
+      {super.key, required this.onOpen, required this.service});
   final String title = 'Open Parameter Page';
 
   @override
@@ -96,7 +95,7 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
   }
 
   Future<void> _fetchData() async {
-    _service.fetchPages(onFailure: (String errorMessage) {
+    widget.service.fetchPages(onFailure: (String errorMessage) {
       logger.e('fetchPages failure: $errorMessage');
     }, onSuccess: (List<dynamic> newTitles) {
       setState(() {
@@ -104,7 +103,4 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
       });
     });
   }
-
-  final ParameterPageService _service =
-      GraphQLParameterPageService(); //fetchData function
 }

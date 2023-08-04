@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:parameter_page/gql_param/graphql_parameter_page_service.dart';
+import 'package:parameter_page/mock_parameter_page_service.dart';
+import 'package:parameter_page/parameter_page_service.dart';
 import 'package:parameter_page/theme/theme.dart';
 import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 import 'package:parameter_page/widgets/display_settings_widget.dart';
@@ -10,17 +13,32 @@ import 'mock-dpm/mock_dpm_service.dart';
 import 'page_entry.dart';
 import 'widgets/page_widget.dart';
 
-void main() async{
-  await dotenv.load(fileName: ".env");  
+void main() async {
+  await dotenv.load(fileName: ".env");
 
   const useMockServices =
-      String.fromEnvironment("USE_MOCK_DPM_SERVICE", defaultValue: "false") !=
+      String.fromEnvironment("USE_MOCK_SERVICES", defaultValue: "false") !=
           "false";
+
+  DpmService dpmService;
+  ParameterPageService pageService;
+  if (useMockServices) {
+    MockDpmService mock = MockDpmService();
+    mock.enablePeriodSettingStream();
+    dpmService = mock;
+
+    pageService = MockParameterPageService();
+  } else {
+    dpmService = GraphQLDpmService();
+    pageService = GraphQLParameterPageService();
+  }
 
   runApp(FermiApp(
       title: "Parameter Page",
       child: BaseWidget(
-          title: 'Parameter Page', useMockServices: useMockServices)));
+          title: 'Parameter Page',
+          dpmService: dpmService,
+          pageService: pageService)));
 }
 
 // This is the base widget for the app. It's only purpose is to provide
@@ -48,12 +66,19 @@ class FermiApp extends StatelessWidget {
 }
 
 class BaseWidget extends StatelessWidget {
-  BaseWidget({super.key, this.useMockServices = false, required this.title});
+  BaseWidget(
+      {super.key,
+      required this.title,
+      required this.dpmService,
+      required this.pageService});
 
-  final bool useMockServices;
   final String title;
   final _pageKey = GlobalKey<PageWidgetState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  final DpmService dpmService;
+
+  final ParameterPageService pageService;
 
   @override
   Widget build(BuildContext context) {
@@ -94,16 +119,7 @@ class BaseWidget extends StatelessWidget {
           key: const Key("parameter_row_Z:INC_SETTING"))
     ]));
 
-    DpmService service;
-    if (useMockServices) {
-      MockDpmService mock = MockDpmService();
-      mock.enablePeriodSettingStream();
-      service = mock;
-    } else {
-      service = GraphQLDpmService();
-    }
-
-    return DataAcquisitionWidget(service: service, child: child);
+    return DataAcquisitionWidget(service: dpmService, child: child);
   }
 
   Widget _buildDrawer(BuildContext context) {
@@ -129,8 +145,10 @@ class BaseWidget extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) =>
-              OpenPageWidget(key: const Key("open_page_route"), onOpen: () {})),
+          builder: (context) => OpenPageWidget(
+              key: const Key("open_page_route"),
+              onOpen: () {},
+              service: pageService)),
     );
   }
 
