@@ -34,7 +34,7 @@ void main() {
       await navigateToOpenPage(tester);
 
       // Then I should be presented with a list of pages, including...
-      assertOpenPageList(containsTitles: ['New Page 1']);
+      assertOpenPageList(containsTitles: ['east tower', 'west tower']);
     });
   });
 }
