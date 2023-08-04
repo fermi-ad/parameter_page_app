@@ -16,22 +16,7 @@ import 'widgets/page_widget.dart';
 void main() async {
   await dotenv.load(fileName: ".env");
 
-  const useMockServices =
-      String.fromEnvironment("USE_MOCK_SERVICES", defaultValue: "false") !=
-          "false";
-
-  DpmService dpmService;
-  ParameterPageService pageService;
-  if (useMockServices) {
-    MockDpmService mock = MockDpmService();
-    mock.enablePeriodSettingStream();
-    dpmService = mock;
-
-    pageService = MockParameterPageService();
-  } else {
-    dpmService = GraphQLDpmService();
-    pageService = GraphQLParameterPageService();
-  }
+  var (dpmService, pageService) = _configureServices();
 
   runApp(FermiApp(
       title: "Parameter Page",
@@ -39,6 +24,27 @@ void main() async {
           title: 'Parameter Page',
           dpmService: dpmService,
           pageService: pageService)));
+}
+
+(DpmService, ParameterPageService) _configureServices() {
+  const useMockServices =
+      String.fromEnvironment("USE_MOCK_SERVICES", defaultValue: "false") !=
+          "false";
+
+  return useMockServices
+      ? _configureMockServices()
+      : _configureGraphQLServices();
+}
+
+(DpmService, ParameterPageService) _configureMockServices() {
+  MockDpmService dpm = MockDpmService();
+  dpm.enablePeriodSettingStream();
+
+  return (dpm, MockParameterPageService());
+}
+
+(DpmService, ParameterPageService) _configureGraphQLServices() {
+  return (GraphQLDpmService(), GraphQLParameterPageService());
 }
 
 // This is the base widget for the app. It's only purpose is to provide
