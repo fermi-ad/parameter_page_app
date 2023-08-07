@@ -4,18 +4,19 @@ import 'package:logger/logger.dart';
 import 'package:parameter_page/parameter_page_service.dart';
 import '../gqlconnect.dart';
 import '../gql_param/mutations.dart';
-import 'parampagedetail_widget.dart';
 
 class OpenPagesListViewWidget extends StatefulWidget {
   final List<dynamic> titles;
   final Function fetchData;
   final ParameterPageService service;
+  final Function(String pageId, String pageTitle) onSelected;
 
   const OpenPagesListViewWidget(
       {Key? key,
       required this.titles,
       required this.fetchData,
-      required this.service})
+      required this.service,
+      required this.onSelected})
       : super(key: key);
 
   @override
@@ -34,16 +35,8 @@ class _OpenPagesListViewWidgetState extends State<OpenPagesListViewWidget> {
         return Card(
           child: GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ParamPageDetail(
-                    service: widget.service,
-                    pageid: widget.titles[index]['pageid'],
-                    title: widget.titles[index]['title'],
-                  ),
-                ),
-              );
+              widget.onSelected.call(widget.titles[index]['pageid'],
+                  widget.titles[index]['title']);
             },
             child: SizedBox(
               height: 40,
