@@ -36,5 +36,23 @@ void main() {
       // Then I should be presented with a list of pages, including...
       assertOpenPageList(containsTitles: ['east tower', 'west tower']);
     });
+
+    testWidgets('Select Test Page 1, return to main page and load Test Page 1',
+        (WidgetTester tester) async {
+      // Given I am on the "Open Parameter Page" page
+      app.main();
+      await waitForMainPageToLoad(tester);
+      await navigateToOpenPage(tester);
+
+      // When I select Test Page 1
+      await openParameterPage(tester, withTitle: 'Test Page 1');
+
+      // Then I should be returned to the main page
+      assertOpenPage(isVisible: false);
+
+      // ... and the contents of Test Page 1 are loaded
+      assertIsOnPage(comment: "this is comment #1");
+      assertIsOnPage(comment: "this is comment #2");
+    });
   });
 }

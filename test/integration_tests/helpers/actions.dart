@@ -247,3 +247,10 @@ Future<void> cancelSetting(tester, {required String forDRF}) async {
       matching: find.byIcon(Icons.cancel)));
   await tester.pumpAndSettle();
 }
+
+Future<void> openParameterPage(WidgetTester tester,
+    {required String withTitle}) async {
+  await tester.tap(find.descendant(
+      of: find.byType(ListTile), matching: find.text(withTitle)));
+  await tester.pumpAndSettle();
+}
