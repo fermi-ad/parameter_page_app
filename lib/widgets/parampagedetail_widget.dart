@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:parameter_page/gql_param/graphql_parameter_page_service.dart';
+import 'package:parameter_page/parameter_page_service.dart';
 import 'entryquerywrapper_widget.dart';
 
 class ParamPageDetail extends StatefulWidget {
   final String pageid;
   final String title;
+  final ParameterPageService service;
 
-  const ParamPageDetail({super.key, required this.pageid, required this.title});
+  const ParamPageDetail(
+      {super.key,
+      required this.pageid,
+      required this.title,
+      required this.service});
 
   @override
   State<ParamPageDetail> createState() => _ParamPageDetailState();
@@ -104,7 +109,7 @@ class _ParamPageDetailState extends State<ParamPageDetail> {
   }
 
   Future<void> _fetchEntryData() async {
-    _service.fetchEntries(
+    widget.service.fetchEntries(
       forPageId: widget.pageid,
       onFailure: (errorMessage) {
         logger.e(errorMessage);
@@ -116,6 +121,4 @@ class _ParamPageDetailState extends State<ParamPageDetail> {
       },
     );
   } //fetchData function
-
-  final _service = GraphQLParameterPageService();
 }

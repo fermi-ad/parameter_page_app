@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:logger/logger.dart';
+import 'package:parameter_page/parameter_page_service.dart';
 import '../gqlconnect.dart';
 import '../gql_param/mutations.dart';
 import 'parampagedetail_widget.dart';
@@ -8,12 +9,14 @@ import 'parampagedetail_widget.dart';
 class TitleQueryWrapper extends StatefulWidget {
   final List<dynamic> titles;
   final Function fetchData;
+  final ParameterPageService service;
 
-  const TitleQueryWrapper({
-    Key? key,
-    required this.titles,
-    required this.fetchData,
-  }) : super(key: key);
+  const TitleQueryWrapper(
+      {Key? key,
+      required this.titles,
+      required this.fetchData,
+      required this.service})
+      : super(key: key);
 
   @override
   State<TitleQueryWrapper> createState() => _TitleQueryWrapperState();
@@ -34,6 +37,7 @@ class _TitleQueryWrapperState extends State<TitleQueryWrapper> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => ParamPageDetail(
+                    service: widget.service,
                     pageid: widget.titles[index]['pageid'],
                     title: widget.titles[index]['title'],
                   ),

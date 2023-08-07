@@ -49,9 +49,7 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
         children: [
           Expanded(
             child: TitleQueryWrapper(
-              titles: titles,
-              fetchData: _fetchData,
-            ),
+                titles: titles, fetchData: _fetchData, service: widget.service),
           ),
           Container(
               padding: const EdgeInsets.all(10),
@@ -95,6 +93,7 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
   }
 
   Future<void> _fetchData() async {
+    // TODO: move this into TitleQueryWrapper
     widget.service.fetchPages(onFailure: (String errorMessage) {
       logger.e('fetchPages failure: $errorMessage');
     }, onSuccess: (List<dynamic> newTitles) {
