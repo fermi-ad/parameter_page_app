@@ -6,12 +6,12 @@ import '../gqlconnect.dart';
 import '../gql_param/mutations.dart';
 import 'parampagedetail_widget.dart';
 
-class TitleQueryWrapper extends StatefulWidget {
+class OpenPagesListViewWidget extends StatefulWidget {
   final List<dynamic> titles;
   final Function fetchData;
   final ParameterPageService service;
 
-  const TitleQueryWrapper(
+  const OpenPagesListViewWidget(
       {Key? key,
       required this.titles,
       required this.fetchData,
@@ -19,10 +19,11 @@ class TitleQueryWrapper extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<TitleQueryWrapper> createState() => _TitleQueryWrapperState();
+  State<OpenPagesListViewWidget> createState() =>
+      _OpenPagesListViewWidgetState();
 }
 
-class _TitleQueryWrapperState extends State<TitleQueryWrapper> {
+class _OpenPagesListViewWidgetState extends State<OpenPagesListViewWidget> {
   final Logger logger = Logger();
 
   @override

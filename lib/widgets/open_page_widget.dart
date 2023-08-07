@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import '../parameter_page_service.dart';
-import 'titlequerywrapper_widget.dart';
+import 'open_pages_list_view_widget.dart';
 import 'newtitledialog_widget.dart';
 
 class OpenPageWidget extends StatefulWidget {
@@ -48,7 +48,7 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
       body: Column(
         children: [
           Expanded(
-            child: TitleQueryWrapper(
+            child: OpenPagesListViewWidget(
                 titles: titles, fetchData: _fetchData, service: widget.service),
           ),
           Container(
@@ -93,7 +93,6 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
   }
 
   Future<void> _fetchData() async {
-    // TODO: move this into TitleQueryWrapper
     widget.service.fetchPages(onFailure: (String errorMessage) {
       logger.e('fetchPages failure: $errorMessage');
     }, onSuccess: (List<dynamic> newTitles) {
