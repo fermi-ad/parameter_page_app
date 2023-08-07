@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:logger/logger.dart';
-import '../gqlconnect.dart';
-import '../gql_param/queries.dart';
-import 'titlequerywrapper_widget.dart';
+import '../parameter_page_service.dart';
+import 'open_pages_list_view_widget.dart';
 import 'newtitledialog_widget.dart';
 
 class OpenPageWidget extends StatefulWidget {
   final Function() onOpen;
 
-  const OpenPageWidget({super.key, required this.onOpen});
+  final ParameterPageService service;
+
+  const OpenPageWidget(
+      {super.key, required this.onOpen, required this.service});
   final String title = 'Open Parameter Page';
 
   @override
@@ -47,10 +48,8 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
       body: Column(
         children: [
           Expanded(
-            child: TitleQueryWrapper(
-              titles: titles,
-              fetchData: _fetchData,
-            ),
+            child: OpenPagesListViewWidget(
+                titles: titles, fetchData: _fetchData, service: widget.service),
           ),
           Container(
               padding: const EdgeInsets.all(10),
@@ -94,20 +93,12 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
   }
 
   Future<void> _fetchData() async {
-    final QueryOptions options = QueryOptions(
-      document: gql(titlequery),
-      fetchPolicy: FetchPolicy.noCache,
-    );
-
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      logger.e('GraphQL Error: ${result.exception}');
-    } else {
+    widget.service.fetchPages(onFailure: (String errorMessage) {
+      logger.e('fetchPages failure: $errorMessage');
+    }, onSuccess: (List<dynamic> newTitles) {
       setState(() {
-        titles = [];
-        titles = result.data?['allTitles'];
+        titles = newTitles;
       });
-    }
-  } //fetchData function
+    });
+  }
 }
