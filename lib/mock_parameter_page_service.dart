@@ -8,6 +8,14 @@ class MockParameterPageService extends ParameterPageService {
     onSuccess.call(_testPages);
   }
 
+  @override
+  Future<void> fetchEntries(
+      {required String forPageId,
+      required Function(String errorMessage) onFailure,
+      required Function(List entries) onSuccess}) async {
+    onSuccess.call([]);
+  }
+
   static const _testPages = [
     {"pageid": "1", "title": 'west tower'},
     {"pageid": "2", "title": 'east tower'},
