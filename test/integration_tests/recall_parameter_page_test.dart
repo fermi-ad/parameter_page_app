@@ -10,19 +10,22 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Recall Parameter Page', () {
-    testWidgets('Characterize Add Page Title', (WidgetTester tester) async {
+    testWidgets('Characterize Add Page Title and Delete Title',
+        (WidgetTester tester) async {
       // Given I am on the "Open Parameter Page" page
       //   and there is no page titled 'test add page title'
       app.main();
       await waitForMainPageToLoad(tester);
       await navigateToOpenPage(tester);
-      // assertOpenPageListDoesNot(containTitle: 'test add page title');
 
       // When I create a new page with the title 'test add page title'
       await addPage(tester, title: "test add page title");
 
       // Then the page list contains the new title
       assertOpenPageList(containsTitles: ['test add page title']);
+
+      // Clean-up by removing the title
+      await deletePage(tester, withTitle: 'test add page title');
     }, semanticsEnabled: false);
 
     testWidgets(

@@ -277,3 +277,13 @@ Future<void> waitForNewPageToAppearInList(WidgetTester tester,
       timeout: const Duration(seconds: 10));
   await tester.pumpAndSettle();
 }
+
+Future<void> deletePage(WidgetTester tester,
+    {required String withTitle}) async {
+  final listTileFinder =
+      find.ancestor(of: find.text(withTitle), matching: find.byType(ListTile));
+  final deleteIconFinder =
+      find.descendant(of: listTileFinder, matching: find.byIcon(Icons.delete));
+  await tester.tap(deleteIconFinder);
+  await tester.pumpAndSettle();
+}
