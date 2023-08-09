@@ -28,7 +28,7 @@ class MockParameterPageService extends ParameterPageService {
         "entryid": "1",
         "pageid": "1",
         "position": "0",
-        "text": "this is entry to east tower",
+        "text": "this is entry to west tower",
         "type": "Comment"
       },
       {
