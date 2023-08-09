@@ -61,11 +61,11 @@ void main() {
       await waitForMainPageToLoad(tester);
       await navigateToOpenPage(tester);
 
-      // When I select 'west tower'
-      await openParameterPage(tester, withTitle: 'west tower');
+      // When I select 'east tower'
+      await openParameterPage(tester, withTitle: 'east tower');
 
       // Then the following should be on the page
-      expect(find.text("this is entry to west tower"), findsOneWidget);
+      expect(find.text("this is entry to east tower"), findsOneWidget);
       expect(find.text("graph route"), findsNWidgets(2));
     });
 

@@ -17,8 +17,8 @@ class MockParameterPageService extends ParameterPageService {
   }
 
   static const _testPages = [
-    {"pageid": "1", "title": 'west tower'},
-    {"pageid": "2", "title": 'east tower'},
+    {"pageid": "1", "title": 'east tower'},
+    {"pageid": "2", "title": 'west tower'},
     {"pageid": "3", "title": 'Test Page 1'}
   ];
 
@@ -28,7 +28,7 @@ class MockParameterPageService extends ParameterPageService {
         "entryid": "1",
         "pageid": "1",
         "position": "0",
-        "text": "this is entry to west tower",
+        "text": "this is entry to east tower",
         "type": "Comment"
       },
       {
