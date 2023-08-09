@@ -254,3 +254,26 @@ Future<void> openParameterPage(WidgetTester tester,
       of: find.byType(ListTile), matching: find.text(withTitle)));
   await tester.pumpAndSettle();
 }
+
+Future<void> addPage(WidgetTester tester, {required String title}) async {
+  await tester.tap(find.text('<Add page title>'));
+  await tester.pumpAndSettle();
+
+  await pumpUntilFound(tester, find.byKey(const Key("add_page_title")));
+  await tester.enterText(find.byKey(const Key("add_page_title")), title);
+  await tester.tap(find.text('Save'));
+  await tester.pumpAndSettle();
+
+  await waitForNewPageToAppearInList(tester, withTitle: title);
+}
+
+Future<void> waitForNewPageToAppearInList(WidgetTester tester,
+    {required String withTitle}) async {
+  await pumpUntilFound(
+      tester,
+      find.descendant(
+          of: find.byKey(const Key("open_page_pages_listview")),
+          matching: find.text(withTitle)),
+      timeout: const Duration(seconds: 10));
+  await tester.pumpAndSettle();
+}

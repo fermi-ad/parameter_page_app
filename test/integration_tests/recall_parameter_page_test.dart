@@ -10,6 +10,21 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Recall Parameter Page', () {
+    testWidgets('Characterize Add Page Title', (WidgetTester tester) async {
+      // Given I am on the "Open Parameter Page" page
+      //   and there is no page titled 'test add page title'
+      app.main();
+      await waitForMainPageToLoad(tester);
+      await navigateToOpenPage(tester);
+      // assertOpenPageListDoesNot(containTitle: 'test add page title');
+
+      // When I create a new page with the title 'test add page title'
+      await addPage(tester, title: "test add page title");
+
+      // Then the page list contains the new title
+      assertOpenPageList(containsTitles: ['test add page title']);
+    }, semanticsEnabled: false);
+
     testWidgets(
         'Tap Open Page in main menu, should navigate to the Open Page screen',
         (tester) async {
@@ -44,14 +59,20 @@ void main() {
       await navigateToOpenPage(tester);
 
       // When I select 'west tower'
-      await openParameterPage(tester, withTitle: 'west tower');
+      await openParameterPage(tester, withTitle: 'east tower');
 
       // Then the following should be on the page
       expect(find.text("this is entry to east tower"), findsOneWidget);
       expect(find.text("graph route"), findsNWidgets(2));
     });
 
-/*
+/*    testWidgets('Characterize delete page', (WidgetTester tester) async {
+      // Given a page with the title "delete me"
+      app.main();
+      await waitForMainPageToLoad(tester);
+      await navigateToOpenPage(tester);
+    });
+
     testWidgets('Select Test Page 1, return to main page and load Test Page 1',
         (WidgetTester tester) async {
       // Given I am on the "Open Parameter Page" page
