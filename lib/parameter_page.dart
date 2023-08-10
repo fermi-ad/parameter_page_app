@@ -6,6 +6,18 @@ class ParameterPage {
       : _entries = List<PageEntry>.from(entries ?? []),
         _savedEntries = List<PageEntry>.from(entries ?? []);
 
+  ParameterPage.fromQueryResult(List<dynamic> queryResult)
+      : _entries = [],
+        _savedEntries = [] {
+    final initialEntries = [];
+    for (final entries in queryResult) {
+      initialEntries.add(CommentEntry(entries["text"]!));
+    }
+
+    _entries = List<PageEntry>.from(initialEntries);
+    _savedEntries = List<PageEntry>.from(initialEntries);
+  }
+
   void add(PageEntry entry) {
     _enforceEditMode();
     _entries.add(entry);
@@ -78,7 +90,7 @@ class ParameterPage {
 
   List<PageEntry> _undoEntries = [];
 
-  final List<PageEntry> _savedEntries;
+  List<PageEntry> _savedEntries;
 
   bool _editing = false;
 }
