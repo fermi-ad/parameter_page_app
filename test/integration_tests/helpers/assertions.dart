@@ -362,3 +362,11 @@ void assertOpenPageList({required List<String> containsTitles}) {
         findsOneWidget);
   }
 }
+
+void assertOpenPageListDoesNot({required String containTitle}) {
+  expect(
+      find.descendant(
+          of: find.byKey(const Key("open_page_pages_listview")),
+          matching: find.text(containTitle)),
+      findsNothing);
+}

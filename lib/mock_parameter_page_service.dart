@@ -16,13 +16,49 @@ class MockParameterPageService extends ParameterPageService {
     onSuccess.call(_testPageEntries[forPageId]!);
   }
 
-  static const _testPages = [
-    {"pageid": "1", "title": 'west tower'},
-    {"pageid": "2", "title": 'east tower'},
+  @override
+  Future<void> createPage(
+      {required String withTitle,
+      required Function(String errorMessage) onFailure,
+      required Function() onSuccess}) async {
+    _testPages.add({"pageid": "4", "title": withTitle});
+    _testPageEntries["4"] = [
+      {
+        "entryid": "4",
+        "pageid": "4",
+        "position": "0",
+        "text": "position #0",
+        "type": "Comment"
+      }
+    ];
+    onSuccess.call();
+  }
+
+  @override
+  Future<void> deletePage(
+      {required String withPageId,
+      required Function(String errorMessage) onFailure,
+      required Function() onSuccess}) async {
+    for (var page in _testPages) {
+      if (page["pageid"] == withPageId) {
+        _testPages.remove(page);
+
+        onSuccess.call();
+
+        return;
+      }
+    }
+
+    onFailure.call("page could not be deleted (pageid not found)");
+  }
+
+  final _testPages = [
+    {"pageid": "1", "title": 'east tower'},
+    {"pageid": "2", "title": 'west tower'},
     {"pageid": "3", "title": 'Test Page 1'}
   ];
 
-  static const _testPageEntries = {
+  final _testPageEntries = {
     "1": [
       {
         "entryid": "1",

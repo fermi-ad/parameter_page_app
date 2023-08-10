@@ -5,7 +5,7 @@ import 'open_pages_list_view_widget.dart';
 import 'newtitledialog_widget.dart';
 
 class OpenPageWidget extends StatefulWidget {
-  final Function() onOpen;
+  final Function(String pageId, String pageTitle) onOpen;
 
   final ParameterPageService service;
 
@@ -49,7 +49,10 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
         children: [
           Expanded(
             child: OpenPagesListViewWidget(
-                titles: titles, fetchData: _fetchData, service: widget.service),
+                titles: titles,
+                fetchData: _fetchData,
+                service: widget.service,
+                onSelected: widget.onOpen),
           ),
           Container(
               padding: const EdgeInsets.all(10),
@@ -75,7 +78,9 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
                         context: context,
                         builder: (BuildContext dialogContext) {
                           return NewTitleDialog(
-                              titles: titles, fetchData: _fetchData);
+                              titles: titles,
+                              fetchData: _fetchData,
+                              service: widget.service);
                         },
                       );
                     },

@@ -6,6 +6,7 @@ import 'package:parameter_page/theme/theme.dart';
 import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 import 'package:parameter_page/widgets/display_settings_widget.dart';
 import 'package:parameter_page/widgets/open_page_widget.dart';
+import 'package:parameter_page/widgets/parampagedetail_widget.dart';
 import 'dpm_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'gql-dpm/graphql_dpm_service.dart';
@@ -153,7 +154,18 @@ class BaseWidget extends StatelessWidget {
       MaterialPageRoute(
           builder: (context) => OpenPageWidget(
               key: const Key("open_page_route"),
-              onOpen: () {},
+              onOpen: (String pageId, String pageTitle) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ParamPageDetail(
+                      service: pageService,
+                      pageid: pageId,
+                      title: pageTitle,
+                    ),
+                  ),
+                );
+              },
               service: pageService)),
     );
   }
