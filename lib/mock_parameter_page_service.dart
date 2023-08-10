@@ -16,6 +16,15 @@ class MockParameterPageService extends ParameterPageService {
     onSuccess.call(_testPageEntries[forPageId]!);
   }
 
+  @override
+  Future<void> createPage(
+      {required String withTitle,
+      required Function(String errorMessage) onFailure,
+      required Function() onSuccess}) async {
+    // TODO mock createPage
+    throw UnimplementedError();
+  }
+
   static const _testPages = [
     {"pageid": "1", "title": 'east tower'},
     {"pageid": "2", "title": 'west tower'},

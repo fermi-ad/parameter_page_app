@@ -1,4 +1,5 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:parameter_page/gql_param/mutations.dart';
 import 'package:parameter_page/parameter_page_service.dart';
 
 import '../gqlconnect.dart';
@@ -42,6 +43,27 @@ class GraphQLParameterPageService extends ParameterPageService {
       onFailure.call("${result.exception}");
     } else {
       onSuccess.call(result.data?['entriesInPageX']);
+    }
+  }
+
+  @override
+  Future<void> createPage(
+      {required String withTitle,
+      required Function(String errorMessage) onFailure,
+      required Function() onSuccess}) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(addpagetitle),
+      variables: <String, dynamic>{
+        'title': withTitle.trim(),
+      },
+    );
+
+    final QueryResult result = await client.value.query(options);
+
+    if (result.hasException) {
+      onFailure.call("${result.exception}");
+    } else {
+      onSuccess.call();
     }
   }
 }

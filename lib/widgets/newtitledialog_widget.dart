@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:logger/logger.dart';
-import '../gqlconnect.dart';
-import '../gql_param/mutations.dart';
+import 'package:parameter_page/parameter_page_service.dart';
 
 class NewTitleDialog extends StatefulWidget {
   final List<dynamic> titles;
   final Function fetchData;
+  final ParameterPageService service;
 
-  const NewTitleDialog({
-    Key? key,
-    required this.titles,
-    required this.fetchData,
-  }) : super(key: key);
+  const NewTitleDialog(
+      {Key? key,
+      required this.titles,
+      required this.fetchData,
+      required this.service})
+      : super(key: key);
 
   @override
   State<NewTitleDialog> createState() => _NewTitleDialogState();
@@ -75,20 +75,13 @@ class _NewTitleDialogState extends State<NewTitleDialog> {
   }
 
   Future<void> _addTitle(String title) async {
-    final QueryOptions options = QueryOptions(
-      document: gql(addpagetitle),
-      variables: <String, dynamic>{
-        'title': title.trim(),
-      },
-    );
-
-    final QueryResult result = await client.value.query(options);
-    //final dynamic rec = result.data;
-
-    if (result.hasException) {
-      logger.e('GraphQL Error: ${result.exception}');
-    } else {
-      widget.fetchData();
-    }
+    widget.service.createPage(
+        withTitle: title,
+        onFailure: (String errorMessage) {
+          logger.e('GraphQL Error: $errorMessage');
+        },
+        onSuccess: () {
+          widget.fetchData();
+        });
   } //addtitle function
 }

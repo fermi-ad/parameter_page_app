@@ -78,7 +78,9 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
                         context: context,
                         builder: (BuildContext dialogContext) {
                           return NewTitleDialog(
-                              titles: titles, fetchData: _fetchData);
+                              titles: titles,
+                              fetchData: _fetchData,
+                              service: widget.service);
                         },
                       );
                     },
