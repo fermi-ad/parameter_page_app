@@ -41,8 +41,7 @@ void main() async {
   MockDpmService dpm = MockDpmService();
   dpm.enablePeriodSettingStream();
 
-  // return (dpm, MockParameterPageService());
-  return (dpm, GraphQLParameterPageService());
+  return (dpm, MockParameterPageService());
 }
 
 (DpmService, ParameterPageService) _configureGraphQLServices() {

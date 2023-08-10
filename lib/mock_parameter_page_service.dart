@@ -31,15 +31,25 @@ class MockParameterPageService extends ParameterPageService {
         "type": "Comment"
       }
     ];
+    onSuccess.call();
   }
 
   @override
   Future<void> deletePage(
       {required String withPageId,
       required Function(String errorMessage) onFailure,
-      required Function() onSuccess}) {
-    // TODO: implement deletePage
-    throw UnimplementedError();
+      required Function() onSuccess}) async {
+    for (var page in _testPages) {
+      if (page["pageid"] == withPageId) {
+        _testPages.remove(page);
+
+        onSuccess.call();
+
+        return;
+      }
+    }
+
+    onFailure.call("page could not be deleted (pageid not found)");
   }
 
   final _testPages = [
@@ -48,7 +58,7 @@ class MockParameterPageService extends ParameterPageService {
     {"pageid": "3", "title": 'Test Page 1'}
   ];
 
-  static const _testPageEntries = {
+  final _testPageEntries = {
     "1": [
       {
         "entryid": "1",
