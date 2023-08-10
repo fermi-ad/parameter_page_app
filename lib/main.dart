@@ -20,10 +20,7 @@ void main() async {
 
   runApp(FermiApp(
       title: "Parameter Page",
-      child: BaseWidget(
-          title: 'Parameter Page',
-          dpmService: dpmService,
-          pageService: pageService)));
+      child: BaseWidget(dpmService: dpmService, pageService: pageService)));
 }
 
 (DpmService, ParameterPageService) _configureServices() {
@@ -71,62 +68,67 @@ class FermiApp extends StatelessWidget {
   }
 }
 
-class BaseWidget extends StatelessWidget {
-  BaseWidget(
-      {super.key,
-      required this.title,
-      required this.dpmService,
-      required this.pageService});
-
-  final String title;
-  final _pageKey = GlobalKey<PageWidgetState>();
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
+class BaseWidget extends StatefulWidget {
+  const BaseWidget(
+      {super.key, required this.dpmService, required this.pageService});
 
   final DpmService dpmService;
 
   final ParameterPageService pageService;
 
   @override
+  State<BaseWidget> createState() => _BaseWidgetState();
+}
+
+class _BaseWidgetState extends State<BaseWidget> {
+  final _pageKey = GlobalKey<PageWidgetState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         key: _scaffoldKey,
-        appBar: AppBar(title: Text(title), actions: [
-          Tooltip(
-              message: "Display Settings",
-              child: TextButton(
-                key: const Key('display_settings_button'),
-                child: const Text("Display Settings"),
-                onPressed: () => _navigateToDisplaySettings(context),
-              )),
-        ]),
+        appBar: AppBar(
+            title: Container(key: const Key("page_title"), child: Text(_title)),
+            actions: [
+              Tooltip(
+                  message: "Display Settings",
+                  child: TextButton(
+                    key: const Key('display_settings_button'),
+                    child: const Text("Display Settings"),
+                    onPressed: () => _navigateToDisplaySettings(context),
+                  )),
+            ]),
         drawer: _buildDrawer(context),
         body: _buildDPMService());
   }
 
   Widget _buildDPMService() {
     final child = Center(
-        child:
-            PageWidget(key: _pageKey, service: pageService, initialParameters: [
-      ParameterEntry("M:OUTTMP@e,02",
-          key: const Key("parameter_row_M:OUTTMP@e,02")),
-      CommentEntry("This is our first comment!"),
-      ParameterEntry("G:AMANDA", key: const Key("parameter_row_G:AMANDA")),
-      ParameterEntry("Z:NO_ALARMS",
-          key: const Key("parameter_row_Z:NO_ALARMS")),
-      ParameterEntry("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE",
-          key: const Key(
-              "parameter_row_PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE")),
-      ParameterEntry("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY",
-          key: const Key(
-              "parameter_row_PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY"),
-          label: "Humidity"),
-      ParameterEntry("Z:BTE200_TEMP",
-          key: const Key("parameter_row_BTE200_TEMP")),
-      ParameterEntry("Z:INC_SETTING",
-          key: const Key("parameter_row_Z:INC_SETTING"))
-    ]));
+        child: PageWidget(
+            key: _pageKey,
+            service: widget.pageService,
+            initialParameters: [
+          ParameterEntry("M:OUTTMP@e,02",
+              key: const Key("parameter_row_M:OUTTMP@e,02")),
+          CommentEntry("This is our first comment!"),
+          ParameterEntry("G:AMANDA", key: const Key("parameter_row_G:AMANDA")),
+          ParameterEntry("Z:NO_ALARMS",
+              key: const Key("parameter_row_Z:NO_ALARMS")),
+          ParameterEntry("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE",
+              key: const Key(
+                  "parameter_row_PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE")),
+          ParameterEntry("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY",
+              key: const Key(
+                  "parameter_row_PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY"),
+              label: "Humidity"),
+          ParameterEntry("Z:BTE200_TEMP",
+              key: const Key("parameter_row_BTE200_TEMP")),
+          ParameterEntry("Z:INC_SETTING",
+              key: const Key("parameter_row_Z:INC_SETTING"))
+        ]));
 
-    return DataAcquisitionWidget(service: dpmService, child: child);
+    return DataAcquisitionWidget(service: widget.dpmService, child: child);
   }
 
   Widget _buildDrawer(BuildContext context) {
@@ -144,7 +146,8 @@ class BaseWidget extends StatelessWidget {
   }
 
   void _newPage() async {
-    await _pageKey.currentState?.newPage();
+    await _pageKey.currentState?.newPage(
+        onNewPage: () => setState(() => _title = "New Parameter Page"));
     _scaffoldKey.currentState?.closeDrawer();
   }
 
@@ -155,8 +158,8 @@ class BaseWidget extends StatelessWidget {
           builder: (context) => OpenPageWidget(
               key: const Key("open_page_route"),
               onOpen: (String pageId, String pageTitle) =>
-                  _handleOpenPage(context, pageId),
-              service: pageService)),
+                  _handleOpenPage(context, pageId, pageTitle),
+              service: widget.pageService)),
     );
   }
 
@@ -175,8 +178,11 @@ class BaseWidget extends StatelessWidget {
                 )));
   }
 
-  void _handleOpenPage(BuildContext context, String pageId) {
+  void _handleOpenPage(BuildContext context, String pageId, String pageTitle) {
     _pageKey.currentState?.loadPage(pageId: pageId);
     Navigator.pop(context);
+    setState(() => _title = pageTitle);
   }
+
+  String _title = "Parameter Page";
 }

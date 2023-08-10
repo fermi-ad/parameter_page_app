@@ -13,6 +13,7 @@ class MockParameterPageService extends ParameterPageService {
       {required String forPageId,
       required Function(String errorMessage) onFailure,
       required Function(List entries) onSuccess}) async {
+    await Future.delayed(const Duration(seconds: 2));
     onSuccess.call(_testPageEntries[forPageId]!);
   }
 
@@ -89,6 +90,20 @@ class MockParameterPageService extends ParameterPageService {
         "position": "0",
         "text": "this is comment #1",
         "type": "Comment"
+      },
+      {
+        "entryid": "5",
+        "pageid": "3",
+        "position": "1",
+        "text": "I:BEAM",
+        "type": "Parameter"
+      },
+      {
+        "entryid": "6",
+        "pageid": "3",
+        "position": "2",
+        "text": "R:BEAM",
+        "type": "Parameter"
       },
       {
         "entryid": "5",

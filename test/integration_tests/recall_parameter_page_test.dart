@@ -55,21 +55,6 @@ void main() {
       assertOpenPageList(containsTitles: ['east tower', 'west tower']);
     });
 
-/*
-    testWidgets('Characterize open page', (WidgetTester tester) async {
-      // Given I am on the "Open Parameter Page" page
-      app.main();
-      await waitForMainPageToLoad(tester);
-      await navigateToOpenPage(tester);
-
-      // When I select 'east tower'
-      await openParameterPage(tester, withTitle: 'east tower');
-
-      // Then the following should be on the page
-      expect(find.text("this is entry to east tower"), findsOneWidget);
-      expect(find.text("graph route"), findsNWidgets(2));
-    });
-*/
     testWidgets('Select Test Page 1, return to main page and load Test Page 1',
         (WidgetTester tester) async {
       // Given I am on the "Open Parameter Page" page
@@ -83,8 +68,12 @@ void main() {
       // Then I should be returned to the main page
       assertOpenPage(isVisible: false);
 
+      // ... and the title should be displayed
+      assertPageTitleIs("Test Page 1");
+
       // ... and the contents of Test Page 1 are loaded
       assertIsOnPage(comment: "this is comment #1");
+      assertParametersAreOnPage(["I:BEAM", "R:BEAM"]);
       assertIsOnPage(comment: "this is comment #2");
     });
   });

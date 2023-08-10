@@ -42,6 +42,7 @@ void main() {
       // Then I should be returned to the page
       assertNumberOfEntriesOnPageIs(9);
       assertParameterIsInRow("M:OUTTMP@e,02", 0);
+      assertPageTitleIs("Parameter Page");
     });
 
     testWidgets('Tap New Page, should be prompted to throw away recent changes',
@@ -69,9 +70,14 @@ void main() {
       // When I press new page
       await newPage(tester);
 
-      // Then I should not have been prompted and have a new page
+      // Then I should not have been prompted
       assertConfirmThrowAwayDialog(isVisible: false);
+
+      // ... and the new page has no entries
       assertNumberOfEntriesOnPageIs(0);
+
+      // ... and the title is...
+      assertPageTitleIs("New Parameter Page");
     });
 
     testWidgets('Tap New Page, should be presented with a new blank page',
