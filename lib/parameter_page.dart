@@ -85,22 +85,24 @@ class ParameterPage {
 
   List<PageEntry> _buildEntriesListFromQueryResult(List<dynamic> queryResult) {
     List<PageEntry> ret = [];
-    for (final entry in queryResult) {
-      switch (entry["type"]) {
-        case "Comment":
-          ret.add(CommentEntry(entry["text"]!));
-          break;
-
-        case "Parameter":
-          ret.add(ParameterEntry(entry["text"]));
-          break;
-
-        default:
-          throw UnimplementedError();
-      }
+    for (final entryData in queryResult) {
+      ret.add(_hydratePageEntry(from: entryData));
     }
 
     return ret;
+  }
+
+  PageEntry _hydratePageEntry({required Map<String, dynamic> from}) {
+    switch (from["type"]) {
+      case "Comment":
+        return CommentEntry(from["text"]!);
+
+      case "Parameter":
+        return ParameterEntry(from["text"]);
+
+      default:
+        throw UnimplementedError();
+    }
   }
 
   List<PageEntry> _entries;
