@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:parameter_page/widgets/comment_entry_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
 
 void assertIsOnPage({required String comment}) {
-  expect(find.text(comment), findsOneWidget);
+  expect(
+      find.descendant(
+          of: find.byType(CommentEntryWidget), matching: find.text(comment)),
+      findsOneWidget);
 }
 
 void assertIsNotOnPage({required String comment}) {

@@ -52,7 +52,8 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
                 titles: titles,
                 fetchData: _fetchData,
                 service: widget.service,
-                onSelected: widget.onOpen),
+                onSelected: (String pageId, String pageTitle) =>
+                    _handlePageSelected(context, pageId, pageTitle)),
           ),
           Container(
               padding: const EdgeInsets.all(10),
@@ -95,6 +96,12 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
         ],
       ),
     );
+  }
+
+  void _handlePageSelected(
+      BuildContext context, String pageId, String pageTitle) {
+    widget.onOpen(pageId, pageTitle);
+    Navigator.pop(context);
   }
 
   Future<void> _fetchData() async {

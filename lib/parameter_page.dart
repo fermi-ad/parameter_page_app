@@ -6,6 +6,15 @@ class ParameterPage {
       : _entries = List<PageEntry>.from(entries ?? []),
         _savedEntries = List<PageEntry>.from(entries ?? []);
 
+  ParameterPage.fromQueryResult(List<dynamic> queryResult)
+      : _entries = [],
+        _savedEntries = [] {
+    final initialEntries = _buildEntriesListFromQueryResult(queryResult);
+
+    _entries = List<PageEntry>.from(initialEntries);
+    _savedEntries = List<PageEntry>.from(initialEntries);
+  }
+
   void add(PageEntry entry) {
     _enforceEditMode();
     _entries.add(entry);
@@ -74,11 +83,33 @@ class ParameterPage {
     return !listEquals<PageEntry>(_entries, _savedEntries);
   }
 
+  List<PageEntry> _buildEntriesListFromQueryResult(List<dynamic> queryResult) {
+    List<PageEntry> ret = [];
+    for (final entryData in queryResult) {
+      ret.add(_hydratePageEntry(from: entryData));
+    }
+
+    return ret;
+  }
+
+  PageEntry _hydratePageEntry({required Map<String, dynamic> from}) {
+    switch (from["type"]) {
+      case "Comment":
+        return CommentEntry(from["text"]!);
+
+      case "Parameter":
+        return ParameterEntry(from["text"]);
+
+      default:
+        throw UnimplementedError();
+    }
+  }
+
   List<PageEntry> _entries;
 
   List<PageEntry> _undoEntries = [];
 
-  final List<PageEntry> _savedEntries;
+  List<PageEntry> _savedEntries;
 
   bool _editing = false;
 }

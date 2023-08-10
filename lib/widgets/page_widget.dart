@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:parameter_page/parameter_page_service.dart';
 import '../parameter_page.dart';
 import '../page_entry.dart';
 import 'display_settings_widget.dart';
@@ -32,7 +33,10 @@ class DataSource extends InheritedWidget {
 class PageWidget extends StatefulWidget {
   final List<PageEntry> initialParameters;
 
-  const PageWidget({required this.initialParameters, super.key});
+  final ParameterPageService service;
+
+  const PageWidget(
+      {required this.initialParameters, required this.service, super.key});
 
   @override
   State<PageWidget> createState() => PageWidgetState();
@@ -224,6 +228,20 @@ class PageWidgetState extends State<PageWidget> {
     } else {
       setState(() => _page = ParameterPage());
     }
+  }
+
+  Future<void> loadPage({required String pageId}) async {
+    widget.service.fetchEntries(
+      forPageId: pageId,
+      onFailure: (errorMessage) {
+        throw UnimplementedError();
+      },
+      onSuccess: (fetchedEntries) {
+        setState(() {
+          _page = ParameterPage.fromQueryResult(fetchedEntries);
+        });
+      },
+    );
   }
 
   // Prompts the user to see if they want to discard changes to the page.

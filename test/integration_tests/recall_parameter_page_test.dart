@@ -55,6 +55,7 @@ void main() {
       assertOpenPageList(containsTitles: ['east tower', 'west tower']);
     });
 
+/*
     testWidgets('Characterize open page', (WidgetTester tester) async {
       // Given I am on the "Open Parameter Page" page
       app.main();
@@ -68,7 +69,7 @@ void main() {
       expect(find.text("this is entry to east tower"), findsOneWidget);
       expect(find.text("graph route"), findsNWidgets(2));
     });
-/*
+*/
     testWidgets('Select Test Page 1, return to main page and load Test Page 1',
         (WidgetTester tester) async {
       // Given I am on the "Open Parameter Page" page
@@ -86,6 +87,5 @@ void main() {
       assertIsOnPage(comment: "this is comment #1");
       assertIsOnPage(comment: "this is comment #2");
     });
-    */
   });
 }
