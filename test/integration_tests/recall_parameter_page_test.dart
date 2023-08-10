@@ -83,6 +83,9 @@ void main() {
       // Then I should be returned to the main page
       assertOpenPage(isVisible: false);
 
+      // ... and the title should be displayed
+      assertPageTitleIs("Test Page 1");
+
       // ... and the contents of Test Page 1 are loaded
       assertIsOnPage(comment: "this is comment #1");
       assertParametersAreOnPage(["I:BEAM", "R:BEAM"]);

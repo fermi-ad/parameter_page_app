@@ -374,3 +374,10 @@ void assertOpenPageListDoesNot({required String containTitle}) {
           matching: find.text(containTitle)),
       findsNothing);
 }
+
+void assertPageTitleIs(String title) {
+  expect(
+      find.descendant(
+          of: find.byKey(const Key("page_title")), matching: find.text(title)),
+      findsOneWidget);
+}
