@@ -154,8 +154,8 @@ class BaseWidget extends StatelessWidget {
       MaterialPageRoute(
           builder: (context) => OpenPageWidget(
               key: const Key("open_page_route"),
-              onOpen: (String pageId, String pageTitle) async =>
-                  await _pageKey.currentState?.loadPage(pageId: pageId),
+              onOpen: (String pageId, String pageTitle) =>
+                  _handleOpenPage(context, pageId),
               service: pageService)),
     );
   }
@@ -173,5 +173,10 @@ class BaseWidget extends StatelessWidget {
                   onChanged: (DisplaySettings newSettings) =>
                       _pageKey.currentState?.updateSettings(newSettings),
                 )));
+  }
+
+  void _handleOpenPage(BuildContext context, String pageId) {
+    _pageKey.currentState?.loadPage(pageId: pageId);
+    Navigator.pop(context);
   }
 }
