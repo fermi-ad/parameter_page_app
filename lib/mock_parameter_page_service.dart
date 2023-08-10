@@ -94,6 +94,20 @@ class MockParameterPageService extends ParameterPageService {
         "entryid": "5",
         "pageid": "3",
         "position": "1",
+        "text": "I:BEAM",
+        "type": "Parameter"
+      },
+      {
+        "entryid": "6",
+        "pageid": "3",
+        "position": "2",
+        "text": "R:BEAM",
+        "type": "Parameter"
+      },
+      {
+        "entryid": "5",
+        "pageid": "3",
+        "position": "1",
         "text": "this is comment #2",
         "type": "Comment"
       }

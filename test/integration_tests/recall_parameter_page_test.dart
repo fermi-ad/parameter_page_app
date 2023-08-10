@@ -85,6 +85,7 @@ void main() {
 
       // ... and the contents of Test Page 1 are loaded
       assertIsOnPage(comment: "this is comment #1");
+      assertParametersAreOnPage(["I:BEAM", "R:BEAM"]);
       assertIsOnPage(comment: "this is comment #2");
     });
   });
