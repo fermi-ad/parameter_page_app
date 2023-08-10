@@ -89,6 +89,13 @@ void main() {
           "position": "1",
           "text": "this is comment #2",
           "type": "Comment"
+        },
+        {
+          "entryid": "6",
+          "pageid": "3",
+          "position": "2",
+          "text": "I:BEAM",
+          "type": "Parameter"
         }
       ]);
 
@@ -96,9 +103,10 @@ void main() {
       List<PageEntry> entries = page.entriesAsList();
 
       // Then the list contains the expected entries
-      expect(entries.length, 2);
+      expect(entries.length, 3);
       expect(entries[0], isA<CommentEntry>());
       expect(entries[1], isA<CommentEntry>());
+      expect(entries[2], isA<ParameterEntry>());
     });
 
     test("editing(), initially returns false", () {
