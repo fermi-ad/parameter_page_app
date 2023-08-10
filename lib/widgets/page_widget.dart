@@ -61,12 +61,12 @@ class PageWidgetState extends State<PageWidget> {
         child: LayoutBuilder(
       key: const Key("parameter_page_layout"),
       builder: (BuildContext context, BoxConstraints constraints) {
-        return _build(context, constraints.maxWidth > 600);
+        return _buildPage(context, constraints.maxWidth > 600);
       },
     ));
   }
 
-  Widget _build(BuildContext context, bool wide) {
+  Widget _buildPage(BuildContext context, bool wide) {
     final bool movable = _page.editing() && _page.numberOfEntries > 1;
 
     return Column(

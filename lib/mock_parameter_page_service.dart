@@ -13,6 +13,7 @@ class MockParameterPageService extends ParameterPageService {
       {required String forPageId,
       required Function(String errorMessage) onFailure,
       required Function(List entries) onSuccess}) async {
+    await Future.delayed(const Duration(seconds: 2));
     onSuccess.call(_testPageEntries[forPageId]!);
   }
 
