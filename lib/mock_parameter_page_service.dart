@@ -81,6 +81,22 @@ class MockParameterPageService extends ParameterPageService {
         "text": "graph route",
         "type": "Comment"
       }
+    ],
+    "3": [
+      {
+        "entryid": "4",
+        "pageid": "3",
+        "position": "0",
+        "text": "this is comment #1",
+        "type": "Comment"
+      },
+      {
+        "entryid": "5",
+        "pageid": "3",
+        "position": "1",
+        "text": "this is comment #2",
+        "type": "Comment"
+      }
     ]
   };
 }
