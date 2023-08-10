@@ -68,14 +68,7 @@ void main() {
       expect(find.text("this is entry to east tower"), findsOneWidget);
       expect(find.text("graph route"), findsNWidgets(2));
     });
-
-/*    testWidgets('Characterize delete page', (WidgetTester tester) async {
-      // Given a page with the title "delete me"
-      app.main();
-      await waitForMainPageToLoad(tester);
-      await navigateToOpenPage(tester);
-    });
-
+/*
     testWidgets('Select Test Page 1, return to main page and load Test Page 1',
         (WidgetTester tester) async {
       // Given I am on the "Open Parameter Page" page

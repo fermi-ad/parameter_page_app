@@ -66,4 +66,26 @@ class GraphQLParameterPageService extends ParameterPageService {
       onSuccess.call();
     }
   }
+
+  @override
+  Future<void> deletePage(
+      {required String withPageId,
+      required Function(String errorMessage) onFailure,
+      required Function() onSuccess}) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(deletepagetitle),
+      variables: <String, dynamic>{
+        'pageid': withPageId,
+      },
+    );
+
+    final QueryResult result = await client.value.query(options);
+    //final dynamic data = result.data;
+
+    if (result.hasException) {
+      onFailure.call("GraphQL Error: ${result.exception}");
+    } else {
+      onSuccess.call();
+    } //else
+  }
 }

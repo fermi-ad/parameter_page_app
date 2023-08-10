@@ -33,6 +33,15 @@ class MockParameterPageService extends ParameterPageService {
     ];
   }
 
+  @override
+  Future<void> deletePage(
+      {required String withPageId,
+      required Function(String errorMessage) onFailure,
+      required Function() onSuccess}) {
+    // TODO: implement deletePage
+    throw UnimplementedError();
+  }
+
   final _testPages = [
     {"pageid": "1", "title": 'east tower'},
     {"pageid": "2", "title": 'west tower'},

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:parameter_page/parameter_page_service.dart';
-import '../gqlconnect.dart';
-import '../gql_param/mutations.dart';
 
 class OpenPagesListViewWidget extends StatefulWidget {
   final List<dynamic> titles;
@@ -67,20 +64,13 @@ class _OpenPagesListViewWidgetState extends State<OpenPagesListViewWidget> {
   }
 
   Future<void> _deleteTitle(String pageid) async {
-    final QueryOptions options = QueryOptions(
-      document: gql(deletepagetitle),
-      variables: <String, dynamic>{
-        'pageid': pageid,
-      },
-    );
-
-    final QueryResult result = await client.value.query(options);
-    //final dynamic data = result.data;
-
-    if (result.hasException) {
-      logger.e('GraphQL Error: ${result.exception}');
-    } else {
-      widget.fetchData();
-    } //else
+    widget.service.deletePage(
+        withPageId: pageid,
+        onFailure: (String errorMessage) {
+          logger.e('GraphQL Error: $errorMessage');
+        },
+        onSuccess: () {
+          widget.fetchData();
+        });
   } //delete Title function
 }

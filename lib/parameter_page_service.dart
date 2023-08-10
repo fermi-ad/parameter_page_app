@@ -12,4 +12,9 @@ abstract class ParameterPageService {
       {required String withTitle,
       required Function(String errorMessage) onFailure,
       required Function() onSuccess});
+
+  Future<void> deletePage(
+      {required String withPageId,
+      required Function(String errorMessage) onFailure,
+      required Function() onSuccess});
 }
