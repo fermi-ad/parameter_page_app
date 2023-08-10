@@ -148,6 +148,7 @@ class _BaseWidgetState extends State<BaseWidget> {
   void _newPage() async {
     await _pageKey.currentState?.newPage();
     _scaffoldKey.currentState?.closeDrawer();
+    setState(() => _title = "New Parameter Page");
   }
 
   void _navigateToOpenPage(BuildContext context) {

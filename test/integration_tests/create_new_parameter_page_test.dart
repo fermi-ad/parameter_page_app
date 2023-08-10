@@ -42,6 +42,7 @@ void main() {
       // Then I should be returned to the page
       assertNumberOfEntriesOnPageIs(9);
       assertParameterIsInRow("M:OUTTMP@e,02", 0);
+      assertPageTitleIs("Parameter Page");
     });
 
     testWidgets('Tap New Page, should be prompted to throw away recent changes',
