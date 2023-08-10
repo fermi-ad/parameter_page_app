@@ -219,14 +219,16 @@ class PageWidgetState extends State<PageWidget> {
     setState(() => _page.cancelEditing());
   }
 
-  Future<void> newPage() async {
+  Future<void> newPage({Function()? onNewPage}) async {
     if (_page.isDirty) {
       final dialogResponse = await _shouldDiscardChanges(context);
       if (!(dialogResponse == null || !dialogResponse)) {
         setState(() => _page = ParameterPage());
+        onNewPage?.call();
       }
     } else {
       setState(() => _page = ParameterPage());
+      onNewPage?.call();
     }
   }
 
