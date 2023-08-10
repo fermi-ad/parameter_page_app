@@ -9,10 +9,7 @@ class ParameterPage {
   ParameterPage.fromQueryResult(List<dynamic> queryResult)
       : _entries = [],
         _savedEntries = [] {
-    final initialEntries = [];
-    for (final entries in queryResult) {
-      initialEntries.add(CommentEntry(entries["text"]!));
-    }
+    final initialEntries = _buildEntriesListFromQueryResult(queryResult);
 
     _entries = List<PageEntry>.from(initialEntries);
     _savedEntries = List<PageEntry>.from(initialEntries);
@@ -84,6 +81,26 @@ class ParameterPage {
 
   bool get isDirty {
     return !listEquals<PageEntry>(_entries, _savedEntries);
+  }
+
+  List<PageEntry> _buildEntriesListFromQueryResult(List<dynamic> queryResult) {
+    List<PageEntry> ret = [];
+    for (final entry in queryResult) {
+      switch (entry["type"]) {
+        case "Comment":
+          ret.add(CommentEntry(entry["text"]!));
+          break;
+
+        case "Parameter":
+          ret.add(ParameterEntry(entry["text"]));
+          break;
+
+        default:
+          throw UnimplementedError();
+      }
+    }
+
+    return ret;
   }
 
   List<PageEntry> _entries;
