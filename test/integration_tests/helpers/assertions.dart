@@ -381,3 +381,8 @@ void assertPageTitleIs(String title) {
           of: find.byKey(const Key("page_title")), matching: find.text(title)),
       findsOneWidget);
 }
+
+void assertOpeningPageProgressIndicator({required bool isVisible}) {
+  expect(find.byKey(const Key("opening_page_progress_indicator")),
+      isVisible ? findsOneWidget : findsNothing);
+}
