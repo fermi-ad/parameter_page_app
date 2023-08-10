@@ -21,11 +21,19 @@ class MockParameterPageService extends ParameterPageService {
       {required String withTitle,
       required Function(String errorMessage) onFailure,
       required Function() onSuccess}) async {
-    // TODO mock createPage
-    throw UnimplementedError();
+    _testPages.add({"pageid": "4", "title": withTitle});
+    _testPageEntries["4"] = [
+      {
+        "entryid": "4",
+        "pageid": "4",
+        "position": "0",
+        "text": "position #0",
+        "type": "Comment"
+      }
+    ];
   }
 
-  static const _testPages = [
+  final _testPages = [
     {"pageid": "1", "title": 'east tower'},
     {"pageid": "2", "title": 'west tower'},
     {"pageid": "3", "title": 'Test Page 1'}
