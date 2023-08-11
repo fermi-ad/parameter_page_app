@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
-import '../parameter_page.dart';
-import '../page_entry.dart';
+import '../entities/parameter_page.dart';
+import '../entities/page_entry.dart';
 import 'display_settings_widget.dart';
 import 'new_entry_editor_widget.dart';
 

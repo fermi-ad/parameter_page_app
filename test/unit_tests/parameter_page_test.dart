@@ -1,5 +1,5 @@
-import 'package:parameter_page/page_entry.dart';
-import 'package:parameter_page/parameter_page.dart';
+import 'package:parameter_page/entities/page_entry.dart';
+import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:test/test.dart';
 
 void main() {

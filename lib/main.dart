@@ -10,7 +10,7 @@ import 'services/dpm/dpm_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'services/dpm/graphql_dpm_service.dart';
 import 'services/dpm/mock_dpm_service.dart';
-import 'page_entry.dart';
+import 'entities/page_entry.dart';
 import 'widgets/page_widget.dart';
 
 void main() async {
