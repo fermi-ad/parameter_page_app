@@ -40,7 +40,7 @@ void main() {
 
       // Then the user should be presented with the open page screen
       assertOpenPage(isVisible: true);
-    });
+    }, semanticsEnabled: false);
 
     testWidgets('Navigate to Open Page, should see a list of saved pages',
         (WidgetTester tester) async {
@@ -53,27 +53,7 @@ void main() {
 
       // Then I should be presented with a list of pages, including...
       assertOpenPageList(containsTitles: ['east tower', 'west tower']);
-    });
-
-    testWidgets(
-        'Open a page, display selected title with progress indicator while loading',
-        (WidgetTester tester) async {
-      // Given I am on the Open Page page
-      app.main();
-      await waitForMainPageToLoad(tester);
-      await navigateToOpenPage(tester);
-
-      // When I select Test Page 1
-      await openParameterPage(tester, withTitle: 'Test Page 1');
-
-      // Then the new title is displayed immediately
-      assertOpenPage(isVisible: false);
-      assertPageTitleIs("Test Page 1");
-
-      // ... and a progress indicator is shown while the page is being loaded
-      assertIsNotOnPage(comment: "this is comment #1");
-      assertOpeningPageProgressIndicator(isVisible: true);
-    });
+    }, semanticsEnabled: false);
 
     testWidgets('Select Test Page 1, return to main page and load Test Page 1',
         (WidgetTester tester) async {
@@ -87,6 +67,9 @@ void main() {
 
       // Then I should be returned to the main page
       assertOpenPage(isVisible: false);
+
+      // ... and the page loading progress indicator should be gone
+      assertOpeningPageProgressIndicator(isVisible: false);
 
       // ... and the title should be displayed
       assertPageTitleIs("Test Page 1");

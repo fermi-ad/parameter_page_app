@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:parameter_page/parameter_page_service.dart';
 
 class MockParameterPageService extends ParameterPageService {
@@ -13,8 +15,8 @@ class MockParameterPageService extends ParameterPageService {
       {required String forPageId,
       required Function(String errorMessage) onFailure,
       required Function(List entries) onSuccess}) async {
-    await Future.delayed(const Duration(seconds: 2));
-    onSuccess.call(_testPageEntries[forPageId]!);
+    Timer(const Duration(seconds: 2),
+        () => onSuccess.call(_testPageEntries[forPageId]!));
   }
 
   @override
