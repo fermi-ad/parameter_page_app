@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:parameter_page/dpm_service.dart';
+import 'package:parameter_page/services/dpm/dpm_service.dart';
 
 class DataAcquisitionWidget extends InheritedWidget {
   final DpmService service;

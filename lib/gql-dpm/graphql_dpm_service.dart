@@ -15,7 +15,7 @@ import 'package:parameter_page/gql-dpm/schema/__generated__/stream_data.var.gql.
 
 import 'dart:developer' as developer;
 
-import '../dpm_service.dart';
+import '../services/dpm/dpm_service.dart';
 
 class GraphQLDpmService extends DpmService {
   final Client _q;

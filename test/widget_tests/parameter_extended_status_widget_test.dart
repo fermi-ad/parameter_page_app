@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:parameter_page/dpm_service.dart';
+import 'package:parameter_page/services/dpm/dpm_service.dart';
 import 'package:parameter_page/widgets/parameter_extended_status_widget.dart';
 
 void main() {

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:parameter_page/dpm_service.dart';
+import 'package:parameter_page/services/dpm/dpm_service.dart';
 
 class MockDpmService extends DpmService {
   final bool useEmptyStream;
