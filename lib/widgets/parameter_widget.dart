@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:parameter_page/dpm_service.dart';
+import 'package:parameter_page/services/dpm/dpm_service.dart';
 import 'package:parameter_page/widgets/command_menu_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
 import 'package:parameter_page/widgets/parameter_basic_status_widget.dart';

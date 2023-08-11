@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:parameter_page/widgets/util.dart';
 
-import '../dpm_service.dart';
+import '../services/dpm/dpm_service.dart';
 
 class ParameterBasicStatusWidget extends StatelessWidget {
   final DigitalStatus digitalStatus;
