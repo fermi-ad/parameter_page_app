@@ -8,7 +8,7 @@ import 'package:parameter_page/widgets/display_settings_widget.dart';
 import 'package:parameter_page/widgets/open_page_widget.dart';
 import 'services/dpm/dpm_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'gql-dpm/graphql_dpm_service.dart';
+import 'services/dpm/graphql_dpm_service.dart';
 import 'services/dpm/mock_dpm_service.dart';
 import 'page_entry.dart';
 import 'widgets/page_widget.dart';
