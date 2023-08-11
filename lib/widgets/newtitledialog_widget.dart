@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:parameter_page/services/parameter_page_service.dart';
+import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
 
 class NewTitleDialog extends StatefulWidget {
   final List<dynamic> titles;

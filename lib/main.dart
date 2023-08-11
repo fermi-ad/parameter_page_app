@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:parameter_page/gql_param/graphql_parameter_page_service.dart';
-import 'package:parameter_page/mock_parameter_page_service.dart';
-import 'package:parameter_page/services/parameter_page_service.dart';
+import 'package:parameter_page/services/parameter_page/gql_param/graphql_parameter_page_service.dart';
+import 'package:parameter_page/services/parameter_page/mock_parameter_page_service.dart';
+import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
 import 'package:parameter_page/theme/theme.dart';
 import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 import 'package:parameter_page/widgets/display_settings_widget.dart';
