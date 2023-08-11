@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:parameter_page/parameter_page_service.dart';
+import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
 
 class MockParameterPageService extends ParameterPageService {
   @override

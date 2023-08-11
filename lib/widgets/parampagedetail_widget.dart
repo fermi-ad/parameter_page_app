@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:parameter_page/parameter_page_service.dart';
+import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
 import 'entryquerywrapper_widget.dart';
 
 class ParamPageDetail extends StatefulWidget {
