@@ -1,6 +1,6 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:parameter_page/gql_param/mutations.dart';
-import 'package:parameter_page/parameter_page_service.dart';
+import 'package:parameter_page/services/parameter_page_service.dart';
 
 import '../gqlconnect.dart';
 import 'queries.dart';
