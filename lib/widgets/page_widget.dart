@@ -45,9 +45,11 @@ class PageWidget extends StatefulWidget {
 // The non-public state of the Parameter Page.
 
 class PageWidgetState extends State<PageWidget> {
-  late ParameterPage _page;
-
   DisplaySettings settings = DisplaySettings();
+
+  bool get pageIsLoading {
+    return _page == null;
+  }
 
   @override
   void initState() {
@@ -61,13 +63,25 @@ class PageWidgetState extends State<PageWidget> {
         child: LayoutBuilder(
       key: const Key("parameter_page_layout"),
       builder: (BuildContext context, BoxConstraints constraints) {
-        return _buildPage(context, constraints.maxWidth > 600);
+        return pageIsLoading
+            ? _buildLoadingPage()
+            : _buildPage(context, constraints.maxWidth > 600, _page!);
       },
     ));
   }
 
-  Widget _buildPage(BuildContext context, bool wide) {
-    final bool movable = _page.editing() && _page.numberOfEntries > 1;
+  Widget _buildLoadingPage() {
+    return const Column(key: Key("opening_page_progress_indicator"), children: [
+      Spacer(),
+      CircularProgressIndicator(),
+      SizedBox(height: 16),
+      Text("Loading..."),
+      Spacer()
+    ]);
+  }
+
+  Widget _buildPage(BuildContext context, bool wide, ParameterPage page) {
+    final bool movable = page.editing() && page.numberOfEntries > 1;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -75,20 +89,22 @@ class PageWidgetState extends State<PageWidget> {
         Expanded(
           child: ReorderableListView(
               padding: const EdgeInsets.fromLTRB(4.0, 4.0, 4.0, 4.0),
-              footer: _page.editing()
+              footer: page.editing()
                   ? NewEntryEditorWidget(
                       key: const Key('add-entry-textfield'),
                       onSubmitted: (PageEntry newEntry) {
                         setState(() {
-                          _page.add(newEntry);
+                          page.add(newEntry);
                         });
                       })
                   : null,
               buildDefaultDragHandles: false,
-              onReorder: _reorderEntry,
-              children: _page.entriesAsList().fold([], (acc, entry) {
+              onReorder: (oldIndex, newIndex) =>
+                  _reorderEntry(page, oldIndex, newIndex),
+              children: page.entriesAsList().fold([], (acc, entry) {
                 acc.add(Row(key: entry.key, children: [
-                  Expanded(child: _buildRow(context, entry, acc.length, wide)),
+                  Expanded(
+                      child: _buildRow(context, entry, acc.length, wide, page)),
                   movable
                       ? ReorderableDragStartListener(
                           index: acc.length,
@@ -98,21 +114,21 @@ class PageWidgetState extends State<PageWidget> {
                 return acc;
               })),
         ),
-        _buildEditModeFloatingActionBar(),
-        _buildFloatingActionBar()
+        _buildEditModeFloatingActionBar(page),
+        _buildFloatingActionBar(page)
       ],
     );
   }
 
-  Widget _buildRow(
-      BuildContext context, PageEntry entry, int index, bool wide) {
+  Widget _buildRow(BuildContext context, PageEntry entry, int index, bool wide,
+      ParameterPage page) {
     return Padding(
       padding: const EdgeInsets.all(2.0),
-      child: _page.editing()
+      child: page.editing()
           ? Row(children: [
               Expanded(
                   child: entry.buildEntry(
-                      context, _page.editing(), wide, settings)),
+                      context, page.editing(), wide, settings)),
               const SizedBox(width: 8.0),
               GestureDetector(
                   onTap: () async {
@@ -120,7 +136,7 @@ class PageWidgetState extends State<PageWidget> {
 
                     if (result ?? false) {
                       setState(() {
-                        _page.removeEntry(at: index);
+                        page.removeEntry(at: index);
                       });
                     }
                   },
@@ -129,15 +145,15 @@ class PageWidgetState extends State<PageWidget> {
                       onPressed: null,
                       icon: Icon(Icons.delete)))
             ])
-          : entry.buildEntry(context, _page.editing(), wide, settings),
+          : entry.buildEntry(context, page.editing(), wide, settings),
     );
   }
 
   // Moves an entry from one location to another in the parameter list. It
   // also triggers a redraw.
-  void _reorderEntry(oldIndex, newIndex) {
+  void _reorderEntry(ParameterPage onPage, oldIndex, newIndex) {
     setState(() {
-      _page.reorderEntry(atIndex: oldIndex, toIndex: newIndex);
+      onPage.reorderEntry(atIndex: oldIndex, toIndex: newIndex);
     });
   }
 
@@ -163,7 +179,7 @@ class PageWidgetState extends State<PageWidget> {
     );
   }
 
-  Widget _buildFloatingActionBar() {
+  Widget _buildFloatingActionBar(ParameterPage page) {
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: FloatingActionButton.small(
@@ -172,19 +188,19 @@ class PageWidgetState extends State<PageWidget> {
             backgroundColor: Theme.of(context)
                 .colorScheme
                 .primary
-                .withAlpha(_page.editing() ? 255 : 128),
-            onPressed: _toggleEditMode,
+                .withAlpha(page.editing() ? 255 : 128),
+            onPressed: () => _toggleEditMode(page),
             child: const Icon(Icons.edit_note)));
   }
 
-  void _toggleEditMode() {
-    setState(() => _page.toggleEditing());
+  void _toggleEditMode(ParameterPage page) {
+    setState(() => page.toggleEditing());
   }
 
-  Widget _buildEditModeFloatingActionBar() {
+  Widget _buildEditModeFloatingActionBar(ParameterPage page) {
     return Visibility(
         key: const Key("edit_mode_tools_visibility"),
-        visible: _page.editing(),
+        visible: page.editing(),
         child: Column(children: [
           Padding(
               padding: const EdgeInsets.all(8.0),
@@ -195,7 +211,7 @@ class PageWidgetState extends State<PageWidget> {
                       heroTag: null,
                       backgroundColor:
                           Theme.of(context).colorScheme.primary.withAlpha(128),
-                      onPressed: _cancelEditMode,
+                      onPressed: () => _cancelEditMode(page),
                       child: const Icon(Icons.restore)))),
           Padding(
               padding: const EdgeInsets.all(8.0),
@@ -206,21 +222,21 @@ class PageWidgetState extends State<PageWidget> {
                       heroTag: null,
                       backgroundColor:
                           Theme.of(context).colorScheme.primary.withAlpha(128),
-                      onPressed: _clearAllEntries,
+                      onPressed: () => _clearAllEntries(page),
                       child: const Icon(Icons.delete))))
         ]));
   }
 
-  void _clearAllEntries() {
-    setState(() => _page.clearAll());
+  void _clearAllEntries(ParameterPage page) {
+    setState(() => page.clearAll());
   }
 
-  void _cancelEditMode() {
-    setState(() => _page.cancelEditing());
+  void _cancelEditMode(ParameterPage page) {
+    setState(() => page.cancelEditing());
   }
 
   Future<void> newPage({Function()? onNewPage}) async {
-    if (_page.isDirty) {
+    if (_page != null && _page!.isDirty) {
       final dialogResponse = await _shouldDiscardChanges(context);
       if (!(dialogResponse == null || !dialogResponse)) {
         setState(() => _page = ParameterPage());
@@ -232,7 +248,7 @@ class PageWidgetState extends State<PageWidget> {
     }
   }
 
-  Future<void> loadPage({required String pageId}) async {
+  loadPage({required String pageId}) {
     widget.service.fetchEntries(
       forPageId: pageId,
       onFailure: (errorMessage) {
@@ -244,6 +260,7 @@ class PageWidgetState extends State<PageWidget> {
         });
       },
     );
+    setState(() => _page = null);
   }
 
   // Prompts the user to see if they want to discard changes to the page.
@@ -272,4 +289,6 @@ class PageWidgetState extends State<PageWidget> {
   void updateSettings(DisplaySettings newSettings) {
     setState(() => settings = newSettings);
   }
+
+  ParameterPage? _page;
 }

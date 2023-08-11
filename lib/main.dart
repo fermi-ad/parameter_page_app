@@ -178,7 +178,8 @@ class _BaseWidgetState extends State<BaseWidget> {
                 )));
   }
 
-  void _handleOpenPage(BuildContext context, String pageId, String pageTitle) {
+  void _handleOpenPage(
+      BuildContext context, String pageId, String pageTitle) async {
     _pageKey.currentState?.loadPage(pageId: pageId);
     Navigator.pop(context);
     setState(() => _title = pageTitle);

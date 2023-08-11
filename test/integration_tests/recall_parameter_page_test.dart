@@ -40,7 +40,7 @@ void main() {
 
       // Then the user should be presented with the open page screen
       assertOpenPage(isVisible: true);
-    });
+    }, semanticsEnabled: false);
 
     testWidgets('Navigate to Open Page, should see a list of saved pages',
         (WidgetTester tester) async {
@@ -53,7 +53,7 @@ void main() {
 
       // Then I should be presented with a list of pages, including...
       assertOpenPageList(containsTitles: ['east tower', 'west tower']);
-    });
+    }, semanticsEnabled: false);
 
     testWidgets('Select Test Page 1, return to main page and load Test Page 1',
         (WidgetTester tester) async {
@@ -67,6 +67,9 @@ void main() {
 
       // Then I should be returned to the main page
       assertOpenPage(isVisible: false);
+
+      // ... and the page loading progress indicator should be gone
+      assertOpeningPageProgressIndicator(isVisible: false);
 
       // ... and the title should be displayed
       assertPageTitleIs("Test Page 1");
