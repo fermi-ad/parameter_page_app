@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/services/dpm/mock_dpm_service.dart';
-import 'package:parameter_page/page_entry.dart';
+import 'package:parameter_page/entities/page_entry.dart';
 import 'package:parameter_page/widgets/new_entry_editor_widget.dart';
 import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 

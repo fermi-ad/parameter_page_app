@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:parameter_page/page_entry.dart';
+import 'package:parameter_page/entities/page_entry.dart';
 
 class ParameterPage {
   ParameterPage([List<PageEntry>? entries])
