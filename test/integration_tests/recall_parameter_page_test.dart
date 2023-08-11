@@ -17,6 +17,7 @@ void main() {
       app.main();
       await waitForMainPageToLoad(tester);
       await navigateToOpenPage(tester);
+      await tester.pumpAndSettle();
 
       // When I create a new page with the title 'test add page title'
       await addPage(tester, title: "test add page title");
@@ -52,6 +53,7 @@ void main() {
       await navigateToOpenPage(tester);
 
       // Then I should be presented with a list of pages, including...
+      assertOpenPage(isVisible: true);
       assertOpenPageList(containsTitles: ['east tower', 'west tower']);
     }, semanticsEnabled: false);
 

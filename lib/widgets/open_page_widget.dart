@@ -18,8 +18,11 @@ class OpenPageWidget extends StatefulWidget {
 }
 
 class _OpenPageWidgetState extends State<OpenPageWidget> {
-  List<dynamic> titles = [];
   final Logger logger = Logger();
+
+  bool get isLoading {
+    return _titles == null;
+  }
 
   @override
   void initState() {
@@ -45,56 +48,74 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
           ),
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: OpenPagesListViewWidget(
-                titles: titles,
-                fetchData: _fetchData,
-                service: widget.service,
-                onSelected: (String pageId, String pageTitle) =>
-                    _handlePageSelected(context, pageId, pageTitle)),
-          ),
-          Container(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GestureDetector(
-                    onTap: () => {
-                      const CircularProgressIndicator(
-                        backgroundColor: Colors.amber,
-                      ),
-                      _fetchData()
-                    },
-                    child: const Text('<Refresh>',
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue)),
-                  ),
-                  GestureDetector(
-                    onTap: () async {
-                      await showDialog(
-                        context: context,
-                        builder: (BuildContext dialogContext) {
-                          return NewTitleDialog(
-                              titles: titles,
-                              fetchData: _fetchData,
-                              service: widget.service);
-                        },
-                      );
-                    },
-                    child: const Text('<Add page title>',
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue)),
-                  ),
-                ],
-              )),
-        ],
-      ),
+      body: isLoading ? _buildLoading() : _buildPageList(_titles!),
+    );
+  }
+
+  Widget _buildLoading() {
+    return const Row(children: [
+      Spacer(),
+      Column(children: [
+        Spacer(),
+        CircularProgressIndicator(),
+        SizedBox(height: 16),
+        Text("Loading..."),
+        Spacer()
+      ]),
+      Spacer()
+    ]);
+  }
+
+  Widget _buildPageList(List<dynamic> titles) {
+    return Column(
+      children: [
+        Expanded(
+          child: OpenPagesListViewWidget(
+              titles: titles,
+              fetchData: _fetchData,
+              service: widget.service,
+              onSelected: (String pageId, String pageTitle) =>
+                  _handlePageSelected(context, pageId, pageTitle)),
+        ),
+        Container(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                GestureDetector(
+                  onTap: () => {
+                    const CircularProgressIndicator(
+                      backgroundColor: Colors.amber,
+                    ),
+                    _fetchData()
+                  },
+                  child: const Text('<Refresh>',
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue)),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    await showDialog(
+                      context: context,
+                      builder: (BuildContext dialogContext) {
+                        return NewTitleDialog(
+                            titles: titles,
+                            fetchData: _fetchData,
+                            service: widget.service);
+                      },
+                    );
+                  },
+                  child: const Text('<Add page title>',
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue)),
+                ),
+              ],
+            )),
+      ],
     );
   }
 
@@ -105,12 +126,16 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
   }
 
   Future<void> _fetchData() async {
+    setState(() => _titles = null);
+
     widget.service.fetchPages(onFailure: (String errorMessage) {
       logger.e('fetchPages failure: $errorMessage');
     }, onSuccess: (List<dynamic> newTitles) {
       setState(() {
-        titles = newTitles;
+        _titles = newTitles;
       });
     });
   }
+
+  List<dynamic>? _titles;
 }
