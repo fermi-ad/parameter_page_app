@@ -113,7 +113,8 @@ class _BaseWidgetState extends State<BaseWidget> {
     return DataAcquisitionWidget(
         service: widget.dpmService,
         child: Center(
-            child: PageWidget(service: widget.pageService, pageId: pageId)));
+            child: PageWidget(
+                key: _pageKey, service: widget.pageService, pageId: pageId)));
   }
 
   Widget _buildDrawer(BuildContext context) {
