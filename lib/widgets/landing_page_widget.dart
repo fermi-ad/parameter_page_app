@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class LandingPageWidget extends StatelessWidget {
-  const LandingPageWidget({super.key});
+  final Function() onOpenPage;
+
+  const LandingPageWidget({super.key, required this.onOpenPage});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class LandingPageWidget extends StatelessWidget {
                 backgroundColor: Colors.blue,
                 elevation: 0.0,
                 minimumSize: const Size.fromHeight(40)),
-            onPressed: () {},
+            onPressed: onOpenPage,
             child: const Text(
                 style: TextStyle(color: Colors.white),
                 "Open a Parameter Page")));

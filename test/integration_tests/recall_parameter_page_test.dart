@@ -19,14 +19,27 @@ void main() {
 
       // Then I should the landing page
       assertLandingPage(isVisible: true);
-    });
-/*
+    }, semanticsEnabled: false);
+
+    testWidgets('Load Test Page 1 from Landing Page, display Test Page 1',
+        (WidgetTester tester) async {
+      // Given I am on the Landing Page
+      app.main();
+      await tester.pumpAndSettle();
+
+      // When I tap Open a Parameter Page and select Test Page 1
+      await navigateToTestPage1(tester);
+
+      // Then Test Page 1 should be displayed
+      assertTestPage1IsOpen();
+    }, semanticsEnabled: false);
+
     testWidgets('Characterize Add Page Title and Delete Title',
         (WidgetTester tester) async {
       // Given I am on the "Open Parameter Page" page
       //   and there is no page titled 'test add page title'
       app.main();
-      await waitForMainPageToLoad(tester);
+      await tester.pumpAndSettle();
       await navigateToOpenPage(tester);
       await tester.pumpAndSettle();
 
@@ -43,9 +56,9 @@ void main() {
     testWidgets(
         'Tap Open Page in main menu, should navigate to the Open Page screen',
         (tester) async {
-      // Given the test page is loaded
+      // Given the application is started fresh
       app.main();
-      await waitForMainPageToLoad(tester);
+      await tester.pumpAndSettle();
 
       // When I navigate to Open Page
       await navigateToOpenPage(tester);
@@ -56,9 +69,9 @@ void main() {
 
     testWidgets('Navigate to Open Page, should see a list of saved pages',
         (WidgetTester tester) async {
-      // Given the test page is loaded
+      // Given the application is started fresh
       app.main();
-      await waitForMainPageToLoad(tester);
+      await tester.pumpAndSettle();
 
       // When I navigate to Open Page
       await navigateToOpenPage(tester);
@@ -72,7 +85,7 @@ void main() {
         (WidgetTester tester) async {
       // Given I am on the "Open Parameter Page" page
       app.main();
-      await waitForMainPageToLoad(tester);
+      await tester.pumpAndSettle();
       await navigateToOpenPage(tester);
 
       // When I select Test Page 1
@@ -84,27 +97,15 @@ void main() {
       // ... and the page loading progress indicator should be gone
       assertOpeningPageProgressIndicator(isVisible: false);
 
-      // ... and the title should be displayed
-      assertPageTitleIs("Test Page 1");
-
-      // ... and the contents of Test Page 1 are loaded
-      assertIsOnPage(comment: "This is our first comment!");
-      assertParametersAreOnPage([
-        "M:OUTTMP@e,02",
-        "G:AMANDA",
-        "Z:NO_ALARMS",
-        "PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE",
-        "PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY",
-        "Z:BTE200_TEMP",
-        "Z:INC_SETTING"
-      ]);
+      // ... and Test Page 1 is open
+      assertTestPage1IsOpen();
     }, semanticsEnabled: false);
 
     testWidgets('Select Test Page 2, return to main page and load Test Page 2',
         (WidgetTester tester) async {
       // Given I am on the "Open Parameter Page" page
       app.main();
-      await waitForMainPageToLoad(tester);
+      await tester.pumpAndSettle();
       await navigateToOpenPage(tester);
 
       // When I select Test Page 1
@@ -124,6 +125,5 @@ void main() {
       assertParametersAreOnPage(["I:BEAM", "R:BEAM"]);
       assertIsOnPage(comment: "this is comment #2");
     }, semanticsEnabled: false);
-    */
   });
 }

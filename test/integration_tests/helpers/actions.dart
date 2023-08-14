@@ -287,3 +287,9 @@ Future<void> deletePage(WidgetTester tester,
   await tester.tap(deleteIconFinder);
   await tester.pumpAndSettle();
 }
+
+Future<void> navigateToTestPage1(WidgetTester tester) async {
+  await tester.tap(find.text("Open a Parameter Page"));
+  await tester.pumpAndSettle();
+  await openParameterPage(tester, withTitle: "Test Page 1");
+}

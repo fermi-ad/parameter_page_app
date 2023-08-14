@@ -31,12 +31,11 @@ class DataSource extends InheritedWidget {
 // This widget implements the entire behavior of a "Parameter Page".
 
 class PageWidget extends StatefulWidget {
-  final List<PageEntry> initialParameters;
-
   final ParameterPageService service;
 
-  const PageWidget(
-      {required this.initialParameters, required this.service, super.key});
+  final String pageId;
+
+  const PageWidget({required this.pageId, required this.service, super.key});
 
   @override
   State<PageWidget> createState() => PageWidgetState();
@@ -53,8 +52,8 @@ class PageWidgetState extends State<PageWidget> {
 
   @override
   void initState() {
-    _page = ParameterPage(widget.initialParameters);
     super.initState();
+    _loadPage(pageId: widget.pageId);
   }
 
   @override
@@ -248,7 +247,9 @@ class PageWidgetState extends State<PageWidget> {
     }
   }
 
-  loadPage({required String pageId}) {
+  _loadPage({required String pageId}) {
+    setState(() => _page = null);
+
     widget.service.fetchEntries(
       forPageId: pageId,
       onFailure: (errorMessage) {
@@ -260,7 +261,6 @@ class PageWidgetState extends State<PageWidget> {
         });
       },
     );
-    setState(() => _page = null);
   }
 
   // Prompts the user to see if they want to discard changes to the page.

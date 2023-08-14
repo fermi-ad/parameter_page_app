@@ -11,7 +11,6 @@ import 'services/dpm/dpm_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'services/dpm/graphql_dpm_service.dart';
 import 'services/dpm/mock_dpm_service.dart';
-import 'entities/page_entry.dart';
 import 'widgets/page_widget.dart';
 
 void main() async {
@@ -101,36 +100,17 @@ class _BaseWidgetState extends State<BaseWidget> {
                   )),
             ]),
         drawer: _buildDrawer(context),
-        body: const LandingPageWidget());
-    // body: _buildDPMService());
+        body: _openPageId == null
+            ? LandingPageWidget(onOpenPage: () => _navigateToOpenPage(context))
+            : _buildPageWidget());
   }
 
-  Widget _buildDPMService() {
-    final child = Center(
-        child: PageWidget(
-            key: _pageKey,
-            service: widget.pageService,
-            initialParameters: [
-          ParameterEntry("M:OUTTMP@e,02",
-              key: const Key("parameter_row_M:OUTTMP@e,02")),
-          CommentEntry("This is our first comment!"),
-          ParameterEntry("G:AMANDA", key: const Key("parameter_row_G:AMANDA")),
-          ParameterEntry("Z:NO_ALARMS",
-              key: const Key("parameter_row_Z:NO_ALARMS")),
-          ParameterEntry("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE",
-              key: const Key(
-                  "parameter_row_PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE")),
-          ParameterEntry("PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY",
-              key: const Key(
-                  "parameter_row_PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY"),
-              label: "Humidity"),
-          ParameterEntry("Z:BTE200_TEMP",
-              key: const Key("parameter_row_BTE200_TEMP")),
-          ParameterEntry("Z:INC_SETTING",
-              key: const Key("parameter_row_Z:INC_SETTING"))
-        ]));
-
-    return DataAcquisitionWidget(service: widget.dpmService, child: child);
+  Widget _buildPageWidget() {
+    return DataAcquisitionWidget(
+        service: widget.dpmService,
+        child: Center(
+            child:
+                PageWidget(service: widget.pageService, pageId: _openPageId!)));
   }
 
   Widget _buildDrawer(BuildContext context) {
@@ -143,7 +123,10 @@ class _BaseWidgetState extends State<BaseWidget> {
           ListTile(title: const Text("New Page"), onTap: _newPage),
           ListTile(
               title: const Text("Open Page"),
-              onTap: () => _navigateToOpenPage(context))
+              onTap: () {
+                Navigator.pop(context);
+                _navigateToOpenPage(context);
+              })
         ]));
   }
 
@@ -159,8 +142,7 @@ class _BaseWidgetState extends State<BaseWidget> {
       MaterialPageRoute(
           builder: (context) => OpenPageWidget(
               key: const Key("open_page_route"),
-              onOpen: (String pageId, String pageTitle) =>
-                  _handleOpenPage(context, pageId, pageTitle),
+              onOpen: _handleOpenPage,
               service: widget.pageService)),
     );
   }
@@ -180,12 +162,14 @@ class _BaseWidgetState extends State<BaseWidget> {
                 )));
   }
 
-  void _handleOpenPage(
-      BuildContext context, String pageId, String pageTitle) async {
-    _pageKey.currentState?.loadPage(pageId: pageId);
-    Navigator.pop(context);
-    setState(() => _title = pageTitle);
+  void _handleOpenPage(String pageId, String pageTitle) async {
+    setState(() {
+      _title = pageTitle;
+      _openPageId = pageId;
+    });
   }
 
   String _title = "Parameter Page";
+
+  String? _openPageId;
 }
