@@ -17,7 +17,7 @@ void main() {
       //   in row 3
       //   and I am in edit mode
       app.main();
-      await waitForMainPageToLoad(tester);
+      await navigateToTestPage1(tester);
       assertParametersAreOnPage(["G:AMANDA"]);
       assertParameterIsInRow("G:AMANDA", 2);
       await enterEditMode(tester);
@@ -36,7 +36,7 @@ void main() {
         (tester) async {
       // Given the test page is loaded, "G:AMANDA" is in row 3 and edit mode is enabled
       app.main();
-      await waitForMainPageToLoad(tester);
+      await navigateToTestPage1(tester);
       assertParameterIsInRow("G:AMANDA", 2);
       await enterEditMode(tester);
 
