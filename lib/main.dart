@@ -100,17 +100,20 @@ class _BaseWidgetState extends State<BaseWidget> {
                   )),
             ]),
         drawer: _buildDrawer(context),
-        body: _openPageId == null
-            ? LandingPageWidget(onOpenPage: () => _navigateToOpenPage(context))
-            : _buildPageWidget());
+        body: _buildBody(context));
   }
 
-  Widget _buildPageWidget() {
+  Widget _buildBody(BuildContext context) {
+    return _openPageId == null
+        ? LandingPageWidget(onOpenPage: () => _navigateToOpenPage(context))
+        : _buildPageWidget(_openPageId!);
+  }
+
+  Widget _buildPageWidget(String pageId) {
     return DataAcquisitionWidget(
         service: widget.dpmService,
         child: Center(
-            child:
-                PageWidget(service: widget.pageService, pageId: _openPageId!)));
+            child: PageWidget(service: widget.pageService, pageId: pageId)));
   }
 
   Widget _buildDrawer(BuildContext context) {
