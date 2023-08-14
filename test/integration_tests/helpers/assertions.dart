@@ -386,3 +386,31 @@ void assertOpeningPageProgressIndicator({required bool isVisible}) {
   expect(find.byKey(const Key("opening_page_progress_indicator")),
       isVisible ? findsOneWidget : findsNothing);
 }
+
+void assertLandingPage({required bool isVisible}) {
+  expect(find.byKey(const Key("landing_page")),
+      isVisible ? findsOneWidget : findsNothing);
+
+  expect(
+      find.descendant(
+          of: find.byKey(const Key("landing_page")),
+          matching: find.text("Open a Parameter Page")),
+      isVisible ? findsOneWidget : findsNothing);
+}
+
+void assertTestPage1IsOpen() {
+  // ... and the title should be displayed
+  assertPageTitleIs("Test Page 1");
+
+  // ... and the contents of Test Page 1 are loaded
+  assertIsOnPage(comment: "This is our first comment!");
+  assertParametersAreOnPage([
+    "M:OUTTMP@e,02",
+    "G:AMANDA",
+    "Z:NO_ALARMS",
+    "PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE",
+    "PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY",
+    "Z:BTE200_TEMP",
+    "Z:INC_SETTING"
+  ]);
+}

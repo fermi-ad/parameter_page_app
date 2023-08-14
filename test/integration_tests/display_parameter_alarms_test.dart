@@ -1,8 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-import 'package:parameter_page/main.dart' as app;
-
 import 'helpers/assertions.dart';
 import 'helpers/actions.dart';
 
@@ -13,8 +11,8 @@ void main() {
     testWidgets('Display Settings > Show Alarm Details, initially is OFF',
         (tester) async {
       // Given the test page is loaded
-      app.main();
-      await waitForMainPageToLoad(tester);
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
 
       // When I navigate to the display settings page
       await navigateToDisplaySettings(tester);
@@ -28,8 +26,8 @@ void main() {
         'Turn on Display Settings > Show Alarm Details, change persists',
         (tester) async {
       // Given I have turned on Show Parameter Alarm Details
-      app.main();
-      await waitForMainPageToLoad(tester);
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
       await navigateToDisplaySettings(tester);
       await toggleShowAlarmDetails(tester);
 
@@ -46,8 +44,8 @@ void main() {
         'Turn on Display Settings > Show Alarm Details, alarm details are shown',
         (tester) async {
       // Given the test parameter page is loaded
-      app.main();
-      await waitForMainPageToLoad(tester);
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
 
       // When I turn on Show Alarm Details and return to the parameter page
       await navigateToDisplaySettings(tester);

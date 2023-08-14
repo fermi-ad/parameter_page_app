@@ -1,8 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-import 'package:parameter_page/main.dart' as app;
-
 import 'helpers/assertions.dart';
 import 'helpers/actions.dart';
 
@@ -14,8 +12,8 @@ void main() {
       // Given the test page is loaded
       //   the 'G:AMANDA' device is on the page
       //   and I am in edit mode
-      app.main();
-      await waitForMainPageToLoad(tester);
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
       assertParametersAreOnPage(["G:AMANDA"]);
       await enterEditMode(tester);
 
@@ -30,8 +28,8 @@ void main() {
       // Given the test page is loaded
       //    the 'G:AMANDA' device is on the page
       //    and I am in the edit mode
-      app.main();
-      await waitForMainPageToLoad(tester);
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
       assertParametersAreOnPage(["G:AMANDA"]);
       await enterEditMode(tester);
 

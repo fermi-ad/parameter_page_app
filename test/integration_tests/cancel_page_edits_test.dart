@@ -1,8 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-import 'package:parameter_page/main.dart' as app;
-
 import 'helpers/assertions.dart';
 import 'helpers/actions.dart';
 
@@ -13,8 +11,8 @@ void main() {
     testWidgets('Add comment and cancel, new comment should be discarded',
         (tester) async {
       // Given the test page is loaded and I am in edit mode
-      app.main();
-      await waitForMainPageToLoad(tester);
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
       await enterEditMode(tester);
 
       // When I add a new comment and cancel edit mode
@@ -29,8 +27,8 @@ void main() {
     testWidgets('Outside edit mode, cancel button is not visible',
         (tester) async {
       // Given the test page is loaded and I am in edit mode
-      app.main();
-      await waitForMainPageToLoad(tester);
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
       await enterEditMode(tester);
 
       // When I exit edit mode
@@ -42,8 +40,8 @@ void main() {
 
     testWidgets('Inside edit mode, cancel button is visible', (tester) async {
       // Given the test page is loaded
-      app.main();
-      await waitForMainPageToLoad(tester);
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
 
       // When I enter edit mode
       await enterEditMode(tester);
@@ -59,8 +57,8 @@ void main() {
       //   the 'G:AMANDA' device is on the page
       //   in row 3
       //   and I am in edit mode
-      app.main();
-      await waitForMainPageToLoad(tester);
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
       assertParametersAreOnPage(["G:AMANDA"]);
       assertParameterIsInRow("G:AMANDA", 2);
       await enterEditMode(tester);
@@ -81,8 +79,8 @@ void main() {
       //   the 'G:AMANDA' device is on the page
       //   in row 3
       //   and I am in edit mode
-      app.main();
-      await waitForMainPageToLoad(tester);
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
       assertParameterIsInRow("M:OUTTMP@e,02", 0);
       assertParameterIsInRow("G:AMANDA", 2);
       await enterEditMode(tester);

@@ -1,8 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-import 'package:parameter_page/main.dart' as app;
-
 import 'helpers/assertions.dart';
 import 'helpers/actions.dart';
 
@@ -13,8 +11,8 @@ void main() {
     testWidgets('Initially, parameters should be displaying their common units',
         (tester) async {
       // Given the test page is loaded
-      app.main();
-      await waitForMainPageToLoad(tester);
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
       await waitForDataToLoadFor(tester, "M:OUTTMP@e,02");
 
       // Then M:OUTTMP should show units of degF
@@ -28,8 +26,8 @@ void main() {
     testWidgets('Initially, Display Settings > Units is set to Common Units',
         (tester) async {
       // Given the test page is loaded
-      app.main();
-      await waitForMainPageToLoad(tester);
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
 
       // When I navigate to the display settings page
       await navigateToDisplaySettings(tester);
@@ -43,8 +41,8 @@ void main() {
         'Change Display Settings > Units to Primary Units, M:OUTTMP units change to volts',
         (tester) async {
       // Given the test page is loaded and I am on the Display Settings page
-      app.main();
-      await waitForMainPageToLoad(tester);
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
       await navigateToDisplaySettings(tester);
 
       // When I change Units to Primary Units and exit Display Settings
@@ -64,8 +62,8 @@ void main() {
         'Change Display Settings > Units to Primary Units, change persists',
         (tester) async {
       // Given I have changed the DisplaySettings to Primary Units and returned to the parameter page
-      app.main();
-      await waitForMainPageToLoad(tester);
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
       await navigateToDisplaySettings(tester);
       await changeDisplaySettingsUnits(tester, to: "Primary Units");
       await navigateBackwards(tester);
@@ -81,8 +79,8 @@ void main() {
         'Change Display Settings > Units to Raw, no units are displayed',
         (tester) async {
       // Given the test page is loaded and I am on the Display Settings page
-      app.main();
-      await waitForMainPageToLoad(tester);
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
       await navigateToDisplaySettings(tester);
 
       // When I change Units to Raw and exit Display Settings

@@ -1,8 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-import 'package:parameter_page/main.dart' as app;
-
 import 'helpers/assertions.dart';
 import 'helpers/actions.dart';
 
@@ -14,7 +12,8 @@ void main() {
         'Tap New Page and discard changes, should be presented with a new blank page',
         (tester) async {
       // Given the test page is loaded and I have added new parameters
-      app.main();
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
       await waitForMainPageToLoad(tester);
       await enterEditMode(tester);
       await addANewComment(tester, "A comment");
@@ -30,7 +29,8 @@ void main() {
     testWidgets('Cancel New Page, should preserve the existing page',
         (tester) async {
       // Given the test page is loaded and I have added a new comment but did not save the page yet
-      app.main();
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
       await waitForMainPageToLoad(tester);
       await enterEditMode(tester);
       await addANewComment(tester, "A new comment");
@@ -42,13 +42,14 @@ void main() {
       // Then I should be returned to the page
       assertNumberOfEntriesOnPageIs(9);
       assertParameterIsInRow("M:OUTTMP@e,02", 0);
-      assertPageTitleIs("Parameter Page");
+      assertPageTitleIs("Test Page 1");
     });
 
     testWidgets('Tap New Page, should be prompted to throw away recent changes',
         (tester) async {
       // Given the test page is loaded and I have added a new comment but did not save the page yet
-      app.main();
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
       await waitForMainPageToLoad(tester);
       await enterEditMode(tester);
       await addANewComment(tester, "A new comment");
@@ -64,7 +65,8 @@ void main() {
     testWidgets('Tap New Page, should not be prompted if there are no changes',
         (tester) async {
       // Given the test page is loaded and I haven't made any changes
-      app.main();
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
       await waitForMainPageToLoad(tester);
 
       // When I press new page
@@ -83,7 +85,8 @@ void main() {
     testWidgets('Tap New Page, should be presented with a new blank page',
         (tester) async {
       // Given the test page is loaded
-      app.main();
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
       await waitForMainPageToLoad(tester);
 
       // When I press new page and add some new entries

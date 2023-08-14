@@ -3,6 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
+import 'package:parameter_page/main.dart' as app;
+
+Future<void> startParameterPageApp(WidgetTester tester) async {
+  app.main();
+  await tester.pumpAndSettle();
+}
 
 Future<void> pumpUntilFound(
   WidgetTester tester,
@@ -286,4 +292,11 @@ Future<void> deletePage(WidgetTester tester,
       find.descendant(of: listTileFinder, matching: find.byIcon(Icons.delete));
   await tester.tap(deleteIconFinder);
   await tester.pumpAndSettle();
+}
+
+Future<void> navigateToTestPage1(WidgetTester tester) async {
+  await tester.tap(find.text("Open a Parameter Page"));
+  await tester.pumpAndSettle();
+  await openParameterPage(tester, withTitle: "Test Page 1");
+  await waitForMainPageToLoad(tester);
 }

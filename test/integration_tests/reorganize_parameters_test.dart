@@ -1,8 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-import 'package:parameter_page/main.dart' as app;
-
 import 'helpers/assertions.dart';
 import 'helpers/actions.dart';
 
@@ -16,8 +14,8 @@ void main() {
       //   the 'G:AMANDA' device is on the page
       //   in row 3
       //   and I am in edit mode
-      app.main();
-      await waitForMainPageToLoad(tester);
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
       assertParametersAreOnPage(["G:AMANDA"]);
       assertParameterIsInRow("G:AMANDA", 2);
       await enterEditMode(tester);
@@ -35,8 +33,8 @@ void main() {
         'Move entry down two rows, should remove from old position and insert at new position',
         (tester) async {
       // Given the test page is loaded, "G:AMANDA" is in row 3 and edit mode is enabled
-      app.main();
-      await waitForMainPageToLoad(tester);
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
       assertParameterIsInRow("G:AMANDA", 2);
       await enterEditMode(tester);
 

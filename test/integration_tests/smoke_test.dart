@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-import 'package:parameter_page/main.dart' as app;
-
 import 'helpers/actions.dart';
 
 void main() {
@@ -13,8 +11,7 @@ void main() {
     testWidgets('Enter the parameter page, title is set to Parameter Page',
         (tester) async {
       // Given the app is running
-      app.main();
-      await waitForMainPageToLoad(tester);
+      await startParameterPageApp(tester);
 
       // Then 'Parameter Page' is displayed in the title bar
       _assertAppBarTitleIs('Parameter Page');
