@@ -3,6 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
+import 'package:parameter_page/main.dart' as app;
+
+Future<void> startParameterPageApp(WidgetTester tester) async {
+  app.main();
+  await tester.pumpAndSettle();
+}
 
 Future<void> pumpUntilFound(
   WidgetTester tester,

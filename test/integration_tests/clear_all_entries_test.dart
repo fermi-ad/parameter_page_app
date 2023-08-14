@@ -1,8 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-import 'package:parameter_page/main.dart' as app;
-
 import 'helpers/assertions.dart';
 import 'helpers/actions.dart';
 
@@ -14,7 +12,7 @@ void main() {
         (tester) async {
       // Given the test page is loaded
       //   and I am not in edit mode
-      app.main();
+      await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
 
       // Then the clear all button is not on the page
@@ -24,7 +22,7 @@ void main() {
     testWidgets('Clear All button, should be visible when in edit mode',
         (tester) async {
       // Given the test page is loaded
-      app.main();
+      await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
 
       // When I enter edit mode
@@ -37,7 +35,7 @@ void main() {
     testWidgets('Tap Clear All button, should remove all entries',
         (tester) async {
       // Given the test page is loaded and I am in edit mode
-      app.main();
+      await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
       await enterEditMode(tester);
 

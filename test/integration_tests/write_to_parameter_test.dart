@@ -1,8 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-import 'package:parameter_page/main.dart' as app;
-
 import 'helpers/assertions.dart';
 import 'helpers/actions.dart';
 
@@ -13,7 +11,7 @@ void main() {
     testWidgets('Tap Setting property, text is replaced by an input field',
         (tester) async {
       // Given the test page is loaded
-      app.main();
+      await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
       await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
 
@@ -29,7 +27,7 @@ void main() {
         'Tap cancel when working on a setting, text field is removed and setting is cancelled',
         (tester) async {
       // Given I am attempting to set Z:BTE200_TEMP
-      app.main();
+      await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
       await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
       await tapSetting(tester, forDRF: "Z:BTE200_TEMP");
@@ -46,7 +44,7 @@ void main() {
         'Submit a new setting successfully, see the update reflect in the display and the old value provided in the undo column',
         (tester) async {
       // Given the test page is loaded
-      app.main();
+      await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
       await waitForDataToLoadFor(tester, "G:AMANDA");
 
@@ -70,7 +68,7 @@ void main() {
     testWidgets('Failed setting, displays error message for three seconds',
         (tester) async {
       // Given the test page is loaded with a device whose setting is broken
-      app.main();
+      await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
       await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
 
@@ -92,7 +90,7 @@ void main() {
     testWidgets('Setting changes, undo displays the original setting value',
         (tester) async {
       // Given the test page is loaded with a device whose setting increments once a second
-      app.main();
+      await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
       await waitForDataToLoadFor(tester, "Z:INC_SETTING");
       assertUndo(forDRF: "Z:INC_SETTING", isVisible: false);
@@ -108,7 +106,7 @@ void main() {
     testWidgets('Click Undo display, original value is submitted and set',
         (tester) async {
       // Given I have set a new value for the G:AMANDA device
-      app.main();
+      await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
       await waitForDataToLoadFor(tester, "G:AMANDA");
       await tapSetting(tester, forDRF: "G:AMANDA");

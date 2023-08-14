@@ -1,8 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-import 'package:parameter_page/main.dart' as app;
-
 import 'helpers/assertions.dart';
 import 'helpers/actions.dart';
 
@@ -14,8 +12,7 @@ void main() {
         (WidgetTester tester) async {
       // Given nothing
       // When I start the application fresh
-      app.main();
-      await tester.pumpAndSettle();
+      await startParameterPageApp(tester);
 
       // Then I should the landing page
       assertLandingPage(isVisible: true);
@@ -24,8 +21,7 @@ void main() {
     testWidgets('Load Test Page 1 from Landing Page, display Test Page 1',
         (WidgetTester tester) async {
       // Given I am on the Landing Page
-      app.main();
-      await tester.pumpAndSettle();
+      await startParameterPageApp(tester);
 
       // When I tap Open a Parameter Page and select Test Page 1
       await navigateToTestPage1(tester);
@@ -38,8 +34,7 @@ void main() {
         (WidgetTester tester) async {
       // Given I am on the "Open Parameter Page" page
       //   and there is no page titled 'test add page title'
-      app.main();
-      await tester.pumpAndSettle();
+      await startParameterPageApp(tester);
       await navigateToOpenPage(tester);
       await tester.pumpAndSettle();
 
@@ -57,8 +52,7 @@ void main() {
         'Tap Open Page in main menu, should navigate to the Open Page screen',
         (tester) async {
       // Given the application is started fresh
-      app.main();
-      await tester.pumpAndSettle();
+      await startParameterPageApp(tester);
 
       // When I navigate to Open Page
       await navigateToOpenPage(tester);
@@ -70,8 +64,7 @@ void main() {
     testWidgets('Navigate to Open Page, should see a list of saved pages',
         (WidgetTester tester) async {
       // Given the application is started fresh
-      app.main();
-      await tester.pumpAndSettle();
+      await startParameterPageApp(tester);
 
       // When I navigate to Open Page
       await navigateToOpenPage(tester);
@@ -84,8 +77,7 @@ void main() {
     testWidgets('Select Test Page 1, return to main page and load Test Page 1',
         (WidgetTester tester) async {
       // Given I am on the "Open Parameter Page" page
-      app.main();
-      await tester.pumpAndSettle();
+      await startParameterPageApp(tester);
       await navigateToOpenPage(tester);
 
       // When I select Test Page 1
@@ -104,8 +96,7 @@ void main() {
     testWidgets('Select Test Page 2, return to main page and load Test Page 2',
         (WidgetTester tester) async {
       // Given I am on the "Open Parameter Page" page
-      app.main();
-      await tester.pumpAndSettle();
+      await startParameterPageApp(tester);
       await navigateToOpenPage(tester);
 
       // When I select Test Page 1

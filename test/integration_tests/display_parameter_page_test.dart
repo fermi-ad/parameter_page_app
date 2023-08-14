@@ -1,8 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-import 'package:parameter_page/main.dart' as app;
-
 import 'helpers/assertions.dart';
 import 'helpers/actions.dart';
 
@@ -13,7 +11,7 @@ void main() {
     testWidgets('Display test page, should contain three parameters',
         (tester) async {
       // Given the test page is loaded
-      app.main();
+      await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
 
       // Then the following parameters should be displayed...
@@ -28,7 +26,7 @@ void main() {
         'Display ACNET device, should contain parameter details with setting and reading values',
         (tester) async {
       // Given the test page is loaded
-      app.main();
+      await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
 
       // When I wait for the parametr data to update
@@ -50,7 +48,7 @@ void main() {
         "Display PV, should contain parameter details with setting and reading values",
         (tester) async {
       // Given the test page is loaded
-      app.main();
+      await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
 
       // When I wait for the readings to update
