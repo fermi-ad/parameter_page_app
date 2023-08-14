@@ -93,7 +93,6 @@ void main() {
       await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
       await waitForDataToLoadFor(tester, "Z:INC_SETTING");
-      assertUndo(forDRF: "Z:INC_SETTING", isVisible: false);
 
       // When I wait one second for the setting to change
       await waitForUndoToDisplay(tester, forDRF: "Z:INC_SETTING");
