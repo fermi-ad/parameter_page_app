@@ -33,9 +33,9 @@ class DataSource extends InheritedWidget {
 class PageWidget extends StatefulWidget {
   final ParameterPageService service;
 
-  final String pageId;
+  final String? pageId;
 
-  const PageWidget({required this.pageId, required this.service, super.key});
+  const PageWidget({this.pageId, required this.service, super.key});
 
   @override
   State<PageWidget> createState() => PageWidgetState();
@@ -53,7 +53,11 @@ class PageWidgetState extends State<PageWidget> {
   @override
   void initState() {
     super.initState();
-    _loadPage(pageId: widget.pageId);
+    if (widget.pageId != null) {
+      _loadPage(pageId: widget.pageId!);
+    } else {
+      _page = ParameterPage();
+    }
   }
 
   @override
