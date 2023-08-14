@@ -390,11 +390,10 @@ void assertOpeningPageProgressIndicator({required bool isVisible}) {
 void assertLandingPage({required bool isVisible}) {
   expect(find.byKey(const Key("landing_page")),
       isVisible ? findsOneWidget : findsNothing);
-  /*
+
   expect(
       find.descendant(
           of: find.byKey(const Key("landing_page")),
-          matching: find.text("Open Parameter Page")),
+          matching: find.text("Open a Parameter Page")),
       isVisible ? findsOneWidget : findsNothing);
-      */
 }

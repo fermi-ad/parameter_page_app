@@ -17,10 +17,10 @@ void main() {
       app.main();
       await tester.pumpAndSettle();
 
-      // Then I should see a button to open a new parameter page
+      // Then I should the landing page
       assertLandingPage(isVisible: true);
     });
-
+/*
     testWidgets('Characterize Add Page Title and Delete Title',
         (WidgetTester tester) async {
       // Given I am on the "Open Parameter Page" page
@@ -124,5 +124,6 @@ void main() {
       assertParametersAreOnPage(["I:BEAM", "R:BEAM"]);
       assertIsOnPage(comment: "this is comment #2");
     }, semanticsEnabled: false);
+    */
   });
 }

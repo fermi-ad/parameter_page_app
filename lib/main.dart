@@ -5,6 +5,7 @@ import 'package:parameter_page/services/parameter_page/parameter_page_service.da
 import 'package:parameter_page/theme/theme.dart';
 import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 import 'package:parameter_page/widgets/display_settings_widget.dart';
+import 'package:parameter_page/widgets/landing_page_widget.dart';
 import 'package:parameter_page/widgets/open_page_widget.dart';
 import 'services/dpm/dpm_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -100,7 +101,8 @@ class _BaseWidgetState extends State<BaseWidget> {
                   )),
             ]),
         drawer: _buildDrawer(context),
-        body: _buildDPMService());
+        body: const LandingPageWidget());
+    // body: _buildDPMService());
   }
 
   Widget _buildDPMService() {
