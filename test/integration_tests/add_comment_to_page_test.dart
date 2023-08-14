@@ -14,7 +14,8 @@ void main() {
         (tester) async {
       // Given the test page is loaded and I am in edit mode
       app.main();
-      await waitForMainPageToLoad(tester);
+      await tester.pumpAndSettle();
+      await navigateToTestPage1(tester);
       await enterEditMode(tester);
 
       // When I add a new comment...

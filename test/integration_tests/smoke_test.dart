@@ -14,7 +14,7 @@ void main() {
         (tester) async {
       // Given the app is running
       app.main();
-      await waitForMainPageToLoad(tester);
+      await tester.pumpAndSettle();
 
       // Then 'Parameter Page' is displayed in the title bar
       _assertAppBarTitleIs('Parameter Page');

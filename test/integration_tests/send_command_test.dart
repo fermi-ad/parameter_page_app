@@ -20,7 +20,7 @@ void main() {
     testWidgets('Expand extended status, show command buttons', (tester) async {
       // Given the test page is loaded
       app.main();
-      await waitForMainPageToLoad(tester);
+      await navigateToTestPage1(tester);
       await waitForDataToLoadFor(tester, "G:AMANDA");
 
       // When I expand the extended status display for the device

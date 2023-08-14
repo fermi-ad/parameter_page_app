@@ -17,7 +17,7 @@ void main() {
       // Given the test page is loaded
       //   and a device with no digital status ('M:OUTTMP') is on the page
       app.main();
-      await waitForMainPageToLoad(tester);
+      await navigateToTestPage1(tester);
       assertParametersAreOnPage(["M:OUTTMP@e,02"]);
 
       // Then nothing is display in the digitial status column
@@ -29,7 +29,7 @@ void main() {
         (tester) async {
       // Given the test page is loaded
       app.main();
-      await waitForMainPageToLoad(tester);
+      await navigateToTestPage1(tester);
 
       // When I wait for the parametr data to update
       await waitForDataToLoadFor(tester, "G:AMANDA");
@@ -58,7 +58,7 @@ void main() {
       // Given the test page is loaded
       //   and the 'G:AMANDA' device is on the page in row 1
       app.main();
-      await waitForMainPageToLoad(tester);
+      await navigateToTestPage1(tester);
       assertParametersAreOnPage(["G:AMANDA"]);
       await waitForDataToLoadFor(tester, "G:AMANDA");
 
@@ -73,7 +73,7 @@ void main() {
         (tester) async {
       // Given the test page is loaded
       app.main();
-      await waitForMainPageToLoad(tester);
+      await navigateToTestPage1(tester);
 
       // When I wait for the parametr data to update
       await waitForDataToLoadFor(tester, "M:OUTTMP@e,02");
@@ -86,7 +86,7 @@ void main() {
         (tester) async {
       // Given the test page is loaded
       app.main();
-      await waitForMainPageToLoad(tester);
+      await navigateToTestPage1(tester);
 
       // When I wait for the parametr data to update
       await waitForDataToLoadFor(tester, "G:AMANDA");
@@ -98,7 +98,7 @@ void main() {
     testWidgets('Click expand icon, displays extended status', (tester) async {
       // Given the test page is loaded and data for G:AMANDA is loaded
       app.main();
-      await waitForMainPageToLoad(tester);
+      await navigateToTestPage1(tester);
       await waitForDataToLoadFor(tester, "G:AMANDA");
 
       // When I expand the parameter to display extended digital status
@@ -154,7 +154,7 @@ void main() {
         (tester) async {
       // Given the test page is loaded and data for G:AMANDA is loaded
       app.main();
-      await waitForMainPageToLoad(tester);
+      await navigateToTestPage1(tester);
       await waitForDataToLoadFor(tester, "G:AMANDA");
 
       // ... and the extended digital status is expanded

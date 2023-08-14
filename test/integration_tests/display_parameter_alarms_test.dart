@@ -14,7 +14,7 @@ void main() {
         (tester) async {
       // Given the test page is loaded
       app.main();
-      await waitForMainPageToLoad(tester);
+      await navigateToTestPage1(tester);
 
       // When I navigate to the display settings page
       await navigateToDisplaySettings(tester);
@@ -29,7 +29,7 @@ void main() {
         (tester) async {
       // Given I have turned on Show Parameter Alarm Details
       app.main();
-      await waitForMainPageToLoad(tester);
+      await navigateToTestPage1(tester);
       await navigateToDisplaySettings(tester);
       await toggleShowAlarmDetails(tester);
 
@@ -47,7 +47,7 @@ void main() {
         (tester) async {
       // Given the test parameter page is loaded
       app.main();
-      await waitForMainPageToLoad(tester);
+      await navigateToTestPage1(tester);
 
       // When I turn on Show Alarm Details and return to the parameter page
       await navigateToDisplaySettings(tester);

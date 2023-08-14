@@ -16,7 +16,7 @@ void main() {
       // Given the app is running
       tester.view.physicalSize = const Size(600, 600);
       app.main();
-      await waitForMainPageToLoad(tester);
+      await navigateToTestPage1(tester);
 
       // Wait 1 second for data to arrive
       await Future.delayed(const Duration(seconds: 1));
