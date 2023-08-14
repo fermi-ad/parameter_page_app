@@ -10,6 +10,17 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Recall Parameter Page', () {
+    testWidgets('Start app fresh, display the landing page',
+        (WidgetTester tester) async {
+      // Given nothing
+      // When I start the application fresh
+      app.main();
+      await tester.pumpAndSettle();
+
+      // Then I should see a button to open a new parameter page
+      assertLandingPage(isVisible: true);
+    });
+
     testWidgets('Characterize Add Page Title and Delete Title',
         (WidgetTester tester) async {
       // Given I am on the "Open Parameter Page" page
