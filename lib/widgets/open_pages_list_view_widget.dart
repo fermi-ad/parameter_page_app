@@ -35,18 +35,12 @@ class _OpenPagesListViewWidgetState extends State<OpenPagesListViewWidget> {
               widget.onSelected.call(widget.titles[index]['pageid'],
                   widget.titles[index]['title']);
             },
-            child: SizedBox(
-              height: 40,
-              child: ListTile(
-                leading: Text(widget.titles[index]['pageid']),
-                title: Text(
-                  widget.titles[index]['title'],
-                  style: const TextStyle(
-                    fontSize: 17,
-                  ),
-                ),
-                selectedColor: Colors.green,
+            child: ListTile(
+              leading: Text(widget.titles[index]['pageid']),
+              title: Text(
+                widget.titles[index]['title'],
               ),
+              selectedColor: Colors.green,
             ),
           ),
         );
