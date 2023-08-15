@@ -104,17 +104,19 @@ class _BaseWidgetState extends State<BaseWidget> {
   }
 
   Widget _buildBody(BuildContext context) {
-    return _openPageId == null
+    return _showLandingPage
         ? LandingPageWidget(onOpenPage: () => _navigateToOpenPage(context))
-        : _buildPageWidget(_openPageId!);
+        : _buildPageWidget();
   }
 
-  Widget _buildPageWidget(String pageId) {
+  Widget _buildPageWidget() {
     return DataAcquisitionWidget(
         service: widget.dpmService,
         child: Center(
             child: PageWidget(
-                key: _pageKey, service: widget.pageService, pageId: pageId)));
+                key: _pageKey,
+                service: widget.pageService,
+                pageId: _openPageId)));
   }
 
   Widget _buildDrawer(BuildContext context) {
@@ -161,19 +163,27 @@ class _BaseWidgetState extends State<BaseWidget> {
   }
 
   void _handleNewPage() async {
-    await _pageKey.currentState?.newPage(
-        onNewPage: () => setState(() => _title = "New Parameter Page"));
     _scaffoldKey.currentState?.closeDrawer();
+
+    await _pageKey.currentState?.newPage(onNewPage: () {
+      setState(() {
+        _title = "New Parameter Page";
+        _openPageId = null;
+      });
+    });
   }
 
   void _handleOpenPage(String pageId, String pageTitle) async {
     setState(() {
       _title = pageTitle;
       _openPageId = pageId;
+      _showLandingPage = false;
     });
   }
 
   String _title = "Parameter Page";
 
   String? _openPageId;
+
+  bool _showLandingPage = true;
 }

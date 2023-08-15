@@ -74,11 +74,11 @@ class PageWidgetState extends State<PageWidget> {
   }
 
   bool _pageNeedsToBeLoaded() {
-    return _pageId != widget.pageId;
+    return widget.pageId != null && _pageId != widget.pageId;
   }
 
   bool _newPageIsRequested() {
-    return _page == null && widget.pageId == null;
+    return widget.pageId == null && _page == null;
   }
 
   Widget _buildLoadingPage() {
