@@ -301,3 +301,8 @@ Future<void> navigateToTestPage1(WidgetTester tester) async {
   await openParameterPage(tester, withTitle: "Test Page 1");
   await waitForMainPageToLoad(tester);
 }
+
+Future<void> createNewParameterPage(WidgetTester tester) async {
+  await tester.tap(find.text("Create a New Parameter Page"));
+  await tester.pumpAndSettle();
+}

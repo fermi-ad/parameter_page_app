@@ -15,8 +15,7 @@ void main() {
       await startParameterPageApp(tester);
 
       // When I tap "Create a new Parameter Page"
-      await tester.tap(find.text("Create a New Parameter Page"));
-      await tester.pumpAndSettle();
+      await createNewParameterPage(tester);
 
       // Then the user is given a new parameter page
       assertNumberOfEntriesOnPageIs(0);
