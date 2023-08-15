@@ -52,7 +52,7 @@ class PageWidgetState extends State<PageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    initializePage();
+    _initializePage();
 
     return DataSource(
         child: LayoutBuilder(
@@ -65,7 +65,7 @@ class PageWidgetState extends State<PageWidget> {
     ));
   }
 
-  void initializePage() {
+  void _initializePage() {
     if (_pageNeedsToBeLoaded()) {
       _loadPage(pageId: widget.pageId!);
     } else if (_newPageIsRequested()) {
