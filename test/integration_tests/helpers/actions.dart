@@ -8,6 +8,7 @@ import 'package:parameter_page/main.dart' as app;
 Future<void> startParameterPageApp(WidgetTester tester) async {
   app.main();
   await tester.pumpAndSettle();
+  await pumpUntilFound(tester, find.text("Welcome!"));
 }
 
 Future<void> pumpUntilFound(
