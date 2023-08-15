@@ -66,18 +66,18 @@ class PageWidgetState extends State<PageWidget> {
   }
 
   void initializePage() {
-    if (pageNeedsToBeLoaded()) {
+    if (_pageNeedsToBeLoaded()) {
       _loadPage(pageId: widget.pageId!);
-    } else if (newPageIsRequested()) {
+    } else if (_newPageIsRequested()) {
       _page = ParameterPage();
     }
   }
 
-  bool pageNeedsToBeLoaded() {
+  bool _pageNeedsToBeLoaded() {
     return _pageId != widget.pageId;
   }
 
-  bool newPageIsRequested() {
+  bool _newPageIsRequested() {
     return _page == null && widget.pageId == null;
   }
 
