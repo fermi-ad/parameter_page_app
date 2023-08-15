@@ -51,17 +51,9 @@ class PageWidgetState extends State<PageWidget> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    if (widget.pageId != null) {
-      _loadPage(pageId: widget.pageId!);
-    } else {
-      _page = ParameterPage();
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+    _initializePage();
+
     return DataSource(
         child: LayoutBuilder(
       key: const Key("parameter_page_layout"),
@@ -71,6 +63,22 @@ class PageWidgetState extends State<PageWidget> {
             : _buildPage(context, constraints.maxWidth > 600, _page!);
       },
     ));
+  }
+
+  void _initializePage() {
+    if (_pageNeedsToBeLoaded()) {
+      _loadPage(pageId: widget.pageId!);
+    } else if (_newPageIsRequested()) {
+      _page = ParameterPage();
+    }
+  }
+
+  bool _pageNeedsToBeLoaded() {
+    return _pageId != widget.pageId;
+  }
+
+  bool _newPageIsRequested() {
+    return _page == null && widget.pageId == null;
   }
 
   Widget _buildLoadingPage() {
@@ -253,7 +261,6 @@ class PageWidgetState extends State<PageWidget> {
 
   _loadPage({required String pageId}) {
     setState(() => _page = null);
-
     widget.service.fetchEntries(
       forPageId: pageId,
       onFailure: (errorMessage) {
@@ -261,6 +268,7 @@ class PageWidgetState extends State<PageWidget> {
       },
       onSuccess: (fetchedEntries) {
         setState(() {
+          _pageId = pageId;
           _page = ParameterPage.fromQueryResult(fetchedEntries);
         });
       },
@@ -295,4 +303,6 @@ class PageWidgetState extends State<PageWidget> {
   }
 
   ParameterPage? _page;
+
+  String? _pageId;
 }
