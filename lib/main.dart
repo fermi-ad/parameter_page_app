@@ -124,7 +124,7 @@ class _BaseWidgetState extends State<BaseWidget> {
           const DrawerHeader(
               decoration: BoxDecoration(color: Colors.blue),
               child: Text("Parameter Page Menu")),
-          ListTile(title: const Text("New Page"), onTap: _newPage),
+          ListTile(title: const Text("New Page"), onTap: _handleNewPage),
           ListTile(
               title: const Text("Open Page"),
               onTap: () {
@@ -132,12 +132,6 @@ class _BaseWidgetState extends State<BaseWidget> {
                 _navigateToOpenPage(context);
               })
         ]));
-  }
-
-  void _newPage() async {
-    await _pageKey.currentState?.newPage(
-        onNewPage: () => setState(() => _title = "New Parameter Page"));
-    _scaffoldKey.currentState?.closeDrawer();
   }
 
   void _navigateToOpenPage(BuildContext context) {
@@ -164,6 +158,12 @@ class _BaseWidgetState extends State<BaseWidget> {
                   onChanged: (DisplaySettings newSettings) =>
                       _pageKey.currentState?.updateSettings(newSettings),
                 )));
+  }
+
+  void _handleNewPage() async {
+    await _pageKey.currentState?.newPage(
+        onNewPage: () => setState(() => _title = "New Parameter Page"));
+    _scaffoldKey.currentState?.closeDrawer();
   }
 
   void _handleOpenPage(String pageId, String pageTitle) async {
