@@ -116,5 +116,21 @@ void main() {
       assertParametersAreOnPage(["I:BEAM", "R:BEAM"]);
       assertIsOnPage(comment: "this is comment #2");
     }, semanticsEnabled: false);
+
+    testWidgets('Open Test Page 2 and then open Test Page 1, show test page 1',
+        (WidgetTester tester) async {
+      // Given I have Test Page 2 open
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: 'Test Page 2');
+      assertPageTitleIs("Test Page 2");
+
+      // When I open Test Page 1
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 1");
+
+      // Then Test Page 1 is open
+      assertTestPage1IsOpen();
+    }, semanticsEnabled: false);
   });
 }
