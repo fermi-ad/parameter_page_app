@@ -36,15 +36,7 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
         preferredSize: const Size.fromHeight(40),
         child: AppBar(
           key: const Key("open_page_appbar"),
-          backgroundColor: Colors.blue,
-          foregroundColor: Colors.white,
-          title: Text(
-            widget.title,
-            style: const TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-                fontStyle: FontStyle.normal),
-          ),
+          title: Text(widget.title),
         ),
       ),
       body: isLoading ? _buildLoading() : _buildPageList(_titles!),
