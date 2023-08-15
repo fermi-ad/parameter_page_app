@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
+import 'package:parameter_page/widgets/new_entry_editor_widget.dart';
 import '../entities/parameter_page.dart';
 import '../entities/page_entry.dart';
 import 'display_settings_widget.dart';
-import 'new_entry_editor_widget.dart';
 
 class DataSource extends InheritedWidget {
   final Stream<double> _data = Stream<double>.periodic(

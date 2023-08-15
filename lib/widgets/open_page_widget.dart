@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import '../services/parameter_page/parameter_page_service.dart';
 import 'open_pages_list_view_widget.dart';
-import 'newtitledialog_widget.dart';
 
 class OpenPageWidget extends StatefulWidget {
   final Function(String pageId, String pageTitle) onOpen;
@@ -37,15 +36,7 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
         preferredSize: const Size.fromHeight(40),
         child: AppBar(
           key: const Key("open_page_appbar"),
-          backgroundColor: Colors.blue,
-          foregroundColor: Colors.white,
-          title: Text(
-            widget.title,
-            style: const TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-                fontStyle: FontStyle.normal),
-          ),
+          title: Text(widget.title),
         ),
       ),
       body: isLoading ? _buildLoading() : _buildPageList(_titles!),
@@ -90,24 +81,6 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
                     _fetchData()
                   },
                   child: const Text('<Refresh>',
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue)),
-                ),
-                GestureDetector(
-                  onTap: () async {
-                    await showDialog(
-                      context: context,
-                      builder: (BuildContext dialogContext) {
-                        return NewTitleDialog(
-                            titles: titles,
-                            fetchData: _fetchData,
-                            service: widget.service);
-                      },
-                    );
-                  },
-                  child: const Text('<Add page title>',
                       style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,

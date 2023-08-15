@@ -30,24 +30,6 @@ void main() {
       assertTestPage1IsOpen();
     }, semanticsEnabled: false);
 
-    testWidgets('Characterize Add Page Title and Delete Title',
-        (WidgetTester tester) async {
-      // Given I am on the "Open Parameter Page" page
-      //   and there is no page titled 'test add page title'
-      await startParameterPageApp(tester);
-      await navigateToOpenPage(tester);
-      await tester.pumpAndSettle();
-
-      // When I create a new page with the title 'test add page title'
-      await addPage(tester, title: "test add page title");
-
-      // Then the page list contains the new title
-      assertOpenPageList(containsTitles: ['test add page title']);
-
-      // Clean-up by removing the title
-      await deletePage(tester, withTitle: 'test add page title');
-    }, semanticsEnabled: false);
-
     testWidgets(
         'Tap Open Page in main menu, should navigate to the Open Page screen',
         (tester) async {
