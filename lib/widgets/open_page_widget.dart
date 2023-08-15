@@ -95,24 +95,6 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
                           fontWeight: FontWeight.bold,
                           color: Colors.blue)),
                 ),
-                GestureDetector(
-                  onTap: () async {
-                    await showDialog(
-                      context: context,
-                      builder: (BuildContext dialogContext) {
-                        return NewTitleDialog(
-                            titles: titles,
-                            fetchData: _fetchData,
-                            service: widget.service);
-                      },
-                    );
-                  },
-                  child: const Text('<Add page title>',
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue)),
-                ),
               ],
             )),
       ],
