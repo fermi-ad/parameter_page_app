@@ -107,13 +107,7 @@ class _BaseWidgetState extends State<BaseWidget> {
     return _showLandingPage
         ? LandingPageWidget(
             onOpenPage: () => _navigateToOpenPage(context),
-            onCreateNewPage: () {
-              setState(() {
-                _openPageId = null;
-                _showLandingPage = false;
-                _title = "New Parameter Page";
-              });
-            },
+            onCreateNewPage: _startWithANewParameterPage,
           )
         : _buildPageWidget();
   }
@@ -143,6 +137,14 @@ class _BaseWidgetState extends State<BaseWidget> {
                 _navigateToOpenPage(context);
               })
         ]));
+  }
+
+  void _startWithANewParameterPage() {
+    setState(() {
+      _openPageId = null;
+      _showLandingPage = false;
+      _title = "New Parameter Page";
+    });
   }
 
   void _navigateToOpenPage(BuildContext context) {
