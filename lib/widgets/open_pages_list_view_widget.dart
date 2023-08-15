@@ -45,14 +45,6 @@ class _OpenPagesListViewWidgetState extends State<OpenPagesListViewWidget> {
                     fontSize: 17,
                   ),
                 ),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete),
-                  iconSize: 20,
-                  color: Theme.of(context).hintColor,
-                  onPressed: () => {
-                    _deleteTitle(widget.titles[index]['pageid']),
-                  },
-                ),
                 selectedColor: Colors.green,
               ),
             ),
@@ -61,16 +53,5 @@ class _OpenPagesListViewWidgetState extends State<OpenPagesListViewWidget> {
       },
       itemCount: widget.titles.length,
     );
-  }
-
-  Future<void> _deleteTitle(String pageid) async {
-    widget.service.deletePage(
-        withPageId: pageid,
-        onFailure: (String errorMessage) {
-          logger.e('GraphQL Error: $errorMessage');
-        },
-        onSuccess: () {
-          widget.fetchData();
-        });
   } //delete Title function
 }
