@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import '../services/parameter_page/parameter_page_service.dart';
 import 'open_pages_list_view_widget.dart';
-import 'newtitledialog_widget.dart';
 
 class OpenPageWidget extends StatefulWidget {
   final Function(String pageId, String pageTitle) onOpen;
