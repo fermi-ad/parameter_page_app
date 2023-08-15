@@ -104,17 +104,22 @@ class _BaseWidgetState extends State<BaseWidget> {
   }
 
   Widget _buildBody(BuildContext context) {
-    return _openPageId == null
-        ? LandingPageWidget(onOpenPage: () => _navigateToOpenPage(context))
-        : _buildPageWidget(_openPageId!);
+    return _showLandingPage
+        ? LandingPageWidget(
+            onOpenPage: () => _navigateToOpenPage(context),
+            onCreateNewPage: _startWithANewParameterPage,
+          )
+        : _buildPageWidget();
   }
 
-  Widget _buildPageWidget(String pageId) {
+  Widget _buildPageWidget() {
     return DataAcquisitionWidget(
         service: widget.dpmService,
         child: Center(
             child: PageWidget(
-                key: _pageKey, service: widget.pageService, pageId: pageId)));
+                key: _pageKey,
+                service: widget.pageService,
+                pageId: _openPageId)));
   }
 
   Widget _buildDrawer(BuildContext context) {
@@ -124,7 +129,7 @@ class _BaseWidgetState extends State<BaseWidget> {
           const DrawerHeader(
               decoration: BoxDecoration(color: Colors.blue),
               child: Text("Parameter Page Menu")),
-          ListTile(title: const Text("New Page"), onTap: _newPage),
+          ListTile(title: const Text("New Page"), onTap: _handleNewPage),
           ListTile(
               title: const Text("Open Page"),
               onTap: () {
@@ -134,10 +139,12 @@ class _BaseWidgetState extends State<BaseWidget> {
         ]));
   }
 
-  void _newPage() async {
-    await _pageKey.currentState?.newPage(
-        onNewPage: () => setState(() => _title = "New Parameter Page"));
-    _scaffoldKey.currentState?.closeDrawer();
+  void _startWithANewParameterPage() {
+    setState(() {
+      _openPageId = null;
+      _showLandingPage = false;
+      _title = "New Parameter Page";
+    });
   }
 
   void _navigateToOpenPage(BuildContext context) {
@@ -166,14 +173,28 @@ class _BaseWidgetState extends State<BaseWidget> {
                 )));
   }
 
+  void _handleNewPage() async {
+    _scaffoldKey.currentState?.closeDrawer();
+
+    await _pageKey.currentState?.newPage(onNewPage: () {
+      setState(() {
+        _title = "New Parameter Page";
+        _openPageId = null;
+      });
+    });
+  }
+
   void _handleOpenPage(String pageId, String pageTitle) async {
     setState(() {
       _title = pageTitle;
       _openPageId = pageId;
+      _showLandingPage = false;
     });
   }
 
   String _title = "Parameter Page";
 
   String? _openPageId;
+
+  bool _showLandingPage = true;
 }

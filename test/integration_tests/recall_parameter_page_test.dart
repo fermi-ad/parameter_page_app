@@ -132,5 +132,20 @@ void main() {
       // Then Test Page 1 is open
       assertTestPage1IsOpen();
     }, semanticsEnabled: false);
+
+    testWidgets(
+        'Start a new parameter page then open Test Page 1, show Test Page 1',
+        (WidgetTester tester) async {
+      // Given I have started a new parameter page
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+
+      // When I open Test Page 1
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 1");
+
+      // Then Test Page 1 is open
+      assertTestPage1IsOpen();
+    });
   });
 }

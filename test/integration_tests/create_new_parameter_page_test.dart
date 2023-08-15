@@ -9,6 +9,20 @@ void main() {
 
   group('Create New Parameter Page', () {
     testWidgets(
+        'Tap Create a New Parameter Page on the landing page, opens a new parameter page',
+        (WidgetTester tester) async {
+      // Given I am on the landing page
+      await startParameterPageApp(tester);
+
+      // When I tap "Create a new Parameter Page"
+      await createNewParameterPage(tester);
+
+      // Then the user is given a new parameter page
+      assertNumberOfEntriesOnPageIs(0);
+      assertPageTitleIs("New Parameter Page");
+    });
+
+    testWidgets(
         'Tap New Page and discard changes, should be presented with a new blank page',
         (tester) async {
       // Given the test page is loaded and I have added new parameters
