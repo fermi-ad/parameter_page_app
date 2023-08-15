@@ -105,7 +105,16 @@ class _BaseWidgetState extends State<BaseWidget> {
 
   Widget _buildBody(BuildContext context) {
     return _showLandingPage
-        ? LandingPageWidget(onOpenPage: () => _navigateToOpenPage(context))
+        ? LandingPageWidget(
+            onOpenPage: () => _navigateToOpenPage(context),
+            onCreateNewPage: () {
+              setState(() {
+                _openPageId = null;
+                _showLandingPage = false;
+                _title = "New Parameter Page";
+              });
+            },
+          )
         : _buildPageWidget();
   }
 

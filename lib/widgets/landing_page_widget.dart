@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 class LandingPageWidget extends StatelessWidget {
   final Function() onOpenPage;
 
-  const LandingPageWidget({super.key, required this.onOpenPage});
+  final Function() onCreateNewPage;
+
+  const LandingPageWidget(
+      {super.key, required this.onOpenPage, required this.onCreateNewPage});
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +17,8 @@ class LandingPageWidget extends StatelessWidget {
         _buildWelcomeBanner(),
         const SizedBox(height: 16.0),
         _buildOpenParameterPageButton(),
+        const SizedBox(height: 16.0),
+        _buildCreateNewParameterPageButton(),
         const Spacer()
       ]),
       const Spacer()
@@ -36,5 +41,19 @@ class LandingPageWidget extends StatelessWidget {
             child: const Text(
                 style: TextStyle(color: Colors.white),
                 "Open a Parameter Page")));
+  }
+
+  Widget _buildCreateNewParameterPageButton() {
+    return SizedBox(
+        width: 256.0,
+        child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                elevation: 0.0,
+                minimumSize: const Size.fromHeight(40)),
+            onPressed: onCreateNewPage,
+            child: const Text(
+                style: TextStyle(color: Colors.white),
+                "Create a New Parameter Page")));
   }
 }
