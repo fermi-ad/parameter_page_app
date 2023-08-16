@@ -97,12 +97,7 @@ class PageWidgetState extends State<PageWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Visibility(
-            visible: !page.editing() && page.isDirty,
-            child: const Row(key: Key("unsaved_changes_indicator"), children: [
-              Icon(Icons.warning),
-              Text("There are un-saved changes to this page.")
-            ])),
+        _buildUnsavedChangesIndicator(page),
         Expanded(
           child: ReorderableListView(
               padding: const EdgeInsets.fromLTRB(4.0, 4.0, 4.0, 4.0),
@@ -135,6 +130,19 @@ class PageWidgetState extends State<PageWidget> {
         _buildFloatingActionBar(page)
       ],
     );
+  }
+
+  Widget _buildUnsavedChangesIndicator(ParameterPage page) {
+    return Visibility(
+        visible: !page.editing() && page.isDirty,
+        child: const Padding(
+            padding: EdgeInsets.fromLTRB(12.0, 4.0, 4.0, 4.0),
+            child: Row(key: Key("unsaved_changes_indicator"), children: [
+              Icon(Icons.warning, color: Colors.amber),
+              SizedBox(width: 8.0),
+              Text("There are un-saved changes to this page.",
+                  style: TextStyle(fontSize: 12.0))
+            ])));
   }
 
   Widget _buildRow(BuildContext context, PageEntry entry, int index, bool wide,
