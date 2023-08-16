@@ -88,19 +88,41 @@ class _BaseWidgetState extends State<BaseWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
         key: _scaffoldKey,
-        appBar: AppBar(
-            title: Container(key: const Key("page_title"), child: Text(_title)),
-            actions: [
-              Tooltip(
-                  message: "Display Settings",
-                  child: TextButton(
-                    key: const Key('display_settings_button'),
-                    child: const Text("Display Settings"),
-                    onPressed: () => _navigateToDisplaySettings(context),
-                  )),
-            ]),
+        appBar: _buildAppBar(context),
         drawer: _buildDrawer(context),
         body: _buildBody(context));
+  }
+
+  AppBar _buildAppBar(BuildContext context) {
+    return AppBar(title: _buildTitle(), actions: [
+      Tooltip(
+          message: "Display Settings",
+          child: TextButton(
+            key: const Key('display_settings_button'),
+            child: const Text("Display Settings"),
+            onPressed: () => _navigateToDisplaySettings(context),
+          )),
+    ]);
+  }
+
+  Widget _buildTitle() {
+    return Row(key: const Key("page_title"), children: [
+      _buildUnsavedChangesIndicator(),
+      Text(_title),
+      const SizedBox(width: 12.0)
+    ]);
+  }
+
+  Widget _buildUnsavedChangesIndicator() {
+    return Visibility(
+        visible: _pageHasUnsavedChanges,
+        child: const Row(children: [
+          Tooltip(
+              key: Key("unsaved_changes_indicator"),
+              message: "This page has unsaved changes.",
+              child: Icon(Icons.warning, color: Colors.amber)),
+          SizedBox(width: 8.0)
+        ]));
   }
 
   Widget _buildBody(BuildContext context) {
@@ -119,24 +141,30 @@ class _BaseWidgetState extends State<BaseWidget> {
             child: PageWidget(
                 key: _pageKey,
                 service: widget.pageService,
-                pageId: _openPageId)));
+                pageId: _openPageId,
+                onPageModified: _handlePageModified)));
   }
 
   Widget _buildDrawer(BuildContext context) {
     return Drawer(
         key: const Key("main_menu_icon"),
-        child: ListView(padding: EdgeInsets.zero, children: [
-          const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
-              child: Text("Parameter Page Menu")),
-          ListTile(title: const Text("New Page"), onTap: _handleNewPage),
-          ListTile(
-              title: const Text("Open Page"),
-              onTap: () {
-                Navigator.pop(context);
-                _navigateToOpenPage(context);
-              })
-        ]));
+        child: ListView(
+            key: const Key("main_menu"),
+            padding: EdgeInsets.zero,
+            children: [
+              const DrawerHeader(
+                  decoration: BoxDecoration(color: Colors.blue),
+                  child: Text("Parameter Page Menu")),
+              ListTile(title: const Text("New Page"), onTap: _handleNewPage),
+              ListTile(
+                  title: const Text("Open Page"),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _navigateToOpenPage(context);
+                  }),
+              ListTile(
+                  title: const Text("Save"), enabled: _pageHasUnsavedChanges)
+            ]));
   }
 
   void _startWithANewParameterPage() {
@@ -192,9 +220,17 @@ class _BaseWidgetState extends State<BaseWidget> {
     });
   }
 
+  void _handlePageModified(bool hasUnsavedChanges) {
+    setState(() {
+      _pageHasUnsavedChanges = hasUnsavedChanges;
+    });
+  }
+
   String _title = "Parameter Page";
 
   String? _openPageId;
 
   bool _showLandingPage = true;
+
+  bool _pageHasUnsavedChanges = false;
 }

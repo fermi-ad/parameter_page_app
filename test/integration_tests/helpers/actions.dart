@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:parameter_page/main.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
 import 'package:parameter_page/main.dart' as app;
 
@@ -154,7 +155,7 @@ Future<void> clearAll(tester) async {
 }
 
 Future<void> newPage(tester, {bool? confirmDiscardChanges}) async {
-  await _openMainMenu(tester);
+  await openMainMenu(tester);
   await tester.tap(find.text("New Page"));
   await tester.pumpAndSettle();
 
@@ -217,13 +218,18 @@ Future<void> collapseDigitalStatus(tester, {required String forDRF}) async {
 }
 
 Future<void> navigateToOpenPage(tester) async {
-  await _openMainMenu(tester);
+  await openMainMenu(tester);
   await tester.tap(find.text('Open Page'));
   await tester.pumpAndSettle();
 }
 
-Future<void> _openMainMenu(tester) async {
+Future<void> openMainMenu(tester) async {
   await tester.tap(find.byIcon(Icons.menu));
+  await tester.pumpAndSettle();
+}
+
+Future<void> closeMainMenu(tester) async {
+  await tester.tap(find.byType(BaseWidget));
   await tester.pumpAndSettle();
 }
 

@@ -419,3 +419,13 @@ void assertUnsavedChangesIndicator({required bool isVisible}) {
   expect(find.byKey(const Key("unsaved_changes_indicator")),
       isVisible ? findsOneWidget : findsNothing);
 }
+
+void assertMainMenuItem(WidgetTester tester,
+    {required String name, required bool isEnabled}) {
+  final menuTextFinder = find.descendant(
+      of: find.byKey(const Key("main_menu")), matching: find.text(name));
+  final menuItemFinder =
+      find.ancestor(of: menuTextFinder, matching: find.byType(ListTile));
+  final ListTile listTile = tester.widget(menuItemFinder);
+  expect(listTile.enabled, isEnabled);
+}

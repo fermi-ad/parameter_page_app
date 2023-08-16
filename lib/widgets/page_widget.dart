@@ -35,7 +35,10 @@ class PageWidget extends StatefulWidget {
 
   final String? pageId;
 
-  const PageWidget({this.pageId, required this.service, super.key});
+  final Function(bool)? onPageModified;
+
+  const PageWidget(
+      {this.pageId, this.onPageModified, required this.service, super.key});
 
   @override
   State<PageWidget> createState() => PageWidgetState();
@@ -97,7 +100,6 @@ class PageWidgetState extends State<PageWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        _buildUnsavedChangesIndicator(page),
         Expanded(
           child: ReorderableListView(
               padding: const EdgeInsets.fromLTRB(4.0, 4.0, 4.0, 4.0),
@@ -130,19 +132,6 @@ class PageWidgetState extends State<PageWidget> {
         _buildFloatingActionBar(page)
       ],
     );
-  }
-
-  Widget _buildUnsavedChangesIndicator(ParameterPage page) {
-    return Visibility(
-        visible: !page.editing() && page.isDirty,
-        child: const Padding(
-            padding: EdgeInsets.fromLTRB(12.0, 4.0, 4.0, 4.0),
-            child: Row(key: Key("unsaved_changes_indicator"), children: [
-              Icon(Icons.warning, color: Colors.amber),
-              SizedBox(width: 8.0),
-              Text("There are un-saved changes to this page.",
-                  style: TextStyle(fontSize: 12.0))
-            ])));
   }
 
   Widget _buildRow(BuildContext context, PageEntry entry, int index, bool wide,
@@ -220,6 +209,9 @@ class PageWidgetState extends State<PageWidget> {
 
   void _toggleEditMode(ParameterPage page) {
     setState(() => page.toggleEditing());
+    if (!page.editing()) {
+      widget.onPageModified?.call(page.isDirty);
+    }
   }
 
   Widget _buildEditModeFloatingActionBar(ParameterPage page) {
