@@ -88,12 +88,12 @@ class _BaseWidgetState extends State<BaseWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
         key: _scaffoldKey,
-        appBar: _buildAppBar(),
+        appBar: _buildAppBar(context),
         drawer: _buildDrawer(context),
         body: _buildBody(context));
   }
 
-  AppBar _buildAppBar() {
+  AppBar _buildAppBar(BuildContext context) {
     return AppBar(title: _buildTitle(), actions: [
       Tooltip(
           message: "Display Settings",
