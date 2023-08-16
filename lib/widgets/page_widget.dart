@@ -97,6 +97,12 @@ class PageWidgetState extends State<PageWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
+        Visibility(
+            visible: !page.editing() && page.isDirty,
+            child: const Row(key: Key("unsaved_changes_indicator"), children: [
+              Icon(Icons.warning),
+              Text("There are un-saved changes to this page.")
+            ])),
         Expanded(
           child: ReorderableListView(
               padding: const EdgeInsets.fromLTRB(4.0, 4.0, 4.0, 4.0),

@@ -414,3 +414,8 @@ void assertTestPage1IsOpen() {
     "Z:INC_SETTING"
   ]);
 }
+
+void assertUnsavedChangesIndicator({required bool isVisible}) {
+  expect(find.byKey(const Key("unsaved_changes_indicator")),
+      isVisible ? findsOneWidget : findsNothing);
+}
