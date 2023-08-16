@@ -88,17 +88,21 @@ class _BaseWidgetState extends State<BaseWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
         key: _scaffoldKey,
-        appBar: AppBar(title: _buildTitle(), actions: [
-          Tooltip(
-              message: "Display Settings",
-              child: TextButton(
-                key: const Key('display_settings_button'),
-                child: const Text("Display Settings"),
-                onPressed: () => _navigateToDisplaySettings(context),
-              )),
-        ]),
+        appBar: _buildAppBar(),
         drawer: _buildDrawer(context),
         body: _buildBody(context));
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(title: _buildTitle(), actions: [
+      Tooltip(
+          message: "Display Settings",
+          child: TextButton(
+            key: const Key('display_settings_button'),
+            child: const Text("Display Settings"),
+            onPressed: () => _navigateToDisplaySettings(context),
+          )),
+    ]);
   }
 
   Widget _buildTitle() {
