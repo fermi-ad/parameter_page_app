@@ -119,7 +119,8 @@ class _BaseWidgetState extends State<BaseWidget> {
             child: PageWidget(
                 key: _pageKey,
                 service: widget.pageService,
-                pageId: _openPageId)));
+                pageId: _openPageId,
+                onPageModified: _handlePageModified)));
   }
 
   Widget _buildDrawer(BuildContext context) {
@@ -139,7 +140,8 @@ class _BaseWidgetState extends State<BaseWidget> {
                     Navigator.pop(context);
                     _navigateToOpenPage(context);
                   }),
-              const ListTile(title: Text("Save"), enabled: false)
+              ListTile(
+                  title: const Text("Save"), enabled: _pageHasUnsavedChanges)
             ]));
   }
 
@@ -196,9 +198,17 @@ class _BaseWidgetState extends State<BaseWidget> {
     });
   }
 
+  void _handlePageModified(bool hasUnsavedChanges) {
+    setState(() {
+      _pageHasUnsavedChanges = hasUnsavedChanges;
+    });
+  }
+
   String _title = "Parameter Page";
 
   String? _openPageId;
 
   bool _showLandingPage = true;
+
+  bool _pageHasUnsavedChanges = false;
 }

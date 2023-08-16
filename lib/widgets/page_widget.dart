@@ -35,7 +35,10 @@ class PageWidget extends StatefulWidget {
 
   final String? pageId;
 
-  const PageWidget({this.pageId, required this.service, super.key});
+  final Function(bool)? onPageModified;
+
+  const PageWidget(
+      {this.pageId, this.onPageModified, required this.service, super.key});
 
   @override
   State<PageWidget> createState() => PageWidgetState();
@@ -220,6 +223,9 @@ class PageWidgetState extends State<PageWidget> {
 
   void _toggleEditMode(ParameterPage page) {
     setState(() => page.toggleEditing());
+    if (!page.editing()) {
+      widget.onPageModified?.call(page.isDirty);
+    }
   }
 
   Widget _buildEditModeFloatingActionBar(ParameterPage page) {
