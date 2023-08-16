@@ -88,19 +88,37 @@ class _BaseWidgetState extends State<BaseWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
         key: _scaffoldKey,
-        appBar: AppBar(
-            title: Container(key: const Key("page_title"), child: Text(_title)),
-            actions: [
-              Tooltip(
-                  message: "Display Settings",
-                  child: TextButton(
-                    key: const Key('display_settings_button'),
-                    child: const Text("Display Settings"),
-                    onPressed: () => _navigateToDisplaySettings(context),
-                  )),
-            ]),
+        appBar: AppBar(title: _buildTitle(), actions: [
+          Tooltip(
+              message: "Display Settings",
+              child: TextButton(
+                key: const Key('display_settings_button'),
+                child: const Text("Display Settings"),
+                onPressed: () => _navigateToDisplaySettings(context),
+              )),
+        ]),
         drawer: _buildDrawer(context),
         body: _buildBody(context));
+  }
+
+  Widget _buildTitle() {
+    return Row(key: const Key("page_title"), children: [
+      _buildUnsavedChangesIndicator(),
+      Text(_title),
+      const SizedBox(width: 12.0)
+    ]);
+  }
+
+  Widget _buildUnsavedChangesIndicator() {
+    return Visibility(
+        visible: _pageHasUnsavedChanges,
+        child: const Row(children: [
+          Tooltip(
+              key: Key("unsaved_changes_indicator"),
+              message: "This page has unsaved changes.",
+              child: Icon(Icons.warning, color: Colors.amber)),
+          SizedBox(width: 8.0)
+        ]));
   }
 
   Widget _buildBody(BuildContext context) {
