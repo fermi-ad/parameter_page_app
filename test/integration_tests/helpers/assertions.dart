@@ -421,12 +421,12 @@ void assertUnsavedChangesIndicator({required bool isVisible}) {
 }
 
 void assertSavingPageIndicator({required bool isVisible}) {
-  expect(find.byKey(const Key("saving_page_indicator")),
+  expect(find.byKey(const Key("page_saving_indicator")),
       isVisible ? findsOneWidget : findsNothing);
 }
 
 void assertPageSavedIndicator({required bool isVisible}) {
-  expect(find.byKey(const Key("saving_page_indicator")),
+  expect(find.byKey(const Key("page_saved_indicator")),
       isVisible ? findsOneWidget : findsNothing);
 }
 

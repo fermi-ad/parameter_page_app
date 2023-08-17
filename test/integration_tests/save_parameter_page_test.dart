@@ -59,11 +59,10 @@ void main() {
       // When I save the page
       await openMainMenu(tester);
       await saveParameterPage(tester);
-      await closeMainMenu(tester);
 
       // Then the saving page indicator is displayed for three seconds
       assertSavingPageIndicator(isVisible: true);
-      tester.pumpAndSettle(const Duration(seconds: 3));
+      await tester.pumpAndSettle(const Duration(seconds: 3));
 
       // ... and then it changes to the Page Saved indicator
       assertSavingPageIndicator(isVisible: false);
