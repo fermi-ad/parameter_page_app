@@ -51,6 +51,30 @@ class GraphQLDpmService extends DpmService {
           cache: Cache(),
         );
 
+  // Common code needed to do RPCs. The caller sends in a protobuf request and,
+  // optionally, a function to translate the protobuf reply into some other data
+  // type.
+
+  Future<Result> _rpc<TData, TVars, Result>(OperationRequest<TData, TVars> req,
+          {Result Function(TData)? xlat}) =>
+      _q
+          .request(req)
+          .where((response) => !response.loading)
+          .first
+          .then((value) {
+        if (value.hasErrors) {
+          throw Exception(value.graphqlErrors);
+        } else {
+          final data = value.data;
+
+          if (data != null) {
+            return xlat != null ? xlat(data) : data as Result;
+          } else {
+            throw Exception("no data was returned from request");
+          }
+        }
+      });
+
   // Returns information about devices. The caller provides a list of device
   // names and will receive a list of `DeviceInfo` objects. The order of the
   // results in the returned list correspond to the order of the devices in the
@@ -61,50 +85,9 @@ class GraphQLDpmService extends DpmService {
       final req =
           GGetDeviceInfoReq((b) => b..vars.names = ListBuilder(devices));
 
-      return _q
-          // Make the request on the "query" connection. This returns a stream
-          // of replies. The request type was automatically generated from the
-          // schema (hence the ugly name.)
-
-          .request(req)
-
-          // Report errors.
-
-          .handleError((error) =>
-              developer.log("error: $error", name: "gql.getDeviceInfo"))
-
-          // Ignore items showing the progress of the request. We only want the
-          // final response when there's data or an error.
-
-          .where((event) => !event.loading)
-
-          // Since this is a query, there should only be one reply (after
-          // filtering out the progress entries), so grab the first (and only)
-          // reply. This method returns a Future with the reply.
-
-          .first
-
-          // We need to convert the Future's result because it's a list of
-          // `GGetDeviceInfoData_acceleratorData` objects and we want a list of
-          // `DeviceInfo` objects.
-
-          .then(
-        (response) {
-          if (!response.hasErrors) {
-            // Iterate across the list to generate a new one with our "nicer"
-            // class type.
-
-            return response.data!.deviceInfo.result
-                .map(_convertToDevInfo)
-                .toList();
-          } else {
-            // Any GraphQL errors should be re-raised (but wrapped in our
-            // DPM-specific exception.)
-
-            throw DPMGraphQLException(response.graphqlErrors.toString());
-          }
-        },
-      );
+      return _rpc(req,
+          xlat: (GGetDeviceInfoData data) =>
+              data.deviceInfo.result.map(_convertToDevInfo).toList());
     } else {
       throw DPMInvArgException("empty device list");
     }
