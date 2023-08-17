@@ -420,6 +420,16 @@ void assertUnsavedChangesIndicator({required bool isVisible}) {
       isVisible ? findsOneWidget : findsNothing);
 }
 
+void assertSavingPageIndicator({required bool isVisible}) {
+  expect(find.byKey(const Key("saving_page_indicator")),
+      isVisible ? findsOneWidget : findsNothing);
+}
+
+void assertPageSavedIndicator({required bool isVisible}) {
+  expect(find.byKey(const Key("saving_page_indicator")),
+      isVisible ? findsOneWidget : findsNothing);
+}
+
 void assertMainMenuItem(WidgetTester tester,
     {required String name, required bool isEnabled}) {
   final menuTextFinder = find.descendant(

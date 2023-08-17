@@ -268,6 +268,12 @@ Future<void> openParameterPage(WidgetTester tester,
   await tester.pumpAndSettle();
 }
 
+Future<void> saveParameterPage(WidgetTester tester) async {
+  await tester.tap(
+      find.descendant(of: find.byType(ListTile), matching: find.text("Save")));
+  await tester.pumpAndSettle();
+}
+
 Future<void> addPage(WidgetTester tester, {required String title}) async {
   await tester.tap(find.text('<Add page title>'));
   await tester.pumpAndSettle();
