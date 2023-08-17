@@ -8,6 +8,7 @@ part of 'serializers.gql.dart';
 
 Serializers _$serializers = (new Serializers().toBuilder()
       ..add(FetchPolicy.serializer)
+      ..add(GDevValue.serializer)
       ..add(GGetDeviceInfoData.serializer)
       ..add(GGetDeviceInfoData_deviceInfo.serializer)
       ..add(GGetDeviceInfoData_deviceInfo_result__asDeviceInfo.serializer)
@@ -19,6 +20,10 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(GGetDeviceInfoData_deviceInfo_result__base.serializer)
       ..add(GGetDeviceInfoReq.serializer)
       ..add(GGetDeviceInfoVars.serializer)
+      ..add(GSetDeviceData.serializer)
+      ..add(GSetDeviceData_setDevice.serializer)
+      ..add(GSetDeviceReq.serializer)
+      ..add(GSetDeviceVars.serializer)
       ..add(GStreamDataData.serializer)
       ..add(GStreamDataData_acceleratorData.serializer)
       ..add(GStreamDataData_acceleratorData_data.serializer)
@@ -35,6 +40,15 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(String)]),
           () => new ListBuilder<String>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(String)]),
+          () => new ListBuilder<String>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(double)]),
+          () => new ListBuilder<double>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(int)]),
+          () => new ListBuilder<int>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(String)]),
           () => new ListBuilder<String>()))
