@@ -107,9 +107,9 @@ class _BaseWidgetState extends State<BaseWidget> {
 
   Widget _buildTitle() {
     return Row(key: const Key("page_title"), children: [
-      _buildUnsavedChangesIndicator(),
       Text(_title),
-      const SizedBox(width: 12.0)
+      const SizedBox(width: 8.0),
+      _buildUnsavedChangesIndicator()
     ]);
   }
 
@@ -120,8 +120,7 @@ class _BaseWidgetState extends State<BaseWidget> {
           Tooltip(
               key: Key("unsaved_changes_indicator"),
               message: "This page has unsaved changes.",
-              child: Icon(Icons.warning, color: Colors.amber)),
-          SizedBox(width: 8.0)
+              child: Icon(Icons.warning, color: Colors.amber))
         ]));
   }
 
@@ -163,7 +162,9 @@ class _BaseWidgetState extends State<BaseWidget> {
                     _navigateToOpenPage(context);
                   }),
               ListTile(
-                  title: const Text("Save"), enabled: _pageHasUnsavedChanges)
+                  title: const Text("Save"),
+                  enabled: _pageHasUnsavedChanges,
+                  onTap: _handleSavePage)
             ]));
   }
 
@@ -201,6 +202,12 @@ class _BaseWidgetState extends State<BaseWidget> {
                 )));
   }
 
+  void _handleSavePage() async {
+    setState(() {
+      _saving = true;
+    });
+  }
+
   void _handleNewPage() async {
     _scaffoldKey.currentState?.closeDrawer();
 
@@ -233,4 +240,6 @@ class _BaseWidgetState extends State<BaseWidget> {
   bool _showLandingPage = true;
 
   bool _pageHasUnsavedChanges = false;
+
+  bool _saving = false;
 }
