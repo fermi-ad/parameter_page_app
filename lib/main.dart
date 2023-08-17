@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:parameter_page/services/parameter_page/gql_param/graphql_parameter_page_service.dart';
 import 'package:parameter_page/services/parameter_page/mock_parameter_page_service.dart';
@@ -12,6 +14,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'services/dpm/graphql_dpm_service.dart';
 import 'services/dpm/mock_dpm_service.dart';
 import 'widgets/page_widget.dart';
+
+enum PagePersistenceState { clean, unsaved, saving, saved }
 
 void main() async {
   await dotenv.load(fileName: ".env");
@@ -107,22 +111,49 @@ class _BaseWidgetState extends State<BaseWidget> {
 
   Widget _buildTitle() {
     return Row(key: const Key("page_title"), children: [
-      _buildUnsavedChangesIndicator(),
       Text(_title),
-      const SizedBox(width: 12.0)
+      const SizedBox(width: 8.0),
+      _buildPagePersistenceStateIndicator()
     ]);
   }
 
+  Widget _buildPagePersistenceStateIndicator() {
+    switch (_persistenceState) {
+      case PagePersistenceState.clean:
+        return Container();
+
+      case PagePersistenceState.unsaved:
+        return _buildUnsavedChangesIndicator();
+
+      case PagePersistenceState.saving:
+        return _buildSavingIndicator();
+
+      case PagePersistenceState.saved:
+        return _buildSavedIndicator();
+    }
+  }
+
+  Widget _buildSavedIndicator() {
+    return const Text(
+        key: Key("page_saved_indicator"),
+        "Last saved 8/17/2003 at 11:35:00 AM",
+        style: TextStyle(fontSize: 12.0, color: Colors.grey));
+  }
+
+  Widget _buildSavingIndicator() {
+    return const Text(
+        key: Key("page_saving_indicator"),
+        "Saving...",
+        style: TextStyle(fontSize: 12.0, color: Colors.grey));
+  }
+
   Widget _buildUnsavedChangesIndicator() {
-    return Visibility(
-        visible: _pageHasUnsavedChanges,
-        child: const Row(children: [
-          Tooltip(
-              key: Key("unsaved_changes_indicator"),
-              message: "This page has unsaved changes.",
-              child: Icon(Icons.warning, color: Colors.amber)),
-          SizedBox(width: 8.0)
-        ]));
+    return const Row(children: [
+      Tooltip(
+          key: Key("unsaved_changes_indicator"),
+          message: "This page has unsaved changes.",
+          child: Icon(Icons.warning, color: Colors.amber))
+    ]);
   }
 
   Widget _buildBody(BuildContext context) {
@@ -163,7 +194,9 @@ class _BaseWidgetState extends State<BaseWidget> {
                     _navigateToOpenPage(context);
                   }),
               ListTile(
-                  title: const Text("Save"), enabled: _pageHasUnsavedChanges)
+                  title: const Text("Save"),
+                  enabled: _persistenceState == PagePersistenceState.unsaved,
+                  onTap: _handleSavePage)
             ]));
   }
 
@@ -201,6 +234,20 @@ class _BaseWidgetState extends State<BaseWidget> {
                 )));
   }
 
+  void _handleSavePage() async {
+    _scaffoldKey.currentState?.closeDrawer();
+
+    setState(() {
+      _persistenceState = PagePersistenceState.saving;
+    });
+
+    Timer(const Duration(seconds: 2), () {
+      setState(() {
+        _persistenceState = PagePersistenceState.saved;
+      });
+    });
+  }
+
   void _handleNewPage() async {
     _scaffoldKey.currentState?.closeDrawer();
 
@@ -222,7 +269,11 @@ class _BaseWidgetState extends State<BaseWidget> {
 
   void _handlePageModified(bool hasUnsavedChanges) {
     setState(() {
-      _pageHasUnsavedChanges = hasUnsavedChanges;
+      if (hasUnsavedChanges) {
+        _persistenceState = PagePersistenceState.unsaved;
+      } else {
+        _persistenceState = PagePersistenceState.clean;
+      }
     });
   }
 
@@ -232,5 +283,5 @@ class _BaseWidgetState extends State<BaseWidget> {
 
   bool _showLandingPage = true;
 
-  bool _pageHasUnsavedChanges = false;
+  PagePersistenceState _persistenceState = PagePersistenceState.clean;
 }

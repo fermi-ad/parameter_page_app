@@ -44,5 +44,29 @@ void main() {
       await openMainMenu(tester);
       assertMainMenuItem(tester, name: "Save", isEnabled: true);
     });
+
+    testWidgets('Save page, saving/saved indicator is shown',
+        (WidgetTester tester) async {
+      // Given there are unsaved changes to the page
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await enterEditMode(tester);
+      await addANewParameter(tester, 'Z:BDCCT');
+      await exitEditMode(tester);
+      await waitForDataToLoadFor(tester, "Z:BDCCT");
+      assertUnsavedChangesIndicator(isVisible: true);
+
+      // When I save the page
+      await openMainMenu(tester);
+      await saveParameterPage(tester);
+
+      // Then the saving page indicator is displayed for three seconds
+      assertSavingPageIndicator(isVisible: true);
+      await tester.pumpAndSettle(const Duration(seconds: 3));
+
+      // ... and then it changes to the Page Saved indicator
+      assertSavingPageIndicator(isVisible: false);
+      assertPageSavedIndicator(isVisible: true);
+    });
   });
 }
