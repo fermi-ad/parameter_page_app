@@ -66,17 +66,28 @@ type ErrorReply {
     message: String!
 }
 
-union DeviceInfoResult =
-      DeviceInfo
-    | ErrorReply
+union DeviceInfoResult = DeviceInfo | ErrorReply
 
 type DeviceInfoReply {
     result: [DeviceInfoResult!]!
 }
 
+input DevValue {
+    intVal: Int
+    scalarVal: Float
+    scalarArrayVal: [Float!]
+    rawVal: [Int!]
+    textVal: String
+    textArrayVal: [String!]
+}
+
 type Query {
     acceleratorData(drfs: [String!]!): [DataReply!]!
     deviceInfo(device: [String!]!): DeviceInfoReply!
+}
+
+type Mutation {
+    setDevice(device: String!, value: DevValue!): StatusReply!
 }
 
 type Subscription {

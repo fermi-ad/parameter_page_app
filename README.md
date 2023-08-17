@@ -2,11 +2,18 @@
 
 ![Parameter Page in Chrome](screenshots/main-screenshot.png "Parameter Page in Chrome")
 
-This is the PIP-II Parameter Page web application. 
+This is the PIP-II Parameter Page web application.
 
 ## Development Environment
 
 TODO
+
+If more queries are added to the GraphQL schema, you need to generate new files.
+To do this, run:
+
+```
+dart run build_runner build --delete-conflicting-outputs
+```
 
 ## Running
 

@@ -7,6 +7,8 @@ import 'package:built_value/standard_json_plugin.dart' show StandardJsonPlugin;
 import 'package:ferry_exec/ferry_exec.dart';
 import 'package:gql_code_builder/src/serializers/operation_serializer.dart'
     show OperationSerializer;
+import 'package:parameter_page/gql-dpm/schema/__generated__/DPM.schema.gql.dart'
+    show GDevValue;
 import 'package:parameter_page/gql-dpm/schema/__generated__/get_device_info.data.gql.dart'
     show
         GGetDeviceInfoData_deviceInfo_result,
@@ -21,6 +23,12 @@ import 'package:parameter_page/gql-dpm/schema/__generated__/get_device_info.req.
     show GGetDeviceInfoReq;
 import 'package:parameter_page/gql-dpm/schema/__generated__/get_device_info.var.gql.dart'
     show GGetDeviceInfoVars;
+import 'package:parameter_page/gql-dpm/schema/__generated__/set_device.data.gql.dart'
+    show GSetDeviceData, GSetDeviceData_setDevice;
+import 'package:parameter_page/gql-dpm/schema/__generated__/set_device.req.gql.dart'
+    show GSetDeviceReq;
+import 'package:parameter_page/gql-dpm/schema/__generated__/set_device.var.gql.dart'
+    show GSetDeviceVars;
 import 'package:parameter_page/gql-dpm/schema/__generated__/stream_data.data.gql.dart'
     show
         GStreamDataData_acceleratorData_data_result,
@@ -46,6 +54,7 @@ final SerializersBuilder _serializersBuilder = _$serializers.toBuilder()
   ..add(GStreamDataData_acceleratorData_data_result.serializer)
   ..addPlugin(StandardJsonPlugin());
 @SerializersFor([
+  GDevValue,
   GGetDeviceInfoData,
   GGetDeviceInfoData_deviceInfo,
   GGetDeviceInfoData_deviceInfo_result__asDeviceInfo,
@@ -55,6 +64,10 @@ final SerializersBuilder _serializersBuilder = _$serializers.toBuilder()
   GGetDeviceInfoData_deviceInfo_result__base,
   GGetDeviceInfoReq,
   GGetDeviceInfoVars,
+  GSetDeviceData,
+  GSetDeviceData_setDevice,
+  GSetDeviceReq,
+  GSetDeviceVars,
   GStreamDataData,
   GStreamDataData_acceleratorData,
   GStreamDataData_acceleratorData_data,
