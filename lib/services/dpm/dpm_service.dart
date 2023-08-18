@@ -21,6 +21,43 @@ class DPMGraphQLException extends DPMException {
   DPMGraphQLException(String message) : super("GraphQL: $message");
 }
 
+// Type which defines all the types returned by Fermilab devices. The base class
+// is sealed so new types can only be defined in this module.
+
+sealed class DeviceValue {
+  const DeviceValue();
+}
+
+class DevRaw extends DeviceValue {
+  final List<int> value;
+
+  const DevRaw(this.value);
+}
+
+class DevScalar extends DeviceValue {
+  final double value;
+
+  const DevScalar(this.value);
+}
+
+class DevScalarArray extends DeviceValue {
+  final List<double> value;
+
+  const DevScalarArray(this.value);
+}
+
+class DevText extends DeviceValue {
+  final String value;
+
+  const DevText(this.value);
+}
+
+class DevTextArray extends DeviceValue {
+  final List<String> value;
+
+  const DevTextArray(this.value);
+}
+
 // The classes in this section are used to return results from the queries /
 // subscriptions. The generated classes have unusual names and have nested
 // structure. We'd rather present a simpler result type. This also protects us
@@ -183,8 +220,8 @@ abstract class DpmService {
 
   Stream<DigitalStatus> monitorDigitalStatusDevices(List<String> drfs);
 
-  Stream<SettingStatus> submit(
-      {required String forDRF, required String newSetting});
+  Future<SettingStatus> submit(
+      {required String forDRF, required DeviceValue newSetting});
 
   Stream<SettingStatus> sendCommand(
       {required String toDRF, required int value});
