@@ -272,11 +272,10 @@ class MockDpmService extends DpmService {
   }
 
   void succeedAllPendingSettings() {
-    _pendingSettingsStream.forEach((drf, controller) {
-      controller.add(const SettingStatus(facilityCode: 1, errorCode: 0));
-      controller.close();
+    _pendingSettingsCompleter.forEach((drf, controller) {
+      controller.complete(const SettingStatus(facilityCode: 1, errorCode: 0));
     });
-    _pendingSettingsStream.clear();
+    _pendingSettingsCompleter.clear();
     if (pendingSettingValue != null) {
       _settingValue = pendingSettingValue!;
     }
@@ -284,40 +283,44 @@ class MockDpmService extends DpmService {
 
   void failAllPendingSettings(
       {required int facilityCode, required int errorCode}) {
-    _pendingSettingsStream.forEach((drf, controller) {
-      controller
-          .add(SettingStatus(facilityCode: facilityCode, errorCode: errorCode));
-      controller.close();
+    _pendingSettingsCompleter.forEach((drf, controller) {
+      controller.complete(
+          SettingStatus(facilityCode: facilityCode, errorCode: errorCode));
     });
-    _pendingSettingsStream.clear();
+    _pendingSettingsCompleter.clear();
     pendingSettingValue = null;
   }
 
   @override
-  Stream<SettingStatus> submit(
-      {required String forDRF, required String newSetting}) {
+  Future<SettingStatus> submit(
+      {required String forDRF, required DeviceValue newSetting}) async {
     if (useEmptyStream) {
-      return const Stream<SettingStatus>.empty();
+      return const SettingStatus(facilityCode: 0, errorCode: 0);
     } else {
-      pendingSettingValue = double.parse(newSetting);
+      if (newSetting is DevScalar) {
+        pendingSettingValue = newSetting;
+      } else {
+        throw UnimplementedError(
+            "Only scalar setting supported by MockDPMService");
+      }
 
-      final newStream = StreamController<SettingStatus>();
-      _pendingSettingsStream[forDRF] = newStream;
+      final newCompleter = Completer<SettingStatus>();
+      _pendingSettingsCompleter[forDRF] = newCompleter;
 
-      return newStream.stream;
+      return newCompleter.future;
     }
   }
 
   @override
-  Stream<SettingStatus> sendCommand(
-      {required String toDRF, required int value}) {
+  Future<SettingStatus> sendCommand(
+      {required String toDRF, required String value}) async {
     if (useEmptyStream) {
-      return const Stream<SettingStatus>.empty();
+      return const SettingStatus(facilityCode: 0, errorCode: 0);
     } else {
-      final newStream = StreamController<SettingStatus>();
-      _pendingSettingsStream[toDRF] = newStream;
+      final newCompleter = Completer<SettingStatus>();
+      _pendingSettingsCompleter[toDRF] = newCompleter;
 
-      return newStream.stream;
+      return newCompleter.future;
     }
   }
 
@@ -336,7 +339,7 @@ class MockDpmService extends DpmService {
   }
 
   void enablePeriodSettingStream({double withDefaultSettingValue = 50.0}) {
-    _settingValue = withDefaultSettingValue;
+    _settingValue = DevScalar(withDefaultSettingValue);
     _incrementingSettingValue = withDefaultSettingValue;
 
     Timer.periodic(const Duration(seconds: 1), (Timer timer) {
@@ -344,8 +347,8 @@ class MockDpmService extends DpmService {
           refId: 0,
           cycle: 0,
           timestamp: DateTime.now(),
-          value: _settingValue,
-          primaryValue: _settingValue / 10.0,
+          value: _settingValue.value,
+          primaryValue: _settingValue.value / 10.0,
           rawValue: "8888"));
 
       _incSettings.add(Reading(
@@ -356,8 +359,8 @@ class MockDpmService extends DpmService {
           primaryValue: _incrementingSettingValue / 10.0,
           rawValue: "8888"));
 
-      if (_pendingSettingsStream.isNotEmpty) {
-        if (_pendingSettingsStream.keys.contains("Z:BTE200_TEMP")) {
+      if (_pendingSettingsCompleter.isNotEmpty) {
+        if (_pendingSettingsCompleter.keys.contains("Z:BTE200_TEMP")) {
           failAllPendingSettings(facilityCode: 57, errorCode: -10);
         } else {
           succeedAllPendingSettings();
@@ -368,8 +371,7 @@ class MockDpmService extends DpmService {
     });
   }
 
-  final Map<String, StreamController<SettingStatus>> _pendingSettingsStream =
-      {};
+  final Map<String, Completer<SettingStatus>> _pendingSettingsCompleter = {};
 
   final StreamController<Reading> _settings =
       StreamController<Reading>.broadcast();
@@ -377,9 +379,9 @@ class MockDpmService extends DpmService {
   final StreamController<Reading> _incSettings =
       StreamController<Reading>.broadcast();
 
-  double _settingValue = 0.0;
+  DevScalar _settingValue = const DevScalar(0.0);
 
   double _incrementingSettingValue = 0.0;
 
-  double? pendingSettingValue;
+  DevScalar? pendingSettingValue;
 }

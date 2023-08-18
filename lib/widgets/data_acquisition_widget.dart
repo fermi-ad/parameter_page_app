@@ -62,8 +62,8 @@ class DataAcquisitionWidget extends InheritedWidget {
       Function? onSuccess,
       Function(int, int)? onFailure}) {
     service
-        .submit(forDRF: forDRF, newSetting: newSetting)
-        .listen((SettingStatus status) {
+        .submit(forDRF: forDRF, newSetting: DevScalar(double.parse(newSetting)))
+        .then((SettingStatus status) {
       if (status.errorCode == 0) {
         onSuccess?.call();
       } else {
@@ -74,12 +74,12 @@ class DataAcquisitionWidget extends InheritedWidget {
 
   void sendCommand(
       {required String toDRF,
-      required int value,
+      required String value,
       Function? onSuccess,
       Function(int, int)? onFailure}) {
     service
         .sendCommand(toDRF: toDRF, value: value)
-        .listen((SettingStatus status) {
+        .then((SettingStatus status) {
       if (status.errorCode == 0) {
         onSuccess?.call();
       } else {

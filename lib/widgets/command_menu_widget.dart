@@ -22,7 +22,7 @@ class CommandButtonMenuWidget extends StatelessWidget {
     List<CommandButtonWidget> buttons = [];
     for (DeviceInfoDigitalControl command in deviceInfo.digControl) {
       buttons.add(CommandButtonWidget(
-          drf: drf, value: command.value, longName: command.longName));
+          drf: drf, value: command.shortName, longName: command.longName));
     }
     return buttons;
   }

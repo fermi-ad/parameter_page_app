@@ -193,19 +193,18 @@ class GraphQLDpmService extends DpmService {
   }
 
   @override
-  Stream<Reading> monitorSettingProperty(List<String> drfs) {
-    return const Stream<Reading>.empty();
-  }
+  Stream<Reading> monitorSettingProperty(List<String> drfs) =>
+      monitorDevices(drfs);
 
   @override
-  Stream<SettingStatus> submit(
-      {required String forDRF, required String newSetting}) {
+  Future<SettingStatus> submit(
+      {required String forDRF, required DeviceValue newSetting}) {
     throw UnimplementedError();
   }
 
   @override
-  Stream<SettingStatus> sendCommand(
-      {required String toDRF, required int value}) {
+  Future<SettingStatus> sendCommand(
+      {required String toDRF, required String value}) {
     throw UnimplementedError();
   }
 }
