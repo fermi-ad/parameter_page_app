@@ -223,6 +223,6 @@ abstract class DpmService {
   Future<SettingStatus> submit(
       {required String forDRF, required DeviceValue newSetting});
 
-  Stream<SettingStatus> sendCommand(
-      {required String toDRF, required int value});
+  Future<SettingStatus> sendCommand(
+      {required String toDRF, required String value});
 }
