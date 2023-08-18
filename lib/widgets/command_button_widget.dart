@@ -6,7 +6,7 @@ import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 class CommandButtonWidget extends StatefulWidget {
   final String drf;
 
-  final int value;
+  final String value;
 
   final String longName;
 
