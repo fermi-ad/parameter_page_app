@@ -113,5 +113,26 @@ void main() {
       assertNumberOfEntriesOnPageIs(1);
       assertParameterIsInRow("I:BEAM", 0);
     });
+
+    testWidgets('Tap New Page, persistent state indicator is reset to Clean',
+        (tester) async {
+      // Given the page I'm working on has been saved
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await waitForMainPageToLoad(tester);
+      await enterEditMode(tester);
+      await addANewParameter(tester, "I:BEAM");
+      await exitEditMode(tester);
+      await openMainMenu(tester);
+      await saveParameterPage(tester);
+      await waitForPageToBeSaved(tester);
+      assertPageSavedIndicator(isVisible: true);
+
+      // When I start a new page
+      await newPage(tester);
+
+      // Then the Page Saved indicator goes away
+      assertPageSavedIndicator(isVisible: false);
+    });
   });
 }
