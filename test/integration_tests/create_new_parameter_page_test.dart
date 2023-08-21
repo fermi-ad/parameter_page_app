@@ -20,7 +20,7 @@ void main() {
       // Then the user is given a new parameter page
       assertNumberOfEntriesOnPageIs(0);
       assertPageTitleIs("New Parameter Page");
-    });
+    }, semanticsEnabled: false);
 
     testWidgets(
         'Tap New Page and discard changes, should be presented with a new blank page',
@@ -38,7 +38,7 @@ void main() {
 
       // Then the changes are discarded and I get a new page
       assertNumberOfEntriesOnPageIs(0);
-    });
+    }, semanticsEnabled: false);
 
     testWidgets('Cancel New Page, should preserve the existing page',
         (tester) async {
@@ -57,7 +57,7 @@ void main() {
       assertNumberOfEntriesOnPageIs(9);
       assertParameterIsInRow("M:OUTTMP@e,02", 0);
       assertPageTitleIs("Test Page 1");
-    });
+    }, semanticsEnabled: false);
 
     testWidgets('Tap New Page, should be prompted to throw away recent changes',
         (tester) async {
@@ -74,7 +74,7 @@ void main() {
 
       // Then I should be prompted to throw away changes
       assertConfirmThrowAwayDialog(isVisible: true);
-    });
+    }, semanticsEnabled: false);
 
     testWidgets('Tap New Page, should not be prompted if there are no changes',
         (tester) async {
@@ -94,7 +94,7 @@ void main() {
 
       // ... and the title is...
       assertPageTitleIs("New Parameter Page");
-    });
+    }, semanticsEnabled: false);
 
     testWidgets('Tap New Page, should be presented with a new blank page',
         (tester) async {
@@ -112,7 +112,7 @@ void main() {
       // Then the page is empty except for the entries I added
       assertNumberOfEntriesOnPageIs(1);
       assertParameterIsInRow("I:BEAM", 0);
-    });
+    }, semanticsEnabled: false);
 
     testWidgets('Tap New Page, persistent state indicator is reset to Clean',
         (tester) async {
@@ -126,6 +126,7 @@ void main() {
       await openMainMenu(tester);
       await saveParameterPage(tester);
       await waitForPageToBeSaved(tester);
+      await waitForMainPageToLoad(tester);
       assertPageSavedIndicator(isVisible: true);
 
       // When I start a new page
@@ -133,6 +134,6 @@ void main() {
 
       // Then the Page Saved indicator goes away
       assertPageSavedIndicator(isVisible: false);
-    });
+    }, semanticsEnabled: false);
   });
 }
