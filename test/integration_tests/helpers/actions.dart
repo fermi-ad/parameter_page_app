@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:parameter_page/main.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
 import 'package:parameter_page/main.dart' as app;
+import 'package:parameter_page/widgets/parameter_page_scaffold_widget.dart';
 
 Future<void> startParameterPageApp(WidgetTester tester) async {
   app.main();
