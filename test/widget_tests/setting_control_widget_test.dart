@@ -401,7 +401,7 @@ void main() {
 
       // Then the undo value is submitted as a new setting
       assertSettingPendingIndicator(isVisible: true);
-      expect(testDPM.pendingSettingValue, equals(72.0));
+      expect(testDPM.pendingSettingValue!.value, equals(72.0));
     });
   });
 }
