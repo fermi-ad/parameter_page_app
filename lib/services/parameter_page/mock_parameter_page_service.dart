@@ -22,10 +22,7 @@ class MockParameterPageService extends ParameterPageService {
   }
 
   @override
-  Future<void> createPage(
-      {required String withTitle,
-      required Function(String errorMessage) onFailure,
-      required Function() onSuccess}) async {
+  Future<String> createPage({required String withTitle}) async {
     _testPages.add({"pageid": "4", "title": withTitle});
     _testPageEntries["4"] = [
       {
@@ -36,7 +33,7 @@ class MockParameterPageService extends ParameterPageService {
         "type": "Comment"
       }
     ];
-    onSuccess.call();
+    return "4";
   }
 
   @override
