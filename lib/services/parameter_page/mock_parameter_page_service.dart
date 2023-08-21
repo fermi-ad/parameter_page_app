@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:parameter_page/entities/page_entry.dart';
+import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
 
 class MockParameterPageService extends ParameterPageService {
@@ -53,6 +55,31 @@ class MockParameterPageService extends ParameterPageService {
     }
 
     onFailure.call("page could not be deleted (pageid not found)");
+  }
+
+  @override
+  Future<void> savePage(
+      {required String id,
+      required ParameterPage page,
+      required Function() onSuccess}) async {
+    final entries = page.entriesAsList();
+
+    List<Map<String, String>> newEntries = [];
+    int position = 0;
+    for (final PageEntry entry in entries) {
+      newEntries.add({
+        "pageid": id,
+        "entryid": DateTime.now().microsecondsSinceEpoch.toString(),
+        "position": "$position",
+        "text": entry.entryText(),
+        "type": entry is CommentEntry ? "Comment" : "Parameter"
+      });
+      position += 1;
+    }
+
+    _testPageEntries[id] = newEntries;
+
+    Timer(const Duration(seconds: 1), () => onSuccess.call());
   }
 
   final _testPages = [

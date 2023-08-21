@@ -79,6 +79,10 @@ class ParameterPage {
     _entries = [];
   }
 
+  void commit() {
+    _savedEntries = List<PageEntry>.from(_entries);
+  }
+
   bool get isDirty {
     return !listEquals<PageEntry>(_entries, _savedEntries);
   }

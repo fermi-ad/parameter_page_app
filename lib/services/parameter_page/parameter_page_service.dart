@@ -1,3 +1,5 @@
+import 'package:parameter_page/entities/parameter_page.dart';
+
 abstract class ParameterPageService {
   Future<void> fetchPages(
       {required Function(String errorMessage) onFailure,
@@ -16,5 +18,10 @@ abstract class ParameterPageService {
   Future<void> deletePage(
       {required String withPageId,
       required Function(String errorMessage) onFailure,
+      required Function() onSuccess});
+
+  Future<void> savePage(
+      {required String id,
+      required ParameterPage page,
       required Function() onSuccess});
 }

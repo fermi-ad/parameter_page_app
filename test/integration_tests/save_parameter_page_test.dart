@@ -68,5 +68,28 @@ void main() {
       assertSavingPageIndicator(isVisible: false);
       assertPageSavedIndicator(isVisible: true);
     });
+
+    testWidgets('Save page, changes persist', (WidgetTester tester) async {
+      // Given I have modified Test Page 1 by adding a new comment and saved it
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await enterEditMode(tester);
+      await addANewComment(tester, "a new comment");
+      await exitEditMode(tester);
+      await openMainMenu(tester);
+      await saveParameterPage(tester);
+      await waitForPageToBeSaved(tester);
+
+      // When I open a different page
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+
+      // ... and then open the saved paged
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 1");
+
+      // Then the new comment has persisted
+      assertIsOnPage(comment: "a new comment");
+    });
   });
 }

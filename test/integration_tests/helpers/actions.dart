@@ -64,6 +64,11 @@ Future<void> waitForUndoToDisplay(tester, {required String forDRF}) async {
   await pumpUntilFound(tester, settingFinder);
 }
 
+Future<void> waitForPageToBeSaved(tester) async {
+  final indicatorFinder = find.byKey(const Key("page_saved_indicator"));
+  await pumpUntilFound(tester, indicatorFinder);
+}
+
 Future<void> enterEditMode(tester) async {
   await tester.tap(find.byKey(const Key("enable_edit_mode_button")));
   await tester.pumpAndSettle();
