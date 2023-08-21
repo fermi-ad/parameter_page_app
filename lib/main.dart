@@ -14,7 +14,7 @@ void main() async {
 
   var (dpmService, pageService) = _configureServices();
 
-  runApp(FermiApp(
+  runApp(FermiControlsApp(
       title: "Parameter Page",
       child: ParameterPageScaffoldWidget(
           dpmService: dpmService, pageService: pageService)));
@@ -45,11 +45,11 @@ void main() async {
 // consistent theme settings to the rest of the app. All apps using this
 // base widget will have a similar look-and-feel.
 
-class FermiApp extends StatelessWidget {
+class FermiControlsApp extends StatelessWidget {
   final String title;
   final Widget child;
 
-  const FermiApp({required this.title, required this.child, super.key});
+  const FermiControlsApp({required this.title, required this.child, super.key});
 
   // Return the MaterialApp widget which will define the look-and-feel for the
   // application.
