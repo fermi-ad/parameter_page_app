@@ -213,6 +213,7 @@ class _BaseWidgetState extends State<BaseWidget> {
       setState(() {
         _title = "New Parameter Page";
         _openPageId = null;
+        _persistenceState = PagePersistenceState.clean;
       });
     });
   }
@@ -225,13 +226,9 @@ class _BaseWidgetState extends State<BaseWidget> {
     });
   }
 
-  void _handlePageModified(bool hasUnsavedChanges) {
+  void _handlePageModified(PagePersistenceState newPersistenceState) {
     setState(() {
-      if (hasUnsavedChanges) {
-        _persistenceState = PagePersistenceState.unsaved;
-      } else {
-        _persistenceState = PagePersistenceState.clean;
-      }
+      _persistenceState = newPersistenceState;
     });
   }
 
