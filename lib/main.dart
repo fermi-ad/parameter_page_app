@@ -21,7 +21,8 @@ void main() async {
 
   runApp(FermiApp(
       title: "Parameter Page",
-      child: BaseWidget(dpmService: dpmService, pageService: pageService)));
+      child: ParameterPageScaffoldWidget(
+          dpmService: dpmService, pageService: pageService)));
 }
 
 (DpmService, ParameterPageService) _configureServices() {
@@ -69,8 +70,8 @@ class FermiApp extends StatelessWidget {
   }
 }
 
-class BaseWidget extends StatefulWidget {
-  const BaseWidget(
+class ParameterPageScaffoldWidget extends StatefulWidget {
+  const ParameterPageScaffoldWidget(
       {super.key, required this.dpmService, required this.pageService});
 
   final DpmService dpmService;
@@ -78,10 +79,12 @@ class BaseWidget extends StatefulWidget {
   final ParameterPageService pageService;
 
   @override
-  State<BaseWidget> createState() => _BaseWidgetState();
+  State<ParameterPageScaffoldWidget> createState() =>
+      _ParameterPageScaffoldWidgetState();
 }
 
-class _BaseWidgetState extends State<BaseWidget> {
+class _ParameterPageScaffoldWidgetState
+    extends State<ParameterPageScaffoldWidget> {
   final _pageKey = GlobalKey<PageWidgetState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 

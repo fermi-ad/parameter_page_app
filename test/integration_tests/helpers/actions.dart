@@ -234,7 +234,7 @@ Future<void> openMainMenu(tester) async {
 }
 
 Future<void> closeMainMenu(tester) async {
-  await tester.tap(find.byType(BaseWidget));
+  await tester.tap(find.byType(ParameterPageScaffoldWidget));
   await tester.pumpAndSettle();
 }
 
