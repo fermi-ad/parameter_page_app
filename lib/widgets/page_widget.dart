@@ -68,6 +68,16 @@ class PageWidgetState extends State<PageWidget> {
     ));
   }
 
+  Future<void> savePage({required Function() onSuccess}) async {
+    widget.service.savePage(
+        id: _pageId!,
+        page: _page!,
+        onSuccess: () {
+          _page!.commit();
+          onSuccess.call();
+        });
+  }
+
   void _initializePage() {
     if (_pageNeedsToBeLoaded()) {
       _loadPage(pageId: widget.pageId!);

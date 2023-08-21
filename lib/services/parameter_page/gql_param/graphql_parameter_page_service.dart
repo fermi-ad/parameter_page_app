@@ -1,4 +1,5 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/parameter_page/gql_param/mutations.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
 
@@ -87,5 +88,13 @@ class GraphQLParameterPageService extends ParameterPageService {
     } else {
       onSuccess.call();
     } //else
+  }
+
+  @override
+  Future<void> savePage(
+      {required String id,
+      required ParameterPage page,
+      required Function() onSuccess}) {
+    throw UnimplementedError();
   }
 }

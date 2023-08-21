@@ -307,5 +307,20 @@ void main() {
       // Then isDirty() is true
       expect(page.isDirty, false);
     });
+
+    test("commit changes, isDirty changes to false", () {
+      // Given a "dirty" (has uncommited changes) page
+      ParameterPage page = ParameterPage([CommentEntry("comment 1")]);
+      page.toggleEditing();
+      page.add(CommentEntry("comment 2"));
+      page.toggleEditing();
+      expect(page.isDirty, true);
+
+      // When I commit() the changes
+      page.commit();
+
+      // Then isDirty() is false
+      expect(page.isDirty, false);
+    });
   });
 }

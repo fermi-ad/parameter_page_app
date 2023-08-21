@@ -80,8 +80,9 @@ void main() {
       await saveParameterPage(tester);
       await waitForPageToBeSaved(tester);
 
-      // When I create a new page
-      await newPage(tester);
+      // When I open a different page
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
 
       // ... and then open the saved paged
       await navigateToOpenPage(tester);

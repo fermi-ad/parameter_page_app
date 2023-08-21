@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:parameter_page/services/parameter_page/gql_param/graphql_parameter_page_service.dart';
 import 'package:parameter_page/services/parameter_page/mock_parameter_page_service.dart';
@@ -201,7 +199,7 @@ class _BaseWidgetState extends State<BaseWidget> {
       _persistenceState = PagePersistenceState.saving;
     });
 
-    Timer(const Duration(seconds: 2), () {
+    _pageKey.currentState?.savePage(onSuccess: () {
       setState(() {
         _persistenceState = PagePersistenceState.saved;
       });
