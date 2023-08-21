@@ -10,10 +10,7 @@ abstract class ParameterPageService {
       required Function(String errorMessage) onFailure,
       required Function(List<dynamic> entries) onSuccess});
 
-  Future<void> createPage(
-      {required String withTitle,
-      required Function(String errorMessage) onFailure,
-      required Function() onSuccess});
+  Future<String> createPage({required String withTitle});
 
   Future<void> deletePage(
       {required String withPageId,

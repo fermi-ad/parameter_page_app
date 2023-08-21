@@ -69,9 +69,33 @@ class PageWidgetState extends State<PageWidget> {
     ));
   }
 
-  Future<void> savePage({required Function() onSuccess}) async {
+  Future<void> savePage(
+      {required String title, required Function() onSuccess}) async {
+    if (_pageId == null) {
+      return _saveNewPage(title: title, onSuccess: onSuccess);
+    } else {
+      return _saveExistingPage(pageId: _pageId!, onSuccess: onSuccess);
+    }
+  }
+
+  Future<void> _saveNewPage(
+      {required String title, required Function() onSuccess}) async {
+    widget.service.createPage(withTitle: title).then((String newId) {
+      widget.service.savePage(
+          id: newId,
+          page: _page!,
+          onSuccess: () {
+            _page!.commit();
+            onSuccess.call();
+          });
+      setState(() => _pageId = newId);
+    });
+  }
+
+  Future<void> _saveExistingPage(
+      {required String pageId, required Function() onSuccess}) async {
     widget.service.savePage(
-        id: _pageId!,
+        id: pageId,
         page: _page!,
         onSuccess: () {
           _page!.commit();

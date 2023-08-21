@@ -22,21 +22,14 @@ class MockParameterPageService extends ParameterPageService {
   }
 
   @override
-  Future<void> createPage(
-      {required String withTitle,
-      required Function(String errorMessage) onFailure,
-      required Function() onSuccess}) async {
-    _testPages.add({"pageid": "4", "title": withTitle});
-    _testPageEntries["4"] = [
-      {
-        "entryid": "4",
-        "pageid": "4",
-        "position": "0",
-        "text": "position #0",
-        "type": "Comment"
-      }
-    ];
-    onSuccess.call();
+  Future<String> createPage({required String withTitle}) async {
+    _testPages.add({"pageid": "$_nextPageId", "title": withTitle});
+    _testPageEntries["$_nextPageId"] = [];
+
+    final thisPageId = _nextPageId;
+    _nextPageId += 1;
+
+    return "$thisPageId";
   }
 
   @override
@@ -81,6 +74,8 @@ class MockParameterPageService extends ParameterPageService {
 
     Timer(const Duration(seconds: 1), () => onSuccess.call());
   }
+
+  int _nextPageId = 5;
 
   final _testPages = [
     {"pageid": "1", "title": 'east tower'},

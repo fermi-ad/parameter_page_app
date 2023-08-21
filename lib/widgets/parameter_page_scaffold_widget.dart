@@ -141,11 +141,13 @@ class _ParameterPageScaffoldWidgetState
       _persistenceState = PagePersistenceState.saving;
     });
 
-    _pageKey.currentState?.savePage(onSuccess: () {
-      setState(() {
-        _persistenceState = PagePersistenceState.saved;
-      });
-    });
+    _pageKey.currentState?.savePage(
+        title: _title,
+        onSuccess: () {
+          setState(() {
+            _persistenceState = PagePersistenceState.saved;
+          });
+        });
   }
 
   void _handleNewPage() async {

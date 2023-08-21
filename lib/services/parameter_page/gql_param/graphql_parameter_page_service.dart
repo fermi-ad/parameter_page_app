@@ -48,24 +48,8 @@ class GraphQLParameterPageService extends ParameterPageService {
   }
 
   @override
-  Future<void> createPage(
-      {required String withTitle,
-      required Function(String errorMessage) onFailure,
-      required Function() onSuccess}) async {
-    final QueryOptions options = QueryOptions(
-      document: gql(addpagetitle),
-      variables: <String, dynamic>{
-        'title': withTitle.trim(),
-      },
-    );
-
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      onFailure.call("${result.exception}");
-    } else {
-      onSuccess.call();
-    }
+  Future<String> createPage({required String withTitle}) async {
+    throw UnimplementedError();
   }
 
   @override
