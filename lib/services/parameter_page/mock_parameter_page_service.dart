@@ -26,9 +26,10 @@ class MockParameterPageService extends ParameterPageService {
     _testPages.add({"pageid": "$_nextPageId", "title": withTitle});
     _testPageEntries["$_nextPageId"] = [];
 
+    final thisPageId = _nextPageId;
     _nextPageId += 1;
 
-    return "$_nextPageId";
+    return "$thisPageId";
   }
 
   @override
