@@ -43,7 +43,7 @@ void main() {
       // Then the menu item becomes enabled
       await openMainMenu(tester);
       assertMainMenuItem(tester, name: "Save", isEnabled: true);
-    });
+    }, semanticsEnabled: false);
 
     testWidgets('Save page, saving/saved indicator is shown',
         (WidgetTester tester) async {
@@ -67,9 +67,10 @@ void main() {
       // ... and then it changes to the Page Saved indicator
       assertSavingPageIndicator(isVisible: false);
       assertPageSavedIndicator(isVisible: true);
-    });
+    }, semanticsEnabled: false);
 
-    testWidgets('Save page, changes persist', (WidgetTester tester) async {
+    testWidgets('Save existing page, changes persist',
+        (WidgetTester tester) async {
       // Given I have modified Test Page 1 by adding a new comment and saved it
       await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
@@ -90,6 +91,29 @@ void main() {
 
       // Then the new comment has persisted
       assertIsOnPage(comment: "a new comment");
-    });
+    }, semanticsEnabled: false);
+
+    testWidgets('Save new page, changes persist', (WidgetTester tester) async {
+      // Given I've created and saved a new parameter page called 'New Parameter Page'
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+      await enterEditMode(tester);
+      await addANewComment(tester, "this is a new page");
+      await exitEditMode(tester);
+      await openMainMenu(tester);
+      await saveParameterPage(tester);
+      await waitForPageToBeSaved(tester);
+
+      // When I open a different page
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+
+      // ... and then open the saved paged
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "New Parameter Page");
+
+      // Then the new page has persisted
+      assertIsOnPage(comment: "this is a new page");
+    }, semanticsEnabled: false);
   });
 }
