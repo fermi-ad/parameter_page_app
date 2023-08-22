@@ -305,11 +305,17 @@ class PageWidgetState extends State<PageWidget> {
     if (_page != null && _page!.isDirty) {
       final dialogResponse = await _shouldDiscardChanges(context);
       if (!(dialogResponse == null || !dialogResponse)) {
-        setState(() => _page = ParameterPage());
+        setState(() {
+          _page = ParameterPage();
+          _pageId = null;
+        });
         onNewPage?.call();
       }
     } else {
-      setState(() => _page = ParameterPage());
+      setState(() {
+        _page = ParameterPage();
+        _pageId = null;
+      });
       onNewPage?.call();
     }
   }
