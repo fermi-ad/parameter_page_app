@@ -8,6 +8,8 @@ class ParameterPage {
 
   String? id;
 
+  String title = "New Parameter Page";
+
   ParameterPage.fromQueryResult(List<dynamic> queryResult)
       : _entries = [],
         _savedEntries = [] {
