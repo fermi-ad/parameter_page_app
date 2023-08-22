@@ -76,11 +76,11 @@ class PageWidgetState extends State<PageWidget> {
 
   Future<void> savePage(
       {required String title, required Function() onSuccess}) async {
-    if (_pageId == null) {
+    if (_page!.id == null) {
       return _saveNewPage(title: title, onSuccess: onSuccess);
     } else {
       return _saveExistingPage(
-          title: title, pageId: _pageId!, onSuccess: onSuccess);
+          title: title, pageId: _page!.id!, onSuccess: onSuccess);
     }
   }
 
@@ -94,7 +94,7 @@ class PageWidgetState extends State<PageWidget> {
             _page!.commit();
             onSuccess.call();
           });
-      setState(() => _pageId = newId);
+      setState(() => _page!.id = newId);
     });
   }
 
@@ -124,7 +124,7 @@ class PageWidgetState extends State<PageWidget> {
   }
 
   bool _pageNeedsToBeLoaded() {
-    return widget.pageId != null && _pageId != widget.pageId;
+    return widget.pageId != null && (_page?.id != widget.pageId);
   }
 
   bool _newPageIsRequested() {
@@ -307,14 +307,12 @@ class PageWidgetState extends State<PageWidget> {
       if (!(dialogResponse == null || !dialogResponse)) {
         setState(() {
           _page = ParameterPage();
-          _pageId = null;
         });
         onNewPage?.call();
       }
     } else {
       setState(() {
         _page = ParameterPage();
-        _pageId = null;
       });
       onNewPage?.call();
     }
@@ -329,8 +327,8 @@ class PageWidgetState extends State<PageWidget> {
       },
       onSuccess: (fetchedEntries) {
         setState(() {
-          _pageId = pageId;
           _page = ParameterPage.fromQueryResult(fetchedEntries);
+          _page!.id = pageId;
         });
       },
     );
@@ -364,6 +362,4 @@ class PageWidgetState extends State<PageWidget> {
   }
 
   ParameterPage? _page;
-
-  String? _pageId;
 }
