@@ -134,5 +134,25 @@ void main() {
       // ... and the new title is shown
       assertPageTitleIs("My New Page");
     });
+
+    testWidgets('Change page title and save, new title persists',
+        (WidgetTester tester) async {
+      // Given I have changed the title of the page
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await enterEditMode(tester);
+      await changePageTitle(tester, to: "Test Page One");
+      await exitEditMode(tester);
+
+      // When I save the page
+      await openMainMenu(tester);
+      await saveParameterPage(tester);
+      await waitForPageToBeSaved(tester);
+
+      // Then the new title is persisted
+      await navigateToOpenPage(tester);
+      assertOpenPageList(containsTitles: ["Test Page One"]);
+      assertOpenPageListDoesNot(containTitle: "Test Page 1");
+    });
   });
 }
