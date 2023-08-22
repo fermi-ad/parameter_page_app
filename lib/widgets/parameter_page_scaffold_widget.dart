@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:parameter_page/services/dpm/dpm_service.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
+import 'package:parameter_page/widgets/page_title_widget.dart';
 
 import 'data_acquisition_widget.dart';
 import 'display_settings_widget.dart';
@@ -37,39 +38,21 @@ class _ParameterPageScaffoldWidgetState
   }
 
   AppBar _buildAppBar(BuildContext context) {
-    return AppBar(title: _buildTitle(), actions: [
-      Tooltip(
-          message: "Display Settings",
-          child: TextButton(
-            key: const Key('display_settings_button'),
-            child: const Text("Display Settings"),
-            onPressed: () => _navigateToDisplaySettings(context),
-          )),
-    ]);
-  }
-
-  Widget _buildTitle() {
-    return _editing ? _buildTitleEditor() : _buildReadOnlyTitle();
-  }
-
-  Widget _buildTitleEditor() {
-    return Row(key: const Key("page_title"), children: [
-      Expanded(
-          child: TextField(
-        key: const Key("page_title_textfield"),
-        maxLines: 1,
-        minLines: 1,
-        controller: _titleEditorController,
-      ))
-    ]);
-  }
-
-  Widget _buildReadOnlyTitle() {
-    return Row(key: const Key("page_title"), children: [
-      Text(_title),
-      const SizedBox(width: 8.0),
-      PagePersistenceStateIndicatorWidget(persistenceState: _persistenceState)
-    ]);
+    return AppBar(
+        title: PageTitleWidget(
+            editing: _editing,
+            persistenceState: _persistenceState,
+            title: _title,
+            onTitleUpdate: _handleTitleUpdate),
+        actions: [
+          Tooltip(
+              message: "Display Settings",
+              child: TextButton(
+                key: const Key('display_settings_button'),
+                child: const Text("Display Settings"),
+                onPressed: () => _navigateToDisplaySettings(context),
+              )),
+        ]);
   }
 
   Widget _buildBody(BuildContext context) {
@@ -122,7 +105,8 @@ class _ParameterPageScaffoldWidgetState
       _openPageId = null;
       _showLandingPage = false;
       _title = "New Parameter Page";
-      _titleEditorController.text = _title;
+      _titleIsDirty = false;
+      _pageIsDirty = false;
     });
   }
 
@@ -155,12 +139,17 @@ class _ParameterPageScaffoldWidgetState
   void _handleToggleEditing(bool editing) {
     setState(() {
       _editing = editing;
-
-      if (!editing && _title != _titleEditorController.text) {
-        _title = _titleEditorController.text;
-        _persistenceState = PagePersistenceState.unsaved;
-      }
     });
+  }
+
+  void _handleTitleUpdate(String newTitle) {
+    if (newTitle != _title) {
+      setState(() {
+        _title = newTitle;
+        _titleIsDirty = true;
+        _updatePersistenceState();
+      });
+    }
   }
 
   void _handleSavePage() async {
@@ -175,6 +164,8 @@ class _ParameterPageScaffoldWidgetState
         onSuccess: () {
           setState(() {
             _persistenceState = PagePersistenceState.saved;
+            _pageIsDirty = false;
+            _titleIsDirty = false;
           });
         });
   }
@@ -185,9 +176,10 @@ class _ParameterPageScaffoldWidgetState
     await _pageKey.currentState?.newPage(onNewPage: () {
       setState(() {
         _title = "New Parameter Page";
-        _titleEditorController.text = _title;
         _openPageId = null;
         _persistenceState = PagePersistenceState.clean;
+        _titleIsDirty = false;
+        _pageIsDirty = false;
       });
     });
   }
@@ -195,19 +187,30 @@ class _ParameterPageScaffoldWidgetState
   void _handleOpenPage(String pageId, String pageTitle) async {
     setState(() {
       _title = pageTitle;
-      _titleEditorController.text = _title;
       _openPageId = pageId;
       _showLandingPage = false;
+      _pageIsDirty = false;
+      _titleIsDirty = false;
+      _persistenceState = PagePersistenceState.clean;
     });
   }
 
-  void _handlePageModified(PagePersistenceState newPersistenceState) {
+  void _handlePageModified(bool isDirty) {
     setState(() {
-      _persistenceState = newPersistenceState;
+      _pageIsDirty = isDirty;
+      _updatePersistenceState();
     });
+  }
+
+  void _updatePersistenceState() {
+    if (_pageIsDirty || _titleIsDirty) {
+      _persistenceState = PagePersistenceState.unsaved;
+    }
   }
 
   String _title = "Parameter Page";
+
+  bool _titleIsDirty = false;
 
   String? _openPageId;
 
@@ -215,8 +218,7 @@ class _ParameterPageScaffoldWidgetState
 
   bool _editing = false;
 
-  PagePersistenceState _persistenceState = PagePersistenceState.clean;
+  bool _pageIsDirty = false;
 
-  final TextEditingController _titleEditorController =
-      TextEditingController(text: "Parameter Page");
+  PagePersistenceState _persistenceState = PagePersistenceState.clean;
 }
