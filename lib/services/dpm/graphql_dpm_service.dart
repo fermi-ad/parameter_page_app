@@ -7,8 +7,10 @@ import 'package:built_collection/built_collection.dart';
 import "package:gql_websocket_link/gql_websocket_link.dart";
 import 'package:gql_http_link/gql_http_link.dart';
 import 'package:ferry/ferry.dart';
+import 'package:parameter_page/gql-dpm/schema/__generated__/DPM.schema.gql.dart';
 import 'package:parameter_page/gql-dpm/schema/__generated__/get_device_info.req.gql.dart';
 import 'package:parameter_page/gql-dpm/schema/__generated__/get_device_info.data.gql.dart';
+import 'package:parameter_page/gql-dpm/schema/__generated__/set_device.req.gql.dart';
 import 'package:parameter_page/gql-dpm/schema/__generated__/stream_data.data.gql.dart';
 import 'package:parameter_page/gql-dpm/schema/__generated__/stream_data.req.gql.dart';
 import 'package:parameter_page/gql-dpm/schema/__generated__/stream_data.var.gql.dart';
@@ -196,15 +198,50 @@ class GraphQLDpmService extends DpmService {
   Stream<Reading> monitorSettingProperty(List<String> drfs) =>
       monitorDevices(drfs);
 
+  // Performs a setting request. `forDRF` is the DRF string representing the
+  // target device and property to receive the setting. `newSetting` is the
+  // value of the setting. The future this function returns will resolve to the
+  // status of the setting.
+
   @override
   Future<SettingStatus> submit(
       {required String forDRF, required DeviceValue newSetting}) {
-    throw UnimplementedError();
+    // Define a nested function which converts the GraphQL reply into a
+    // SettingStatus.
+
+    xlat(e) => SettingStatus(
+        facilityCode: e.setDevice.status / 256,
+        errorCode: e.setDevice.status & 255);
+
+    // Build the request.
+
+    final req = GSetDeviceReq((b) => b
+      ..vars.device = forDRF
+      ..vars.value = newSetting._toGDevValue());
+
+    return _rpc(req, xlat: xlat);
   }
 
   @override
   Future<SettingStatus> sendCommand(
-      {required String toDRF, required String value}) {
-    throw UnimplementedError();
+          {required String toDRF, required String value}) =>
+      submit(forDRF: toDRF, newSetting: DevText(value));
+}
+
+// And an extension to the DevValue hierarchy which translates a value into a
+// GraphQL `GDevValue` type. No other code needs to be exposed to this
+// interface, so we only make the extension visible in this module.
+
+extension on DeviceValue {
+  GDevValueBuilder _toGDevValue() {
+    return switch (this) {
+      DevRaw(value: var v) => GDevValueBuilder()..rawVal = ListBuilder(v),
+      DevScalar(value: var v) => GDevValueBuilder()..scalarVal = v,
+      DevScalarArray(value: var v) => GDevValueBuilder()
+        ..scalarArrayVal = ListBuilder(v),
+      DevText(value: var v) => GDevValueBuilder()..textVal = v,
+      DevTextArray(value: var v) => GDevValueBuilder()
+        ..textArrayVal = ListBuilder(v)
+    };
   }
 }
