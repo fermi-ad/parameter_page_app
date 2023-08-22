@@ -75,6 +75,19 @@ class MockParameterPageService extends ParameterPageService {
     Timer(const Duration(seconds: 1), () => onSuccess.call());
   }
 
+  @override
+  Future<String> renamePage(
+      {required String id, required String newTitle}) async {
+    for (Map<String, String> page in _testPages) {
+      if (page["pageid"] == id) {
+        page["title"] = newTitle;
+        return newTitle;
+      }
+    }
+
+    return Future.error("Failed to rename page");
+  }
+
   int _nextPageId = 5;
 
   final _testPages = [
