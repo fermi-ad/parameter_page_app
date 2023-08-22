@@ -115,5 +115,24 @@ void main() {
       // Then the new page has persisted
       assertIsOnPage(comment: "this is a new page");
     }, semanticsEnabled: false);
+
+    testWidgets(
+        'Change page title, page persistence indicator changes to unsaved',
+        (WidgetTester tester) async {
+      // Given I've loaded Test Page 1 and I have entered edit mode
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await enterEditMode(tester);
+
+      // When I change the page title and exit edit mode
+      await changePageTitle(tester, to: "My New Page");
+      await exitEditMode(tester);
+
+      // Then the "Un-saved Changes" indicator is displayed
+      assertUnsavedChangesIndicator(isVisible: true);
+
+      // ... and the new title is shown
+      assertPageTitleIs("My New Page");
+    });
   });
 }

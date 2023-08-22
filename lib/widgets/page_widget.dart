@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
 import 'package:parameter_page/widgets/new_entry_editor_widget.dart';
-import 'package:parameter_page/widgets/page_persistence_state_indicator_widget.dart';
 import '../entities/parameter_page.dart';
 import '../entities/page_entry.dart';
 import 'display_settings_widget.dart';
@@ -36,10 +35,16 @@ class PageWidget extends StatefulWidget {
 
   final String? pageId;
 
-  final Function(PagePersistenceState)? onPageModified;
+  final Function(bool)? onPageModified;
+
+  final Function(bool)? onToggleEditing;
 
   const PageWidget(
-      {this.pageId, this.onPageModified, required this.service, super.key});
+      {this.pageId,
+      this.onPageModified,
+      this.onToggleEditing,
+      required this.service,
+      super.key});
 
   @override
   State<PageWidget> createState() => PageWidgetState();
@@ -245,10 +250,10 @@ class PageWidgetState extends State<PageWidget> {
   void _toggleEditMode(ParameterPage page) {
     setState(() => page.toggleEditing());
     if (!page.editing()) {
-      widget.onPageModified?.call(page.isDirty
-          ? PagePersistenceState.unsaved
-          : PagePersistenceState.clean);
+      widget.onPageModified?.call(page.isDirty);
     }
+
+    widget.onToggleEditing?.call(page.editing());
   }
 
   Widget _buildEditModeFloatingActionBar(ParameterPage page) {

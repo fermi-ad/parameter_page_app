@@ -323,3 +323,11 @@ Future<void> createNewParameterPage(WidgetTester tester) async {
   await tester.tap(find.text("Create a New Parameter Page"));
   await tester.pumpAndSettle();
 }
+
+Future<void> changePageTitle(WidgetTester tester, {required String to}) async {
+  await tester.tap(find.byKey(const Key("page_title")));
+  await tester.pumpAndSettle();
+  await tester.enterText(find.byKey(const Key("page_title_textfield")), to);
+  await tester.testTextInput.receiveAction(TextInputAction.done);
+  await tester.pumpAndSettle();
+}
