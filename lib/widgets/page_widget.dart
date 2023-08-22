@@ -38,8 +38,14 @@ class PageWidget extends StatefulWidget {
 
   final Function(PagePersistenceState)? onPageModified;
 
+  final Function(bool)? onToggleEditing;
+
   const PageWidget(
-      {this.pageId, this.onPageModified, required this.service, super.key});
+      {this.pageId,
+      this.onPageModified,
+      this.onToggleEditing,
+      required this.service,
+      super.key});
 
   @override
   State<PageWidget> createState() => PageWidgetState();
@@ -249,6 +255,8 @@ class PageWidgetState extends State<PageWidget> {
           ? PagePersistenceState.unsaved
           : PagePersistenceState.clean);
     }
+
+    widget.onToggleEditing?.call(page.editing());
   }
 
   Widget _buildEditModeFloatingActionBar(ParameterPage page) {

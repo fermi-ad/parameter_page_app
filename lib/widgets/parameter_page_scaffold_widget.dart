@@ -49,6 +49,22 @@ class _ParameterPageScaffoldWidgetState
   }
 
   Widget _buildTitle() {
+    return _editing ? _buildTitleEditor() : _buildReadOnlyTitle();
+  }
+
+  Widget _buildTitleEditor() {
+    return Row(key: const Key("page_title"), children: [
+      Expanded(
+          child: TextField(
+        key: const Key("page_title_textfield"),
+        maxLines: 1,
+        minLines: 1,
+        controller: _titleEditorController,
+      ))
+    ]);
+  }
+
+  Widget _buildReadOnlyTitle() {
     return Row(key: const Key("page_title"), children: [
       Text(_title),
       const SizedBox(width: 8.0),
@@ -73,7 +89,8 @@ class _ParameterPageScaffoldWidgetState
                 key: _pageKey,
                 service: widget.pageService,
                 pageId: _openPageId,
-                onPageModified: _handlePageModified)));
+                onPageModified: _handlePageModified,
+                onToggleEditing: _handleToggleEditing)));
   }
 
   Widget _buildDrawer(BuildContext context) {
@@ -105,6 +122,7 @@ class _ParameterPageScaffoldWidgetState
       _openPageId = null;
       _showLandingPage = false;
       _title = "New Parameter Page";
+      _titleEditorController.text = _title;
     });
   }
 
@@ -134,6 +152,17 @@ class _ParameterPageScaffoldWidgetState
                 )));
   }
 
+  void _handleToggleEditing(bool editing) {
+    setState(() {
+      _editing = editing;
+
+      if (!editing && _title != _titleEditorController.text) {
+        _title = _titleEditorController.text;
+        _persistenceState = PagePersistenceState.unsaved;
+      }
+    });
+  }
+
   void _handleSavePage() async {
     _scaffoldKey.currentState?.closeDrawer();
 
@@ -156,6 +185,7 @@ class _ParameterPageScaffoldWidgetState
     await _pageKey.currentState?.newPage(onNewPage: () {
       setState(() {
         _title = "New Parameter Page";
+        _titleEditorController.text = _title;
         _openPageId = null;
         _persistenceState = PagePersistenceState.clean;
       });
@@ -165,6 +195,7 @@ class _ParameterPageScaffoldWidgetState
   void _handleOpenPage(String pageId, String pageTitle) async {
     setState(() {
       _title = pageTitle;
+      _titleEditorController.text = _title;
       _openPageId = pageId;
       _showLandingPage = false;
     });
@@ -182,5 +213,10 @@ class _ParameterPageScaffoldWidgetState
 
   bool _showLandingPage = true;
 
+  bool _editing = false;
+
   PagePersistenceState _persistenceState = PagePersistenceState.clean;
+
+  final TextEditingController _titleEditorController =
+      TextEditingController(text: "Parameter Page");
 }

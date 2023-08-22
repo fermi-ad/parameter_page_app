@@ -130,6 +130,9 @@ void main() {
 
       // Then the "Un-saved Changes" indicator is displayed
       assertUnsavedChangesIndicator(isVisible: true);
+
+      // ... and the new title is shown
+      assertPageTitleIs("My New Page");
     });
   });
 }
