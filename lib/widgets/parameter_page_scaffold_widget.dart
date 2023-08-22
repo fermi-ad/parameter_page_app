@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/dpm/dpm_service.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
 import 'package:parameter_page/widgets/page_title_widget.dart';
@@ -42,7 +43,7 @@ class _ParameterPageScaffoldWidgetState
         title: PageTitleWidget(
             editing: _editing,
             persistenceState: _persistenceState,
-            title: _title,
+            title: _page == null ? "Parameter Page" : _page!.title,
             onTitleUpdate: _handleTitleUpdate),
         actions: [
           Tooltip(
@@ -61,7 +62,9 @@ class _ParameterPageScaffoldWidgetState
             onOpenPage: () => _navigateToOpenPage(context),
             onCreateNewPage: _startWithANewParameterPage,
           )
-        : _buildPageWidget();
+        : _page == null
+            ? _buildLoadingPage()
+            : _buildPageWidget();
   }
 
   Widget _buildPageWidget() {
@@ -71,9 +74,23 @@ class _ParameterPageScaffoldWidgetState
             child: PageWidget(
                 key: _pageKey,
                 service: widget.pageService,
-                pageId: _openPageId,
+                page: _page!,
                 onPageModified: _handlePageModified,
                 onToggleEditing: _handleToggleEditing)));
+  }
+
+  Widget _buildLoadingPage() {
+    return const Row(children: [
+      Spacer(),
+      Column(key: Key("opening_page_progress_indicator"), children: [
+        Spacer(),
+        CircularProgressIndicator(),
+        SizedBox(height: 16),
+        Text("Loading..."),
+        Spacer()
+      ]),
+      Spacer()
+    ]);
   }
 
   Widget _buildDrawer(BuildContext context) {
@@ -102,11 +119,10 @@ class _ParameterPageScaffoldWidgetState
 
   void _startWithANewParameterPage() {
     setState(() {
-      _openPageId = null;
       _showLandingPage = false;
-      _title = "New Parameter Page";
       _titleIsDirty = false;
       _pageIsDirty = false;
+      _page = ParameterPage();
     });
   }
 
@@ -143,9 +159,9 @@ class _ParameterPageScaffoldWidgetState
   }
 
   void _handleTitleUpdate(String newTitle) {
-    if (newTitle != _title) {
+    if (newTitle != _page!.title) {
       setState(() {
-        _title = newTitle;
+        _page!.title = newTitle;
         _titleIsDirty = true;
         _updatePersistenceState();
       });
@@ -159,24 +175,20 @@ class _ParameterPageScaffoldWidgetState
       _persistenceState = PagePersistenceState.saving;
     });
 
-    _pageKey.currentState?.savePage(
-        title: _title,
-        onSuccess: () {
-          setState(() {
-            _persistenceState = PagePersistenceState.saved;
-            _pageIsDirty = false;
-            _titleIsDirty = false;
-          });
-        });
+    _savePage(onSuccess: () {
+      setState(() {
+        _persistenceState = PagePersistenceState.saved;
+        _pageIsDirty = false;
+        _titleIsDirty = false;
+      });
+    });
   }
 
   void _handleNewPage() async {
     _scaffoldKey.currentState?.closeDrawer();
 
-    await _pageKey.currentState?.newPage(onNewPage: () {
+    await _newPage(onNewPage: () {
       setState(() {
-        _title = "New Parameter Page";
-        _openPageId = null;
         _persistenceState = PagePersistenceState.clean;
         _titleIsDirty = false;
         _pageIsDirty = false;
@@ -186,13 +198,13 @@ class _ParameterPageScaffoldWidgetState
 
   void _handleOpenPage(String pageId, String pageTitle) async {
     setState(() {
-      _title = pageTitle;
-      _openPageId = pageId;
       _showLandingPage = false;
       _pageIsDirty = false;
       _titleIsDirty = false;
       _persistenceState = PagePersistenceState.clean;
     });
+
+    _loadPage(pageId: pageId, title: pageTitle);
   }
 
   void _handlePageModified(bool isDirty) {
@@ -208,17 +220,107 @@ class _ParameterPageScaffoldWidgetState
     }
   }
 
-  String _title = "Parameter Page";
+  Future<void> _savePage({required Function() onSuccess}) async {
+    if (_page!.id == null) {
+      return _saveNewPage(onSuccess: onSuccess);
+    } else {
+      return _saveExistingPage(onSuccess: onSuccess);
+    }
+  }
+
+  Future<void> _saveNewPage({required Function() onSuccess}) async {
+    widget.pageService.createPage(withTitle: _page!.title).then((String newId) {
+      widget.pageService.savePage(
+          id: newId,
+          page: _page!,
+          onSuccess: () {
+            _page!.commit();
+            onSuccess.call();
+          });
+      setState(() => _page!.id = newId);
+    });
+  }
+
+  Future<void> _saveExistingPage({required Function() onSuccess}) async {
+    widget.pageService
+        .renamePage(id: _page!.id!, newTitle: _page!.title)
+        .then((String newTitle) {
+      widget.pageService.savePage(
+          id: _page!.id!,
+          page: _page!,
+          onSuccess: () {
+            _page!.commit();
+            onSuccess.call();
+          });
+    });
+  }
+
+  Future<void> _newPage({Function()? onNewPage}) async {
+    if (_page != null && _page!.isDirty) {
+      final dialogResponse = await _shouldDiscardChanges(context);
+      if (!(dialogResponse == null || !dialogResponse)) {
+        setState(() {
+          _page = ParameterPage();
+        });
+        onNewPage?.call();
+      }
+    } else {
+      setState(() {
+        _page = ParameterPage();
+      });
+      onNewPage?.call();
+    }
+  }
+
+  _loadPage({required String pageId, required String title}) {
+    setState(() => _page = null);
+    widget.pageService.fetchEntries(
+      forPageId: pageId,
+      onFailure: (errorMessage) {
+        throw UnimplementedError();
+      },
+      onSuccess: (fetchedEntries) {
+        setState(() {
+          _page = ParameterPage.fromQueryResult(fetchedEntries);
+          _page!.id = pageId;
+          _page!.title = title;
+        });
+      },
+    );
+  }
+
+  // Prompts the user to see if they want to discard changes to the page.
+  // Return `true` or `false` based on response.
+  Future<bool?> _shouldDiscardChanges(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('Discard Changes'),
+        content: const Text(
+            'This page has unsaved changes that will be discarded.  Do you wish to continue?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Continue'),
+          ),
+        ],
+      ),
+    );
+  }
 
   bool _titleIsDirty = false;
-
-  String? _openPageId;
 
   bool _showLandingPage = true;
 
   bool _editing = false;
 
   bool _pageIsDirty = false;
+
+  ParameterPage? _page;
 
   PagePersistenceState _persistenceState = PagePersistenceState.clean;
 }

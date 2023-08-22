@@ -6,6 +6,10 @@ class ParameterPage {
       : _entries = List<PageEntry>.from(entries ?? []),
         _savedEntries = List<PageEntry>.from(entries ?? []);
 
+  String? id;
+
+  String title = "New Parameter Page";
+
   ParameterPage.fromQueryResult(List<dynamic> queryResult)
       : _entries = [],
         _savedEntries = [] {

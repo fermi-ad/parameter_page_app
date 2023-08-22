@@ -33,14 +33,14 @@ class DataSource extends InheritedWidget {
 class PageWidget extends StatefulWidget {
   final ParameterPageService service;
 
-  final String? pageId;
+  final ParameterPage page;
 
   final Function(bool)? onPageModified;
 
   final Function(bool)? onToggleEditing;
 
   const PageWidget(
-      {this.pageId,
+      {required this.page,
       this.onPageModified,
       this.onToggleEditing,
       required this.service,
@@ -55,90 +55,15 @@ class PageWidget extends StatefulWidget {
 class PageWidgetState extends State<PageWidget> {
   DisplaySettings settings = DisplaySettings();
 
-  bool get pageIsLoading {
-    return _page == null;
-  }
-
   @override
   Widget build(BuildContext context) {
-    _initializePage();
-
     return DataSource(
         child: LayoutBuilder(
       key: const Key("parameter_page_layout"),
       builder: (BuildContext context, BoxConstraints constraints) {
-        return pageIsLoading
-            ? _buildLoadingPage()
-            : _buildPage(context, constraints.maxWidth > 600, _page!);
+        return _buildPage(context, constraints.maxWidth > 600, widget.page);
       },
     ));
-  }
-
-  Future<void> savePage(
-      {required String title, required Function() onSuccess}) async {
-    if (_pageId == null) {
-      return _saveNewPage(title: title, onSuccess: onSuccess);
-    } else {
-      return _saveExistingPage(
-          title: title, pageId: _pageId!, onSuccess: onSuccess);
-    }
-  }
-
-  Future<void> _saveNewPage(
-      {required String title, required Function() onSuccess}) async {
-    widget.service.createPage(withTitle: title).then((String newId) {
-      widget.service.savePage(
-          id: newId,
-          page: _page!,
-          onSuccess: () {
-            _page!.commit();
-            onSuccess.call();
-          });
-      setState(() => _pageId = newId);
-    });
-  }
-
-  Future<void> _saveExistingPage(
-      {required String pageId,
-      required String title,
-      required Function() onSuccess}) async {
-    widget.service
-        .renamePage(id: pageId, newTitle: title)
-        .then((String newTitle) {
-      widget.service.savePage(
-          id: pageId,
-          page: _page!,
-          onSuccess: () {
-            _page!.commit();
-            onSuccess.call();
-          });
-    });
-  }
-
-  void _initializePage() {
-    if (_pageNeedsToBeLoaded()) {
-      _loadPage(pageId: widget.pageId!);
-    } else if (_newPageIsRequested()) {
-      _page = ParameterPage();
-    }
-  }
-
-  bool _pageNeedsToBeLoaded() {
-    return widget.pageId != null && _pageId != widget.pageId;
-  }
-
-  bool _newPageIsRequested() {
-    return widget.pageId == null && _page == null;
-  }
-
-  Widget _buildLoadingPage() {
-    return const Column(key: Key("opening_page_progress_indicator"), children: [
-      Spacer(),
-      CircularProgressIndicator(),
-      SizedBox(height: 16),
-      Text("Loading..."),
-      Spacer()
-    ]);
   }
 
   Widget _buildPage(BuildContext context, bool wide, ParameterPage page) {
@@ -301,69 +226,7 @@ class PageWidgetState extends State<PageWidget> {
     setState(() => page.cancelEditing());
   }
 
-  Future<void> newPage({Function()? onNewPage}) async {
-    if (_page != null && _page!.isDirty) {
-      final dialogResponse = await _shouldDiscardChanges(context);
-      if (!(dialogResponse == null || !dialogResponse)) {
-        setState(() {
-          _page = ParameterPage();
-          _pageId = null;
-        });
-        onNewPage?.call();
-      }
-    } else {
-      setState(() {
-        _page = ParameterPage();
-        _pageId = null;
-      });
-      onNewPage?.call();
-    }
-  }
-
-  _loadPage({required String pageId}) {
-    setState(() => _page = null);
-    widget.service.fetchEntries(
-      forPageId: pageId,
-      onFailure: (errorMessage) {
-        throw UnimplementedError();
-      },
-      onSuccess: (fetchedEntries) {
-        setState(() {
-          _pageId = pageId;
-          _page = ParameterPage.fromQueryResult(fetchedEntries);
-        });
-      },
-    );
-  }
-
-  // Prompts the user to see if they want to discard changes to the page.
-  // Return `true` or `false` based on response.
-  Future<bool?> _shouldDiscardChanges(BuildContext context) {
-    return showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: const Text('Discard Changes'),
-        content: const Text(
-            'This page has unsaved changes that will be discarded.  Do you wish to continue?'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Continue'),
-          ),
-        ],
-      ),
-    );
-  }
-
   void updateSettings(DisplaySettings newSettings) {
     setState(() => settings = newSettings);
   }
-
-  ParameterPage? _page;
-
-  String? _pageId;
 }
