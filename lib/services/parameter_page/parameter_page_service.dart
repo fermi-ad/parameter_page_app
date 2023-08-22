@@ -21,4 +21,6 @@ abstract class ParameterPageService {
       {required String id,
       required ParameterPage page,
       required Function() onSuccess});
+
+  Future<String> renamePage({required String id, required String newTitle});
 }

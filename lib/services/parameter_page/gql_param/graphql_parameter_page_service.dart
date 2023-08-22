@@ -81,4 +81,9 @@ class GraphQLParameterPageService extends ParameterPageService {
       required Function() onSuccess}) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<String> renamePage({required String id, required String newTitle}) {
+    throw UnimplementedError();
+  }
 }
