@@ -27,6 +27,9 @@ class ParameterPage {
 
     _entries = List<PageEntry>.from(initialEntries);
     _savedEntries = List<PageEntry>.from(initialEntries);
+
+    _title = title;
+    _savedTitle = title;
   }
 
   void add(PageEntry entry) {
