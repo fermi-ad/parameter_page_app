@@ -17,7 +17,10 @@ class ParameterPage {
       : _entries = List<PageEntry>.from(entries ?? []),
         _savedEntries = List<PageEntry>.from(entries ?? []);
 
-  ParameterPage.fromQueryResult(List<dynamic> queryResult)
+  ParameterPage.fromQueryResult(
+      {required this.id,
+      required String title,
+      required List<dynamic> queryResult})
       : _entries = [],
         _savedEntries = [] {
     final initialEntries = _buildEntriesListFromQueryResult(queryResult);

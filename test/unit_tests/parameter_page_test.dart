@@ -76,34 +76,39 @@ void main() {
 
     test("initialize with query result set, return the proper entries", () {
       // Given a ParameterPage initialized with a graphql query result
-      ParameterPage page = ParameterPage.fromQueryResult([
-        {
-          "entryid": "4",
-          "pageid": "3",
-          "position": "0",
-          "text": "this is comment #1",
-          "type": "Comment"
-        },
-        {
-          "entryid": "5",
-          "pageid": "3",
-          "position": "1",
-          "text": "this is comment #2",
-          "type": "Comment"
-        },
-        {
-          "entryid": "6",
-          "pageid": "3",
-          "position": "2",
-          "text": "I:BEAM",
-          "type": "Parameter"
-        }
-      ]);
+      ParameterPage page = ParameterPage.fromQueryResult(
+          id: "99",
+          title: "New Page",
+          queryResult: [
+            {
+              "entryid": "4",
+              "pageid": "3",
+              "position": "0",
+              "text": "this is comment #1",
+              "type": "Comment"
+            },
+            {
+              "entryid": "5",
+              "pageid": "3",
+              "position": "1",
+              "text": "this is comment #2",
+              "type": "Comment"
+            },
+            {
+              "entryid": "6",
+              "pageid": "3",
+              "position": "2",
+              "text": "I:BEAM",
+              "type": "Parameter"
+            }
+          ]);
 
       // When I request the list of entries
       List<PageEntry> entries = page.entriesAsList();
 
       // Then the list contains the expected entries
+      expect(page.id, equals("99"));
+      expect(page.title, equals("New Page"));
       expect(entries.length, 3);
       expect(entries[0], isA<CommentEntry>());
       expect(entries[1], isA<CommentEntry>());

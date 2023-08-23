@@ -120,7 +120,6 @@ class _ParameterPageScaffoldWidgetState
   void _startWithANewParameterPage() {
     setState(() {
       _showLandingPage = false;
-      _titleIsDirty = false;
       _page = ParameterPage();
     });
   }
@@ -161,7 +160,6 @@ class _ParameterPageScaffoldWidgetState
     if (newTitle != _page!.title) {
       setState(() {
         _page!.title = newTitle;
-        _titleIsDirty = true;
         _updatePersistenceState();
       });
     }
@@ -177,7 +175,6 @@ class _ParameterPageScaffoldWidgetState
     _savePage(onSuccess: () {
       setState(() {
         _persistenceState = PagePersistenceState.saved;
-        _titleIsDirty = false;
       });
     });
   }
@@ -188,7 +185,6 @@ class _ParameterPageScaffoldWidgetState
     await _newPage(onNewPage: () {
       setState(() {
         _persistenceState = PagePersistenceState.clean;
-        _titleIsDirty = false;
       });
     });
   }
@@ -196,7 +192,6 @@ class _ParameterPageScaffoldWidgetState
   void _handleOpenPage(String pageId, String pageTitle) async {
     setState(() {
       _showLandingPage = false;
-      _titleIsDirty = false;
       _persistenceState = PagePersistenceState.clean;
     });
 
@@ -210,7 +205,7 @@ class _ParameterPageScaffoldWidgetState
   }
 
   void _updatePersistenceState() {
-    if ((_page != null && _page!.isDirty) || _titleIsDirty) {
+    if ((_page != null && _page!.isDirty)) {
       _persistenceState = PagePersistenceState.unsaved;
     }
   }
@@ -276,9 +271,8 @@ class _ParameterPageScaffoldWidgetState
       },
       onSuccess: (fetchedEntries) {
         setState(() {
-          _page = ParameterPage.fromQueryResult(fetchedEntries);
-          _page!.id = pageId;
-          _page!.title = title;
+          _page = ParameterPage.fromQueryResult(
+              id: pageId, title: title, queryResult: fetchedEntries);
         });
       },
     );
@@ -306,8 +300,6 @@ class _ParameterPageScaffoldWidgetState
       ),
     );
   }
-
-  bool _titleIsDirty = false;
 
   bool _showLandingPage = true;
 
