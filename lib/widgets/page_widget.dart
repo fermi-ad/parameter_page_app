@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
 import 'package:parameter_page/widgets/new_entry_editor_widget.dart';
 import '../entities/parameter_page.dart';
 import '../entities/page_entry.dart';
@@ -31,8 +30,6 @@ class DataSource extends InheritedWidget {
 // This widget implements the entire behavior of a "Parameter Page".
 
 class PageWidget extends StatefulWidget {
-  final ParameterPageService service;
-
   final ParameterPage page;
 
   final Function()? onPageModified;
@@ -43,7 +40,6 @@ class PageWidget extends StatefulWidget {
       {required this.page,
       this.onPageModified,
       this.onToggleEditing,
-      required this.service,
       super.key});
 
   @override

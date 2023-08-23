@@ -73,7 +73,6 @@ class _ParameterPageScaffoldWidgetState
         child: Center(
             child: PageWidget(
                 key: _pageKey,
-                service: widget.pageService,
                 page: _page!,
                 onPageModified: _handlePageModified,
                 onToggleEditing: (bool isEditing) => setState(() {}))));
