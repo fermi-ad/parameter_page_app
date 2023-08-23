@@ -88,7 +88,8 @@ class ParameterPage {
   }
 
   bool get isDirty {
-    return !listEquals<PageEntry>(_entries, _savedEntries);
+    return title != _savedTitle ||
+        !listEquals<PageEntry>(_entries, _savedEntries);
   }
 
   List<PageEntry> _buildEntriesListFromQueryResult(List<dynamic> queryResult) {
@@ -118,6 +119,8 @@ class ParameterPage {
   List<PageEntry> _undoEntries = [];
 
   List<PageEntry> _savedEntries;
+
+  String _savedTitle = "New Parameter Page";
 
   bool _editing = false;
 }

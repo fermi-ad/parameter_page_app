@@ -322,5 +322,19 @@ void main() {
       // Then isDirty() is false
       expect(page.isDirty, false);
     });
+
+    test("change title, isDirty changes to true", () {
+      // Given a page with an initial title
+      ParameterPage page = ParameterPage();
+      expect(page.title, equals("New Parameter Page"));
+
+      // When I change the page title
+      page.toggleEditing();
+      page.title = "New Title";
+      page.toggleEditing();
+
+      // Then isDirty() is true
+      expect(page.isDirty, true);
+    });
   });
 }
