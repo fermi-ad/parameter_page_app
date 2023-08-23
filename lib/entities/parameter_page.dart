@@ -2,13 +2,20 @@ import 'package:flutter/foundation.dart';
 import 'package:parameter_page/entities/page_entry.dart';
 
 class ParameterPage {
+  String? id;
+
+  set title(String newTitle) {
+    _enforceEditMode();
+    _title = newTitle;
+  }
+
+  String get title {
+    return _title;
+  }
+
   ParameterPage([List<PageEntry>? entries])
       : _entries = List<PageEntry>.from(entries ?? []),
         _savedEntries = List<PageEntry>.from(entries ?? []);
-
-  String? id;
-
-  String title = "New Parameter Page";
 
   ParameterPage.fromQueryResult(List<dynamic> queryResult)
       : _entries = [],
@@ -120,6 +127,8 @@ class ParameterPage {
   List<PageEntry> _undoEntries = [];
 
   List<PageEntry> _savedEntries;
+
+  String _title = "New Parameter Page";
 
   String _savedTitle = "New Parameter Page";
 

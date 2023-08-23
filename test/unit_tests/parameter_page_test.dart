@@ -352,5 +352,18 @@ void main() {
       // Then isDirty() returns false
       expect(page.isDirty, false);
     });
+
+    test("cancelEditing(), restores changes to the page title", () {
+      // Given I am editing a ParameterPage and have changed the title
+      ParameterPage page = ParameterPage();
+      page.toggleEditing();
+      page.title = "New title";
+
+      // When I cancelEditing()
+      page.cancelEditing();
+
+      // Then the original title is restored
+      expect(page.title, equals("New Parameter Page"));
+    });
   });
 }
