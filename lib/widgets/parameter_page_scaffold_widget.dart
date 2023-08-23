@@ -121,7 +121,6 @@ class _ParameterPageScaffoldWidgetState
     setState(() {
       _showLandingPage = false;
       _titleIsDirty = false;
-      _pageIsDirty = false;
       _page = ParameterPage();
     });
   }
@@ -178,7 +177,6 @@ class _ParameterPageScaffoldWidgetState
     _savePage(onSuccess: () {
       setState(() {
         _persistenceState = PagePersistenceState.saved;
-        _pageIsDirty = false;
         _titleIsDirty = false;
       });
     });
@@ -191,7 +189,6 @@ class _ParameterPageScaffoldWidgetState
       setState(() {
         _persistenceState = PagePersistenceState.clean;
         _titleIsDirty = false;
-        _pageIsDirty = false;
       });
     });
   }
@@ -199,7 +196,6 @@ class _ParameterPageScaffoldWidgetState
   void _handleOpenPage(String pageId, String pageTitle) async {
     setState(() {
       _showLandingPage = false;
-      _pageIsDirty = false;
       _titleIsDirty = false;
       _persistenceState = PagePersistenceState.clean;
     });
@@ -209,13 +205,12 @@ class _ParameterPageScaffoldWidgetState
 
   void _handlePageModified(bool isDirty) {
     setState(() {
-      _pageIsDirty = isDirty;
       _updatePersistenceState();
     });
   }
 
   void _updatePersistenceState() {
-    if (_pageIsDirty || _titleIsDirty) {
+    if ((_page != null && _page!.isDirty) || _titleIsDirty) {
       _persistenceState = PagePersistenceState.unsaved;
     }
   }
@@ -317,8 +312,6 @@ class _ParameterPageScaffoldWidgetState
   bool _showLandingPage = true;
 
   bool _editing = false;
-
-  bool _pageIsDirty = false;
 
   ParameterPage? _page;
 
