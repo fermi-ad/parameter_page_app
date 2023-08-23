@@ -76,7 +76,7 @@ class _ParameterPageScaffoldWidgetState
                 service: widget.pageService,
                 page: _page!,
                 onPageModified: _handlePageModified,
-                onToggleEditing: _handleToggleEditing)));
+                onToggleEditing: (bool isEditing) => setState(() {}))));
   }
 
   Widget _buildLoadingPage() {
@@ -148,12 +148,6 @@ class _ParameterPageScaffoldWidgetState
                   onChanged: (DisplaySettings newSettings) =>
                       _pageKey.currentState?.updateSettings(newSettings),
                 )));
-  }
-
-  void _handleToggleEditing(bool editing) {
-    setState(() {
-      // _editing = editing;
-    });
   }
 
   void _handleTitleUpdate(String newTitle) {
