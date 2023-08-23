@@ -85,6 +85,7 @@ class ParameterPage {
 
   void commit() {
     _savedEntries = List<PageEntry>.from(_entries);
+    _savedTitle = title;
   }
 
   bool get isDirty {

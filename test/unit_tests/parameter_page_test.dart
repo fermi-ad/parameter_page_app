@@ -336,5 +336,20 @@ void main() {
       // Then isDirty() is true
       expect(page.isDirty, true);
     });
+
+    test("commit title change, isDirty changes to false", () {
+      // Given I have changed the page title and the page is marked dirty
+      ParameterPage page = ParameterPage();
+      page.toggleEditing();
+      page.title = "New title";
+      page.toggleEditing();
+      expect(page.isDirty, true);
+
+      // When I commit the changes
+      page.commit();
+
+      // Then isDirty() returns false
+      expect(page.isDirty, false);
+    });
   });
 }
