@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/dpm/dpm_service.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
+import 'package:parameter_page/widgets/main_menu_widget.dart';
 import 'package:parameter_page/widgets/page_title_widget.dart';
 
 import 'data_acquisition_widget.dart';
@@ -93,27 +94,11 @@ class _ParameterPageScaffoldWidgetState
   }
 
   Widget _buildDrawer(BuildContext context) {
-    return Drawer(
-        key: const Key("main_menu_icon"),
-        child: ListView(
-            key: const Key("main_menu"),
-            padding: EdgeInsets.zero,
-            children: [
-              const DrawerHeader(
-                  decoration: BoxDecoration(color: Colors.blue),
-                  child: Text("Parameter Page Menu")),
-              ListTile(title: const Text("New Page"), onTap: _handleNewPage),
-              ListTile(
-                  title: const Text("Open Page"),
-                  onTap: () {
-                    Navigator.pop(context);
-                    _navigateToOpenPage(context);
-                  }),
-              ListTile(
-                  title: const Text("Save"),
-                  enabled: _persistenceState == PagePersistenceState.unsaved,
-                  onTap: _handleSavePage)
-            ]));
+    return MainMenuWidget(
+        onNewPage: _handleNewPage,
+        onOpenPage: _navigateToOpenPage,
+        onSave: _handleSavePage,
+        saveEnabled: _persistenceState == PagePersistenceState.unsaved);
   }
 
   void _startWithANewParameterPage() {
