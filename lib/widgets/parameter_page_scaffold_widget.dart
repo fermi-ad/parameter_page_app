@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/dpm/dpm_service.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
+import 'package:parameter_page/widgets/main_menu_widget.dart';
 import 'package:parameter_page/widgets/page_title_widget.dart';
 
 import 'data_acquisition_widget.dart';
@@ -41,7 +42,7 @@ class _ParameterPageScaffoldWidgetState
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
         title: PageTitleWidget(
-            editing: _editing,
+            editing: _page != null && _page!.editing(),
             persistenceState: _persistenceState,
             title: _page == null ? "Parameter Page" : _page!.title,
             onTitleUpdate: _handleTitleUpdate),
@@ -73,10 +74,9 @@ class _ParameterPageScaffoldWidgetState
         child: Center(
             child: PageWidget(
                 key: _pageKey,
-                service: widget.pageService,
                 page: _page!,
                 onPageModified: _handlePageModified,
-                onToggleEditing: _handleToggleEditing)));
+                onToggleEditing: (bool isEditing) => setState(() {}))));
   }
 
   Widget _buildLoadingPage() {
@@ -94,34 +94,16 @@ class _ParameterPageScaffoldWidgetState
   }
 
   Widget _buildDrawer(BuildContext context) {
-    return Drawer(
-        key: const Key("main_menu_icon"),
-        child: ListView(
-            key: const Key("main_menu"),
-            padding: EdgeInsets.zero,
-            children: [
-              const DrawerHeader(
-                  decoration: BoxDecoration(color: Colors.blue),
-                  child: Text("Parameter Page Menu")),
-              ListTile(title: const Text("New Page"), onTap: _handleNewPage),
-              ListTile(
-                  title: const Text("Open Page"),
-                  onTap: () {
-                    Navigator.pop(context);
-                    _navigateToOpenPage(context);
-                  }),
-              ListTile(
-                  title: const Text("Save"),
-                  enabled: _persistenceState == PagePersistenceState.unsaved,
-                  onTap: _handleSavePage)
-            ]));
+    return MainMenuWidget(
+        onNewPage: _handleNewPage,
+        onOpenPage: _navigateToOpenPage,
+        onSave: _handleSavePage,
+        saveEnabled: _persistenceState == PagePersistenceState.unsaved);
   }
 
   void _startWithANewParameterPage() {
     setState(() {
       _showLandingPage = false;
-      _titleIsDirty = false;
-      _pageIsDirty = false;
       _page = ParameterPage();
     });
   }
@@ -152,17 +134,10 @@ class _ParameterPageScaffoldWidgetState
                 )));
   }
 
-  void _handleToggleEditing(bool editing) {
-    setState(() {
-      _editing = editing;
-    });
-  }
-
   void _handleTitleUpdate(String newTitle) {
     if (newTitle != _page!.title) {
       setState(() {
         _page!.title = newTitle;
-        _titleIsDirty = true;
         _updatePersistenceState();
       });
     }
@@ -178,8 +153,6 @@ class _ParameterPageScaffoldWidgetState
     _savePage(onSuccess: () {
       setState(() {
         _persistenceState = PagePersistenceState.saved;
-        _pageIsDirty = false;
-        _titleIsDirty = false;
       });
     });
   }
@@ -190,8 +163,6 @@ class _ParameterPageScaffoldWidgetState
     await _newPage(onNewPage: () {
       setState(() {
         _persistenceState = PagePersistenceState.clean;
-        _titleIsDirty = false;
-        _pageIsDirty = false;
       });
     });
   }
@@ -199,23 +170,20 @@ class _ParameterPageScaffoldWidgetState
   void _handleOpenPage(String pageId, String pageTitle) async {
     setState(() {
       _showLandingPage = false;
-      _pageIsDirty = false;
-      _titleIsDirty = false;
       _persistenceState = PagePersistenceState.clean;
     });
 
     _loadPage(pageId: pageId, title: pageTitle);
   }
 
-  void _handlePageModified(bool isDirty) {
+  void _handlePageModified() {
     setState(() {
-      _pageIsDirty = isDirty;
       _updatePersistenceState();
     });
   }
 
   void _updatePersistenceState() {
-    if (_pageIsDirty || _titleIsDirty) {
+    if ((_page != null && _page!.isDirty)) {
       _persistenceState = PagePersistenceState.unsaved;
     }
   }
@@ -281,9 +249,8 @@ class _ParameterPageScaffoldWidgetState
       },
       onSuccess: (fetchedEntries) {
         setState(() {
-          _page = ParameterPage.fromQueryResult(fetchedEntries);
-          _page!.id = pageId;
-          _page!.title = title;
+          _page = ParameterPage.fromQueryResult(
+              id: pageId, title: title, queryResult: fetchedEntries);
         });
       },
     );
@@ -312,13 +279,7 @@ class _ParameterPageScaffoldWidgetState
     );
   }
 
-  bool _titleIsDirty = false;
-
   bool _showLandingPage = true;
-
-  bool _editing = false;
-
-  bool _pageIsDirty = false;
 
   ParameterPage? _page;
 
