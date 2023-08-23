@@ -53,6 +53,7 @@ class ParameterPage {
   void enableEditing() {
     _editing = true;
     _undoEntries = List<PageEntry>.from(_entries);
+    _undoTitle = _title;
   }
 
   void disableEditing() {
@@ -65,6 +66,7 @@ class ParameterPage {
 
   void cancelEditing() {
     _entries = List<PageEntry>.from(_undoEntries);
+    _title = _undoTitle;
     _editing = false;
   }
 
@@ -129,6 +131,8 @@ class ParameterPage {
   List<PageEntry> _savedEntries;
 
   String _title = "New Parameter Page";
+
+  String _undoTitle = "New Parameter Page";
 
   String _savedTitle = "New Parameter Page";
 
