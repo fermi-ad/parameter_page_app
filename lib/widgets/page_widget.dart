@@ -35,7 +35,7 @@ class PageWidget extends StatefulWidget {
 
   final ParameterPage page;
 
-  final Function(bool)? onPageModified;
+  final Function()? onPageModified;
 
   final Function(bool)? onToggleEditing;
 
@@ -182,7 +182,7 @@ class PageWidgetState extends State<PageWidget> {
   void _toggleEditMode(ParameterPage page) {
     setState(() => page.toggleEditing());
     if (!page.editing()) {
-      widget.onPageModified?.call(page.isDirty);
+      widget.onPageModified?.call();
     }
 
     widget.onToggleEditing?.call(page.editing());

@@ -198,7 +198,7 @@ class _ParameterPageScaffoldWidgetState
     _loadPage(pageId: pageId, title: pageTitle);
   }
 
-  void _handlePageModified(bool isDirty) {
+  void _handlePageModified() {
     setState(() {
       _updatePersistenceState();
     });
