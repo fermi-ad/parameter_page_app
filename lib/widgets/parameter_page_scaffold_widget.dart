@@ -41,7 +41,7 @@ class _ParameterPageScaffoldWidgetState
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
         title: PageTitleWidget(
-            editing: _editing,
+            editing: _page != null && _page!.editing(),
             persistenceState: _persistenceState,
             title: _page == null ? "Parameter Page" : _page!.title,
             onTitleUpdate: _handleTitleUpdate),
@@ -153,7 +153,7 @@ class _ParameterPageScaffoldWidgetState
 
   void _handleToggleEditing(bool editing) {
     setState(() {
-      _editing = editing;
+      // _editing = editing;
     });
   }
 
@@ -310,8 +310,6 @@ class _ParameterPageScaffoldWidgetState
   bool _titleIsDirty = false;
 
   bool _showLandingPage = true;
-
-  bool _editing = false;
 
   ParameterPage? _page;
 
