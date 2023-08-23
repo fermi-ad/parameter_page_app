@@ -42,7 +42,7 @@ class _ParameterPageScaffoldWidgetState
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
         title: PageTitleWidget(
-            editing: _page != null && _page!.editing(),
+            editing: _page?.editing() ?? false,
             persistenceState: _persistenceState,
             title: _page == null ? "Parameter Page" : _page!.title,
             onTitleUpdate: _handleTitleUpdate),
@@ -183,7 +183,7 @@ class _ParameterPageScaffoldWidgetState
   }
 
   void _updatePersistenceState() {
-    if ((_page != null && _page!.isDirty)) {
+    if (_page?.isDirty ?? false) {
       _persistenceState = PagePersistenceState.unsaved;
     }
   }
@@ -224,7 +224,7 @@ class _ParameterPageScaffoldWidgetState
   }
 
   Future<void> _newPage({Function()? onNewPage}) async {
-    if (_page != null && _page!.isDirty) {
+    if (_page?.isDirty ?? false) {
       final dialogResponse = await _shouldDiscardChanges(context);
       if (!(dialogResponse == null || !dialogResponse)) {
         setState(() {
