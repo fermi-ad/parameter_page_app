@@ -43,6 +43,7 @@ void main() {
       expect(() => page.removeEntry(at: 0), throwsException);
       expect(() => page.reorderEntry(atIndex: 0, toIndex: 1), throwsException);
       expect(() => page.clearAll(), throwsException);
+      expect(() => page.title = "New Title", throwsException);
     });
 
     test("Add Entry, increments count", () {
