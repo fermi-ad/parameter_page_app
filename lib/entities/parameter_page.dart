@@ -2,17 +2,34 @@ import 'package:flutter/foundation.dart';
 import 'package:parameter_page/entities/page_entry.dart';
 
 class ParameterPage {
+  String? id;
+
+  set title(String newTitle) {
+    _enforceEditMode();
+    _title = newTitle;
+  }
+
+  String get title {
+    return _title;
+  }
+
   ParameterPage([List<PageEntry>? entries])
       : _entries = List<PageEntry>.from(entries ?? []),
         _savedEntries = List<PageEntry>.from(entries ?? []);
 
-  ParameterPage.fromQueryResult(List<dynamic> queryResult)
+  ParameterPage.fromQueryResult(
+      {required this.id,
+      required String title,
+      required List<dynamic> queryResult})
       : _entries = [],
         _savedEntries = [] {
     final initialEntries = _buildEntriesListFromQueryResult(queryResult);
 
     _entries = List<PageEntry>.from(initialEntries);
     _savedEntries = List<PageEntry>.from(initialEntries);
+
+    _title = title;
+    _savedTitle = title;
   }
 
   void add(PageEntry entry) {
@@ -42,6 +59,7 @@ class ParameterPage {
   void enableEditing() {
     _editing = true;
     _undoEntries = List<PageEntry>.from(_entries);
+    _undoTitle = _title;
   }
 
   void disableEditing() {
@@ -54,6 +72,7 @@ class ParameterPage {
 
   void cancelEditing() {
     _entries = List<PageEntry>.from(_undoEntries);
+    _title = _undoTitle;
     _editing = false;
   }
 
@@ -81,10 +100,12 @@ class ParameterPage {
 
   void commit() {
     _savedEntries = List<PageEntry>.from(_entries);
+    _savedTitle = title;
   }
 
   bool get isDirty {
-    return !listEquals<PageEntry>(_entries, _savedEntries);
+    return title != _savedTitle ||
+        !listEquals<PageEntry>(_entries, _savedEntries);
   }
 
   List<PageEntry> _buildEntriesListFromQueryResult(List<dynamic> queryResult) {
@@ -114,6 +135,12 @@ class ParameterPage {
   List<PageEntry> _undoEntries = [];
 
   List<PageEntry> _savedEntries;
+
+  String _title = "New Parameter Page";
+
+  String _undoTitle = "New Parameter Page";
+
+  String _savedTitle = "New Parameter Page";
 
   bool _editing = false;
 }

@@ -133,6 +133,57 @@ void main() {
 
       // ... and the new title is shown
       assertPageTitleIs("My New Page");
-    });
+    }, semanticsEnabled: false);
+
+    testWidgets('Change page title and save, new title persists',
+        (WidgetTester tester) async {
+      // Given I have changed the title of the page
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await enterEditMode(tester);
+      await changePageTitle(tester, to: "Test Page One");
+      await exitEditMode(tester);
+
+      // When I save the page
+      await openMainMenu(tester);
+      await saveParameterPage(tester);
+      await waitForPageToBeSaved(tester);
+
+      // Then the new title is persisted
+      await navigateToOpenPage(tester);
+      assertOpenPageList(containsTitles: ["Test Page One"]);
+      assertOpenPageListDoesNot(containTitle: "Test Page 1");
+    }, semanticsEnabled: false);
+
+    testWidgets('Save new page with a new title, title and parameters persist',
+        (WidgetTester tester) async {
+      // Given I have created a new page
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+      await enterEditMode(tester);
+
+      // ... and I have given it a title of "Test Page 3"
+      await changePageTitle(tester, to: "Test Page 3");
+
+      // ... and it contains a comment
+      await addANewComment(tester, "this is a new page");
+      await exitEditMode(tester);
+
+      // ... and I have saved it
+      await openMainMenu(tester);
+      await saveParameterPage(tester);
+      await waitForPageToBeSaved(tester);
+
+      // ... and then started a new page
+      await newPage(tester);
+
+      // When I recall the new page
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 3");
+
+      // Then the title and the page contents persist
+      assertPageTitleIs("Test Page 3");
+      assertIsOnPage(comment: "this is a new page");
+    }, semanticsEnabled: false);
   });
 }

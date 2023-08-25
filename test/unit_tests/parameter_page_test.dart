@@ -43,6 +43,7 @@ void main() {
       expect(() => page.removeEntry(at: 0), throwsException);
       expect(() => page.reorderEntry(atIndex: 0, toIndex: 1), throwsException);
       expect(() => page.clearAll(), throwsException);
+      expect(() => page.title = "New Title", throwsException);
     });
 
     test("Add Entry, increments count", () {
@@ -75,34 +76,39 @@ void main() {
 
     test("initialize with query result set, return the proper entries", () {
       // Given a ParameterPage initialized with a graphql query result
-      ParameterPage page = ParameterPage.fromQueryResult([
-        {
-          "entryid": "4",
-          "pageid": "3",
-          "position": "0",
-          "text": "this is comment #1",
-          "type": "Comment"
-        },
-        {
-          "entryid": "5",
-          "pageid": "3",
-          "position": "1",
-          "text": "this is comment #2",
-          "type": "Comment"
-        },
-        {
-          "entryid": "6",
-          "pageid": "3",
-          "position": "2",
-          "text": "I:BEAM",
-          "type": "Parameter"
-        }
-      ]);
+      ParameterPage page = ParameterPage.fromQueryResult(
+          id: "99",
+          title: "New Page",
+          queryResult: [
+            {
+              "entryid": "4",
+              "pageid": "3",
+              "position": "0",
+              "text": "this is comment #1",
+              "type": "Comment"
+            },
+            {
+              "entryid": "5",
+              "pageid": "3",
+              "position": "1",
+              "text": "this is comment #2",
+              "type": "Comment"
+            },
+            {
+              "entryid": "6",
+              "pageid": "3",
+              "position": "2",
+              "text": "I:BEAM",
+              "type": "Parameter"
+            }
+          ]);
 
       // When I request the list of entries
       List<PageEntry> entries = page.entriesAsList();
 
       // Then the list contains the expected entries
+      expect(page.id, equals("99"));
+      expect(page.title, equals("New Page"));
       expect(entries.length, 3);
       expect(entries[0], isA<CommentEntry>());
       expect(entries[1], isA<CommentEntry>());
@@ -321,6 +327,48 @@ void main() {
 
       // Then isDirty() is false
       expect(page.isDirty, false);
+    });
+
+    test("change title, isDirty changes to true", () {
+      // Given a page with an initial title
+      ParameterPage page = ParameterPage();
+      expect(page.title, equals("New Parameter Page"));
+
+      // When I change the page title
+      page.toggleEditing();
+      page.title = "New Title";
+      page.toggleEditing();
+
+      // Then isDirty() is true
+      expect(page.isDirty, true);
+    });
+
+    test("commit title change, isDirty changes to false", () {
+      // Given I have changed the page title and the page is marked dirty
+      ParameterPage page = ParameterPage();
+      page.toggleEditing();
+      page.title = "New title";
+      page.toggleEditing();
+      expect(page.isDirty, true);
+
+      // When I commit the changes
+      page.commit();
+
+      // Then isDirty() returns false
+      expect(page.isDirty, false);
+    });
+
+    test("cancelEditing(), restores changes to the page title", () {
+      // Given I am editing a ParameterPage and have changed the title
+      ParameterPage page = ParameterPage();
+      page.toggleEditing();
+      page.title = "New title";
+
+      // When I cancelEditing()
+      page.cancelEditing();
+
+      // Then the original title is restored
+      expect(page.title, equals("New Parameter Page"));
     });
   });
 }

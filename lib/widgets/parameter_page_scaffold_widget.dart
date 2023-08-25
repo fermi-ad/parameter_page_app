@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/dpm/dpm_service.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
+import 'package:parameter_page/widgets/display_settings_button_widget.dart';
+import 'package:parameter_page/widgets/main_menu_widget.dart';
 import 'package:parameter_page/widgets/page_title_widget.dart';
 
 import 'data_acquisition_widget.dart';
@@ -40,18 +43,14 @@ class _ParameterPageScaffoldWidgetState
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
         title: PageTitleWidget(
-            editing: _editing,
+            editing: _page?.editing() ?? false,
             persistenceState: _persistenceState,
-            title: _title,
+            title: _page == null ? "Parameter Page" : _page!.title,
             onTitleUpdate: _handleTitleUpdate),
         actions: [
-          Tooltip(
-              message: "Display Settings",
-              child: TextButton(
-                key: const Key('display_settings_button'),
-                child: const Text("Display Settings"),
-                onPressed: () => _navigateToDisplaySettings(context),
-              )),
+          DisplaySettingsButtonWidget(
+              wide: MediaQuery.of(context).size.width > 600,
+              onPressed: () => _navigateToDisplaySettings(context)),
         ]);
   }
 
@@ -61,7 +60,9 @@ class _ParameterPageScaffoldWidgetState
             onOpenPage: () => _navigateToOpenPage(context),
             onCreateNewPage: _startWithANewParameterPage,
           )
-        : _buildPageWidget();
+        : _page == null
+            ? _buildLoadingPage()
+            : _buildPageWidget();
   }
 
   Widget _buildPageWidget() {
@@ -70,43 +71,37 @@ class _ParameterPageScaffoldWidgetState
         child: Center(
             child: PageWidget(
                 key: _pageKey,
-                service: widget.pageService,
-                pageId: _openPageId,
+                page: _page!,
                 onPageModified: _handlePageModified,
-                onToggleEditing: _handleToggleEditing)));
+                onToggleEditing: (bool isEditing) => setState(() {}))));
+  }
+
+  Widget _buildLoadingPage() {
+    return const Row(children: [
+      Spacer(),
+      Column(key: Key("opening_page_progress_indicator"), children: [
+        Spacer(),
+        CircularProgressIndicator(),
+        SizedBox(height: 16),
+        Text("Loading..."),
+        Spacer()
+      ]),
+      Spacer()
+    ]);
   }
 
   Widget _buildDrawer(BuildContext context) {
-    return Drawer(
-        key: const Key("main_menu_icon"),
-        child: ListView(
-            key: const Key("main_menu"),
-            padding: EdgeInsets.zero,
-            children: [
-              const DrawerHeader(
-                  decoration: BoxDecoration(color: Colors.blue),
-                  child: Text("Parameter Page Menu")),
-              ListTile(title: const Text("New Page"), onTap: _handleNewPage),
-              ListTile(
-                  title: const Text("Open Page"),
-                  onTap: () {
-                    Navigator.pop(context);
-                    _navigateToOpenPage(context);
-                  }),
-              ListTile(
-                  title: const Text("Save"),
-                  enabled: _persistenceState == PagePersistenceState.unsaved,
-                  onTap: _handleSavePage)
-            ]));
+    return MainMenuWidget(
+        onNewPage: _handleNewPage,
+        onOpenPage: _navigateToOpenPage,
+        onSave: _handleSavePage,
+        saveEnabled: _persistenceState == PagePersistenceState.unsaved);
   }
 
   void _startWithANewParameterPage() {
     setState(() {
-      _openPageId = null;
       _showLandingPage = false;
-      _title = "New Parameter Page";
-      _titleIsDirty = false;
-      _pageIsDirty = false;
+      _page = ParameterPage();
     });
   }
 
@@ -136,17 +131,10 @@ class _ParameterPageScaffoldWidgetState
                 )));
   }
 
-  void _handleToggleEditing(bool editing) {
-    setState(() {
-      _editing = editing;
-    });
-  }
-
   void _handleTitleUpdate(String newTitle) {
-    if (newTitle != _title) {
+    if (newTitle != _page!.title) {
       setState(() {
-        _title = newTitle;
-        _titleIsDirty = true;
+        _page!.title = newTitle;
         _updatePersistenceState();
       });
     }
@@ -159,66 +147,138 @@ class _ParameterPageScaffoldWidgetState
       _persistenceState = PagePersistenceState.saving;
     });
 
-    _pageKey.currentState?.savePage(
-        title: _title,
-        onSuccess: () {
-          setState(() {
-            _persistenceState = PagePersistenceState.saved;
-            _pageIsDirty = false;
-            _titleIsDirty = false;
-          });
-        });
+    _savePage(onSuccess: () {
+      setState(() {
+        _persistenceState = PagePersistenceState.saved;
+      });
+    });
   }
 
   void _handleNewPage() async {
     _scaffoldKey.currentState?.closeDrawer();
 
-    await _pageKey.currentState?.newPage(onNewPage: () {
+    await _newPage(onNewPage: () {
       setState(() {
-        _title = "New Parameter Page";
-        _openPageId = null;
         _persistenceState = PagePersistenceState.clean;
-        _titleIsDirty = false;
-        _pageIsDirty = false;
       });
     });
   }
 
   void _handleOpenPage(String pageId, String pageTitle) async {
     setState(() {
-      _title = pageTitle;
-      _openPageId = pageId;
       _showLandingPage = false;
-      _pageIsDirty = false;
-      _titleIsDirty = false;
       _persistenceState = PagePersistenceState.clean;
     });
+
+    _loadPage(pageId: pageId, title: pageTitle);
   }
 
-  void _handlePageModified(bool isDirty) {
+  void _handlePageModified() {
     setState(() {
-      _pageIsDirty = isDirty;
       _updatePersistenceState();
     });
   }
 
   void _updatePersistenceState() {
-    if (_pageIsDirty || _titleIsDirty) {
+    if (_page?.isDirty ?? false) {
       _persistenceState = PagePersistenceState.unsaved;
     }
   }
 
-  String _title = "Parameter Page";
+  Future<void> _savePage({required Function() onSuccess}) async {
+    if (_page!.id == null) {
+      return _saveNewPage(onSuccess: onSuccess);
+    } else {
+      return _saveExistingPage(onSuccess: onSuccess);
+    }
+  }
 
-  bool _titleIsDirty = false;
+  Future<void> _saveNewPage({required Function() onSuccess}) async {
+    widget.pageService.createPage(withTitle: _page!.title).then((String newId) {
+      widget.pageService.savePage(
+          id: newId,
+          page: _page!,
+          onSuccess: () {
+            _page!.commit();
+            onSuccess.call();
+          });
+      setState(() => _page!.id = newId);
+    });
+  }
 
-  String? _openPageId;
+  Future<void> _saveExistingPage({required Function() onSuccess}) async {
+    widget.pageService
+        .renamePage(id: _page!.id!, newTitle: _page!.title)
+        .then((String newTitle) {
+      widget.pageService.savePage(
+          id: _page!.id!,
+          page: _page!,
+          onSuccess: () {
+            _page!.commit();
+            onSuccess.call();
+          });
+    });
+  }
+
+  Future<void> _newPage({Function()? onNewPage}) async {
+    if (_page?.isDirty ?? false) {
+      final dialogResponse = await _shouldDiscardChanges(context);
+      if (!(dialogResponse == null || !dialogResponse)) {
+        setState(() {
+          _page = ParameterPage();
+        });
+        onNewPage?.call();
+      }
+    } else {
+      setState(() {
+        _page = ParameterPage();
+      });
+      onNewPage?.call();
+    }
+  }
+
+  _loadPage({required String pageId, required String title}) {
+    setState(() => _page = null);
+    widget.pageService.fetchEntries(
+      forPageId: pageId,
+      onFailure: (errorMessage) {
+        throw UnimplementedError();
+      },
+      onSuccess: (fetchedEntries) {
+        setState(() {
+          _page = ParameterPage.fromQueryResult(
+              id: pageId, title: title, queryResult: fetchedEntries);
+        });
+      },
+    );
+  }
+
+  // Prompts the user to see if they want to discard changes to the page.
+  // Return `true` or `false` based on response.
+  Future<bool?> _shouldDiscardChanges(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('Discard Changes'),
+        content: const Text(
+            'This page has unsaved changes that will be discarded.  Do you wish to continue?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Continue'),
+          ),
+        ],
+      ),
+    );
+  }
 
   bool _showLandingPage = true;
 
-  bool _editing = false;
-
-  bool _pageIsDirty = false;
+  ParameterPage? _page;
 
   PagePersistenceState _persistenceState = PagePersistenceState.clean;
 }
