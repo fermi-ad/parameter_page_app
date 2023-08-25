@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/dpm/dpm_service.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
+import 'package:parameter_page/widgets/display_settings_button_widget.dart';
 import 'package:parameter_page/widgets/main_menu_widget.dart';
 import 'package:parameter_page/widgets/page_title_widget.dart';
 
@@ -47,13 +48,9 @@ class _ParameterPageScaffoldWidgetState
             title: _page == null ? "Parameter Page" : _page!.title,
             onTitleUpdate: _handleTitleUpdate),
         actions: [
-          Tooltip(
-              message: "Display Settings",
-              child: TextButton(
-                key: const Key('display_settings_button'),
-                child: const Text("Display Settings"),
-                onPressed: () => _navigateToDisplaySettings(context),
-              )),
+          DisplaySettingsButtonWidget(
+              wide: false,
+              onPressed: () => _navigateToDisplaySettings(context)),
         ]);
   }
 
