@@ -47,6 +47,10 @@ class _SettingControlState extends State<SettingControlWidget> {
 
   @override
   Widget build(BuildContext context) {
+    return widget.wide ? _buildWide(context) : _buildNarrow(context);
+  }
+
+  Widget _buildWide(BuildContext context) {
     return Row(children: [
       _buildUndo(context),
       const SizedBox(width: 4.0),
@@ -57,6 +61,24 @@ class _SettingControlState extends State<SettingControlWidget> {
       SizedBox(width: 32.0, child: _buildSubmitButton(context)),
       const SizedBox(width: 4.0),
       SizedBox(width: 32.0, child: _buildCancelButton())
+    ]);
+  }
+
+  Widget _buildNarrow(BuildContext context) {
+    return Column(children: [
+      Row(children: [
+        SizedBox(width: 64.0, child: _buildStates(context)),
+        const SizedBox(width: 4.0),
+        SizedBox(width: 48.0, child: _buildUnits()),
+        const SizedBox(width: 4.0),
+        SizedBox(width: 32.0, child: _buildSubmitButton(context)),
+        const SizedBox(width: 4.0),
+        SizedBox(width: 32.0, child: _buildCancelButton())
+      ]),
+      Row(children: [
+        SizedBox(width: 64.0, child: _buildUndo(context)),
+        const SizedBox(width: 124.0)
+      ])
     ]);
   }
 
