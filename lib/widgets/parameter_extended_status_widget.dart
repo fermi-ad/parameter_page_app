@@ -14,7 +14,7 @@ class ParameterExtendedStatusWidget extends StatelessWidget {
     return Row(key: Key("parameter_extendeddigitalstatus_$drf"), children: [
       const Spacer(),
       ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 400),
+          constraints: const BoxConstraints(maxWidth: 360),
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: _buildRows())),
@@ -55,32 +55,34 @@ class ParameterExtendedStatusWidget extends StatelessWidget {
     return Row(
         key: Key("parameter_extendeddigitalstatus_${drf}_bit$bitN"),
         children: [
-          Text(
-            "Bit $bitN: ",
-            style: labelsStyle,
-            textAlign: TextAlign.left,
-          ),
           Expanded(
               flex: 2,
               child: Text(
-                description,
+                "Bit $bitN: ",
                 style: labelsStyle,
                 textAlign: TextAlign.left,
               )),
+          Expanded(
+              flex: 4,
+              child: Text(description,
+                  style: labelsStyle,
+                  textAlign: TextAlign.left,
+                  overflow: TextOverflow.ellipsis)),
+          const Spacer(),
+          Expanded(
+              flex: 3,
+              child: Text(valueText,
+                  style: valueStyle,
+                  textAlign: TextAlign.left,
+                  overflow: TextOverflow.ellipsis)),
           const Spacer(),
           Expanded(
               flex: 1,
               child: Text(
-                valueText,
+                value,
                 style: valueStyle,
-                textAlign: TextAlign.left,
-              )),
-          const Spacer(),
-          Text(
-            value,
-            style: valueStyle,
-            textAlign: TextAlign.left,
-          )
+                textAlign: TextAlign.right,
+              ))
         ]);
   }
 }
