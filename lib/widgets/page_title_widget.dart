@@ -30,7 +30,10 @@ class PageTitleWidget extends StatelessWidget {
 
   Widget _buildReadOnly() {
     return Row(children: [
-      Text(title),
+      Expanded(
+          child: Tooltip(
+              message: title,
+              child: Text(overflow: TextOverflow.ellipsis, title))),
       const SizedBox(width: 8.0),
       PagePersistenceStateIndicatorWidget(persistenceState: persistenceState)
     ]);

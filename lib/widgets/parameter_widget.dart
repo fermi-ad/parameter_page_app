@@ -197,7 +197,8 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
             key: Key("parameter_setting_${widget.drf}"),
             drf: widget.drf,
             displayUnits: widget.displayUnits,
-            units: settingUnits),
+            units: settingUnits,
+            wide: widget.wide),
         const SizedBox(width: 8.0),
         StreamBuilder(
             stream: widget.dpm.monitorDevices([widget.drf]),
