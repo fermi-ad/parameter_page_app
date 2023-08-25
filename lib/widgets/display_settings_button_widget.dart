@@ -11,11 +11,22 @@ class DisplaySettingsButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Tooltip(
-        message: "Display Settings",
-        child: TextButton(
-          key: const Key('display_settings_button'),
-          onPressed: onPressed,
-          child: const Text("Display Settings"),
-        ));
+        message: "Display Settings", child: wide ? _buildText() : _buildIcon());
+  }
+
+  Widget _buildText() {
+    return TextButton(
+      key: const Key('display_settings_button'),
+      onPressed: onPressed,
+      child: const Text("Display Settings"),
+    );
+  }
+
+  Widget _buildIcon() {
+    return IconButton(
+      key: const Key('display_settings_button'),
+      onPressed: onPressed,
+      icon: const Icon(Icons.settings),
+    );
   }
 }

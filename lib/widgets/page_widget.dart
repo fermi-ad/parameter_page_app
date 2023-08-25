@@ -57,7 +57,8 @@ class PageWidgetState extends State<PageWidget> {
         child: LayoutBuilder(
       key: const Key("parameter_page_layout"),
       builder: (BuildContext context, BoxConstraints constraints) {
-        return _buildPage(context, constraints.maxWidth > 600, widget.page);
+        return _buildPage(
+            context, MediaQuery.of(context).size.width > 600, widget.page);
       },
     ));
   }

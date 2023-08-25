@@ -49,7 +49,7 @@ class _ParameterPageScaffoldWidgetState
             onTitleUpdate: _handleTitleUpdate),
         actions: [
           DisplaySettingsButtonWidget(
-              wide: false,
+              wide: MediaQuery.of(context).size.width > 600,
               onPressed: () => _navigateToDisplaySettings(context)),
         ]);
   }
