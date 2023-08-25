@@ -165,15 +165,17 @@ class PageWidgetState extends State<PageWidget> {
   Widget _buildFloatingActionBar(ParameterPage page) {
     return Padding(
         padding: const EdgeInsets.all(8.0),
-        child: FloatingActionButton.small(
-            key: const Key('enable_edit_mode_button'),
-            heroTag: null,
-            backgroundColor: Theme.of(context)
-                .colorScheme
-                .primary
-                .withAlpha(page.editing() ? 255 : 128),
-            onPressed: () => _toggleEditMode(page),
-            child: const Icon(Icons.edit_note)));
+        child: Tooltip(
+            message: page.editing() ? "Stop editing" : "Edit this page",
+            child: FloatingActionButton.small(
+                key: const Key('enable_edit_mode_button'),
+                heroTag: null,
+                backgroundColor: Theme.of(context)
+                    .colorScheme
+                    .primary
+                    .withAlpha(page.editing() ? 255 : 128),
+                onPressed: () => _toggleEditMode(page),
+                child: const Icon(Icons.edit_note))));
   }
 
   void _toggleEditMode(ParameterPage page) {
@@ -204,7 +206,7 @@ class PageWidgetState extends State<PageWidget> {
           Padding(
               padding: const EdgeInsets.all(8.0),
               child: Tooltip(
-                  message: "Delete All",
+                  message: "Delete all",
                   child: FloatingActionButton.small(
                       key: const Key('clear_all_entries_button'),
                       heroTag: null,
