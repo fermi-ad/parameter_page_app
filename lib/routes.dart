@@ -7,8 +7,6 @@ import 'package:parameter_page/widgets/parameter_page_scaffold_widget.dart';
 
 import 'services/dpm/dpm_service.dart';
 
-String _openTitle = "";
-
 List<GoRoute> configureRoutes(
     DpmService dpmService, ParameterPageService pageService) {
   return [
@@ -25,7 +23,6 @@ List<GoRoute> configureRoutes(
         builder: (context, state) => OpenPageWidget(
             key: const Key("open_page_route"),
             onOpen: (id, title) {
-              _openTitle = title;
               context.go("/page/$id");
             },
             service: pageService)),
@@ -40,7 +37,6 @@ List<GoRoute> configureRoutes(
         builder: (context, state) => ParameterPageScaffoldWidget(
             dpmService: dpmService,
             pageService: pageService,
-            title: _openTitle,
             openPageId: state.pathParameters['id']))
   ];
 }

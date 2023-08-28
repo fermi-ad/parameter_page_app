@@ -17,7 +17,6 @@ class ParameterPageScaffoldWidget extends StatefulWidget {
       {super.key,
       required this.dpmService,
       required this.pageService,
-      this.title,
       this.openPageId});
 
   final DpmService dpmService;
@@ -25,8 +24,6 @@ class ParameterPageScaffoldWidget extends StatefulWidget {
   final ParameterPageService pageService;
 
   final String? openPageId;
-
-  final String? title;
 
   @override
   State<ParameterPageScaffoldWidget> createState() =>
@@ -41,7 +38,7 @@ class _ParameterPageScaffoldWidgetState
   @override
   void initState() {
     if (widget.openPageId != null) {
-      _loadPage(pageId: widget.openPageId!, title: widget.title!);
+      _loadPage(pageId: widget.openPageId!);
     } else {
       _page = ParameterPage();
     }
@@ -224,7 +221,7 @@ class _ParameterPageScaffoldWidgetState
     }
   }
 
-  _loadPage({required String pageId, required String title}) {
+  _loadPage({required String pageId}) {
     setState(() => _page = null);
     widget.pageService
         .fetchPage(id: pageId)
