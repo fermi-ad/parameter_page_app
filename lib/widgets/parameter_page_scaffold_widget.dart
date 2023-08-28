@@ -58,7 +58,9 @@ class _ParameterPageScaffoldWidgetState
   }
 
   bool _aDifferentPageShouldBeLoaded() {
-    return _page != null && widget.openPageId != _page!.id;
+    return _page != null &&
+        widget.openPageId != null &&
+        widget.openPageId != _page!.id;
   }
 
   bool _aNewPageShouldBeStarted() {
