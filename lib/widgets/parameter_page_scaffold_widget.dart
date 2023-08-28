@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/dpm/dpm_service.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
@@ -8,18 +9,24 @@ import 'package:parameter_page/widgets/page_title_widget.dart';
 
 import 'data_acquisition_widget.dart';
 import 'display_settings_widget.dart';
-import 'landing_page_widget.dart';
-import 'open_page_widget.dart';
 import 'page_persistence_state_indicator_widget.dart';
 import 'page_widget.dart';
 
 class ParameterPageScaffoldWidget extends StatefulWidget {
   const ParameterPageScaffoldWidget(
-      {super.key, required this.dpmService, required this.pageService});
+      {super.key,
+      required this.dpmService,
+      required this.pageService,
+      this.title,
+      this.openPageId});
 
   final DpmService dpmService;
 
   final ParameterPageService pageService;
+
+  final String? openPageId;
+
+  final String? title;
 
   @override
   State<ParameterPageScaffoldWidget> createState() =>
@@ -30,6 +37,16 @@ class _ParameterPageScaffoldWidgetState
     extends State<ParameterPageScaffoldWidget> {
   final _pageKey = GlobalKey<PageWidgetState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    if (widget.openPageId != null) {
+      _loadPage(pageId: widget.openPageId!, title: widget.title!);
+    } else {
+      _page = ParameterPage();
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,14 +72,7 @@ class _ParameterPageScaffoldWidgetState
   }
 
   Widget _buildBody(BuildContext context) {
-    return _showLandingPage
-        ? LandingPageWidget(
-            onOpenPage: () => _navigateToOpenPage(context),
-            onCreateNewPage: _startWithANewParameterPage,
-          )
-        : _page == null
-            ? _buildLoadingPage()
-            : _buildPageWidget();
+    return _page == null ? _buildLoadingPage() : _buildPageWidget();
   }
 
   Widget _buildPageWidget() {
@@ -98,22 +108,8 @@ class _ParameterPageScaffoldWidgetState
         saveEnabled: _persistenceState == PagePersistenceState.unsaved);
   }
 
-  void _startWithANewParameterPage() {
-    setState(() {
-      _showLandingPage = false;
-      _page = ParameterPage();
-    });
-  }
-
   void _navigateToOpenPage(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => OpenPageWidget(
-              key: const Key("open_page_route"),
-              onOpen: _handleOpenPage,
-              service: widget.pageService)),
-    );
+    context.go("/open");
   }
 
   void _navigateToDisplaySettings(BuildContext context) {
@@ -162,15 +158,6 @@ class _ParameterPageScaffoldWidgetState
         _persistenceState = PagePersistenceState.clean;
       });
     });
-  }
-
-  void _handleOpenPage(String pageId, String pageTitle) async {
-    setState(() {
-      _showLandingPage = false;
-      _persistenceState = PagePersistenceState.clean;
-    });
-
-    _loadPage(pageId: pageId, title: pageTitle);
   }
 
   void _handlePageModified() {
@@ -275,8 +262,6 @@ class _ParameterPageScaffoldWidgetState
       ),
     );
   }
-
-  bool _showLandingPage = true;
 
   ParameterPage? _page;
 
