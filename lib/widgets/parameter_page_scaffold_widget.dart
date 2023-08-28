@@ -37,9 +37,7 @@ class _ParameterPageScaffoldWidgetState
 
   @override
   Widget build(BuildContext context) {
-    if (_pageShouldBeLoaded()) {
-      _loadPage(pageId: widget.openPageId!);
-    } else if (_aDifferentPageShouldBeLoaded()) {
+    if (_pageHasNotBeenLoadedYet() || _aDifferentPageShouldBeLoaded()) {
       _page = null;
       _loadPage(pageId: widget.openPageId!);
     } else if (_aNewPageShouldBeStarted()) {
@@ -53,7 +51,7 @@ class _ParameterPageScaffoldWidgetState
         body: _buildBody(context));
   }
 
-  bool _pageShouldBeLoaded() {
+  bool _pageHasNotBeenLoadedYet() {
     return _page == null && widget.openPageId != null;
   }
 
