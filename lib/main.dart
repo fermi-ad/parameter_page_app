@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:parameter_page/routes.dart';
 import 'package:parameter_page/services/parameter_page/gql_param/graphql_parameter_page_service.dart';
 import 'package:parameter_page/services/parameter_page/mock_parameter_page_service.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
 import 'package:parameter_page/widgets/fermi_controls_common/fermi_controls_app.dart';
-import 'package:parameter_page/widgets/parameter_page_scaffold_widget.dart';
 import 'services/dpm/dpm_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'services/dpm/graphql_dpm_service.dart';
@@ -16,8 +17,7 @@ void main() async {
 
   runApp(FermiControlsApp(
       title: "Parameter Page",
-      child: ParameterPageScaffoldWidget(
-          dpmService: dpmService, pageService: pageService)));
+      router: GoRouter(routes: configureRoutes(dpmService, pageService))));
 }
 
 (DpmService, ParameterPageService) _configureServices() {

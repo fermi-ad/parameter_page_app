@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/dpm/dpm_service.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
@@ -8,18 +9,21 @@ import 'package:parameter_page/widgets/page_title_widget.dart';
 
 import 'data_acquisition_widget.dart';
 import 'display_settings_widget.dart';
-import 'landing_page_widget.dart';
-import 'open_page_widget.dart';
 import 'page_persistence_state_indicator_widget.dart';
 import 'page_widget.dart';
 
 class ParameterPageScaffoldWidget extends StatefulWidget {
   const ParameterPageScaffoldWidget(
-      {super.key, required this.dpmService, required this.pageService});
+      {super.key,
+      required this.dpmService,
+      required this.pageService,
+      this.openPageId});
 
   final DpmService dpmService;
 
   final ParameterPageService pageService;
+
+  final String? openPageId;
 
   @override
   State<ParameterPageScaffoldWidget> createState() =>
@@ -33,11 +37,32 @@ class _ParameterPageScaffoldWidgetState
 
   @override
   Widget build(BuildContext context) {
+    if (_pageHasNotBeenLoadedYet() || _aDifferentPageShouldBeLoaded()) {
+      _page = null;
+      _loadPage(pageId: widget.openPageId!);
+    } else if (_aNewPageShouldBeStarted()) {
+      _page = ParameterPage();
+    }
+
     return Scaffold(
         key: _scaffoldKey,
         appBar: _buildAppBar(context),
         drawer: _buildDrawer(context),
         body: _buildBody(context));
+  }
+
+  bool _pageHasNotBeenLoadedYet() {
+    return _page == null && widget.openPageId != null;
+  }
+
+  bool _aDifferentPageShouldBeLoaded() {
+    return _page != null &&
+        widget.openPageId != null &&
+        widget.openPageId != _page!.id;
+  }
+
+  bool _aNewPageShouldBeStarted() {
+    return _page == null && widget.openPageId == null;
   }
 
   AppBar _buildAppBar(BuildContext context) {
@@ -55,14 +80,7 @@ class _ParameterPageScaffoldWidgetState
   }
 
   Widget _buildBody(BuildContext context) {
-    return _showLandingPage
-        ? LandingPageWidget(
-            onOpenPage: () => _navigateToOpenPage(context),
-            onCreateNewPage: _startWithANewParameterPage,
-          )
-        : _page == null
-            ? _buildLoadingPage()
-            : _buildPageWidget();
+    return _page == null ? _buildLoadingPage() : _buildPageWidget();
   }
 
   Widget _buildPageWidget() {
@@ -93,27 +111,9 @@ class _ParameterPageScaffoldWidgetState
   Widget _buildDrawer(BuildContext context) {
     return MainMenuWidget(
         onNewPage: _handleNewPage,
-        onOpenPage: _navigateToOpenPage,
+        onOpenPage: (BuildContext context) => context.go("/open"),
         onSave: _handleSavePage,
         saveEnabled: _persistenceState == PagePersistenceState.unsaved);
-  }
-
-  void _startWithANewParameterPage() {
-    setState(() {
-      _showLandingPage = false;
-      _page = ParameterPage();
-    });
-  }
-
-  void _navigateToOpenPage(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => OpenPageWidget(
-              key: const Key("open_page_route"),
-              onOpen: _handleOpenPage,
-              service: widget.pageService)),
-    );
   }
 
   void _navigateToDisplaySettings(BuildContext context) {
@@ -157,20 +157,15 @@ class _ParameterPageScaffoldWidgetState
   void _handleNewPage() async {
     _scaffoldKey.currentState?.closeDrawer();
 
-    await _newPage(onNewPage: () {
-      setState(() {
-        _persistenceState = PagePersistenceState.clean;
+    if (_page?.isDirty ?? false) {
+      _promptUserToDiscardChanges(context).then((bool? dialogResponse) {
+        if (!(dialogResponse == null || !dialogResponse)) {
+          context.go("/page");
+        }
       });
-    });
-  }
-
-  void _handleOpenPage(String pageId, String pageTitle) async {
-    setState(() {
-      _showLandingPage = false;
-      _persistenceState = PagePersistenceState.clean;
-    });
-
-    _loadPage(pageId: pageId, title: pageTitle);
+    } else {
+      context.go("/page");
+    }
   }
 
   void _handlePageModified() {
@@ -220,42 +215,13 @@ class _ParameterPageScaffoldWidgetState
     });
   }
 
-  Future<void> _newPage({Function()? onNewPage}) async {
-    if (_page?.isDirty ?? false) {
-      final dialogResponse = await _shouldDiscardChanges(context);
-      if (!(dialogResponse == null || !dialogResponse)) {
-        setState(() {
-          _page = ParameterPage();
-        });
-        onNewPage?.call();
-      }
-    } else {
-      setState(() {
-        _page = ParameterPage();
-      });
-      onNewPage?.call();
-    }
+  _loadPage({required String pageId}) {
+    widget.pageService
+        .fetchPage(id: pageId)
+        .then((ParameterPage page) => setState(() => _page = page));
   }
 
-  _loadPage({required String pageId, required String title}) {
-    setState(() => _page = null);
-    widget.pageService.fetchEntries(
-      forPageId: pageId,
-      onFailure: (errorMessage) {
-        throw UnimplementedError();
-      },
-      onSuccess: (fetchedEntries) {
-        setState(() {
-          _page = ParameterPage.fromQueryResult(
-              id: pageId, title: title, queryResult: fetchedEntries);
-        });
-      },
-    );
-  }
-
-  // Prompts the user to see if they want to discard changes to the page.
-  // Return `true` or `false` based on response.
-  Future<bool?> _shouldDiscardChanges(BuildContext context) {
+  Future<bool?> _promptUserToDiscardChanges(BuildContext context) {
     return showDialog<bool>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
@@ -275,8 +241,6 @@ class _ParameterPageScaffoldWidgetState
       ),
     );
   }
-
-  bool _showLandingPage = true;
 
   ParameterPage? _page;
 

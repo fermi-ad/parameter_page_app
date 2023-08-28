@@ -95,7 +95,6 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
   void _handlePageSelected(
       BuildContext context, String pageId, String pageTitle) {
     widget.onOpen(pageId, pageTitle);
-    Navigator.pop(context);
   }
 
   Future<void> _fetchData() async {

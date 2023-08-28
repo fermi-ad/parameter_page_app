@@ -88,6 +88,20 @@ class MockParameterPageService extends ParameterPageService {
     return Future.error("Failed to rename page");
   }
 
+  @override
+  Future<ParameterPage> fetchPage({required String id}) async {
+    for (Map<String, String> page in _testPages) {
+      if (page["pageid"] == id) {
+        String title = page["title"]!;
+        final entries = _testPageEntries[id]!;
+        return ParameterPage.fromQueryResult(
+            id: id, title: title, queryResult: entries);
+      }
+    }
+
+    return Future.error("Failed to load page id: $id");
+  }
+
   int _nextPageId = 5;
 
   final _testPages = [

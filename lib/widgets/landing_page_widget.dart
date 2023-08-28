@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:parameter_page/widgets/main_menu_widget.dart';
 
 class LandingPageWidget extends StatelessWidget {
   final Function() onOpenPage;
@@ -10,6 +11,22 @@ class LandingPageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: _buildAppBar(),
+        body: _buildBody(),
+        drawer: MainMenuWidget(
+          onNewPage: onCreateNewPage,
+          onOpenPage: (context) => onOpenPage.call(),
+          onSave: () {},
+          saveEnabled: false,
+        ));
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(title: const Text("Parameter Page"));
+  }
+
+  Widget _buildBody() {
     return Row(key: const Key("landing_page"), children: [
       const Spacer(),
       Column(children: [
