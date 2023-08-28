@@ -37,12 +37,12 @@ class _ParameterPageScaffoldWidgetState
 
   @override
   Widget build(BuildContext context) {
-    if (_page == null && widget.openPageId != null) {
+    if (_pageShouldBeLoaded()) {
       _loadPage(pageId: widget.openPageId!);
-    } else if (_page != null && widget.openPageId != _page!.id) {
+    } else if (_aDifferentPageShouldBeLoaded()) {
       _page = null;
       _loadPage(pageId: widget.openPageId!);
-    } else if (_page == null && widget.openPageId == null) {
+    } else if (_aNewPageShouldBeStarted()) {
       _page = ParameterPage();
     }
 
@@ -51,6 +51,18 @@ class _ParameterPageScaffoldWidgetState
         appBar: _buildAppBar(context),
         drawer: _buildDrawer(context),
         body: _buildBody(context));
+  }
+
+  bool _pageShouldBeLoaded() {
+    return _page == null && widget.openPageId != null;
+  }
+
+  bool _aDifferentPageShouldBeLoaded() {
+    return _page != null && widget.openPageId != _page!.id;
+  }
+
+  bool _aNewPageShouldBeStarted() {
+    return _page == null && widget.openPageId == null;
   }
 
   AppBar _buildAppBar(BuildContext context) {
@@ -149,11 +161,15 @@ class _ParameterPageScaffoldWidgetState
   void _handleNewPage() async {
     _scaffoldKey.currentState?.closeDrawer();
 
-    await _newPage(onNewPage: () {
-      setState(() {
-        _persistenceState = PagePersistenceState.clean;
+    if (_page?.isDirty ?? false) {
+      _promptUserToDiscardChanges(context).then((bool? dialogResponse) {
+        if (!(dialogResponse == null || !dialogResponse)) {
+          context.go("/page");
+        }
       });
-    });
+    } else {
+      context.go("/page");
+    }
   }
 
   void _handlePageModified() {
@@ -203,32 +219,13 @@ class _ParameterPageScaffoldWidgetState
     });
   }
 
-  Future<void> _newPage({Function()? onNewPage}) async {
-    if (_page?.isDirty ?? false) {
-      final dialogResponse = await _shouldDiscardChanges(context);
-      if (!(dialogResponse == null || !dialogResponse)) {
-        setState(() {
-          _page = ParameterPage();
-        });
-        onNewPage?.call();
-      }
-    } else {
-      setState(() {
-        _page = ParameterPage();
-      });
-      onNewPage?.call();
-    }
-  }
-
   _loadPage({required String pageId}) {
     widget.pageService
         .fetchPage(id: pageId)
         .then((ParameterPage page) => setState(() => _page = page));
   }
 
-  // Prompts the user to see if they want to discard changes to the page.
-  // Return `true` or `false` based on response.
-  Future<bool?> _shouldDiscardChanges(BuildContext context) {
+  Future<bool?> _promptUserToDiscardChanges(BuildContext context) {
     return showDialog<bool>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
