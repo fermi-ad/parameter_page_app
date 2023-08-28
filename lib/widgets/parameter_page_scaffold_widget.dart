@@ -226,18 +226,9 @@ class _ParameterPageScaffoldWidgetState
 
   _loadPage({required String pageId, required String title}) {
     setState(() => _page = null);
-    widget.pageService.fetchEntries(
-      forPageId: pageId,
-      onFailure: (errorMessage) {
-        throw UnimplementedError();
-      },
-      onSuccess: (fetchedEntries) {
-        setState(() {
-          _page = ParameterPage.fromQueryResult(
-              id: pageId, title: title, queryResult: fetchedEntries);
-        });
-      },
-    );
+    widget.pageService
+        .fetchPage(id: pageId)
+        .then((ParameterPage page) => setState(() => _page = page));
   }
 
   // Prompts the user to see if they want to discard changes to the page.
