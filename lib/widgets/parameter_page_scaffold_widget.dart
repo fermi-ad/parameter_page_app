@@ -113,13 +113,9 @@ class _ParameterPageScaffoldWidgetState
   Widget _buildDrawer(BuildContext context) {
     return MainMenuWidget(
         onNewPage: _handleNewPage,
-        onOpenPage: _navigateToOpenPage,
+        onOpenPage: (BuildContext context) => context.go("/open"),
         onSave: _handleSavePage,
         saveEnabled: _persistenceState == PagePersistenceState.unsaved);
-  }
-
-  void _navigateToOpenPage(BuildContext context) {
-    context.go("/open");
   }
 
   void _navigateToDisplaySettings(BuildContext context) {
