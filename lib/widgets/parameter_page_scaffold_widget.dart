@@ -36,17 +36,16 @@ class _ParameterPageScaffoldWidgetState
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
-  void initState() {
-    if (widget.openPageId != null) {
+  Widget build(BuildContext context) {
+    if (_page == null && widget.openPageId != null) {
       _loadPage(pageId: widget.openPageId!);
-    } else {
+    } else if (_page != null && widget.openPageId != _page!.id) {
+      _page = null;
+      _loadPage(pageId: widget.openPageId!);
+    } else if (_page == null && widget.openPageId == null) {
       _page = ParameterPage();
     }
-    super.initState();
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
         key: _scaffoldKey,
         appBar: _buildAppBar(context),
@@ -222,7 +221,6 @@ class _ParameterPageScaffoldWidgetState
   }
 
   _loadPage({required String pageId}) {
-    setState(() => _page = null);
     widget.pageService
         .fetchPage(id: pageId)
         .then((ParameterPage page) => setState(() => _page = page));
