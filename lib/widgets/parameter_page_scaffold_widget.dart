@@ -198,8 +198,8 @@ class _ParameterPageScaffoldWidgetState
           onSuccess: () {
             _page!.commit();
             onSuccess.call();
+            context.go("/page/$newId");
           });
-      setState(() => _page!.id = newId);
     });
   }
 
