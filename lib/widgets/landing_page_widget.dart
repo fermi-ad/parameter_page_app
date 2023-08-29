@@ -19,6 +19,7 @@ class LandingPageWidget extends StatelessWidget {
           onOpenPage: (context) => onOpenPage.call(),
           onSave: () {},
           saveEnabled: false,
+          copyLinkEnabled: false,
         ));
   }
 
