@@ -34,5 +34,25 @@ void main() {
       // Then the "Copy Link" menu item is enabled
       assertMainMenuItem(tester, name: "Copy Link", isEnabled: true);
     }, semanticsEnabled: false);
+
+    testWidgets('Persist a new page, copy link menu item switches to enabled',
+        (WidgetTester tester) async {
+      // Given I have a new parameter page that hasn't been saved yet
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+      await enterEditMode(tester);
+      await addANewComment(tester, "test copy link");
+      await exitEditMode(tester);
+      await openMainMenu(tester);
+      assertMainMenuItem(tester, name: "Copy Link", isEnabled: false);
+
+      // When I save the page and open the main menu again
+      await saveParameterPage(tester);
+      await waitForPageToBeSaved(tester);
+      await openMainMenu(tester);
+
+      // Then the "Copy Link" menu item is enabled
+      assertMainMenuItem(tester, name: "Copy Link", isEnabled: true);
+    }, semanticsEnabled: false);
   });
 }
