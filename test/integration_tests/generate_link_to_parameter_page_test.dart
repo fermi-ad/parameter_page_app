@@ -21,5 +21,18 @@ void main() {
       // Then the "Copy Link" menu item is disabled
       assertMainMenuItem(tester, name: "Copy Link", isEnabled: false);
     }, semanticsEnabled: false);
+
+    testWidgets('For persisted page, copy link menu item is enabled',
+        (WidgetTester tester) async {
+      // Given I have opened a persisted parameter page
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+
+      // When I open the main menu
+      await openMainMenu(tester);
+
+      // Then the "Copy Link" menu item is enabled
+      assertMainMenuItem(tester, name: "Copy Link", isEnabled: true);
+    }, semanticsEnabled: false);
   });
 }
