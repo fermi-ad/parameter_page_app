@@ -37,7 +37,9 @@ class MainMenuWidget extends StatelessWidget {
               ListTile(
                   title: const Text("Save"),
                   enabled: saveEnabled,
-                  onTap: onSave)
+                  onTap: onSave),
+              ListTile(
+                  title: const Text("Copy Link"), enabled: false, onTap: () {})
             ]));
   }
 }
