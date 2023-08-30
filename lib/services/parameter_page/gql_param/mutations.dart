@@ -49,7 +49,7 @@ const updatepageentry = r"""
       """;
 
 const deletepageentry = r"""
-      mutation delEntry($entryid: ID!) {
+      mutation deleteEntry($entryid: ID!) {
         deleteEntry(entryid: $entryid) {
           code
           message
