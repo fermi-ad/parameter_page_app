@@ -439,3 +439,9 @@ void assertMainMenuItem(WidgetTester tester,
   final ListTile listTile = tester.widget(menuItemFinder);
   expect(listTile.enabled, isEnabled);
 }
+
+void assertSnackBar({required String message}) {
+  expect(
+      find.descendant(of: find.byType(SnackBar), matching: find.text(message)),
+      findsOneWidget);
+}

@@ -70,11 +70,7 @@ void main() {
       await tester.pump();
 
       // Then the snack bar is displayed
-      expect(
-          find.descendant(
-              of: find.byType(SnackBar),
-              matching: find.text("Page URL copied to clipboard!")),
-          findsOneWidget);
+      assertSnackBar(message: "Page URL copied to clipboard!");
 
       // ... and the clipboard has been set
       expect(await mockUserDeviceService!.getClipboard() as String,
