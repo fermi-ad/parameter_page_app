@@ -13,6 +13,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'services/dpm/graphql_dpm_service.dart';
 import 'services/dpm/mock_dpm_service.dart';
 
+// Accessible to integration tests
+MockDpmService? mockDPMService;
+MockParameterPageService? mockParameterPageService;
+MockUserDeviceService? mockUserDeviceService;
+
 void main() async {
   await dotenv.load(fileName: ".env");
 
@@ -35,10 +40,14 @@ void main() async {
 }
 
 (DpmService, ParameterPageService, UserDeviceService) _configureMockServices() {
-  MockDpmService dpm = MockDpmService();
-  dpm.enablePeriodSettingStream();
+  mockDPMService = MockDpmService();
+  mockDPMService!.enablePeriodSettingStream();
 
-  return (dpm, MockParameterPageService(), MockUserDeviceService());
+  mockParameterPageService = MockParameterPageService();
+
+  mockUserDeviceService = MockUserDeviceService();
+
+  return (mockDPMService!, mockParameterPageService!, mockUserDeviceService!);
 }
 
 (DpmService, ParameterPageService, UserDeviceService)

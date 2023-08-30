@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:parameter_page/main.dart';
 
 import 'helpers/assertions.dart';
 import 'helpers/actions.dart';
@@ -74,6 +75,10 @@ void main() {
               of: find.byType(SnackBar),
               matching: find.text("Page URL copied to clipboard!")),
           findsOneWidget);
+
+      // ... and the clipboard has been set
+      expect(await mockUserDeviceService!.getClipboard() as String,
+          contains("/page/4"));
     }, semanticsEnabled: false);
   });
 }
