@@ -8,7 +8,7 @@ const titlequery = r"""
           """;
 
 const pageentryquery = r"""
-            query findtitleentry ($pageid: ID) {
+            query findtitleentry ($pageid: ID!) {
               entriesInPageX(pageid: $pageid) {
                 entryid
                 pageid
@@ -19,4 +19,18 @@ const pageentryquery = r"""
             }
           """;
 
+const pageequery = r"""
+            query getOnePage($pageid: ID!) {
+              onePage {
+                pageid
+                title
+                entries {
+                        entryid
+                        position
+                        text
+                        type
+                      }
+                }
+            }
+          """;
 
