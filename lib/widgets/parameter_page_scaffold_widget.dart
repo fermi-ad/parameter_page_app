@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/dpm/dpm_service.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
+import 'package:parameter_page/services/user_device/user_device_service.dart';
 import 'package:parameter_page/widgets/display_settings_button_widget.dart';
 import 'package:parameter_page/widgets/main_menu_widget.dart';
 import 'package:parameter_page/widgets/page_title_widget.dart';
@@ -18,11 +18,14 @@ class ParameterPageScaffoldWidget extends StatefulWidget {
       {super.key,
       required this.dpmService,
       required this.pageService,
+      required this.deviceService,
       this.openPageId});
 
   final DpmService dpmService;
 
   final ParameterPageService pageService;
+
+  final UserDeviceService deviceService;
 
   final String? openPageId;
 
@@ -137,7 +140,7 @@ class _ParameterPageScaffoldWidgetState
 
   void _handleCopyLink() {
     final base = Uri.base.toString();
-    // Clipboard.setData(ClipboardData(text: base));
+    widget.deviceService.setClipboard(to: base);
     _scaffoldKey.currentState?.closeDrawer();
     ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Page URL copied to clipboard!")));
