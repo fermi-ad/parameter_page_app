@@ -88,7 +88,22 @@ class GraphQLParameterPageService extends ParameterPageService {
   }
 
   @override
-  Future<ParameterPage> fetchPage({required String id}) {
-    throw UnimplementedError("GraphQLParameterPageService fetchPage");
+  Future<ParameterPage> fetchPage({required String id}) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(pageentryquery),
+      variables: <String, dynamic>{'pageid': id},
+      fetchPolicy: FetchPolicy.noCache,
+    );
+
+    final QueryResult result = await client.value.query(options);
+
+    if (result.hasException) {
+      throw UnimplementedError("fetchPage exception");
+    } else {
+      return ParameterPage.fromQueryResult(
+          id: result.data?['id'],
+          title: result.data?['title'],
+          queryResult: result.data?['entriesInPageX']);
+    }
   }
 }
