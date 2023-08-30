@@ -126,7 +126,7 @@ class ParameterPage {
         return ParameterEntry(from["text"]);
 
       default:
-        throw UnimplementedError();
+        throw UnimplementedError("Unexpected PageEntry type");
     }
   }
 

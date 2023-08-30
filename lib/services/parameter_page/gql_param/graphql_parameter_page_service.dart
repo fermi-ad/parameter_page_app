@@ -49,7 +49,7 @@ class GraphQLParameterPageService extends ParameterPageService {
 
   @override
   Future<String> createPage({required String withTitle}) async {
-    throw UnimplementedError();
+    throw UnimplementedError("GraphQLParameterPageService createPage");
   }
 
   @override
@@ -79,16 +79,16 @@ class GraphQLParameterPageService extends ParameterPageService {
       {required String id,
       required ParameterPage page,
       required Function() onSuccess}) {
-    throw UnimplementedError();
+    throw UnimplementedError("GraphQLParameterPageService savePage");
   }
 
   @override
   Future<String> renamePage({required String id, required String newTitle}) {
-    throw UnimplementedError();
+    throw UnimplementedError("GraphQLParameterPageService renamePage");
   }
 
   @override
   Future<ParameterPage> fetchPage({required String id}) {
-    throw UnimplementedError();
+    throw UnimplementedError("GraphQLParameterPageService fetchPage");
   }
 }
