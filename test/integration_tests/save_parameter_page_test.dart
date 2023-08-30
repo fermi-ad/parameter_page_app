@@ -103,6 +103,7 @@ void main() {
       await openMainMenu(tester);
       await saveParameterPage(tester);
       await waitForPageToBeSaved(tester);
+      await tester.pumpAndSettle();
 
       // When I open a different page
       await navigateToOpenPage(tester);
@@ -173,6 +174,7 @@ void main() {
       await openMainMenu(tester);
       await saveParameterPage(tester);
       await waitForPageToBeSaved(tester);
+      await tester.pumpAndSettle();
 
       // ... and then started a new page
       await newPage(tester);
