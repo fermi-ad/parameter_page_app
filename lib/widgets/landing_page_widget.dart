@@ -20,6 +20,7 @@ class LandingPageWidget extends StatelessWidget {
           onSave: () {},
           saveEnabled: false,
           copyLinkEnabled: false,
+          onCopyLink: () {},
         ));
   }
 

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
@@ -49,10 +50,30 @@ void main() {
       // When I save the page and open the main menu again
       await saveParameterPage(tester);
       await waitForPageToBeSaved(tester);
+      await tester.pumpAndSettle();
       await openMainMenu(tester);
 
       // Then the "Copy Link" menu item is enabled
       assertMainMenuItem(tester, name: "Copy Link", isEnabled: true);
+    }, semanticsEnabled: false);
+
+    testWidgets('Copy link, see confirmation in snack bar',
+        (WidgetTester tester) async {
+      // Given I am on a persisted page
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+
+      // When I tap Copy Link in the menu
+      await openMainMenu(tester);
+      await tester.tap(find.text("Copy Link"));
+      await tester.pump();
+
+      // Then the snack bar is displayed
+      expect(
+          find.descendant(
+              of: find.byType(SnackBar),
+              matching: find.text("Page URL copied to clipboard!")),
+          findsOneWidget);
     }, semanticsEnabled: false);
   });
 }

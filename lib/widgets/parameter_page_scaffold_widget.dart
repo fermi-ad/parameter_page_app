@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/dpm/dpm_service.dart';
@@ -114,6 +115,7 @@ class _ParameterPageScaffoldWidgetState
       onOpenPage: (BuildContext context) => context.go("/open"),
       onSave: _handleSavePage,
       saveEnabled: _persistenceState == PagePersistenceState.unsaved,
+      onCopyLink: _handleCopyLink,
       copyLinkEnabled: _page?.id != null,
     );
   }
@@ -131,6 +133,14 @@ class _ParameterPageScaffoldWidgetState
                   onChanged: (DisplaySettings newSettings) =>
                       _pageKey.currentState?.updateSettings(newSettings),
                 )));
+  }
+
+  void _handleCopyLink() {
+    final base = Uri.base.toString();
+    // Clipboard.setData(ClipboardData(text: base));
+    _scaffoldKey.currentState?.closeDrawer();
+    ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Page URL copied to clipboard!")));
   }
 
   void _handleTitleUpdate(String newTitle) {

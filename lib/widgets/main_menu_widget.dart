@@ -11,13 +11,16 @@ class MainMenuWidget extends StatelessWidget {
 
   final bool copyLinkEnabled;
 
+  final Function() onCopyLink;
+
   const MainMenuWidget(
       {super.key,
       required this.onNewPage,
       required this.onOpenPage,
       required this.saveEnabled,
       required this.onSave,
-      required this.copyLinkEnabled});
+      required this.copyLinkEnabled,
+      required this.onCopyLink});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +47,7 @@ class MainMenuWidget extends StatelessWidget {
               ListTile(
                   title: const Text("Copy Link"),
                   enabled: copyLinkEnabled,
-                  onTap: () {})
+                  onTap: onCopyLink)
             ]));
   }
 }
