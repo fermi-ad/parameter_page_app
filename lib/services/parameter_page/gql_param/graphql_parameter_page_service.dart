@@ -93,7 +93,6 @@ class GraphQLParameterPageService extends ParameterPageService {
     final QueryResult result = await client.value.query(options);
 
     if (result.hasException) {
-      print(result);
       throw UnimplementedError("renamePage exception");
     } else {
       return newTitle;
