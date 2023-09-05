@@ -49,7 +49,20 @@ class GraphQLParameterPageService extends ParameterPageService {
 
   @override
   Future<String> createPage({required String withTitle}) async {
-    throw UnimplementedError("GraphQLParameterPageService createPage");
+    final QueryOptions options = QueryOptions(
+      document: gql(addpagetitle),
+      variables: <String, dynamic>{
+        'title': withTitle,
+      },
+    );
+
+    final QueryResult result = await client.value.query(options);
+
+    if (result.hasException) {
+      throw UnimplementedError();
+    } else {
+      return result.data?['addTitle']['pageid'];
+    } //else
   }
 
   @override
@@ -78,8 +91,9 @@ class GraphQLParameterPageService extends ParameterPageService {
   Future<void> savePage(
       {required String id,
       required ParameterPage page,
-      required Function() onSuccess}) {
-    throw UnimplementedError("GraphQLParameterPageService savePage");
+      required Function() onSuccess}) async {
+    // throw UnimplementedError("GraphQLParameterPageService savePage");
+    onSuccess.call();
   }
 
   @override
