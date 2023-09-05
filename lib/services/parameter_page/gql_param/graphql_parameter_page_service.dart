@@ -49,7 +49,20 @@ class GraphQLParameterPageService extends ParameterPageService {
 
   @override
   Future<String> createPage({required String withTitle}) async {
-    throw UnimplementedError();
+    final QueryOptions options = QueryOptions(
+      document: gql(addpagetitle),
+      variables: <String, dynamic>{
+        'title': withTitle,
+      },
+    );
+
+    final QueryResult result = await client.value.query(options);
+
+    if (result.hasException) {
+      throw UnimplementedError();
+    } else {
+      return result.data?['addTitle']['pageid'];
+    } //else
   }
 
   @override
@@ -78,17 +91,45 @@ class GraphQLParameterPageService extends ParameterPageService {
   Future<void> savePage(
       {required String id,
       required ParameterPage page,
-      required Function() onSuccess}) {
-    throw UnimplementedError();
+      required Function() onSuccess}) async {
+    // throw UnimplementedError("GraphQLParameterPageService savePage");
+    onSuccess.call();
   }
 
   @override
-  Future<String> renamePage({required String id, required String newTitle}) {
-    throw UnimplementedError();
+  Future<String> renamePage(
+      {required String id, required String newTitle}) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(updatepagetitle),
+      variables: <String, dynamic>{'pageid': id, 'title': newTitle},
+    );
+
+    final QueryResult result = await client.value.query(options);
+
+    if (result.hasException) {
+      throw UnimplementedError("renamePage exception");
+    } else {
+      return newTitle;
+    }
   }
 
   @override
-  Future<ParameterPage> fetchPage({required String id}) {
-    throw UnimplementedError();
+  Future<ParameterPage> fetchPage({required String id}) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(pagequery),
+      variables: <String, dynamic>{'pageid': id},
+      fetchPolicy: FetchPolicy.noCache,
+    );
+
+    final QueryResult result = await client.value.query(options);
+
+    if (result.hasException) {
+      throw UnimplementedError("fetchPage exception");
+    } else {
+      return ParameterPage.fromQueryResult(
+          id: result.data?['onePage']['pageid'],
+          title: result.data?['onePage']['title'],
+          queryResult: result.data?['onePage']['entries']);
+    }
   }
 }
