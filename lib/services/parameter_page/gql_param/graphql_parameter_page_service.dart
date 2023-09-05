@@ -83,8 +83,21 @@ class GraphQLParameterPageService extends ParameterPageService {
   }
 
   @override
-  Future<String> renamePage({required String id, required String newTitle}) {
-    throw UnimplementedError("GraphQLParameterPageService renamePage");
+  Future<String> renamePage(
+      {required String id, required String newTitle}) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(updatepagetitle),
+      variables: <String, dynamic>{'pageid': id, 'title': newTitle},
+    );
+
+    final QueryResult result = await client.value.query(options);
+
+    if (result.hasException) {
+      print(result);
+      throw UnimplementedError("renamePage exception");
+    } else {
+      return newTitle;
+    }
   }
 
   @override
