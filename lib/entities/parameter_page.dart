@@ -120,10 +120,14 @@ class ParameterPage {
   PageEntry _hydratePageEntry({required Map<String, dynamic> from}) {
     switch (from["type"]) {
       case "Comment":
+      case "Comments":
         return CommentEntry(from["text"]!);
 
       case "Parameter":
         return ParameterEntry(from["text"]);
+
+      case "Expression":
+        return CommentEntry(from["text"]!);
 
       default:
         throw UnimplementedError("Unexpected PageEntry type");

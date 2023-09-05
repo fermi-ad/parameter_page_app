@@ -19,9 +19,9 @@ const pageentryquery = r"""
             }
           """;
 
-const pageequery = r"""
+const pagequery = r"""
             query getOnePage($pageid: ID!) {
-              onePage {
+              onePage(pageid: $pageid) {
                 pageid
                 title
                 entries {
@@ -33,4 +33,3 @@ const pageequery = r"""
                 }
             }
           """;
-
