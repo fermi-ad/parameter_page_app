@@ -96,7 +96,6 @@ class GraphQLParameterPageService extends ParameterPageService {
     );
 
     final QueryResult result = await client.value.query(options);
-    print(result);
 
     if (result.hasException) {
       throw UnimplementedError("fetchPage exception");
