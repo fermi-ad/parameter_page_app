@@ -9,6 +9,8 @@ class MockParameterPageService extends ParameterPageService {
 
   bool fetchPageShouldFail = false;
 
+  bool fetchEntriesShouldFail = false;
+
   @override
   Future<void> fetchPages(
       {required Function(String errorMessage) onFailure,
@@ -25,8 +27,11 @@ class MockParameterPageService extends ParameterPageService {
       {required String forPageId,
       required Function(String errorMessage) onFailure,
       required Function(List entries) onSuccess}) async {
-    Timer(const Duration(seconds: 1),
-        () => onSuccess.call(_testPageEntries[forPageId]!));
+    Timer(
+        const Duration(seconds: 1),
+        fetchEntriesShouldFail
+            ? () => onFailure.call("Fake fetchEntries failure.")
+            : () => onSuccess.call(_testPageEntries[forPageId]!));
   }
 
   @override
