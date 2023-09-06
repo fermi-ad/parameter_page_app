@@ -39,8 +39,28 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
           title: Text(widget.title),
         ),
       ),
-      body: isLoading ? _buildLoading() : _buildPageList(_titles!),
+      body: _errorMessage != null
+          ? _buildError(_errorMessage!)
+          : isLoading
+              ? _buildLoading()
+              : _buildPageList(_titles!),
     );
+  }
+
+  Widget _buildError(String detailMessage) {
+    return Row(key: const Key("open_pages_list_error"), children: [
+      const Spacer(),
+      Column(children: [
+        const Spacer(),
+        const Icon(Icons.warning),
+        const SizedBox(height: 16),
+        const Text(
+            "The request for parameter page titles failed, please try again."),
+        Text("($detailMessage)"),
+        const Spacer()
+      ]),
+      const Spacer()
+    ]);
   }
 
   Widget _buildLoading() {
@@ -98,16 +118,24 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
   }
 
   Future<void> _fetchData() async {
-    setState(() => _titles = null);
+    setState(() {
+      _titles = null;
+      _errorMessage = null;
+    });
 
     widget.service.fetchPages(onFailure: (String errorMessage) {
-      logger.e('fetchPages failure: $errorMessage');
+      setState(() {
+        _errorMessage = errorMessage;
+      });
     }, onSuccess: (List<dynamic> newTitles) {
       setState(() {
         _titles = newTitles;
+        _errorMessage = null;
       });
     });
   }
 
   List<dynamic>? _titles;
+
+  String? _errorMessage;
 }

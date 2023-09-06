@@ -11,7 +11,11 @@ class MockParameterPageService extends ParameterPageService {
   Future<void> fetchPages(
       {required Function(String errorMessage) onFailure,
       required Function(List pageTitles) onSuccess}) async {
-    Timer(const Duration(seconds: 1), () => onSuccess.call(_testPages));
+    Timer(
+        const Duration(seconds: 1),
+        fetchPagesShouldFail
+            ? () => onFailure.call("Fake fetchPages error message.")
+            : () => onSuccess.call(_testPages));
   }
 
   @override
