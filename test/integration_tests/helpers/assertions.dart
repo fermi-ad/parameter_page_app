@@ -445,3 +445,11 @@ void assertSnackBar({required String message}) {
       find.descendant(of: find.byType(SnackBar), matching: find.text(message)),
       findsOneWidget);
 }
+
+void assertOpenPagesListViewError({required String messageIs}) {
+  expect(
+      find.descendant(
+          of: find.byKey(const Key("open_pages_list_error")),
+          matching: find.text(messageIs)),
+      findsOneWidget);
+}

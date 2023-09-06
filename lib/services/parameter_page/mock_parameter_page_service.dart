@@ -5,6 +5,8 @@ import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
 
 class MockParameterPageService extends ParameterPageService {
+  bool fetchPagesShouldFail = false;
+
   @override
   Future<void> fetchPages(
       {required Function(String errorMessage) onFailure,
