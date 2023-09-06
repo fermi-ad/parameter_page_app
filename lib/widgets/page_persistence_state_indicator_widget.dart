@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum PagePersistenceState { clean, unsaved, saving, saved }
+enum PagePersistenceState { clean, unsaved, saving, saved, unsavedError }
 
 class PagePersistenceStateIndicatorWidget extends StatelessWidget {
   final PagePersistenceState persistenceState;
@@ -22,6 +22,9 @@ class PagePersistenceStateIndicatorWidget extends StatelessWidget {
 
       case PagePersistenceState.saved:
         return _buildSaved();
+
+      case PagePersistenceState.unsavedError:
+        return _buildUnsavedError();
     }
   }
 
@@ -45,6 +48,16 @@ class PagePersistenceStateIndicatorWidget extends StatelessWidget {
           key: Key("unsaved_changes_indicator"),
           message: "This page has unsaved changes.",
           child: Icon(Icons.warning, color: Colors.amber))
+    ]);
+  }
+
+  Widget _buildUnsavedError() {
+    return const Row(children: [
+      Tooltip(
+          key: Key("page_save_failed_indicator"),
+          message:
+              "This page has unsaved changes.  The last attempt to save this page failed.  Please try again.",
+          child: Icon(Icons.warning, color: Colors.red))
     ]);
   }
 }

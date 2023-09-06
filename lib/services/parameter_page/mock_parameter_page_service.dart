@@ -24,6 +24,10 @@ class MockParameterPageService extends ParameterPageService {
 
   @override
   Future<String> createPage({required String withTitle}) async {
+    if (createPageShouldFail) {
+      return Future.error("Fake createPage() failure.");
+    }
+
     _testPages.add({"pageid": "$_nextPageId", "title": withTitle});
     _testPageEntries["$_nextPageId"] = [];
 

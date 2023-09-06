@@ -227,6 +227,10 @@ class _ParameterPageScaffoldWidgetState
             onSuccess.call();
             context.go("/page/$newId");
           });
+    }).onError((String error, stackTrace) {
+      setState(() {
+        _persistenceState = PagePersistenceState.unsavedError;
+      });
     });
   }
 
