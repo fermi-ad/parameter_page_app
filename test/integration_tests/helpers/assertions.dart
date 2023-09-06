@@ -430,6 +430,11 @@ void assertPageSavedIndicator({required bool isVisible}) {
       isVisible ? findsOneWidget : findsNothing);
 }
 
+void assertSaveChangesFailureIndicator({required bool isVisible}) {
+  expect(find.byKey(const Key("page_save_failed_indicator")),
+      isVisible ? findsOneWidget : findsNothing);
+}
+
 void assertMainMenuItem(WidgetTester tester,
     {required String name, required bool isEnabled}) {
   final menuTextFinder = find.descendant(

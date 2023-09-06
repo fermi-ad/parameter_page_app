@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:parameter_page/main.dart';
 
 import 'helpers/assertions.dart';
 import 'helpers/actions.dart';
@@ -187,5 +188,36 @@ void main() {
       assertPageTitleIs("Test Page 3");
       assertIsOnPage(comment: "this is a new page");
     }, semanticsEnabled: false);
+
+    testWidgets(
+        'Create a new page fails, error message displayed and page remains',
+        (WidgetTester tester) async {
+      // Given I have created a new page
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+      await enterEditMode(tester);
+
+      // ... and I have given it a title of "Test Page 3"
+      await changePageTitle(tester, to: "Test Page 3");
+
+      // ... and it contains a comment
+      await addANewComment(tester, "this is a new page");
+      await exitEditMode(tester);
+
+      // ... and the save request will fail
+      mockParameterPageService!.createPageShouldFail = true;
+
+      // When I save the page
+      await openMainMenu(tester);
+      await saveParameterPage(tester);
+      await waitForPageSaveToFail(tester);
+
+      // Then the page save failure indicator is displayed
+      assertSaveChangesFailureIndicator(isVisible: true);
+
+      // ... and the page is still loaded in memory
+      assertPageTitleIs("Test Page 3");
+      assertIsOnPage(comment: "this is a new page");
+    });
   });
 }

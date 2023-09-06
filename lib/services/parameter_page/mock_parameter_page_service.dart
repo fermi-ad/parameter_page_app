@@ -9,7 +9,7 @@ class MockParameterPageService extends ParameterPageService {
 
   bool fetchPageShouldFail = false;
 
-  bool fetchEntriesShouldFail = false;
+  bool createPageShouldFail = false;
 
   @override
   Future<void> fetchPages(
