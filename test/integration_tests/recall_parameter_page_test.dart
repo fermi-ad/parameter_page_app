@@ -161,20 +161,5 @@ void main() {
           messageIs:
               "The request to load the parameter page failed, please try again.");
     });
-
-    testWidgets('Fail to retrieve page entries, show error',
-        (WidgetTester tester) async {
-      // Given an error will occur when opening Test Page 1
-      await startParameterPageApp(tester);
-      mockParameterPageService!.fetchEntriesShouldFail = true;
-      await navigateToOpenPage(tester);
-
-      // When I attempt to open the parameter page
-      await openParameterPage(tester, withTitle: "Test Page 1");
-
-      assertDisplayPageError(
-          messageIs:
-              "The request to load the parameter page failed, please try again.");
-    });
   });
 }

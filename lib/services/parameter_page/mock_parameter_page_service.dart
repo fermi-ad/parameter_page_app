@@ -23,18 +23,6 @@ class MockParameterPageService extends ParameterPageService {
   }
 
   @override
-  Future<void> fetchEntries(
-      {required String forPageId,
-      required Function(String errorMessage) onFailure,
-      required Function(List entries) onSuccess}) async {
-    Timer(
-        const Duration(seconds: 1),
-        fetchEntriesShouldFail
-            ? () => onFailure.call("Fake fetchEntries failure.")
-            : () => onSuccess.call(_testPageEntries[forPageId]!));
-  }
-
-  @override
   Future<String> createPage({required String withTitle}) async {
     _testPages.add({"pageid": "$_nextPageId", "title": withTitle});
     _testPageEntries["$_nextPageId"] = [];

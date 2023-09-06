@@ -28,26 +28,6 @@ class GraphQLParameterPageService extends ParameterPageService {
   }
 
   @override
-  Future<void> fetchEntries(
-      {required String forPageId,
-      required Function(String errorMessage) onFailure,
-      required Function(List entries) onSuccess}) async {
-    final QueryOptions options = QueryOptions(
-      document: gql(pageentryquery),
-      variables: <String, dynamic>{'pageid': forPageId},
-      fetchPolicy: FetchPolicy.noCache,
-    );
-
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      onFailure.call("${result.exception}");
-    } else {
-      onSuccess.call(result.data?['entriesInPageX']);
-    }
-  }
-
-  @override
   Future<String> createPage({required String withTitle}) async {
     final QueryOptions options = QueryOptions(
       document: gql(addpagetitle),
