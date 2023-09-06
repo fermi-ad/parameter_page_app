@@ -5,6 +5,7 @@ import 'package:parameter_page/services/dpm/dpm_service.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
 import 'package:parameter_page/services/user_device/user_device_service.dart';
 import 'package:parameter_page/widgets/display_settings_button_widget.dart';
+import 'package:parameter_page/widgets/fermi_controls_common/error_display_widget.dart';
 import 'package:parameter_page/widgets/main_menu_widget.dart';
 import 'package:parameter_page/widgets/page_title_widget.dart';
 
@@ -93,19 +94,11 @@ class _ParameterPageScaffoldWidgetState
   }
 
   Widget _buildError(String detailMessage) {
-    return Row(key: const Key("parameter_page_error"), children: [
-      const Spacer(),
-      Column(children: [
-        const Spacer(),
-        const Icon(Icons.warning),
-        const SizedBox(height: 16),
-        const Text(
-            "The request to load the parameter page failed, please try again."),
-        Text("($detailMessage)"),
-        const Spacer()
-      ]),
-      const Spacer()
-    ]);
+    return ErrorDisplayWidget(
+        key: const Key("parameter_page_error"),
+        errorMessage:
+            "The request to load the parameter page failed, please try again.",
+        detailMessage: detailMessage);
   }
 
   Widget _buildPageWidget() {

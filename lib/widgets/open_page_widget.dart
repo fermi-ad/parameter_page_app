@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:parameter_page/widgets/fermi_controls_common/error_display_widget.dart';
 import '../services/parameter_page/parameter_page_service.dart';
 import 'open_pages_list_view_widget.dart';
 
@@ -48,19 +49,11 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
   }
 
   Widget _buildError(String detailMessage) {
-    return Row(key: const Key("open_pages_list_error"), children: [
-      const Spacer(),
-      Column(children: [
-        const Spacer(),
-        const Icon(Icons.warning),
-        const SizedBox(height: 16),
-        const Text(
-            "The request for parameter page titles failed, please try again."),
-        Text("($detailMessage)"),
-        const Spacer()
-      ]),
-      const Spacer()
-    ]);
+    return ErrorDisplayWidget(
+        key: const Key("open_pages_list_error"),
+        errorMessage:
+            "The request for parameter page titles failed, please try again.",
+        detailMessage: detailMessage);
   }
 
   Widget _buildLoading() {
