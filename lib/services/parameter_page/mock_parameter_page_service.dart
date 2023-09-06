@@ -7,6 +7,8 @@ import 'package:parameter_page/services/parameter_page/parameter_page_service.da
 class MockParameterPageService extends ParameterPageService {
   bool fetchPagesShouldFail = false;
 
+  bool fetchPageShouldFail = false;
+
   @override
   Future<void> fetchPages(
       {required Function(String errorMessage) onFailure,
@@ -96,6 +98,10 @@ class MockParameterPageService extends ParameterPageService {
 
   @override
   Future<ParameterPage> fetchPage({required String id}) async {
+    if (fetchPageShouldFail) {
+      return Future.error("Fake failure for fetchPage.");
+    }
+
     for (Map<String, String> page in _testPages) {
       if (page["pageid"] == id) {
         String title = page["title"]!;

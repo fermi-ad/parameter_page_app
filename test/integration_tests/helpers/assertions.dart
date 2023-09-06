@@ -453,3 +453,11 @@ void assertOpenPagesListViewError({required String messageIs}) {
           matching: find.text(messageIs)),
       findsOneWidget);
 }
+
+void assertDisplayPageError({required String messageIs}) {
+  expect(
+      find.descendant(
+          of: find.byKey(const Key("parameter_page_error")),
+          matching: find.text(messageIs)),
+      findsOneWidget);
+}

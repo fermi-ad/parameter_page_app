@@ -41,7 +41,8 @@ class _ParameterPageScaffoldWidgetState
 
   @override
   Widget build(BuildContext context) {
-    if (_pageHasNotBeenLoadedYet() || _aDifferentPageShouldBeLoaded()) {
+    if (_errorMessage != null) {
+    } else if (_pageHasNotBeenLoadedYet() || _aDifferentPageShouldBeLoaded()) {
       _page = null;
       _loadPage(pageId: widget.openPageId!);
     } else if (_aNewPageShouldBeStarted()) {
@@ -84,7 +85,27 @@ class _ParameterPageScaffoldWidgetState
   }
 
   Widget _buildBody(BuildContext context) {
-    return _page == null ? _buildLoadingPage() : _buildPageWidget();
+    return _errorMessage != null
+        ? _buildError(_errorMessage!)
+        : _page == null
+            ? _buildLoadingPage()
+            : _buildPageWidget();
+  }
+
+  Widget _buildError(String detailMessage) {
+    return Row(key: const Key("parameter_page_error"), children: [
+      const Spacer(),
+      Column(children: [
+        const Spacer(),
+        const Icon(Icons.warning),
+        const SizedBox(height: 16),
+        const Text(
+            "The request to load the parameter page failed, please try again."),
+        Text("($detailMessage)"),
+        const Spacer()
+      ]),
+      const Spacer()
+    ]);
   }
 
   Widget _buildPageWidget() {
@@ -233,7 +254,11 @@ class _ParameterPageScaffoldWidgetState
   _loadPage({required String pageId}) {
     widget.pageService
         .fetchPage(id: pageId)
-        .then((ParameterPage page) => setState(() => _page = page));
+        .then((ParameterPage page) => setState(() => _page = page))
+        .onError((String error, stackTrace) => setState(() {
+              _errorMessage = error;
+              _page = null;
+            }));
   }
 
   Future<bool?> _promptUserToDiscardChanges(BuildContext context) {
@@ -256,6 +281,8 @@ class _ParameterPageScaffoldWidgetState
       ),
     );
   }
+
+  String? _errorMessage;
 
   ParameterPage? _page;
 
