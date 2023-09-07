@@ -219,8 +219,8 @@ class _ParameterPageScaffoldWidgetState
 
   Future<void> _saveNewPage({required Function() onSuccess}) async {
     widget.pageService.createPage(withTitle: _page!.title).then((String newId) {
-      widget.pageService.savePage(
-          id: newId,
+      _savePageEntries(
+          pageId: newId,
           page: _page!,
           onSuccess: () {
             _page!.commit();
@@ -238,13 +238,32 @@ class _ParameterPageScaffoldWidgetState
     widget.pageService
         .renamePage(id: _page!.id!, newTitle: _page!.title)
         .then((String newTitle) {
-      widget.pageService.savePage(
-          id: _page!.id!,
+      _savePageEntries(
+          pageId: _page!.id!,
           page: _page!,
           onSuccess: () {
             _page!.commit();
             onSuccess.call();
           });
+    });
+  }
+
+  Future<void> _savePageEntries(
+      {required String pageId,
+      required ParameterPage page,
+      required Function onSuccess}) async {
+    widget.pageService
+        .savePage(
+            id: pageId,
+            page: page,
+            onSuccess: () {
+              page.commit();
+              onSuccess.call();
+            })
+        .onError((String error, stackTrace) {
+      setState(() {
+        _persistenceState = PagePersistenceState.unsavedError;
+      });
     });
   }
 

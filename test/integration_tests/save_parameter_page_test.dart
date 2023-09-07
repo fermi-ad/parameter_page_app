@@ -219,5 +219,31 @@ void main() {
       assertPageTitleIs("Test Page 3");
       assertIsOnPage(comment: "this is a new page");
     });
+
+    testWidgets(
+        'Save changes to an existing page fails, error message displayed and page remains',
+        (WidgetTester tester) async {
+      // Given I have made changs to an existing page
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await enterEditMode(tester);
+      await addANewComment(tester, "this change will fail");
+      await exitEditMode(tester);
+
+      // ... and the save request will fail
+      mockParameterPageService!.savePageShouldFail = true;
+
+      // When I save the page
+      await openMainMenu(tester);
+      await saveParameterPage(tester);
+      await waitForPageSaveToFail(tester);
+
+      // Then the page save failure indicator is displayed
+      assertSaveChangesFailureIndicator(isVisible: true);
+
+      // ... and the page is still loaded in memory
+      assertPageTitleIs("Test Page 1");
+      assertIsOnPage(comment: "this change will fail");
+    });
   });
 }

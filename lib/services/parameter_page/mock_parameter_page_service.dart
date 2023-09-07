@@ -11,6 +11,8 @@ class MockParameterPageService extends ParameterPageService {
 
   bool createPageShouldFail = false;
 
+  bool savePageShouldFail = false;
+
   @override
   Future<void> fetchPages(
       {required Function(String errorMessage) onFailure,
@@ -60,6 +62,10 @@ class MockParameterPageService extends ParameterPageService {
       {required String id,
       required ParameterPage page,
       required Function() onSuccess}) async {
+    if (savePageShouldFail) {
+      return Future.error("Fake savePage failure.");
+    }
+
     final entries = page.entriesAsList();
 
     List<Map<String, String>> newEntries = [];
