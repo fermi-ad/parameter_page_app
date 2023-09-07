@@ -218,10 +218,10 @@ void main() {
       // ... and the page is still loaded in memory
       assertPageTitleIs("Test Page 3");
       assertIsOnPage(comment: "this is a new page");
-    });
+    }, semanticsEnabled: false);
 
     testWidgets(
-        'Save changes to an existing page fails, error message displayed and page remains',
+        'Save changes to an existing page fails, error message displayed and save is still enabled',
         (WidgetTester tester) async {
       // Given I have made changs to an existing page
       await startParameterPageApp(tester);
@@ -244,7 +244,11 @@ void main() {
       // ... and the page is still loaded in memory
       assertPageTitleIs("Test Page 1");
       assertIsOnPage(comment: "this change will fail");
-    });
+
+      // ... and the Save menu item is enabled
+      await openMainMenu(tester);
+      assertMainMenuItem(tester, name: "Save", isEnabled: true);
+    }, semanticsEnabled: false);
 
     testWidgets('Rename page fails, error message displayed and page remains',
         (WidgetTester tester) async {
@@ -268,6 +272,6 @@ void main() {
 
       // ... and the page is still loaded in memory
       assertPageTitleIs("Test Page One");
-    });
+    }, semanticsEnabled: false);
   });
 }

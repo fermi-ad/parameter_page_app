@@ -133,10 +133,14 @@ class _ParameterPageScaffoldWidgetState
       onNewPage: _handleNewPage,
       onOpenPage: (BuildContext context) => context.go("/open"),
       onSave: _handleSavePage,
-      saveEnabled: _persistenceState == PagePersistenceState.unsaved,
+      saveEnabled: _saveMenuShouldBeEnabled(),
       onCopyLink: _handleCopyLink,
       copyLinkEnabled: _page?.id != null,
     );
+  }
+
+  bool _saveMenuShouldBeEnabled() {
+    return _persistenceState == PagePersistenceState.unsaved;
   }
 
   void _navigateToDisplaySettings(BuildContext context) {
@@ -269,6 +273,9 @@ class _ParameterPageScaffoldWidgetState
     setState(() {
       _persistenceState = PagePersistenceState.unsavedError;
     });
+
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text("Save failed - $error")));
   }
 
   _loadPage({required String pageId}) {
