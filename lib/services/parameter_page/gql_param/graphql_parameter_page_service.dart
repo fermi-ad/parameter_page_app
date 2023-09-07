@@ -39,7 +39,7 @@ class GraphQLParameterPageService extends ParameterPageService {
     final QueryResult result = await client.value.query(options);
 
     if (result.hasException) {
-      throw UnimplementedError();
+      return Future.error("GraphQL Error: ${result.exception}");
     } else {
       return result.data?['addTitle']['pageid'];
     } //else
@@ -72,8 +72,8 @@ class GraphQLParameterPageService extends ParameterPageService {
       {required String id,
       required ParameterPage page,
       required Function() onSuccess}) async {
-    // throw UnimplementedError("GraphQLParameterPageService savePage");
-    onSuccess.call();
+    return Future.error(
+        "GraphQLParameterPageService savePage() not implemented yet.");
   }
 
   @override
@@ -87,7 +87,7 @@ class GraphQLParameterPageService extends ParameterPageService {
     final QueryResult result = await client.value.query(options);
 
     if (result.hasException) {
-      throw UnimplementedError("renamePage exception");
+      return Future.error("GraphQL exception - ${result.exception}.");
     } else {
       return newTitle;
     }

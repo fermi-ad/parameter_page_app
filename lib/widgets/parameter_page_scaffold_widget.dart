@@ -140,7 +140,8 @@ class _ParameterPageScaffoldWidgetState
   }
 
   bool _saveMenuShouldBeEnabled() {
-    return _persistenceState == PagePersistenceState.unsaved;
+    return _persistenceState == PagePersistenceState.unsaved ||
+        _persistenceState == PagePersistenceState.unsavedError;
   }
 
   void _navigateToDisplaySettings(BuildContext context) {
