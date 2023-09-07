@@ -13,6 +13,8 @@ class MockParameterPageService extends ParameterPageService {
 
   bool savePageShouldFail = false;
 
+  bool renamePageShouldFail = false;
+
   @override
   Future<void> fetchPages(
       {required Function(String errorMessage) onFailure,
@@ -89,6 +91,10 @@ class MockParameterPageService extends ParameterPageService {
   @override
   Future<String> renamePage(
       {required String id, required String newTitle}) async {
+    if (renamePageShouldFail) {
+      return Future.error("Fake renamePage failure.");
+    }
+
     for (Map<String, String> page in _testPages) {
       if (page["pageid"] == id) {
         page["title"] = newTitle;
