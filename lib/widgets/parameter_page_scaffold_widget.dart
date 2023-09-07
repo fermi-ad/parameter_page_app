@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
@@ -227,10 +229,8 @@ class _ParameterPageScaffoldWidgetState
             onSuccess.call();
             context.go("/page/$newId");
           });
-    }).onError((String error, stackTrace) {
-      setState(() {
-        _persistenceState = PagePersistenceState.unsavedError;
-      });
+    }).onError((error, stackTrace) {
+      _handleSaveError(error, stackTrace);
     });
   }
 
@@ -245,6 +245,8 @@ class _ParameterPageScaffoldWidgetState
             _page!.commit();
             onSuccess.call();
           });
+    }).onError((error, stackTrace) {
+      _handleSaveError(error, stackTrace);
     });
   }
 
@@ -260,10 +262,12 @@ class _ParameterPageScaffoldWidgetState
               page.commit();
               onSuccess.call();
             })
-        .onError((String error, stackTrace) {
-      setState(() {
-        _persistenceState = PagePersistenceState.unsavedError;
-      });
+        .onError(_handleSaveError);
+  }
+
+  Future<void> _handleSaveError(error, stackTrace) async {
+    setState(() {
+      _persistenceState = PagePersistenceState.unsavedError;
     });
   }
 
