@@ -69,6 +69,11 @@ Future<void> waitForPageToBeSaved(tester) async {
   await pumpUntilFound(tester, indicatorFinder);
 }
 
+Future<void> waitForPageSaveToFail(tester) async {
+  final indicatorFinder = find.byKey(const Key("page_save_failed_indicator"));
+  await pumpUntilFound(tester, indicatorFinder);
+}
+
 Future<void> enterEditMode(tester) async {
   await tester.tap(find.byKey(const Key("enable_edit_mode_button")));
   await tester.pumpAndSettle();

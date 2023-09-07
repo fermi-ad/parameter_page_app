@@ -430,6 +430,11 @@ void assertPageSavedIndicator({required bool isVisible}) {
       isVisible ? findsOneWidget : findsNothing);
 }
 
+void assertSaveChangesFailureIndicator({required bool isVisible}) {
+  expect(find.byKey(const Key("page_save_failed_indicator")),
+      isVisible ? findsOneWidget : findsNothing);
+}
+
 void assertMainMenuItem(WidgetTester tester,
     {required String name, required bool isEnabled}) {
   final menuTextFinder = find.descendant(
@@ -443,5 +448,21 @@ void assertMainMenuItem(WidgetTester tester,
 void assertSnackBar({required String message}) {
   expect(
       find.descendant(of: find.byType(SnackBar), matching: find.text(message)),
+      findsOneWidget);
+}
+
+void assertOpenPagesListViewError({required String messageIs}) {
+  expect(
+      find.descendant(
+          of: find.byKey(const Key("open_pages_list_error")),
+          matching: find.text(messageIs)),
+      findsOneWidget);
+}
+
+void assertDisplayPageError({required String messageIs}) {
+  expect(
+      find.descendant(
+          of: find.byKey(const Key("parameter_page_error")),
+          matching: find.text(messageIs)),
       findsOneWidget);
 }

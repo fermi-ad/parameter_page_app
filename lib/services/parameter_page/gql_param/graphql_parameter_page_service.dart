@@ -19,31 +19,11 @@ class GraphQLParameterPageService extends ParameterPageService {
     final QueryResult result = await client.value.query(options);
 
     if (result.hasException) {
-      onFailure.call("${result.exception}");
+      onFailure.call("GraphQL error: ${result.exception}");
     } else {
       List<dynamic> titles = [];
       titles = result.data?['allTitles'];
       onSuccess.call(titles);
-    }
-  }
-
-  @override
-  Future<void> fetchEntries(
-      {required String forPageId,
-      required Function(String errorMessage) onFailure,
-      required Function(List entries) onSuccess}) async {
-    final QueryOptions options = QueryOptions(
-      document: gql(pageentryquery),
-      variables: <String, dynamic>{'pageid': forPageId},
-      fetchPolicy: FetchPolicy.noCache,
-    );
-
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      onFailure.call("${result.exception}");
-    } else {
-      onSuccess.call(result.data?['entriesInPageX']);
     }
   }
 
@@ -59,7 +39,7 @@ class GraphQLParameterPageService extends ParameterPageService {
     final QueryResult result = await client.value.query(options);
 
     if (result.hasException) {
-      throw UnimplementedError();
+      return Future.error("GraphQL Error: ${result.exception}");
     } else {
       return result.data?['addTitle']['pageid'];
     } //else
@@ -92,8 +72,8 @@ class GraphQLParameterPageService extends ParameterPageService {
       {required String id,
       required ParameterPage page,
       required Function() onSuccess}) async {
-    // throw UnimplementedError("GraphQLParameterPageService savePage");
-    onSuccess.call();
+    return Future.error(
+        "GraphQLParameterPageService savePage() not implemented yet.");
   }
 
   @override
@@ -107,7 +87,7 @@ class GraphQLParameterPageService extends ParameterPageService {
     final QueryResult result = await client.value.query(options);
 
     if (result.hasException) {
-      throw UnimplementedError("renamePage exception");
+      return Future.error("GraphQL exception - ${result.exception}.");
     } else {
       return newTitle;
     }
@@ -124,7 +104,7 @@ class GraphQLParameterPageService extends ParameterPageService {
     final QueryResult result = await client.value.query(options);
 
     if (result.hasException) {
-      throw UnimplementedError("fetchPage exception");
+      return Future.error("GraphQL Error: ${result.exception}");
     } else {
       return ParameterPage.fromQueryResult(
           id: result.data?['onePage']['pageid'],

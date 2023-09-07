@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:parameter_page/widgets/fermi_controls_common/error_display_widget.dart';
 import '../services/parameter_page/parameter_page_service.dart';
 import 'open_pages_list_view_widget.dart';
 
@@ -39,8 +40,20 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
           title: Text(widget.title),
         ),
       ),
-      body: isLoading ? _buildLoading() : _buildPageList(_titles!),
+      body: _errorMessage != null
+          ? _buildError(_errorMessage!)
+          : isLoading
+              ? _buildLoading()
+              : _buildPageList(_titles!),
     );
+  }
+
+  Widget _buildError(String detailMessage) {
+    return ErrorDisplayWidget(
+        key: const Key("open_pages_list_error"),
+        errorMessage:
+            "The request for parameter page titles failed, please try again.",
+        detailMessage: detailMessage);
   }
 
   Widget _buildLoading() {
@@ -98,16 +111,24 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
   }
 
   Future<void> _fetchData() async {
-    setState(() => _titles = null);
+    setState(() {
+      _titles = null;
+      _errorMessage = null;
+    });
 
     widget.service.fetchPages(onFailure: (String errorMessage) {
-      logger.e('fetchPages failure: $errorMessage');
+      setState(() {
+        _errorMessage = errorMessage;
+      });
     }, onSuccess: (List<dynamic> newTitles) {
       setState(() {
         _titles = newTitles;
+        _errorMessage = null;
       });
     });
   }
 
   List<dynamic>? _titles;
+
+  String? _errorMessage;
 }

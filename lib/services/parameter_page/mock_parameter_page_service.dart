@@ -5,24 +5,33 @@ import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
 
 class MockParameterPageService extends ParameterPageService {
+  bool fetchPagesShouldFail = false;
+
+  bool fetchPageShouldFail = false;
+
+  bool createPageShouldFail = false;
+
+  bool savePageShouldFail = false;
+
+  bool renamePageShouldFail = false;
+
   @override
   Future<void> fetchPages(
       {required Function(String errorMessage) onFailure,
       required Function(List pageTitles) onSuccess}) async {
-    Timer(const Duration(seconds: 1), () => onSuccess.call(_testPages));
-  }
-
-  @override
-  Future<void> fetchEntries(
-      {required String forPageId,
-      required Function(String errorMessage) onFailure,
-      required Function(List entries) onSuccess}) async {
-    Timer(const Duration(seconds: 1),
-        () => onSuccess.call(_testPageEntries[forPageId]!));
+    Timer(
+        const Duration(seconds: 1),
+        fetchPagesShouldFail
+            ? () => onFailure.call("Fake fetchPages error message.")
+            : () => onSuccess.call(_testPages));
   }
 
   @override
   Future<String> createPage({required String withTitle}) async {
+    if (createPageShouldFail) {
+      return Future.error("Fake createPage() failure.");
+    }
+
     _testPages.add({"pageid": "$_nextPageId", "title": withTitle});
     _testPageEntries["$_nextPageId"] = [];
 
@@ -55,6 +64,10 @@ class MockParameterPageService extends ParameterPageService {
       {required String id,
       required ParameterPage page,
       required Function() onSuccess}) async {
+    if (savePageShouldFail) {
+      return Future.error("Fake savePage failure.");
+    }
+
     final entries = page.entriesAsList();
 
     List<Map<String, String>> newEntries = [];
@@ -78,6 +91,10 @@ class MockParameterPageService extends ParameterPageService {
   @override
   Future<String> renamePage(
       {required String id, required String newTitle}) async {
+    if (renamePageShouldFail) {
+      return Future.error("Fake renamePage failure.");
+    }
+
     for (Map<String, String> page in _testPages) {
       if (page["pageid"] == id) {
         page["title"] = newTitle;
@@ -90,6 +107,10 @@ class MockParameterPageService extends ParameterPageService {
 
   @override
   Future<ParameterPage> fetchPage({required String id}) async {
+    if (fetchPageShouldFail) {
+      return Future.error("Fake failure for fetchPage.");
+    }
+
     for (Map<String, String> page in _testPages) {
       if (page["pageid"] == id) {
         String title = page["title"]!;

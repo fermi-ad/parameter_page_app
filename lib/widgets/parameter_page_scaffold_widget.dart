@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
@@ -5,6 +7,7 @@ import 'package:parameter_page/services/dpm/dpm_service.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
 import 'package:parameter_page/services/user_device/user_device_service.dart';
 import 'package:parameter_page/widgets/display_settings_button_widget.dart';
+import 'package:parameter_page/widgets/fermi_controls_common/error_display_widget.dart';
 import 'package:parameter_page/widgets/main_menu_widget.dart';
 import 'package:parameter_page/widgets/page_title_widget.dart';
 
@@ -41,7 +44,8 @@ class _ParameterPageScaffoldWidgetState
 
   @override
   Widget build(BuildContext context) {
-    if (_pageHasNotBeenLoadedYet() || _aDifferentPageShouldBeLoaded()) {
+    if (_errorMessage != null) {
+    } else if (_pageHasNotBeenLoadedYet() || _aDifferentPageShouldBeLoaded()) {
       _page = null;
       _loadPage(pageId: widget.openPageId!);
     } else if (_aNewPageShouldBeStarted()) {
@@ -84,7 +88,19 @@ class _ParameterPageScaffoldWidgetState
   }
 
   Widget _buildBody(BuildContext context) {
-    return _page == null ? _buildLoadingPage() : _buildPageWidget();
+    return _errorMessage != null
+        ? _buildError(_errorMessage!)
+        : _page == null
+            ? _buildLoadingPage()
+            : _buildPageWidget();
+  }
+
+  Widget _buildError(String detailMessage) {
+    return ErrorDisplayWidget(
+        key: const Key("parameter_page_error"),
+        errorMessage:
+            "The request to load the parameter page failed, please try again.",
+        detailMessage: detailMessage);
   }
 
   Widget _buildPageWidget() {
@@ -117,10 +133,15 @@ class _ParameterPageScaffoldWidgetState
       onNewPage: _handleNewPage,
       onOpenPage: (BuildContext context) => context.go("/open"),
       onSave: _handleSavePage,
-      saveEnabled: _persistenceState == PagePersistenceState.unsaved,
+      saveEnabled: _saveMenuShouldBeEnabled(),
       onCopyLink: _handleCopyLink,
       copyLinkEnabled: _page?.id != null,
     );
+  }
+
+  bool _saveMenuShouldBeEnabled() {
+    return _persistenceState == PagePersistenceState.unsaved ||
+        _persistenceState == PagePersistenceState.unsavedError;
   }
 
   void _navigateToDisplaySettings(BuildContext context) {
@@ -205,14 +226,16 @@ class _ParameterPageScaffoldWidgetState
 
   Future<void> _saveNewPage({required Function() onSuccess}) async {
     widget.pageService.createPage(withTitle: _page!.title).then((String newId) {
-      widget.pageService.savePage(
-          id: newId,
+      _savePageEntries(
+          pageId: newId,
           page: _page!,
           onSuccess: () {
             _page!.commit();
             onSuccess.call();
             context.go("/page/$newId");
           });
+    }).onError((error, stackTrace) {
+      _handleSaveError(error, stackTrace);
     });
   }
 
@@ -220,20 +243,50 @@ class _ParameterPageScaffoldWidgetState
     widget.pageService
         .renamePage(id: _page!.id!, newTitle: _page!.title)
         .then((String newTitle) {
-      widget.pageService.savePage(
-          id: _page!.id!,
+      _savePageEntries(
+          pageId: _page!.id!,
           page: _page!,
           onSuccess: () {
             _page!.commit();
             onSuccess.call();
           });
+    }).onError((error, stackTrace) {
+      _handleSaveError(error, stackTrace);
     });
+  }
+
+  Future<void> _savePageEntries(
+      {required String pageId,
+      required ParameterPage page,
+      required Function onSuccess}) async {
+    widget.pageService
+        .savePage(
+            id: pageId,
+            page: page,
+            onSuccess: () {
+              page.commit();
+              onSuccess.call();
+            })
+        .onError(_handleSaveError);
+  }
+
+  Future<void> _handleSaveError(error, stackTrace) async {
+    setState(() {
+      _persistenceState = PagePersistenceState.unsavedError;
+    });
+
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text("Save failed - $error")));
   }
 
   _loadPage({required String pageId}) {
     widget.pageService
         .fetchPage(id: pageId)
-        .then((ParameterPage page) => setState(() => _page = page));
+        .then((ParameterPage page) => setState(() => _page = page))
+        .onError((String error, stackTrace) => setState(() {
+              _errorMessage = error;
+              _page = null;
+            }));
   }
 
   Future<bool?> _promptUserToDiscardChanges(BuildContext context) {
@@ -256,6 +309,8 @@ class _ParameterPageScaffoldWidgetState
       ),
     );
   }
+
+  String? _errorMessage;
 
   ParameterPage? _page;
 
