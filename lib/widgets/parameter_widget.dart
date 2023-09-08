@@ -187,7 +187,10 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
           overflow: TextOverflow.ellipsis,
           deviceInfo?.description ?? "",
           style: widget.wide
-              ? null
+              ? Theme.of(context)
+                  .textTheme
+                  .bodyLarge!
+                  .copyWith(fontStyle: FontStyle.italic)
               : Theme.of(context)
                   .textTheme
                   .bodySmall!
