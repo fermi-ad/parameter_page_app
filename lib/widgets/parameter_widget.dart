@@ -126,13 +126,18 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   Widget _buildWide(BuildContext context) {
-    return ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: 34.0),
-        child: Column(children: [
-          _buildParameterDetailsRow(),
-          Visibility(
-              visible: _displayExtendedStatus, child: _buildExtendedStatusRow())
-        ]));
+    return Card(
+        child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 34.0),
+            child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 40.0),
+                child: Column(children: [
+                  _buildParameterDetailsRow(),
+                  Visibility(
+                      visible: _displayExtendedStatus,
+                      child: _buildExtendedStatusRow())
+                ]))));
   }
 
   Widget _buildNarrow(BuildContext context) {

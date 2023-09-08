@@ -105,27 +105,24 @@ class PageWidgetState extends State<PageWidget> {
 
   Widget _buildRow(BuildContext context, PageEntry entry, int index, bool wide,
       ParameterPage page) {
-    return Padding(
-      padding: const EdgeInsets.all(2.0),
-      child: page.editing()
-          ? Row(children: [
-              Expanded(
-                  child: entry.buildEntry(
-                      context, page.editing(), wide, settings)),
-              const SizedBox(width: 8.0),
-              GestureDetector(
-                  onTap: () async {
-                    setState(() {
-                      page.removeEntry(at: index);
-                    });
-                  },
-                  child: const IconButton(
-                      visualDensity: VisualDensity.compact,
-                      onPressed: null,
-                      icon: Icon(Icons.delete)))
-            ])
-          : entry.buildEntry(context, page.editing(), wide, settings),
-    );
+    return page.editing()
+        ? Row(children: [
+            Expanded(
+                child:
+                    entry.buildEntry(context, page.editing(), wide, settings)),
+            const SizedBox(width: 8.0),
+            GestureDetector(
+                onTap: () async {
+                  setState(() {
+                    page.removeEntry(at: index);
+                  });
+                },
+                child: const IconButton(
+                    visualDensity: VisualDensity.compact,
+                    onPressed: null,
+                    icon: Icon(Icons.delete)))
+          ])
+        : entry.buildEntry(context, page.editing(), wide, settings);
   }
 
   // Moves an entry from one location to another in the parameter list. It
