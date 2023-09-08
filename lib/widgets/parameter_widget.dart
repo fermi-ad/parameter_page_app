@@ -141,23 +141,19 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   Widget _buildNarrow(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
+    return Card(
+        child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         _buildName(),
         _buildDescription(),
-        Row(children: [
-          Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: _buildProperties()),
-          const Spacer(),
-          SizedBox(
-              width: 24.0, child: _buildExpandOrCollapseExtendedStatusButton())
-        ]),
+        const SizedBox(height: 10.0),
+        _buildProperties(wide: false),
+        _buildExpandOrCollapseExtendedStatusButton(),
         Visibility(
             visible: _displayExtendedStatus, child: _buildExtendedStatusRow())
       ]),
-    );
+    ));
   }
 
   Widget _buildParameterDetailsRow() {
@@ -167,7 +163,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         children: [
           Expanded(flex: 2, child: _buildName()),
           Expanded(flex: 2, child: _buildDescription()),
-          _buildProperties(),
+          _buildProperties(wide: true),
           _buildExpandOrCollapseExtendedStatusButton(),
         ]);
   }
@@ -198,7 +194,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     }
   }
 
-  Widget _buildProperties() {
+  Widget _buildProperties({required bool wide}) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(children: [
         SettingControlWidget(
