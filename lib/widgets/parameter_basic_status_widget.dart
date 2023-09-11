@@ -16,16 +16,6 @@ class ParameterBasicStatusWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return wide ? _buildWide(context) : _buildNarrow(context);
-  }
-
-  Widget _buildNarrow(BuildContext context) {
-    return Row(
-        key: Key("parameter_basicstatus_$drf"),
-        children: _buildBasicStatusWidgets());
-  }
-
-  Widget _buildWide(BuildContext context) {
     return Column(
         key: Key("parameter_basicstatus_$drf"),
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -82,11 +72,9 @@ class ParameterBasicStatusWidget extends StatelessWidget {
     return Row(
         key: Key("parameter_basicstatus_${forProperty}_$drf"),
         children: [
-          wide
-              ? Expanded(
-                  child: Text(withLabel,
-                      style: labelsStyle, textAlign: TextAlign.right))
-              : Container(),
+          Expanded(
+              child: Text(withLabel,
+                  style: labelsStyle, textAlign: TextAlign.right)),
           SizedBox(width: 8.0, child: Text(withCharacter, style: valueStyle))
         ]);
   }
