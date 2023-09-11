@@ -56,3 +56,33 @@ const deletepageentry = r"""
         }
       }
       """;
+
+const addentrylist =  r"""
+      mutation AddEntryList($newEntryList: [newParamEntry]!) {
+        addEntryList(newEntryList: $newEntryList) {
+          entryid
+        }
+      }
+""";
+/*[newParamEntry] = [{pageid, position, text, type}, ...] */
+
+const updateentrylist =  r"""
+      mutation UpdateEntryList($updEntryList: [ParamEntryInput]!) {
+        updateEntryList(updEntryList: $updEntryList) {
+          code
+          message
+        }
+      }
+""";
+/*[ParamEntryInput] = [{entryid, position, text, type}, ...] */
+ 
+const deleteentrylist =  r"""
+      mutation DeleteEntryList($delEntryList: [EntryIdInput]!) {
+        deleteEntryList(delEntryList: $delEntryList) {
+          code,
+          message
+        }
+      }
+""";
+/*[EntryIdInput] = [{entryid}, ...] */
+
