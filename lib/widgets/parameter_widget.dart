@@ -148,8 +148,10 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         _buildName(),
         _buildDescription(),
         const SizedBox(height: 10.0),
-        _buildProperties(wide: false),
-        _buildExpandOrCollapseExtendedStatusButton(),
+        Row(children: [
+          Expanded(child: _buildProperties(wide: false)),
+          _buildExpandOrCollapseExtendedStatusButton()
+        ]),
         Visibility(
             visible: _displayExtendedStatus, child: _buildExtendedStatusRow())
       ]),
@@ -195,6 +197,10 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   Widget _buildProperties({required bool wide}) {
+    return wide ? _layoutPropertiesWide() : _layoutPropertiesNarrow();
+  }
+
+  Widget _layoutPropertiesWide() {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(children: [
         SettingControlWidget(
@@ -202,7 +208,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
             drf: widget.drf,
             displayUnits: widget.displayUnits,
             units: settingUnits,
-            wide: widget.wide),
+            wide: true),
         const SizedBox(width: 8.0),
         StreamBuilder(
             stream: widget.dpm.monitorDevices([widget.drf]),
@@ -218,6 +224,35 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
               ? ParameterAlarmDetailsWidget(
                   drf: widget.drf, alarmBlock: deviceInfo!.alarm!)
               : Container()),
+    ]);
+  }
+
+  Widget _layoutPropertiesNarrow() {
+    return Row(children: [
+      Expanded(
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        SettingControlWidget(
+            key: Key("parameter_setting_${widget.drf}"),
+            drf: widget.drf,
+            displayUnits: widget.displayUnits,
+            units: settingUnits,
+            wide: false),
+        const SizedBox(width: 8.0),
+        StreamBuilder(
+            stream: widget.dpm.monitorDevices([widget.drf]),
+            builder: _readingBuilder),
+        const SizedBox(width: 8.0),
+        Visibility(
+            visible: widget.displayAlarmDetails,
+            child: (deviceInfo != null && deviceInfo!.alarm != null)
+                ? ParameterAlarmDetailsWidget(
+                    drf: widget.drf, alarmBlock: deviceInfo!.alarm!)
+                : Container())
+      ])),
+      StreamBuilder(
+          stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
+          builder: _basicStatusBuilder)
     ]);
   }
 
