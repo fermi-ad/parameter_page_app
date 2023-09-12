@@ -121,13 +121,13 @@ class ParameterPage {
     switch (from["type"]) {
       case "Comment":
       case "Comments":
-        return CommentEntry(from["text"]!);
+        return CommentEntry(from["text"]!, id: from["entryid"]);
 
       case "Parameter":
-        return ParameterEntry(from["text"]);
+        return ParameterEntry(from["text"], id: from["entryid"]);
 
       case "Expression":
-        return CommentEntry(from["text"]!);
+        return CommentEntry(from["text"]!, id: from["entryid"]);
 
       default:
         throw UnimplementedError("Unexpected PageEntry type");
