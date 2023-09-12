@@ -210,7 +210,7 @@ class GraphQLDpmService extends DpmService {
     // SettingStatus.
 
     xlat(e) => SettingStatus(
-        facilityCode: e.setDevice.status / 256,
+        facilityCode: e.setDevice.status ~/ 256,
         errorCode: e.setDevice.status & 255);
 
     // Build the request.
