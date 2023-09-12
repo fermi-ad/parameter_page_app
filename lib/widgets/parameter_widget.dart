@@ -126,33 +126,40 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   Widget _buildWide(BuildContext context) {
-    return ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: 34.0),
-        child: Column(children: [
-          _buildParameterDetailsRow(),
-          Visibility(
-              visible: _displayExtendedStatus, child: _buildExtendedStatusRow())
-        ]));
+    return Card(
+        child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 34.0),
+            child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 40.0),
+                child: Column(children: [
+                  _buildParameterDetailsRow(),
+                  Visibility(
+                      visible: _displayExtendedStatus,
+                      child: _buildExtendedStatusRow())
+                ]))));
   }
 
   Widget _buildNarrow(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
+    return Card(
+        child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         _buildName(),
         _buildDescription(),
-        Row(children: [
-          Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: _buildProperties()),
-          const Spacer(),
-          SizedBox(
-              width: 24.0, child: _buildExpandOrCollapseExtendedStatusButton())
-        ]),
+        const SizedBox(height: 10.0),
+        Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [Expanded(child: _buildProperties(wide: false))]),
         Visibility(
-            visible: _displayExtendedStatus, child: _buildExtendedStatusRow())
+            visible: _displayExtendedStatus, child: _buildExtendedStatusRow()),
+        Row(children: [
+          const Spacer(),
+          _buildExpandOrCollapseExtendedStatusButton(),
+          const Spacer()
+        ])
       ]),
-    );
+    ));
   }
 
   Widget _buildParameterDetailsRow() {
@@ -162,8 +169,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         children: [
           Expanded(flex: 2, child: _buildName()),
           Expanded(flex: 2, child: _buildDescription()),
-          _buildProperties(),
-          _buildExpandOrCollapseExtendedStatusButton(),
+          _buildProperties(wide: true),
+          SizedBox(
+              width: 32.0, child: _buildExpandOrCollapseExtendedStatusButton()),
         ]);
   }
 
@@ -182,7 +190,10 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
           overflow: TextOverflow.ellipsis,
           deviceInfo?.description ?? "",
           style: widget.wide
-              ? null
+              ? Theme.of(context)
+                  .textTheme
+                  .bodyLarge!
+                  .copyWith(fontStyle: FontStyle.italic)
               : Theme.of(context)
                   .textTheme
                   .bodySmall!
@@ -190,7 +201,11 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     }
   }
 
-  Widget _buildProperties() {
+  Widget _buildProperties({required bool wide}) {
+    return wide ? _layoutPropertiesWide() : _layoutPropertiesNarrow();
+  }
+
+  Widget _layoutPropertiesWide() {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(children: [
         SettingControlWidget(
@@ -198,15 +213,19 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
             drf: widget.drf,
             displayUnits: widget.displayUnits,
             units: settingUnits,
-            wide: widget.wide),
+            wide: true),
         const SizedBox(width: 8.0),
-        StreamBuilder(
-            stream: widget.dpm.monitorDevices([widget.drf]),
-            builder: _readingBuilder),
+        SizedBox(
+            width: 128.0,
+            child: StreamBuilder(
+                stream: widget.dpm.monitorDevices([widget.drf]),
+                builder: _readingBuilder)),
         const SizedBox(width: 8.0),
-        StreamBuilder(
-            stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
-            builder: _basicStatusBuilder)
+        SizedBox(
+            width: 128.0,
+            child: StreamBuilder(
+                stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
+                builder: _basicStatusBuilder))
       ]),
       Visibility(
           visible: widget.displayAlarmDetails,
@@ -217,15 +236,41 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     ]);
   }
 
+  Widget _layoutPropertiesNarrow() {
+    return Row(children: [
+      Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+        SettingControlWidget(
+            key: Key("parameter_setting_${widget.drf}"),
+            drf: widget.drf,
+            displayUnits: widget.displayUnits,
+            units: settingUnits,
+            wide: false),
+        const SizedBox(width: 8.0),
+        StreamBuilder(
+            stream: widget.dpm.monitorDevices([widget.drf]),
+            builder: _readingBuilder),
+        const SizedBox(width: 8.0),
+        Visibility(
+            visible: widget.displayAlarmDetails,
+            child: (deviceInfo != null && deviceInfo!.alarm != null)
+                ? ParameterAlarmDetailsWidget(
+                    drf: widget.drf, alarmBlock: deviceInfo!.alarm!)
+                : Container()),
+        StreamBuilder(
+            stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
+            builder: _basicStatusBuilder)
+      ]))
+    ]);
+  }
+
   Widget _buildExpandOrCollapseExtendedStatusButton() {
     if (_hasExtendedStatusProperty()) {
-      return SizedBox(
-          width: 32.0,
-          child: _displayExtendedStatus
-              ? _buildExpandExtendedStatusButton()
-              : _buildCollapseExtendedStatusButton());
+      return _displayExtendedStatus
+          ? _buildExpandExtendedStatusButton()
+          : _buildCollapseExtendedStatusButton();
     } else {
-      return const SizedBox(width: 32.0);
+      return Container();
     }
   }
 
@@ -301,12 +346,8 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
 
   Widget _basicStatusBuilder(context, snapshot) {
     if (snapshot.connectionState == ConnectionState.active) {
-      return SizedBox(
-          width: widget.wide ? 128.0 : 32.0,
-          child: ParameterBasicStatusWidget(
-              drf: widget.drf,
-              digitalStatus: snapshot.data!,
-              wide: widget.wide));
+      return ParameterBasicStatusWidget(
+          drf: widget.drf, digitalStatus: snapshot.data!, wide: widget.wide);
     } else {
       return SizedBox(width: widget.wide ? 128.0 : 32.0);
     }
@@ -327,7 +368,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         : (units == null
             ? Text(key: key, textAlign: TextAlign.end, value)
             : Row(key: key, children: [
-                Text(textAlign: TextAlign.end, value),
+                Expanded(child: Text(textAlign: TextAlign.end, value)),
                 const SizedBox(width: 6.0),
                 Text(units, style: const TextStyle(color: Colors.grey))
               ]));

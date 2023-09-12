@@ -8,23 +8,7 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Delete Entry from Page', () {
-    testWidgets('Confirm no, should not delete entry', (tester) async {
-      // Given the test page is loaded
-      //   the 'G:AMANDA' device is on the page
-      //   and I am in edit mode
-      await startParameterPageApp(tester);
-      await navigateToTestPage1(tester);
-      assertParametersAreOnPage(["G:AMANDA"]);
-      await enterEditMode(tester);
-
-      // When I attempt to delete the parameter entry but select No from the confirmation dialog...
-      await deleteRow(tester, index: 2, confirm: false);
-
-      // Then the parameter is still on the page
-      assertParametersAreOnPage(["G:AMANDA"]);
-    });
-
-    testWidgets('Confirm yes, should delete entry', (tester) async {
+    testWidgets('Click delete, should delete entry', (tester) async {
       // Given the test page is loaded
       //    the 'G:AMANDA' device is on the page
       //    and I am in the edit mode

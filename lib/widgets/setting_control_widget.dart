@@ -55,30 +55,19 @@ class _SettingControlState extends State<SettingControlWidget> {
       _buildUndo(context),
       const SizedBox(width: 4.0),
       SizedBox(width: 128.0, child: _buildStates(context)),
-      const SizedBox(width: 4.0),
       SizedBox(width: 48.0, child: _buildUnits()),
-      const SizedBox(width: 4.0),
       SizedBox(width: 32.0, child: _buildSubmitButton(context)),
-      const SizedBox(width: 4.0),
       SizedBox(width: 32.0, child: _buildCancelButton())
     ]);
   }
 
   Widget _buildNarrow(BuildContext context) {
-    return Column(children: [
-      Row(children: [
-        SizedBox(width: 64.0, child: _buildStates(context)),
-        const SizedBox(width: 4.0),
-        SizedBox(width: 48.0, child: _buildUnits()),
-        const SizedBox(width: 4.0),
-        SizedBox(width: 32.0, child: _buildSubmitButton(context)),
-        const SizedBox(width: 4.0),
-        SizedBox(width: 32.0, child: _buildCancelButton())
-      ]),
-      Row(children: [
-        SizedBox(width: 64.0, child: _buildUndo(context)),
-        const SizedBox(width: 124.0)
-      ])
+    return Row(children: [
+      _buildUndo(context),
+      Expanded(child: _buildStates(context)),
+      _buildUnits(),
+      _buildSubmitButton(context),
+      _buildCancelButton()
     ]);
   }
 
@@ -110,14 +99,19 @@ class _SettingControlState extends State<SettingControlWidget> {
   Widget _buildUnits() {
     return widget.units == null
         ? Container()
-        : Text(widget.units!, style: const TextStyle(color: Colors.grey));
+        : Padding(
+            padding: const EdgeInsets.fromLTRB(4.0, 0.0, 0.0, 0.0),
+            child: Text(widget.units!,
+                style: const TextStyle(color: Colors.grey)));
   }
 
   Widget _buildSubmitButton(BuildContext context) {
     return _state == _SettingControlInternalState.editing
         ? GestureDetector(
             onTap: () => _handleSubmitted(context),
-            child: const Icon(Icons.check_circle, color: Colors.blue))
+            child: const Padding(
+                padding: EdgeInsets.fromLTRB(4.0, 0.0, 0.0, 0.0),
+                child: Icon(Icons.check_circle, color: Colors.blue)))
         : Container();
   }
 
@@ -125,7 +119,9 @@ class _SettingControlState extends State<SettingControlWidget> {
     return _state == _SettingControlInternalState.editing
         ? GestureDetector(
             onTap: _handleAbort,
-            child: const Icon(Icons.cancel, color: Colors.red))
+            child: const Padding(
+                padding: EdgeInsets.fromLTRB(4.0, 0.0, 0.0, 0.0),
+                child: Icon(Icons.cancel, color: Colors.red)))
         : Container();
   }
 
