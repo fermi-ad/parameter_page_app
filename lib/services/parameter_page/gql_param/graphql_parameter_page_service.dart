@@ -1,4 +1,5 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:parameter_page/entities/page_entry.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/parameter_page/gql_param/mutations.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
@@ -72,6 +73,12 @@ class GraphQLParameterPageService extends ParameterPageService {
       {required String id,
       required ParameterPage page,
       required Function() onSuccess}) async {
+    try {
+      await _deleteOldEntries(page);
+    } catch (e) {
+      return Future.error("savePage failure");
+    }
+
     final QueryOptions options = QueryOptions(
       document: gql(addentrylist),
       variables: {'newEntryList': _generateEntryList(pageId: id, from: page)},
@@ -84,6 +91,35 @@ class GraphQLParameterPageService extends ParameterPageService {
     } else {
       onSuccess.call();
     }
+  }
+
+  Future<void> _deleteOldEntries(ParameterPage page) async {
+    var list = _generateDeleteEntryList(from: page);
+    if (list.isEmpty) {
+      return;
+    }
+
+    final QueryOptions options = QueryOptions(
+      document: gql(deleteentrylist),
+      variables: {'delEntryList': list},
+    );
+
+    final QueryResult result = await client.value.query(options);
+
+    if (result.hasException) {
+      return Future.error("GraphQL exception - ${result.exception}.");
+    }
+  }
+
+  List<Map<String, dynamic>> _generateDeleteEntryList(
+      {required ParameterPage from}) {
+    List<Map<String, dynamic>> ret = [];
+    for (PageEntry entry in from.entriesAsList()) {
+      if (entry.id != null) {
+        ret.add({"entryid": entry.id});
+      }
+    }
+    return ret;
   }
 
   List<Map<String, dynamic>> _generateEntryList(

@@ -14,7 +14,7 @@ abstract class PageEntry {
   // The base class takes an optional 'key' parameter. If it
   // isn't provided a key, it'll use `UniqueKey()`.
 
-  PageEntry({Key? key, String? id}) : key = key ?? UniqueKey();
+  PageEntry({Key? key, this.id}) : key = key ?? UniqueKey();
 
   Widget buildEntry(
       BuildContext context, bool editMode, bool wide, DisplaySettings settings);
@@ -35,7 +35,7 @@ abstract class PageEntry {
 class CommentEntry extends PageEntry {
   final String text;
 
-  CommentEntry(this.text, {Key? key, String? id}) : super(key: key, id: id);
+  CommentEntry(this.text, {super.key, super.id});
 
   @override
   Widget buildEntry(BuildContext context, bool editMode, bool wide,
