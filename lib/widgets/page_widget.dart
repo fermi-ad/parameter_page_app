@@ -105,31 +105,24 @@ class PageWidgetState extends State<PageWidget> {
 
   Widget _buildRow(BuildContext context, PageEntry entry, int index, bool wide,
       ParameterPage page) {
-    return Padding(
-      padding: const EdgeInsets.all(2.0),
-      child: page.editing()
-          ? Row(children: [
-              Expanded(
-                  child: entry.buildEntry(
-                      context, page.editing(), wide, settings)),
-              const SizedBox(width: 8.0),
-              GestureDetector(
-                  onTap: () async {
-                    var result = await _shouldDeleteRow(context);
-
-                    if (result ?? false) {
-                      setState(() {
-                        page.removeEntry(at: index);
-                      });
-                    }
-                  },
-                  child: const IconButton(
-                      visualDensity: VisualDensity.compact,
-                      onPressed: null,
-                      icon: Icon(Icons.delete)))
-            ])
-          : entry.buildEntry(context, page.editing(), wide, settings),
-    );
+    return page.editing()
+        ? Row(children: [
+            Expanded(
+                child:
+                    entry.buildEntry(context, page.editing(), wide, settings)),
+            const SizedBox(width: 8.0),
+            GestureDetector(
+                onTap: () async {
+                  setState(() {
+                    page.removeEntry(at: index);
+                  });
+                },
+                child: const IconButton(
+                    visualDensity: VisualDensity.compact,
+                    onPressed: null,
+                    icon: Icon(Icons.delete)))
+          ])
+        : entry.buildEntry(context, page.editing(), wide, settings);
   }
 
   // Moves an entry from one location to another in the parameter list. It
@@ -138,28 +131,6 @@ class PageWidgetState extends State<PageWidget> {
     setState(() {
       onPage.reorderEntry(atIndex: oldIndex, toIndex: newIndex);
     });
-  }
-
-  // Prompts the user to see if they want to remove a row. Return `true` or
-  // `false` based on response.
-  Future<bool?> _shouldDeleteRow(BuildContext context) {
-    return showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: const Text('Delete Row'),
-        content: const Text('Are you sure you want to delete the row?'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
   }
 
   Widget _buildFloatingActionBar(ParameterPage page) {

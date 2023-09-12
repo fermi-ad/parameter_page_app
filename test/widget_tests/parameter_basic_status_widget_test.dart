@@ -121,7 +121,7 @@ void main() {
       assertBasicStatusLabels(areVisible: true);
     });
 
-    testWidgets('When wide = false, labels are hidden',
+    testWidgets('When wide = false, labels are displayed',
         (WidgetTester tester) async {
       // Given a ParameterBasicStatusWidget instantiated for a device called G:AMANDA
       // with all of it's basic status properties filled in
@@ -137,8 +137,8 @@ void main() {
       await tester.pumpWidget(app);
 
       // Then all of the attributes are displayed
-      // ... and the attribute labels are hidden
-      assertBasicStatusLabels(areVisible: false);
+      // ... and the attribute labels are visible
+      assertBasicStatusLabels(areVisible: true);
     });
   });
 }

@@ -89,8 +89,7 @@ Future<void> cancelEditMode(tester) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> deleteRow(tester,
-    {required int index, bool confirm = true}) async {
+Future<void> deleteRow(tester, {required int index}) async {
   final trashCansFinder = find.byIcon(Icons.delete);
 
   await pumpUntilFound(tester, trashCansFinder);
@@ -107,14 +106,6 @@ Future<void> deleteRow(tester,
   }
 
   await tester.tap(rowHandleFinder);
-  await tester.pumpAndSettle();
-
-  if (confirm) {
-    await tester.tap(find.text("OK"));
-  } else {
-    await tester.tap(find.text("Cancel"));
-  }
-
   await tester.pumpAndSettle();
 }
 
