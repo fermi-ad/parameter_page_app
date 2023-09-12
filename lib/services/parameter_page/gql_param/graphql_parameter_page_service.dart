@@ -72,8 +72,32 @@ class GraphQLParameterPageService extends ParameterPageService {
       {required String id,
       required ParameterPage page,
       required Function() onSuccess}) async {
-    return Future.error(
-        "GraphQLParameterPageService savePage() not implemented yet.");
+    final QueryOptions options = QueryOptions(
+      document: gql(addentrylist),
+      variables: {'newEntryList': _generateEntryList(pageId: id, from: page)},
+    );
+
+    final QueryResult result = await client.value.query(options);
+
+    if (result.hasException) {
+      return Future.error("GraphQL exception - ${result.exception}.");
+    } else {
+      onSuccess.call();
+    }
+  }
+
+  List<Map<String, dynamic>> _generateEntryList(
+      {required String pageId, required ParameterPage from}) {
+    int n = 0;
+    return from
+        .entriesAsList()
+        .map((entry) => {
+              'pageid': pageId,
+              'position': n += 1,
+              'text': entry.entryText(),
+              'type': entry.typeAsString
+            })
+        .toList();
   }
 
   @override

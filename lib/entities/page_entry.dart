@@ -26,6 +26,8 @@ abstract class PageEntry {
   int get hashCode => entryText().hashCode;
 
   String entryText();
+
+  String get typeAsString => "PageEntry";
 }
 
 class CommentEntry extends PageEntry {
@@ -41,6 +43,9 @@ class CommentEntry extends PageEntry {
 
   @override
   String entryText() => text;
+
+  @override
+  String get typeAsString => "Comments";
 }
 
 class ParameterEntry extends PageEntry {
@@ -64,4 +69,7 @@ class ParameterEntry extends PageEntry {
 
   @override
   String entryText() => drf;
+
+  @override
+  String get typeAsString => "Parameter";
 }
