@@ -9,10 +9,12 @@ import '../widgets/parameter_widget.dart';
 abstract class PageEntry {
   final Key key;
 
+  String? id;
+
   // The base class takes an optional 'key' parameter. If it
   // isn't provided a key, it'll use `UniqueKey()`.
 
-  PageEntry({Key? key}) : key = key ?? UniqueKey();
+  PageEntry({Key? key, this.id}) : key = key ?? UniqueKey();
 
   Widget buildEntry(
       BuildContext context, bool editMode, bool wide, DisplaySettings settings);
@@ -26,12 +28,14 @@ abstract class PageEntry {
   int get hashCode => entryText().hashCode;
 
   String entryText();
+
+  String get typeAsString => "PageEntry";
 }
 
 class CommentEntry extends PageEntry {
   final String text;
 
-  CommentEntry(this.text, {Key? key}) : super(key: key);
+  CommentEntry(this.text, {super.key, super.id});
 
   @override
   Widget buildEntry(BuildContext context, bool editMode, bool wide,
@@ -41,13 +45,16 @@ class CommentEntry extends PageEntry {
 
   @override
   String entryText() => text;
+
+  @override
+  String get typeAsString => "Comments";
 }
 
 class ParameterEntry extends PageEntry {
   final String drf;
   final String? label;
 
-  ParameterEntry(this.drf, {this.label, super.key});
+  ParameterEntry(this.drf, {this.label, super.key, super.id});
 
   @override
   Widget buildEntry(BuildContext context, bool editMode, bool wide,
@@ -64,4 +71,7 @@ class ParameterEntry extends PageEntry {
 
   @override
   String entryText() => drf;
+
+  @override
+  String get typeAsString => "Parameter";
 }

@@ -240,19 +240,20 @@ class _ParameterPageScaffoldWidgetState
   }
 
   Future<void> _saveExistingPage({required Function() onSuccess}) async {
-    widget.pageService
-        .renamePage(id: _page!.id!, newTitle: _page!.title)
-        .then((String newTitle) {
-      _savePageEntries(
+    try {
+      await widget.pageService
+          .renamePage(id: _page!.id!, newTitle: _page!.title);
+
+      await _savePageEntries(
           pageId: _page!.id!,
           page: _page!,
           onSuccess: () {
             _page!.commit();
             onSuccess.call();
           });
-    }).onError((error, stackTrace) {
-      _handleSaveError(error, stackTrace);
-    });
+    } catch (e, stackTrace) {
+      _handleSaveError(e, stackTrace);
+    }
   }
 
   Future<void> _savePageEntries(
