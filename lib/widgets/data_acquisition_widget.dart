@@ -30,7 +30,7 @@ class DataAcquisitionWidget extends InheritedWidget {
   }
 
   bool isProcessVariable(String val) {
-    var pvRegEx = RegExp(r"^([A-Za-z0-9:]{1,255})$");
+    var pvRegEx = RegExp(r"^([A-Za-z0-9:_]{1,255})$");
 
     return pvRegEx.hasMatch(val);
   }
