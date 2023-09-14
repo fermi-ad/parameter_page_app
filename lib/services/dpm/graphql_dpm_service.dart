@@ -14,6 +14,7 @@ import 'package:parameter_page/gql-dpm/schema/__generated__/set_device.req.gql.d
 import 'package:parameter_page/gql-dpm/schema/__generated__/stream_data.data.gql.dart';
 import 'package:parameter_page/gql-dpm/schema/__generated__/stream_data.req.gql.dart';
 import 'package:parameter_page/gql-dpm/schema/__generated__/stream_data.var.gql.dart';
+import 'package:parameter_page/widgets/util.dart';
 
 import 'dart:developer' as developer;
 
@@ -196,7 +197,7 @@ class GraphQLDpmService extends DpmService {
 
   @override
   Stream<Reading> monitorSettingProperty(List<String> drfs) =>
-      monitorDevices(drfs);
+      monitorDevices(Util.toSettingDRFs(from: drfs));
 
   // Performs a setting request. `forDRF` is the DRF string representing the
   // target device and property to receive the setting. `newSetting` is the
