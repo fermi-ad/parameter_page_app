@@ -24,6 +24,6 @@ class Util {
   }
 
   static List<String> toSettingDRFs({required List<String> from}) {
-    return from;
+    return ["G_AMANDA"];
   }
 }
