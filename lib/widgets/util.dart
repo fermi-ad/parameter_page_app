@@ -24,6 +24,12 @@ class Util {
   }
 
   static List<String> toSettingDRFs({required List<String> from}) {
-    return ["G_AMANDA"];
+    List<String> ret = [];
+
+    for (String drf in from) {
+      ret.add(drf.replaceFirst(":", "_"));
+    }
+
+    return ret;
   }
 }

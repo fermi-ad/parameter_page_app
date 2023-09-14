@@ -17,7 +17,8 @@ void main() {
 
     test("ACNET device with colon, replace with _", () {
       assertToSettingDRFs(
-          input: ["G:AMANDA", "I:BEAM"], output: ["G_AMANDA", "I_BEAM"]);
+          input: ["G:AMANDA", "I:BEAM", "Z:BTE200_TEMP"],
+          output: ["G_AMANDA", "I_BEAM", "Z_BTE200_TEMP"]);
     });
   });
 }
