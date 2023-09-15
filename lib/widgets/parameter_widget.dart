@@ -216,14 +216,16 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   Widget _layoutPropertiesWide() {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(children: [
-        Visibility(
-            visible: hasSettingProperty,
-            child: SettingControlWidget(
-                key: Key("parameter_setting_${widget.drf}"),
-                drf: widget.drf,
-                displayUnits: widget.displayUnits,
-                units: settingUnits,
-                wide: true)),
+        SizedBox(
+            width: 300,
+            child: Visibility(
+                visible: hasSettingProperty,
+                child: SettingControlWidget(
+                    key: Key("parameter_setting_${widget.drf}"),
+                    drf: widget.drf,
+                    displayUnits: widget.displayUnits,
+                    units: settingUnits,
+                    wide: true))),
         const SizedBox(width: 8.0),
         SizedBox(
             width: 128.0,
