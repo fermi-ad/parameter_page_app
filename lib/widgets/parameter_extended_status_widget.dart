@@ -14,7 +14,7 @@ class ParameterExtendedStatusWidget extends StatelessWidget {
     return Row(key: Key("parameter_extendeddigitalstatus_$drf"), children: [
       const Spacer(),
       ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 340),
+          constraints: const BoxConstraints(maxWidth: 320),
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: _buildRows())),

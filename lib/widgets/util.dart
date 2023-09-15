@@ -22,4 +22,14 @@ class Util {
         return Colors.yellow;
     }
   }
+
+  static List<String> toSettingDRFs({required List<String> from}) {
+    List<String> ret = [];
+
+    for (String drf in from) {
+      ret.add(drf.replaceFirst(":", "_"));
+    }
+
+    return ret;
+  }
 }

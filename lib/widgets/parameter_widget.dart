@@ -76,6 +76,14 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   DeviceInfo? deviceInfo;
   bool _displayExtendedStatus = false;
 
+  bool get hasSettingProperty {
+    return deviceInfo?.setting != null;
+  }
+
+  bool get hasReadingProperty {
+    return deviceInfo?.reading != null;
+  }
+
   String? get readingUnits {
     switch (widget.displayUnits) {
       case DisplayUnits.commonUnits:
@@ -208,18 +216,24 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   Widget _layoutPropertiesWide() {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(children: [
-        SettingControlWidget(
-            key: Key("parameter_setting_${widget.drf}"),
-            drf: widget.drf,
-            displayUnits: widget.displayUnits,
-            units: settingUnits,
-            wide: true),
+        SizedBox(
+            width: 300,
+            child: Visibility(
+                visible: hasSettingProperty,
+                child: SettingControlWidget(
+                    key: Key("parameter_setting_${widget.drf}"),
+                    drf: widget.drf,
+                    displayUnits: widget.displayUnits,
+                    units: settingUnits,
+                    wide: true))),
         const SizedBox(width: 8.0),
         SizedBox(
             width: 128.0,
-            child: StreamBuilder(
-                stream: widget.dpm.monitorDevices([widget.drf]),
-                builder: _readingBuilder)),
+            child: Visibility(
+                visible: hasReadingProperty,
+                child: StreamBuilder(
+                    stream: widget.dpm.monitorDevices([widget.drf]),
+                    builder: _readingBuilder))),
         const SizedBox(width: 8.0),
         SizedBox(
             width: 128.0,
@@ -240,16 +254,20 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     return Row(children: [
       Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-        SettingControlWidget(
-            key: Key("parameter_setting_${widget.drf}"),
-            drf: widget.drf,
-            displayUnits: widget.displayUnits,
-            units: settingUnits,
-            wide: false),
+        Visibility(
+            visible: hasSettingProperty,
+            child: SettingControlWidget(
+                key: Key("parameter_setting_${widget.drf}"),
+                drf: widget.drf,
+                displayUnits: widget.displayUnits,
+                units: settingUnits,
+                wide: false)),
         const SizedBox(width: 8.0),
-        StreamBuilder(
-            stream: widget.dpm.monitorDevices([widget.drf]),
-            builder: _readingBuilder),
+        Visibility(
+            visible: hasReadingProperty,
+            child: StreamBuilder(
+                stream: widget.dpm.monitorDevices([widget.drf]),
+                builder: _readingBuilder)),
         const SizedBox(width: 8.0),
         Visibility(
             visible: widget.displayAlarmDetails,
