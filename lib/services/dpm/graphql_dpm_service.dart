@@ -120,13 +120,11 @@ class GraphQLDpmService extends DpmService {
         setting: sProp,
       );
     } else {
-      return const DeviceInfo(
-        di: 0,
-        name: "",
-        description: "",
-        reading: null,
-        setting: null,
-      );
+      if (e is GGetDeviceInfoData_deviceInfo_result__asErrorReply) {
+        throw UnimplementedError("getDeviceInfo returned an error");
+      } else {
+        throw UnimplementedError("getDeviceInfo unexpected response");
+      }
     }
   }
 
