@@ -254,16 +254,20 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     return Row(children: [
       Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-        SettingControlWidget(
-            key: Key("parameter_setting_${widget.drf}"),
-            drf: widget.drf,
-            displayUnits: widget.displayUnits,
-            units: settingUnits,
-            wide: false),
+        Visibility(
+            visible: hasSettingProperty,
+            child: SettingControlWidget(
+                key: Key("parameter_setting_${widget.drf}"),
+                drf: widget.drf,
+                displayUnits: widget.displayUnits,
+                units: settingUnits,
+                wide: false)),
         const SizedBox(width: 8.0),
-        StreamBuilder(
-            stream: widget.dpm.monitorDevices([widget.drf]),
-            builder: _readingBuilder),
+        Visibility(
+            visible: hasReadingProperty,
+            child: StreamBuilder(
+                stream: widget.dpm.monitorDevices([widget.drf]),
+                builder: _readingBuilder)),
         const SizedBox(width: 8.0),
         Visibility(
             visible: widget.displayAlarmDetails,
