@@ -80,6 +80,10 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     return deviceInfo?.setting != null;
   }
 
+  bool get hasReadingProperty {
+    return deviceInfo?.reading != null;
+  }
+
   String? get readingUnits {
     switch (widget.displayUnits) {
       case DisplayUnits.commonUnits:
@@ -223,9 +227,11 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         const SizedBox(width: 8.0),
         SizedBox(
             width: 128.0,
-            child: StreamBuilder(
-                stream: widget.dpm.monitorDevices([widget.drf]),
-                builder: _readingBuilder)),
+            child: Visibility(
+                visible: hasReadingProperty,
+                child: StreamBuilder(
+                    stream: widget.dpm.monitorDevices([widget.drf]),
+                    builder: _readingBuilder))),
         const SizedBox(width: 8.0),
         SizedBox(
             width: 128.0,
