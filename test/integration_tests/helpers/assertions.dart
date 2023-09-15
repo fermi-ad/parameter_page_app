@@ -70,6 +70,11 @@ void assertParameterHasDetails(String parameter,
   }
 }
 
+void assertParameterSettingProperty(String drf, {required bool isVisible}) {
+  expect(find.byKey(Key("parameter_settingdisplay_$drf")),
+      isVisible ? findsOneWidget : findsNothing);
+}
+
 void assertAlarmValues(
     {required String forDRF,
     required String nominal,

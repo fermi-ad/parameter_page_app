@@ -61,5 +61,24 @@ void main() {
           settingValue: "50.00",
           readingValue: "100.0");
     });
+
+    testWidgets(
+        "Display ACNET device with only reading property, no setting should be displayed",
+        (WidgetTester tester) async {
+      //Given test page 1 is loaded
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+
+      // When I wait for the data to load
+      await waitForDataToLoadFor(tester, "Z:NO_SET");
+
+      // Then there should be no setting property display
+      assertParameterHasDetails("Z:NO_SET", readingValue: "100.0");
+      assertParameterSettingProperty("Z:NO_SET", isVisible: false);
+    });
+
+    testWidgets(
+        "Display ACNET device with only setting property, no reading should be displaed",
+        (WidgetTester tester) async {});
   });
 }

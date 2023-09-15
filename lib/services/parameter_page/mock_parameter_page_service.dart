@@ -242,6 +242,20 @@ class MockParameterPageService extends ParameterPageService {
         "position": "7",
         "text": "Z:INC_SETTING",
         "type": "Parameter"
+      },
+      {
+        "entryid": "14",
+        "pageid": "4",
+        "position": "8",
+        "text": "Z:NO_SET",
+        "type": "Parameter"
+      },
+      {
+        "entryid": "15",
+        "pageid": "4",
+        "position": "9",
+        "text": "Z:NO_READ",
+        "type": "Parameter"
       }
     ]
   };
