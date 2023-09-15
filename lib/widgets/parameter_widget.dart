@@ -76,6 +76,10 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   DeviceInfo? deviceInfo;
   bool _displayExtendedStatus = false;
 
+  bool get hasSettingProperty {
+    return deviceInfo?.setting != null;
+  }
+
   String? get readingUnits {
     switch (widget.displayUnits) {
       case DisplayUnits.commonUnits:
@@ -208,12 +212,14 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   Widget _layoutPropertiesWide() {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(children: [
-        SettingControlWidget(
-            key: Key("parameter_setting_${widget.drf}"),
-            drf: widget.drf,
-            displayUnits: widget.displayUnits,
-            units: settingUnits,
-            wide: true),
+        Visibility(
+            visible: hasSettingProperty,
+            child: SettingControlWidget(
+                key: Key("parameter_setting_${widget.drf}"),
+                drf: widget.drf,
+                displayUnits: widget.displayUnits,
+                units: settingUnits,
+                wide: true)),
         const SizedBox(width: 8.0),
         SizedBox(
             width: 128.0,
