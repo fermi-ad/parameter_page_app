@@ -84,6 +84,10 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     return deviceInfo?.reading != null;
   }
 
+  bool get hasBasicStatusProperty {
+    return true;
+  }
+
   String? get readingUnits {
     switch (widget.displayUnits) {
       case DisplayUnits.commonUnits:
@@ -195,9 +199,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
 
   Widget _buildDescription() {
     if (_deviceInfoFailure) {
-      return Container(
-          key: Key("parameter_infoerror_${widget.drf}"),
-          child: const Text("Failed to get this parameter"));
+      return _buildDeviceInfoFailureError(context);
     } else if (deviceInfo == null) {
       return Container();
     } else {
@@ -215,6 +217,19 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                   .bodySmall!
                   .copyWith(fontStyle: FontStyle.italic, color: Colors.grey));
     }
+  }
+
+  Widget _buildDeviceInfoFailureError(BuildContext context) {
+    return Row(key: Key("parameter_infoerror_${widget.drf}"), children: [
+      const Padding(
+          padding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+          child: Icon(Icons.error, color: Colors.red)),
+      Text("Failed to get this parameter",
+          style: Theme.of(context)
+              .textTheme
+              .bodyLarge!
+              .copyWith(fontStyle: FontStyle.italic, color: Colors.grey))
+    ]);
   }
 
   Widget _buildProperties({required bool wide}) {
@@ -245,9 +260,12 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         const SizedBox(width: 8.0),
         SizedBox(
             width: 128.0,
-            child: StreamBuilder(
-                stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
-                builder: _basicStatusBuilder))
+            child: Visibility(
+                visible: hasBasicStatusProperty,
+                child: StreamBuilder(
+                    stream:
+                        widget.dpm.monitorDigitalStatusDevices([widget.drf]),
+                    builder: _basicStatusBuilder)))
       ]),
       Visibility(
           visible: widget.displayAlarmDetails,
@@ -283,9 +301,11 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                 ? ParameterAlarmDetailsWidget(
                     drf: widget.drf, alarmBlock: deviceInfo!.alarm!)
                 : Container()),
-        StreamBuilder(
-            stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
-            builder: _basicStatusBuilder)
+        Visibility(
+            visible: hasBasicStatusProperty,
+            child: StreamBuilder(
+                stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
+                builder: _basicStatusBuilder))
       ]))
     ]);
   }

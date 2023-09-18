@@ -42,6 +42,7 @@ void main() async {
 (DpmService, ParameterPageService, UserDeviceService) _configureMockServices() {
   mockDPMService = MockDpmService();
   mockDPMService!.enablePeriodSettingStream();
+  // mockDPMService!.getDeviceInfoShouldFail = true;
 
   mockParameterPageService = MockParameterPageService();
 
