@@ -80,6 +80,17 @@ void assertParameterReadingProperty(String drf, {required bool isVisible}) {
       isVisible ? findsOneWidget : findsNothing);
 }
 
+void assertParameterInfoError(String drf,
+    {required bool isVisible, String? messageIs}) {
+  final errorFinder = find.byKey(Key("parameter_infoerror_$drf"));
+  expect(errorFinder, isVisible ? findsOneWidget : findsNothing);
+
+  if (messageIs != null) {
+    expect(find.descendant(of: errorFinder, matching: find.text(messageIs)),
+        findsOneWidget);
+  }
+}
+
 void assertAlarmValues(
     {required String forDRF,
     required String nominal,

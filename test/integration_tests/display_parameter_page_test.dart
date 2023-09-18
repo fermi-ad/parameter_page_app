@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:parameter_page/main.dart';
 
 import 'helpers/assertions.dart';
 import 'helpers/actions.dart';
@@ -90,6 +91,20 @@ void main() {
       // Then there should be no reading property display
       assertParameterHasDetails("Z:NO_READ", settingValue: "50.00");
       assertParameterReadingProperty("Z:NO_READ", isVisible: false);
+    });
+
+    testWidgets("Connection failure, should display error message",
+        (WidgetTester tester) async {
+      // Given getDeviceInfo(..) will fail
+      await startParameterPageApp(tester);
+      mockDPMService!.getDeviceInfoShouldFail = true;
+
+      // When I open Test Page 1
+      await navigateToTestPage1(tester);
+
+      // Then an error message should be displayed
+      assertParameterInfoError("Z:BTE200_TEMP",
+          isVisible: true, messageIs: "Failed to get this parameter");
     });
   });
 }

@@ -3,12 +3,18 @@ import 'dart:async';
 import 'package:parameter_page/services/dpm/dpm_service.dart';
 
 class MockDpmService extends DpmService {
+  bool getDeviceInfoShouldFail = false;
+
   final bool useEmptyStream;
 
   MockDpmService({this.useEmptyStream = false});
 
   @override
   Future<List<DeviceInfo>> getDeviceInfo(List<String> devices) async {
+    if (getDeviceInfoShouldFail) {
+      return Future.error("Fake getDeviceInfo(..) failure.");
+    }
+
     return devices.map((drf) {
       switch (drf) {
         case "Z:NO_READ":
