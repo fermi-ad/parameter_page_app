@@ -85,7 +85,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   bool get hasBasicStatusProperty {
-    return true;
+    return deviceInfo?.basicStatus != null;
   }
 
   String? get readingUnits {
