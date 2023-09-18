@@ -95,14 +95,12 @@ void main() {
 
     testWidgets("Connection failure, should display error message",
         (WidgetTester tester) async {
-      // Given test page 1 is loaded
-      // ... and getDeviceInfo(..) will fail
-      mockDPMService!.getDeviceInfoShouldFail = true;
+      // Given getDeviceInfo(..) will fail
       await startParameterPageApp(tester);
-      await navigateToTestPage1(tester);
+      mockDPMService!.getDeviceInfoShouldFail = true;
 
-      // When I wait for the data to load
-      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      // When I open Test Page 1
+      await navigateToTestPage1(tester);
 
       // Then an error message should be displayed
       assertParameterInfoError("Z:BTE200_TEMP",

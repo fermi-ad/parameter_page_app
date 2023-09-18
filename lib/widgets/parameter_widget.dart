@@ -122,7 +122,11 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
 
       future: _setup.then((value) {
         deviceInfo = value.first;
+        _deviceInfoFailure = false;
         return value;
+      }, onError: (Object error) {
+        deviceInfo = const DeviceInfo(di: 0, description: '', name: '');
+        _deviceInfoFailure = true;
       }),
 
       // The builder function decides which renderer to call.
@@ -190,7 +194,11 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   Widget _buildDescription() {
-    if (deviceInfo == null) {
+    if (_deviceInfoFailure) {
+      return Container(
+          key: Key("parameter_infoerror_${widget.drf}"),
+          child: const Text("Failed to get this parameter"));
+    } else if (deviceInfo == null) {
       return Container();
     } else {
       return Text(
@@ -402,4 +410,6 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         return from.data!.rawValue;
     }
   }
+
+  bool _deviceInfoFailure = false;
 }

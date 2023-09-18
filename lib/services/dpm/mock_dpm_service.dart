@@ -11,6 +11,10 @@ class MockDpmService extends DpmService {
 
   @override
   Future<List<DeviceInfo>> getDeviceInfo(List<String> devices) async {
+    if (getDeviceInfoShouldFail) {
+      return Future.error("Fake getDeviceInfo(..) failure.");
+    }
+
     return devices.map((drf) {
       switch (drf) {
         case "Z:NO_READ":
