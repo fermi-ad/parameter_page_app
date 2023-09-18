@@ -101,10 +101,16 @@ void main() {
 
       // When I open Test Page 1
       await navigateToTestPage1(tester);
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
 
       // Then an error message should be displayed
       assertParameterInfoError("Z:BTE200_TEMP",
           isVisible: true, messageIs: "Failed to get this parameter");
+
+      // ... and properties should not be displayesd
+      assertParameterReadingProperty("Z:BTE200_TEMP", isVisible: false);
+      assertParameterSettingProperty("Z:BTE200_TEMP", isVisible: false);
+      assertBasicStatus(forDRF: "Z:BTE200_TEMP", isVisible: false);
     });
   });
 }
