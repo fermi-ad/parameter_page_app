@@ -201,7 +201,10 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     if (_deviceInfoFailure) {
       return _buildDeviceInfoFailureError(context);
     } else if (deviceInfo == null) {
-      return Container();
+      return Row(children: [
+        const CircularProgressIndicator(),
+        Expanded(child: Container())
+      ]);
     } else {
       return Text(
           key: Key("parameter_description_${widget.drf}"),
