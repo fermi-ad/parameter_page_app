@@ -55,7 +55,7 @@ class _SettingControlState extends State<SettingControlWidget> {
       _buildUndo(context),
       const SizedBox(width: 4.0),
       SizedBox(width: 128.0, child: _buildStates(context)),
-      SizedBox(width: 48.0, child: _buildUnits()),
+      SizedBox(width: 56.0, child: _buildUnits()),
       SizedBox(width: 32.0, child: _buildSubmitButton(context)),
       SizedBox(width: 32.0, child: _buildCancelButton())
     ]);
