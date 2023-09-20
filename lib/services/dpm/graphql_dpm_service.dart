@@ -106,10 +106,10 @@ class GraphQLDpmService extends DpmService {
               primaryUnits: e.reading!.primaryUnits,
               commonUnits: e.reading!.commonUnits)
           : null;
-      final DeviceInfoProperty? sProp = e.reading != null
+      final DeviceInfoProperty? sProp = e.setting != null
           ? DeviceInfoProperty(
-              primaryUnits: e.reading!.primaryUnits,
-              commonUnits: e.reading!.commonUnits)
+              primaryUnits: e.setting!.primaryUnits,
+              commonUnits: e.setting!.commonUnits)
           : null;
 
       return DeviceInfo(
