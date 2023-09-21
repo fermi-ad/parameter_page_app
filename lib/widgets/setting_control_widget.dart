@@ -159,6 +159,7 @@ class _SettingControlState extends State<SettingControlWidget> {
           },
           child: TextFormField(
               key: Key("parameter_settingtextfield_${widget.drf}"),
+              autofocus: true,
               textAlign: TextAlign.end,
               controller: _textFieldController,
               onChanged: (event) => _startEditingTimeoutTimer(),

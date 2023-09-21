@@ -23,6 +23,7 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
   Widget build(BuildContext context) {
     _daqWidget = DataAcquisitionWidget.of(context);
     return TextField(
+        autofocus: true,
         maxLines: 1,
         minLines: 1,
         controller: controller,
