@@ -36,6 +36,7 @@ jobs:
           - write_to_parameter_test
           - save_parameter_page_test
           - generate_link_to_parameter_page_test
+          - display_tab_test
 
     steps:
       - name: Checkout code
