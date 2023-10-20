@@ -31,8 +31,8 @@ class GraphQLDpmService extends DpmService {
       : _q = Client(
           link: HttpLink(
             Uri(
-              scheme: "http",
-              host: "localhost", // "acsys-proxy.fnal.gov",
+              scheme: "https",
+              host: "acsys-proxy.fnal.gov",
               port: 8000,
               path: "/acsys",
             ).toString(),
@@ -42,8 +42,8 @@ class GraphQLDpmService extends DpmService {
         _s = Client(
           link: WebSocketLink(
               Uri(
-                scheme: "ws",
-                host: "localhost", // "acsys-proxy.fnal.gov",
+                scheme: "wss",
+                host: "acsys-proxy.fnal.gov",
                 port: 8000,
                 path: "/acsys",
               ).toString(),
