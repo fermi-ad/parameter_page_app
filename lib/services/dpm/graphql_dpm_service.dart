@@ -7,6 +7,7 @@ import 'package:built_collection/built_collection.dart';
 import "package:gql_websocket_link/gql_websocket_link.dart";
 import 'package:gql_http_link/gql_http_link.dart';
 import 'package:ferry/ferry.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:parameter_page/gql-dpm/schema/__generated__/DPM.schema.gql.dart';
 import 'package:parameter_page/gql-dpm/schema/__generated__/get_device_info.req.gql.dart';
 import 'package:parameter_page/gql-dpm/schema/__generated__/get_device_info.data.gql.dart';
@@ -40,17 +41,17 @@ class GraphQLDpmService extends DpmService {
           cache: Cache(),
         ),
         _s = Client(
-          link: WebSocketLink(
-              Uri(
-                scheme: "wss",
-                host: "acsys-proxy.fnal.gov",
-                port: 8000,
-                path: "/acsys",
-              ).toString(),
-              reconnectInterval: const Duration(seconds: 1),
-              initialPayload: {
-                "headers": {"sec-websocket-protocol": "graphql-ws"}
-              }),
+          link: WebSocketLink(null,
+              channelGenerator: () => WebSocketChannel.connect(
+                    Uri(
+                      scheme: "wss",
+                      host: "acsys-proxy.fnal.gov",
+                      port: 8000,
+                      path: "/acsys",
+                    ),
+                    protocols: ["graphql-ws"],
+                  ),
+              reconnectInterval: const Duration(seconds: 1)),
           cache: Cache(),
         );
 
