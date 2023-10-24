@@ -45,7 +45,7 @@ class LandingPageWidget extends StatelessWidget {
   }
 
   Widget _buildWelcomeBanner() {
-    return const Text("Welcome!");
+    return const Text("Hello!");
   }
 
   Widget _buildOpenParameterPageButton() {

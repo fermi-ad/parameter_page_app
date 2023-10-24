@@ -1,10 +1,6 @@
-name: Continuous Integration / Continuous Delivery Workflow for the Parameter Page web application
+name: Continuous Integration for the Parameter Page web application
 
 on:
-  push:
-    branches:
-      - "main"
-
   pull_request:
     branches:
       - "main"
@@ -69,7 +65,7 @@ jobs:
           chromedriver --port=4444 &
           flutter drive --chrome-binary=${{ steps.setup-chrome.outputs.chrome-path }} --driver=test_driver/integration_test.dart --target=test/integration_tests/${{ matrix.test }}.dart -d web-server --dart-define=USE_MOCK_SERVICES=true
 
-  Linter-UnitTest-SmokeTest:
+  Linter-UnitTest-SmokeTest-Build:
     runs-on: ubuntu-latest
 
     steps:
@@ -101,61 +97,6 @@ jobs:
         run: |
           flutter test test/widget_tests
 
-  Build-Dockerize-Push:
-    runs-on: ubuntu-latest
-    needs:  [ Linter-UnitTest-SmokeTest, Integration-tests]
-
-    steps:
-      - name: Checking out source code
-        uses: actions/checkout@v3
-
-      - name: Cache Flutter dependencies
-        uses: actions/cache@v3
-        with:
-          path: /opt/hostedtoolcache/flutter
-          key: flutter-install-cache
-
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: "stable"
-          cache: true
-
-      - name: Resolving dependencies
-        run: flutter pub get
       - name: Building web application
         run: |
           flutter build web
-
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: adregistry.fnal.gov/applications/parameter-page
-          tags: |
-            # This is the default tag for the last commit of the default branch
-            type=edge
-            # This is used on a push event and requires a valid semver Git tag
-            type=semver,pattern={{version}}
-            # This tags PRs with the PR number. E.g., refs/pull/2/merge -> pr-2
-            type=ref,event=pr
-            # This sets the latest tag for default branch
-            type=raw,value=latest,enable={{is_default_branch}}
-            type=raw,value=${{ github.run_number }},enable={{is_default_branch}}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Login to AD Registry, Harbor
-        uses: docker/login-action@v2
-        with:
-          registry: adregistry.fnal.gov
-          username: ${{ secrets.ADREGISTRY_USERNAME }}
-          password: ${{ secrets.ADREGISTRY_SECRET }}
-
-      - name: Building Docker image and pushing to adregistry
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
