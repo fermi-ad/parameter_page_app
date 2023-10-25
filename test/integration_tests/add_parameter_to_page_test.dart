@@ -21,6 +21,20 @@ void main() {
       assertNewEntryEditorHasFocus(tester);
     });
 
+    testWidgets('Add a parameter, focus return to the NewEntryEditor',
+        (tester) async {
+      // Given a new page has been created
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+      await enterEditMode(tester);
+
+      // When I add a parameter
+      await addANewParameter(tester, 'Z:BDCCT');
+
+      // Then the focus should return to the NewEntryEditor text field
+      assertNewEntryEditorHasFocus(tester);
+    });
+
     testWidgets(
         'Submit ACNET parameter, should appear at the bottom of the page',
         (tester) async {
