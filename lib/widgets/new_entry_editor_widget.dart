@@ -19,20 +19,20 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
 
   late DataAcquisitionWidget _daqWidget;
 
-  late FocusNode focusNode;
+  late FocusNode _focusNode;
 
   @override
   void initState() {
     super.initState();
 
-    focusNode = FocusNode();
+    _focusNode = FocusNode();
   }
 
   @override
   Widget build(BuildContext context) {
     _daqWidget = DataAcquisitionWidget.of(context);
     return TextField(
-        focusNode: focusNode,
+        focusNode: _focusNode,
         key: const Key("new_entry_textfield"),
         autofocus: true,
         maxLines: 1,
@@ -41,6 +41,7 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
         onSubmitted: (value) {
           setState(() {
             controller.text = "";
+            _focusNode.requestFocus();
           });
 
           widget.onSubmitted(_generatePageEntryFrom(textInput: value));
