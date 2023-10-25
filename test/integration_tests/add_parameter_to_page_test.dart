@@ -8,6 +8,19 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Add Parameter to Page', () {
+    testWidgets('Enter edit mode, focus should be on the NewEntryEditor',
+        (tester) async {
+      // Given a new page has been created
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+
+      // When I enter edit mode
+      await enterEditMode(tester);
+
+      // Then the focus should be on the NewEntryEditor text field
+      assertNewEntryEditorHasFocus(tester);
+    });
+
     testWidgets(
         'Submit ACNET parameter, should appear at the bottom of the page',
         (tester) async {
