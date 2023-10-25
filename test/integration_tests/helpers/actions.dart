@@ -9,7 +9,7 @@ import 'package:parameter_page/widgets/parameter_page_scaffold_widget.dart';
 Future<void> startParameterPageApp(WidgetTester tester) async {
   app.main();
   await tester.pumpAndSettle();
-  await pumpUntilFound(tester, find.text("Welcome!"));
+  await pumpUntilFound(tester, find.text("Hello!"));
 }
 
 Future<void> pumpUntilFound(

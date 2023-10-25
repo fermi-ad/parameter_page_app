@@ -487,3 +487,10 @@ void assertDisplayPageError({required String messageIs}) {
           matching: find.text(messageIs)),
       findsOneWidget);
 }
+
+void assertNewEntryEditorHasFocus(WidgetTester tester) {
+  final textFieldFinder = find.byKey(const Key("new_entry_textfield"));
+  final textField = textFieldFinder.evaluate().first.widget as TextField;
+
+  expect(textField.focusNode!.hasFocus, true);
+}
