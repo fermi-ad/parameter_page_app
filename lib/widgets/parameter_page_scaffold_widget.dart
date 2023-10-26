@@ -94,7 +94,7 @@ class _ParameterPageScaffoldWidgetState
 
     _tabController = TabController(length: nTabs, vsync: this);
 
-    for (int i = 0; i < nTabs; i++) {
+    for (int i = 1; i < nTabs + 1; i++) {
       tabs.add(Tab(text: "Tab $i"));
     }
 
