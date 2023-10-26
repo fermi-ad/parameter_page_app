@@ -495,3 +495,14 @@ void assertNewEntryEditorHasFocus(WidgetTester tester) {
   expect(textField.focusNode!.hasFocus, true,
       reason: "Focus should be on the NewEntryEditor text field");
 }
+
+void assertTabBarContains(
+    {required int nTabs, required List<String> withTitles}) {
+  for (int i = 0; i != nTabs; i++) {
+    expect(
+        find.descendant(
+            of: find.byKey(const Key("subpage-tabs")),
+            matching: find.text(withTitles[i])),
+        findsOneWidget);
+  }
+}
