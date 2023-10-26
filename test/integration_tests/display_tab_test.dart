@@ -18,5 +18,17 @@ void main() {
       // Then two tabs are visible:
       assertTabBarContains(nTabs: 1, withTitles: ["Tab 1"]);
     });
+
+    testWidgets('Open test page 2, two tabs should be visible', (tester) async {
+      // Given the parameter page is started
+      await startParameterPageApp(tester);
+
+      // When I open Test Page 1
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+
+      // Then two tabs are visible:
+      assertTabBarContains(nTabs: 2, withTitles: ["Tab 1", "Tab 2"]);
+    });
   });
 }
