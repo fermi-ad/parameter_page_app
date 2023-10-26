@@ -75,6 +75,7 @@ class ParameterPage {
   void cancelEditing() {
     _entries = List<PageEntry>.from(_undoEntries);
     _title = _undoTitle;
+    tabTitles = _savedTabTitles;
     _editing = false;
   }
 
