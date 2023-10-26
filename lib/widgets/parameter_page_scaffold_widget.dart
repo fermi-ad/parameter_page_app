@@ -52,11 +52,13 @@ class _ParameterPageScaffoldWidgetState
       _page = ParameterPage();
     }
 
-    return Scaffold(
-        key: _scaffoldKey,
-        appBar: _buildAppBar(context),
-        drawer: _buildDrawer(context),
-        body: _buildBody(context));
+    return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+            key: _scaffoldKey,
+            appBar: _buildAppBar(context),
+            drawer: _buildDrawer(context),
+            body: _buildBody(context)));
   }
 
   bool _pageHasNotBeenLoadedYet() {
@@ -80,6 +82,7 @@ class _ParameterPageScaffoldWidgetState
             persistenceState: _persistenceState,
             title: _page == null ? "Parameter Page" : _page!.title,
             onTitleUpdate: _handleTitleUpdate),
+        bottom: const TabBar(tabs: [Tab(text: "Tab 1"), Tab(text: "Tab 2")]),
         actions: [
           DisplaySettingsButtonWidget(
               wide: MediaQuery.of(context).size.width > 600,

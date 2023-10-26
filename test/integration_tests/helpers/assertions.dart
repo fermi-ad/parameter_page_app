@@ -498,11 +498,12 @@ void assertNewEntryEditorHasFocus(WidgetTester tester) {
 
 void assertTabBarContains(
     {required int nTabs, required List<String> withTitles}) {
+  expect(find.byType(Tab), findsNWidgets(nTabs));
+
   for (int i = 0; i != nTabs; i++) {
     expect(
         find.descendant(
-            of: find.byKey(const Key("subpage-tabs")),
-            matching: find.text(withTitles[i])),
+            of: find.byType(Tab), matching: find.text(withTitles[i])),
         findsOneWidget);
   }
 }
