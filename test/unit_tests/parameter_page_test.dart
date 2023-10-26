@@ -80,29 +80,36 @@ void main() {
       ParameterPage page = ParameterPage.fromQueryResult(
           id: "99",
           title: "New Page",
-          queryResult: [
-            {
-              "entryid": "4",
-              "pageid": "3",
-              "position": "0",
-              "text": "this is comment #1",
-              "type": "Comment"
-            },
-            {
-              "entryid": "5",
-              "pageid": "3",
-              "position": "1",
-              "text": "this is comment #2",
-              "type": "Comment"
-            },
-            {
-              "entryid": "6",
-              "pageid": "3",
-              "position": "2",
-              "text": "I:BEAM",
-              "type": "Parameter"
-            }
-          ]);
+          queryResult: {
+            "tabs": [
+              {
+                "title": "Tab 1",
+                "entries": [
+                  {
+                    "entryid": "4",
+                    "pageid": "3",
+                    "position": "0",
+                    "text": "this is comment #1",
+                    "type": "Comment"
+                  },
+                  {
+                    "entryid": "5",
+                    "pageid": "3",
+                    "position": "1",
+                    "text": "this is comment #2",
+                    "type": "Comment"
+                  },
+                  {
+                    "entryid": "6",
+                    "pageid": "3",
+                    "position": "2",
+                    "text": "I:BEAM",
+                    "type": "Parameter"
+                  }
+                ]
+              }
+            ]
+          });
 
       // When I request the list of entries
       List<PageEntry> entries = page.entriesAsList();

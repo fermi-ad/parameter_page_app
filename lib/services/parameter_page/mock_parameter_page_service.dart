@@ -33,7 +33,11 @@ class MockParameterPageService extends ParameterPageService {
     }
 
     _testPages.add({"pageid": "$_nextPageId", "title": withTitle});
-    _testPageEntries["$_nextPageId"] = [];
+    _testPageEntries["$_nextPageId"] = {
+      "tabs": [
+        {"title": "Tab 1", "entries": []}
+      ]
+    };
 
     final thisPageId = _nextPageId;
     _nextPageId += 1;
@@ -83,7 +87,11 @@ class MockParameterPageService extends ParameterPageService {
       position += 1;
     }
 
-    _testPageEntries[id] = newEntries;
+    _testPageEntries[id] = {
+      "tabs": [
+        {"title": "Tab 1", "entries": newEntries}
+      ]
+    };
 
     Timer(const Duration(seconds: 1), () => onSuccess.call());
   }
@@ -200,76 +208,84 @@ class MockParameterPageService extends ParameterPageService {
         }
       ]
     },
-    "4": { "tabs": [ { "title": "Tab 1", "entries":[
-      {
-        "entryid": "6",
-        "pageid": "4",
-        "position": "0",
-        "text": "M:OUTTMP@e,02",
-        "type": "Parameter"
-      },
-      {
-        "entryid": "7",
-        "pageid": "4",
-        "position": "1",
-        "text": "This is our first comment!",
-        "type": "Comment"
-      },
-      {
-        "entryid": "8",
-        "pageid": "4",
-        "position": "2",
-        "text": "G:AMANDA",
-        "type": "Parameter"
-      },
-      {
-        "entryid": "9",
-        "pageid": "4",
-        "position": "3",
-        "text": "Z:NO_ALARMS",
-        "type": "Parameter"
-      },
-      {
-        "entryid": "10",
-        "pageid": "4",
-        "position": "4",
-        "text": "PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE",
-        "type": "Parameter"
-      },
-      {
-        "entryid": "11",
-        "pageid": "4",
-        "position": "5",
-        "text": "PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY",
-        "type": "Parameter"
-      },
-      {
-        "entryid": "12",
-        "pageid": "4",
-        "position": "6",
-        "text": "Z:BTE200_TEMP",
-        "type": "Parameter"
-      },
-      {
-        "entryid": "13",
-        "pageid": "4",
-        "position": "7",
-        "text": "Z:INC_SETTING",
-        "type": "Parameter"
-      },
-      {
-        "entryid": "14",
-        "pageid": "4",
-        "position": "8",
-        "text": "Z:NO_SET",
-        "type": "Parameter"
-      },
-      {
-        "entryid": "15",
-        "pageid": "4",
-        "position": "9",
-        "text": "Z:NO_READ",
-        "type": "Parameter"
-      }
-    ]
-    }]}};
+    "4": {
+      "tabs": [
+        {
+          "title": "Tab 1",
+          "entries": [
+            {
+              "entryid": "6",
+              "pageid": "4",
+              "position": "0",
+              "text": "M:OUTTMP@e,02",
+              "type": "Parameter"
+            },
+            {
+              "entryid": "7",
+              "pageid": "4",
+              "position": "1",
+              "text": "This is our first comment!",
+              "type": "Comment"
+            },
+            {
+              "entryid": "8",
+              "pageid": "4",
+              "position": "2",
+              "text": "G:AMANDA",
+              "type": "Parameter"
+            },
+            {
+              "entryid": "9",
+              "pageid": "4",
+              "position": "3",
+              "text": "Z:NO_ALARMS",
+              "type": "Parameter"
+            },
+            {
+              "entryid": "10",
+              "pageid": "4",
+              "position": "4",
+              "text": "PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE",
+              "type": "Parameter"
+            },
+            {
+              "entryid": "11",
+              "pageid": "4",
+              "position": "5",
+              "text": "PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY",
+              "type": "Parameter"
+            },
+            {
+              "entryid": "12",
+              "pageid": "4",
+              "position": "6",
+              "text": "Z:BTE200_TEMP",
+              "type": "Parameter"
+            },
+            {
+              "entryid": "13",
+              "pageid": "4",
+              "position": "7",
+              "text": "Z:INC_SETTING",
+              "type": "Parameter"
+            },
+            {
+              "entryid": "14",
+              "pageid": "4",
+              "position": "8",
+              "text": "Z:NO_SET",
+              "type": "Parameter"
+            },
+            {
+              "entryid": "15",
+              "pageid": "4",
+              "position": "9",
+              "text": "Z:NO_READ",
+              "type": "Parameter"
+            }
+          ]
+        }
+      ]
+    }
+  };
+}

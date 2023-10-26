@@ -24,7 +24,7 @@ class ParameterPage {
   ParameterPage.fromQueryResult(
       {required this.id,
       required String title,
-      required List<dynamic> queryResult})
+      required Map<String, dynamic> queryResult})
       : _entries = [],
         _savedEntries = [] {
     final initialEntries = _buildEntriesListFromQueryResult(queryResult);
@@ -129,9 +129,10 @@ class ParameterPage {
     return ["Tab 1"];
   }
 
-  List<PageEntry> _buildEntriesListFromQueryResult(List<dynamic> queryResult) {
+  List<PageEntry> _buildEntriesListFromQueryResult(
+      Map<String, dynamic> queryResult) {
     List<PageEntry> ret = [];
-    for (final entryData in queryResult) {
+    for (final entryData in queryResult["tabs"]["Tab 1"]["entries"]) {
       ret.add(_hydratePageEntry(from: entryData));
     }
 
