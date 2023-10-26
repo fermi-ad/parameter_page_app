@@ -13,9 +13,7 @@ class ParameterPage {
     return _title;
   }
 
-  List<String> get tabTitles {
-    return ["Tab 1", "Tab 2"];
-  }
+  List<String> tabTitles = ["Tab 1"];
 
   ParameterPage([List<PageEntry>? entries])
       : _entries = List<PageEntry>.from(entries ?? []),
