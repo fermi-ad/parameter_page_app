@@ -133,60 +133,74 @@ class MockParameterPageService extends ParameterPageService {
   ];
 
   final _testPageEntries = {
-    "1": [
-      {
-        "entryid": "1",
-        "pageid": "1",
-        "position": "0",
-        "text": "this is entry to east tower",
-        "type": "Comment"
-      },
-      {
-        "entryid": "2",
-        "pageid": "1",
-        "position": "1",
-        "text": "graph route",
-        "type": "Comment"
-      },
-      {
-        "entryid": "3",
-        "pageid": "1",
-        "position": "2",
-        "text": "graph route",
-        "type": "Comment"
-      }
-    ],
-    "3": [
-      {
-        "entryid": "4",
-        "pageid": "3",
-        "position": "0",
-        "text": "this is comment #1",
-        "type": "Comment"
-      },
-      {
-        "entryid": "5",
-        "pageid": "3",
-        "position": "1",
-        "text": "I:BEAM",
-        "type": "Parameter"
-      },
-      {
-        "entryid": "6",
-        "pageid": "3",
-        "position": "2",
-        "text": "R:BEAM",
-        "type": "Parameter"
-      },
-      {
-        "entryid": "5",
-        "pageid": "3",
-        "position": "1",
-        "text": "this is comment #2",
-        "type": "Comment"
-      }
-    ],
-    "4": [
+    "1": {
+      "tabs": [
+        {
+          "title": "Tab 1",
+          "entries": [
+            {
+              "entryid": "1",
+              "pageid": "1",
+              "position": "0",
+              "text": "this is entry to east tower",
+              "type": "Comment"
+            },
+            {
+              "entryid": "2",
+              "pageid": "1",
+              "position": "1",
+              "text": "graph route",
+              "type": "Comment"
+            },
+            {
+              "entryid": "3",
+              "pageid": "1",
+              "position": "2",
+              "text": "graph route",
+              "type": "Comment"
+            }
+          ]
+        }
+      ]
+    },
+    "3": {
+      "tabs": [
+        {
+          "title": "Tab 1",
+          "entries": [
+            {
+              "entryid": "4",
+              "pageid": "3",
+              "position": "0",
+              "text": "this is comment #1",
+              "type": "Comment"
+            },
+            {
+              "entryid": "5",
+              "pageid": "3",
+              "position": "1",
+              "text": "I:BEAM",
+              "type": "Parameter"
+            },
+            {
+              "entryid": "6",
+              "pageid": "3",
+              "position": "2",
+              "text": "R:BEAM",
+              "type": "Parameter"
+            },
+            {
+              "entryid": "5",
+              "pageid": "3",
+              "position": "1",
+              "text": "this is comment #2",
+              "type": "Comment"
+            }
+          ]
+        }
+      ]
+    },
+    "4": { "tabs": [ { "title": "Tab 1", "entries":[
       {
         "entryid": "6",
         "pageid": "4",
@@ -258,5 +272,4 @@ class MockParameterPageService extends ParameterPageService {
         "type": "Parameter"
       }
     ]
-  };
-}
+    }]}};

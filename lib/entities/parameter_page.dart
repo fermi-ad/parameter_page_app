@@ -28,12 +28,15 @@ class ParameterPage {
       : _entries = [],
         _savedEntries = [] {
     final initialEntries = _buildEntriesListFromQueryResult(queryResult);
-
     _entries = List<PageEntry>.from(initialEntries);
     _savedEntries = List<PageEntry>.from(initialEntries);
 
     _title = title;
     _savedTitle = title;
+
+    final initialTabTitles = _buildTabTitlesFromQueryResult(queryResult);
+    _tabTitles = initialTabTitles;
+    _savedTabTitles = initialTabTitles;
   }
 
   void add(PageEntry entry) {
@@ -119,6 +122,11 @@ class ParameterPage {
     _enforceEditMode();
 
     _tabTitles.add(title);
+  }
+
+  List<String> _buildTabTitlesFromQueryResult(
+      Map<String, dynamic> queryResult) {
+    return ["Tab 1"];
   }
 
   List<PageEntry> _buildEntriesListFromQueryResult(List<dynamic> queryResult) {
