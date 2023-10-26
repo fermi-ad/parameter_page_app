@@ -103,11 +103,13 @@ class ParameterPage {
   void commit() {
     _savedEntries = List<PageEntry>.from(_entries);
     _savedTitle = title;
+    _savedTabTitles = tabTitles;
   }
 
   bool get isDirty {
     return title != _savedTitle ||
-        !listEquals<PageEntry>(_entries, _savedEntries);
+        !listEquals<PageEntry>(_entries, _savedEntries) ||
+        !listEquals<String>(tabTitles, _savedTabTitles);
   }
 
   void createTab({required String title}) {
@@ -153,6 +155,8 @@ class ParameterPage {
   String _undoTitle = "New Parameter Page";
 
   String _savedTitle = "New Parameter Page";
+
+  List<String> _savedTabTitles = ["Tab 1"];
 
   bool _editing = false;
 }

@@ -407,7 +407,7 @@ void main() {
       page.createTab(title: "Tab 2");
 
       // Then the page is dirty
-      expect(page.isDirty, true);
+      expect(page.isDirty, true, reason: "dirty flag should be true");
     });
   });
 }
