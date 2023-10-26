@@ -13,7 +13,9 @@ class ParameterPage {
     return _title;
   }
 
-  List<String> tabTitles = ["Tab 1"];
+  List<String> get tabTitles {
+    return _tabTitles;
+  }
 
   ParameterPage([List<PageEntry>? entries])
       : _entries = List<PageEntry>.from(entries ?? []),
@@ -75,7 +77,7 @@ class ParameterPage {
   void cancelEditing() {
     _entries = List<PageEntry>.from(_undoEntries);
     _title = _undoTitle;
-    tabTitles = _savedTabTitles;
+    _tabTitles = _savedTabTitles;
     _editing = false;
   }
 
@@ -116,7 +118,7 @@ class ParameterPage {
   void createTab({required String title}) {
     _enforceEditMode();
 
-    tabTitles.add(title);
+    _tabTitles.add(title);
   }
 
   List<PageEntry> _buildEntriesListFromQueryResult(List<dynamic> queryResult) {
@@ -156,6 +158,8 @@ class ParameterPage {
   String _undoTitle = "New Parameter Page";
 
   String _savedTitle = "New Parameter Page";
+
+  List<String> _tabTitles = ["Tab 1"];
 
   List<String> _savedTabTitles = ["Tab 1"];
 
