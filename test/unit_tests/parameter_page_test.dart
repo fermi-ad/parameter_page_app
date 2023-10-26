@@ -44,6 +44,7 @@ void main() {
       expect(() => page.reorderEntry(atIndex: 0, toIndex: 1), throwsException);
       expect(() => page.clearAll(), throwsException);
       expect(() => page.title = "New Title", throwsException);
+      expect(() => page.createTab(title: "Tab 2"), throwsException);
     });
 
     test("Add Entry, increments count", () {
