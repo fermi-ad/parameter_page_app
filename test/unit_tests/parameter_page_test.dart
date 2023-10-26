@@ -380,5 +380,18 @@ void main() {
       expect(page.tabTitles.length, 1);
       expect(page.tabTitles[0], "Tab 1");
     });
+
+    test("createTab(title:), makes a new tab", () {
+      // Given a new ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // When I createTab(..)...
+      page.createTab(title: "Tab 2");
+
+      // Then there are two tabs...
+      expect(page.tabTitles.length, 2);
+      expect(page.tabTitles[0], "Tab 1");
+      expect(page.tabTitles[1], "Tab 2");
+    });
   });
 }

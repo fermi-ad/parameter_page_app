@@ -110,6 +110,10 @@ class ParameterPage {
         !listEquals<PageEntry>(_entries, _savedEntries);
   }
 
+  void createTab({required String title}) {
+    tabTitles.add(title);
+  }
+
   List<PageEntry> _buildEntriesListFromQueryResult(List<dynamic> queryResult) {
     List<PageEntry> ret = [];
     for (final entryData in queryResult) {
