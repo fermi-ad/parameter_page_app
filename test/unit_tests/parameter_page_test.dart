@@ -370,5 +370,15 @@ void main() {
       // Then the original title is restored
       expect(page.title, equals("New Parameter Page"));
     });
+
+    test("A new ParameterPage, should have 1 tab called Tab 1", () {
+      // Given nothing...
+      // When I create a new ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // Then there is one tab named Tab 1
+      expect(page.tabTitles.length, 1);
+      expect(page.tabTitles[0], "Tab 1");
+    });
   });
 }
