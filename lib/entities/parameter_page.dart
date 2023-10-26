@@ -111,6 +111,8 @@ class ParameterPage {
   }
 
   void createTab({required String title}) {
+    _enforceEditMode();
+
     tabTitles.add(title);
   }
 

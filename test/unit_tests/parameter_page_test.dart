@@ -384,7 +384,9 @@ void main() {
 
     test("createTab(title:), makes a new tab", () {
       // Given a new ParameterPage
+      // ... and editing mode is enabled
       ParameterPage page = ParameterPage();
+      page.enableEditing();
 
       // When I createTab(..)...
       page.createTab(title: "Tab 2");
