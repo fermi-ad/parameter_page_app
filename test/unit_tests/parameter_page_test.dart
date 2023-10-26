@@ -396,5 +396,18 @@ void main() {
       expect(page.tabTitles[0], "Tab 1");
       expect(page.tabTitles[1], "Tab 2");
     });
+
+    test("createTab(title:), sets the dirty flag", () {
+      // Given a new ParameterPage
+      // ... and editing is enabled
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I create a new tab...
+      page.createTab(title: "Tab 2");
+
+      // Then the page is dirty
+      expect(page.isDirty, true);
+    });
   });
 }
