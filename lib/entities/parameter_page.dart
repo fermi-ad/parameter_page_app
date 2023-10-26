@@ -13,6 +13,10 @@ class ParameterPage {
     return _title;
   }
 
+  List<String> get tabTitles {
+    return ["Tab 1", "Tab 2"];
+  }
+
   int get nTabs {
     return 2;
   }
