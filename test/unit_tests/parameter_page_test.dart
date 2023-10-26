@@ -409,5 +409,19 @@ void main() {
       // Then the page is dirty
       expect(page.isDirty, true, reason: "dirty flag should be true");
     });
+
+    test("cancelEditing(), restores changes to tabs", () {
+      // Given I am editing a ParameterPage and have added a new tab
+      ParameterPage page = ParameterPage();
+      page.toggleEditing();
+      page.createTab(title: "Tab 2");
+
+      // When I cancelEditing()
+      page.cancelEditing();
+
+      // Then the new tab is discarded
+      expect(page.tabTitles.length, 1);
+      expect(page.tabTitles[0], "Tab 1");
+    });
   });
 }
