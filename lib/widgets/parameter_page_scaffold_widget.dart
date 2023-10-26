@@ -38,18 +38,9 @@ class ParameterPageScaffoldWidget extends StatefulWidget {
 }
 
 class _ParameterPageScaffoldWidgetState
-    extends State<ParameterPageScaffoldWidget>
-    with SingleTickerProviderStateMixin {
+    extends State<ParameterPageScaffoldWidget> with TickerProviderStateMixin {
   final _pageKey = GlobalKey<PageWidgetState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _tabController = TabController(length: 2, vsync: this);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,14 +80,25 @@ class _ParameterPageScaffoldWidgetState
             persistenceState: _persistenceState,
             title: _page == null ? "Parameter Page" : _page!.title,
             onTitleUpdate: _handleTitleUpdate),
-        bottom: TabBar(
-            controller: _tabController,
-            tabs: const [Tab(text: "Tab 1"), Tab(text: "Tab 2")]),
+        bottom: _buildTabBar(),
         actions: [
           DisplaySettingsButtonWidget(
               wide: MediaQuery.of(context).size.width > 600,
               onPressed: () => _navigateToDisplaySettings(context)),
         ]);
+  }
+
+  TabBar _buildTabBar() {
+    List<Widget> tabs = [];
+    int nTabs = _page == null ? 0 : _page!.nTabs;
+
+    _tabController = TabController(length: nTabs, vsync: this);
+
+    for (int i = 0; i < nTabs; i++) {
+      tabs.add(Tab(text: "Tab $i"));
+    }
+
+    return TabBar(controller: _tabController, tabs: tabs);
   }
 
   Widget _buildBody(BuildContext context) {
@@ -328,4 +330,6 @@ class _ParameterPageScaffoldWidgetState
   ParameterPage? _page;
 
   PagePersistenceState _persistenceState = PagePersistenceState.clean;
+
+  TabController? _tabController;
 }
