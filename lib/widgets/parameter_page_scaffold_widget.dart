@@ -90,12 +90,12 @@ class _ParameterPageScaffoldWidgetState
 
   TabBar _buildTabBar() {
     List<Widget> tabs = [];
-    int nTabs = _page == null ? 0 : _page!.nTabs;
+    List<String> titles = _page == null ? [] : _page!.tabTitles;
 
-    _tabController = TabController(length: nTabs, vsync: this);
+    _tabController = TabController(length: titles.length, vsync: this);
 
-    for (int i = 0; i < nTabs; i++) {
-      tabs.add(Tab(text: _page!.tabTitles[i]));
+    for (String title in titles) {
+      tabs.add(Tab(text: title));
     }
 
     return TabBar(controller: _tabController, tabs: tabs);

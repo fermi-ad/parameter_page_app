@@ -17,10 +17,6 @@ class ParameterPage {
     return ["Tab 1", "Tab 2"];
   }
 
-  int get nTabs {
-    return 2;
-  }
-
   ParameterPage([List<PageEntry>? entries])
       : _entries = List<PageEntry>.from(entries ?? []),
         _savedEntries = List<PageEntry>.from(entries ?? []);
