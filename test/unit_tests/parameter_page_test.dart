@@ -107,6 +107,18 @@ void main() {
                     "type": "Parameter"
                   }
                 ]
+              },
+              {
+                "title": "Tab 2",
+                "entries": [
+                  {
+                    "entryid": "7",
+                    "pageid": "3",
+                    "position": "0",
+                    "text": "R:BEAM",
+                    "type": "Parameter"
+                  }
+                ]
               }
             ]
           });
