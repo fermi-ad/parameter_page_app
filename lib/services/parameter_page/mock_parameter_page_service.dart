@@ -32,17 +32,15 @@ class MockParameterPageService extends ParameterPageService {
       return Future.error("Fake createPage() failure.");
     }
 
-    _testPages.add({"pageid": "$_nextPageId", "title": withTitle});
-    _testPageEntries["$_nextPageId"] = {
+    int newPageId = _testPages.length + 1;
+    _testPages.add({"pageid": "$newPageId", "title": withTitle});
+    _testPageEntries["$newPageId"] = {
       "tabs": [
         {"title": "Tab 1", "entries": []}
       ]
     };
 
-    final thisPageId = _nextPageId;
-    _nextPageId += 1;
-
-    return "$thisPageId";
+    return "$newPageId";
   }
 
   @override
@@ -130,8 +128,6 @@ class MockParameterPageService extends ParameterPageService {
 
     return Future.error("Failed to load page id: $id");
   }
-
-  int _nextPageId = 5;
 
   final _testPages = [
     {"pageid": "1", "title": 'east tower'},
