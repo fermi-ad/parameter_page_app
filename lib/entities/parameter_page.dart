@@ -132,7 +132,7 @@ class ParameterPage {
   List<PageEntry> _buildEntriesListFromQueryResult(
       Map<String, dynamic> queryResult) {
     List<PageEntry> ret = [];
-    for (final entryData in queryResult["tabs"]["Tab 1"]["entries"]) {
+    for (final entryData in queryResult["tabs"][0]["entries"]) {
       ret.add(_hydratePageEntry(from: entryData));
     }
 
