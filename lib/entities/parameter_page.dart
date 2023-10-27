@@ -13,6 +13,10 @@ class ParameterPage {
     return _title;
   }
 
+  List<String> get tabTitles {
+    return _tabTitles;
+  }
+
   ParameterPage([List<PageEntry>? entries])
       : _entries = List<PageEntry>.from(entries ?? []),
         _savedEntries = List<PageEntry>.from(entries ?? []);
@@ -20,16 +24,19 @@ class ParameterPage {
   ParameterPage.fromQueryResult(
       {required this.id,
       required String title,
-      required List<dynamic> queryResult})
+      required Map<String, dynamic> queryResult})
       : _entries = [],
         _savedEntries = [] {
     final initialEntries = _buildEntriesListFromQueryResult(queryResult);
-
     _entries = List<PageEntry>.from(initialEntries);
     _savedEntries = List<PageEntry>.from(initialEntries);
 
     _title = title;
     _savedTitle = title;
+
+    final initialTabTitles = _buildTabTitlesFromQueryResult(queryResult);
+    _tabTitles = initialTabTitles;
+    _savedTabTitles = initialTabTitles;
   }
 
   void add(PageEntry entry) {
@@ -73,6 +80,7 @@ class ParameterPage {
   void cancelEditing() {
     _entries = List<PageEntry>.from(_undoEntries);
     _title = _undoTitle;
+    _tabTitles = _savedTabTitles;
     _editing = false;
   }
 
@@ -101,16 +109,34 @@ class ParameterPage {
   void commit() {
     _savedEntries = List<PageEntry>.from(_entries);
     _savedTitle = title;
+    _savedTabTitles = tabTitles;
   }
 
   bool get isDirty {
     return title != _savedTitle ||
-        !listEquals<PageEntry>(_entries, _savedEntries);
+        !listEquals<PageEntry>(_entries, _savedEntries) ||
+        !listEquals<String>(tabTitles, _savedTabTitles);
   }
 
-  List<PageEntry> _buildEntriesListFromQueryResult(List<dynamic> queryResult) {
+  void createTab({required String title}) {
+    _enforceEditMode();
+
+    _tabTitles.add(title);
+  }
+
+  List<String> _buildTabTitlesFromQueryResult(
+      Map<String, dynamic> queryResult) {
+    List<String> ret = [];
+    for (Map<String, dynamic> tab in queryResult["tabs"]) {
+      ret.add(tab["title"]);
+    }
+    return ret;
+  }
+
+  List<PageEntry> _buildEntriesListFromQueryResult(
+      Map<String, dynamic> queryResult) {
     List<PageEntry> ret = [];
-    for (final entryData in queryResult) {
+    for (final entryData in queryResult["tabs"][0]["entries"]) {
       ret.add(_hydratePageEntry(from: entryData));
     }
 
@@ -145,6 +171,10 @@ class ParameterPage {
   String _undoTitle = "New Parameter Page";
 
   String _savedTitle = "New Parameter Page";
+
+  List<String> _tabTitles = ["Tab 1"];
+
+  List<String> _savedTabTitles = ["Tab 1"];
 
   bool _editing = false;
 }

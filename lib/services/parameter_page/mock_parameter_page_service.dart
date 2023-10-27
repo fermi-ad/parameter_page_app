@@ -32,13 +32,15 @@ class MockParameterPageService extends ParameterPageService {
       return Future.error("Fake createPage() failure.");
     }
 
-    _testPages.add({"pageid": "$_nextPageId", "title": withTitle});
-    _testPageEntries["$_nextPageId"] = [];
+    int newPageId = _testPages.length + 1;
+    _testPages.add({"pageid": "$newPageId", "title": withTitle});
+    _testPageEntries["$newPageId"] = {
+      "tabs": [
+        {"title": "Tab 1", "entries": []}
+      ]
+    };
 
-    final thisPageId = _nextPageId;
-    _nextPageId += 1;
-
-    return "$thisPageId";
+    return "$newPageId";
   }
 
   @override
@@ -83,7 +85,11 @@ class MockParameterPageService extends ParameterPageService {
       position += 1;
     }
 
-    _testPageEntries[id] = newEntries;
+    _testPageEntries[id] = {
+      "tabs": [
+        {"title": "Tab 1", "entries": newEntries}
+      ]
+    };
 
     Timer(const Duration(seconds: 1), () => onSuccess.call());
   }
@@ -123,140 +129,195 @@ class MockParameterPageService extends ParameterPageService {
     return Future.error("Failed to load page id: $id");
   }
 
-  int _nextPageId = 5;
-
   final _testPages = [
     {"pageid": "1", "title": 'east tower'},
     {"pageid": "2", "title": 'west tower'},
     {"pageid": "4", "title": "Test Page 1"},
-    {"pageid": "3", "title": 'Test Page 2'}
+    {"pageid": "3", "title": 'Test Page 2'},
+    {"pageid": "5", "title": "Eight Tabs"}
   ];
 
   final _testPageEntries = {
-    "1": [
-      {
-        "entryid": "1",
-        "pageid": "1",
-        "position": "0",
-        "text": "this is entry to east tower",
-        "type": "Comment"
-      },
-      {
-        "entryid": "2",
-        "pageid": "1",
-        "position": "1",
-        "text": "graph route",
-        "type": "Comment"
-      },
-      {
-        "entryid": "3",
-        "pageid": "1",
-        "position": "2",
-        "text": "graph route",
-        "type": "Comment"
-      }
-    ],
-    "3": [
-      {
-        "entryid": "4",
-        "pageid": "3",
-        "position": "0",
-        "text": "this is comment #1",
-        "type": "Comment"
-      },
-      {
-        "entryid": "5",
-        "pageid": "3",
-        "position": "1",
-        "text": "I:BEAM",
-        "type": "Parameter"
-      },
-      {
-        "entryid": "6",
-        "pageid": "3",
-        "position": "2",
-        "text": "R:BEAM",
-        "type": "Parameter"
-      },
-      {
-        "entryid": "5",
-        "pageid": "3",
-        "position": "1",
-        "text": "this is comment #2",
-        "type": "Comment"
-      }
-    ],
-    "4": [
-      {
-        "entryid": "6",
-        "pageid": "4",
-        "position": "0",
-        "text": "M:OUTTMP@e,02",
-        "type": "Parameter"
-      },
-      {
-        "entryid": "7",
-        "pageid": "4",
-        "position": "1",
-        "text": "This is our first comment!",
-        "type": "Comment"
-      },
-      {
-        "entryid": "8",
-        "pageid": "4",
-        "position": "2",
-        "text": "G:AMANDA",
-        "type": "Parameter"
-      },
-      {
-        "entryid": "9",
-        "pageid": "4",
-        "position": "3",
-        "text": "Z:NO_ALARMS",
-        "type": "Parameter"
-      },
-      {
-        "entryid": "10",
-        "pageid": "4",
-        "position": "4",
-        "text": "PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE",
-        "type": "Parameter"
-      },
-      {
-        "entryid": "11",
-        "pageid": "4",
-        "position": "5",
-        "text": "PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY",
-        "type": "Parameter"
-      },
-      {
-        "entryid": "12",
-        "pageid": "4",
-        "position": "6",
-        "text": "Z:BTE200_TEMP",
-        "type": "Parameter"
-      },
-      {
-        "entryid": "13",
-        "pageid": "4",
-        "position": "7",
-        "text": "Z:INC_SETTING",
-        "type": "Parameter"
-      },
-      {
-        "entryid": "14",
-        "pageid": "4",
-        "position": "8",
-        "text": "Z:NO_SET",
-        "type": "Parameter"
-      },
-      {
-        "entryid": "15",
-        "pageid": "4",
-        "position": "9",
-        "text": "Z:NO_READ",
-        "type": "Parameter"
-      }
-    ]
+    "1": {
+      "tabs": [
+        {
+          "title": "Tab 1",
+          "entries": [
+            {
+              "entryid": "1",
+              "pageid": "1",
+              "position": "0",
+              "text": "this is entry to east tower",
+              "type": "Comment"
+            },
+            {
+              "entryid": "2",
+              "pageid": "1",
+              "position": "1",
+              "text": "graph route",
+              "type": "Comment"
+            },
+            {
+              "entryid": "3",
+              "pageid": "1",
+              "position": "2",
+              "text": "graph route",
+              "type": "Comment"
+            }
+          ]
+        }
+      ]
+    },
+    "3": {
+      "tabs": [
+        {
+          "title": "Tab 1",
+          "entries": [
+            {
+              "entryid": "4",
+              "pageid": "3",
+              "position": "0",
+              "text": "this is comment #1",
+              "type": "Comment"
+            },
+            {
+              "entryid": "5",
+              "pageid": "3",
+              "position": "1",
+              "text": "I:BEAM",
+              "type": "Parameter"
+            },
+            {
+              "entryid": "6",
+              "pageid": "3",
+              "position": "2",
+              "text": "R:BEAM",
+              "type": "Parameter"
+            },
+            {
+              "entryid": "5",
+              "pageid": "3",
+              "position": "1",
+              "text": "this is comment #2",
+              "type": "Comment"
+            }
+          ]
+        },
+        {
+          "title": "Tab 2",
+          "entries": [
+            {
+              "entryid": "16",
+              "pageid": "3",
+              "position": "0",
+              "text": "This is Tab 2",
+              "type": "Comment"
+            }
+          ]
+        }
+      ]
+    },
+    "4": {
+      "tabs": [
+        {
+          "title": "Tab 1",
+          "entries": [
+            {
+              "entryid": "6",
+              "pageid": "4",
+              "position": "0",
+              "text": "M:OUTTMP@e,02",
+              "type": "Parameter"
+            },
+            {
+              "entryid": "7",
+              "pageid": "4",
+              "position": "1",
+              "text": "This is our first comment!",
+              "type": "Comment"
+            },
+            {
+              "entryid": "8",
+              "pageid": "4",
+              "position": "2",
+              "text": "G:AMANDA",
+              "type": "Parameter"
+            },
+            {
+              "entryid": "9",
+              "pageid": "4",
+              "position": "3",
+              "text": "Z:NO_ALARMS",
+              "type": "Parameter"
+            },
+            {
+              "entryid": "10",
+              "pageid": "4",
+              "position": "4",
+              "text": "PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE",
+              "type": "Parameter"
+            },
+            {
+              "entryid": "11",
+              "pageid": "4",
+              "position": "5",
+              "text": "PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY",
+              "type": "Parameter"
+            },
+            {
+              "entryid": "12",
+              "pageid": "4",
+              "position": "6",
+              "text": "Z:BTE200_TEMP",
+              "type": "Parameter"
+            },
+            {
+              "entryid": "13",
+              "pageid": "4",
+              "position": "7",
+              "text": "Z:INC_SETTING",
+              "type": "Parameter"
+            },
+            {
+              "entryid": "14",
+              "pageid": "4",
+              "position": "8",
+              "text": "Z:NO_SET",
+              "type": "Parameter"
+            },
+            {
+              "entryid": "15",
+              "pageid": "4",
+              "position": "9",
+              "text": "Z:NO_READ",
+              "type": "Parameter"
+            }
+          ]
+        }
+      ]
+    },
+    "5": {
+      "tabs": [
+        {
+          "title": "Tab One",
+          "entries": [
+            {
+              "entryid": "17",
+              "pageid": "5",
+              "position": "1",
+              "text": "This is Tab One",
+              "type": "Comment"
+            }
+          ]
+        },
+        {"title": "Tab Two", "entries": []},
+        {"title": "Tab Three", "entries": []},
+        {"title": "Tab Four", "entries": []},
+        {"title": "Tab Five", "entries": []},
+        {"title": "Tab Six", "entries": []},
+        {"title": "Tab Seven", "entries": []},
+        {"title": "Tab Eight", "entries": []}
+      ]
+    }
   };
 }

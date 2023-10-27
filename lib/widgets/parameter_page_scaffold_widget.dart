@@ -38,7 +38,7 @@ class ParameterPageScaffoldWidget extends StatefulWidget {
 }
 
 class _ParameterPageScaffoldWidgetState
-    extends State<ParameterPageScaffoldWidget> {
+    extends State<ParameterPageScaffoldWidget> with TickerProviderStateMixin {
   final _pageKey = GlobalKey<PageWidgetState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -80,11 +80,25 @@ class _ParameterPageScaffoldWidgetState
             persistenceState: _persistenceState,
             title: _page == null ? "Parameter Page" : _page!.title,
             onTitleUpdate: _handleTitleUpdate),
+        bottom: _buildTabBar(),
         actions: [
           DisplaySettingsButtonWidget(
               wide: MediaQuery.of(context).size.width > 600,
               onPressed: () => _navigateToDisplaySettings(context)),
         ]);
+  }
+
+  TabBar _buildTabBar() {
+    List<Widget> tabs = [];
+    List<String> titles = _page == null ? [] : _page!.tabTitles;
+
+    _tabController = TabController(length: titles.length, vsync: this);
+
+    for (String title in titles) {
+      tabs.add(Tab(text: title));
+    }
+
+    return TabBar(controller: _tabController, tabs: tabs);
   }
 
   Widget _buildBody(BuildContext context) {
@@ -316,4 +330,6 @@ class _ParameterPageScaffoldWidgetState
   ParameterPage? _page;
 
   PagePersistenceState _persistenceState = PagePersistenceState.clean;
+
+  TabController? _tabController;
 }

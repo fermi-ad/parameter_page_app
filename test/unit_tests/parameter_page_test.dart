@@ -44,6 +44,7 @@ void main() {
       expect(() => page.reorderEntry(atIndex: 0, toIndex: 1), throwsException);
       expect(() => page.clearAll(), throwsException);
       expect(() => page.title = "New Title", throwsException);
+      expect(() => page.createTab(title: "Tab 2"), throwsException);
     });
 
     test("Add Entry, increments count", () {
@@ -79,29 +80,48 @@ void main() {
       ParameterPage page = ParameterPage.fromQueryResult(
           id: "99",
           title: "New Page",
-          queryResult: [
-            {
-              "entryid": "4",
-              "pageid": "3",
-              "position": "0",
-              "text": "this is comment #1",
-              "type": "Comment"
-            },
-            {
-              "entryid": "5",
-              "pageid": "3",
-              "position": "1",
-              "text": "this is comment #2",
-              "type": "Comment"
-            },
-            {
-              "entryid": "6",
-              "pageid": "3",
-              "position": "2",
-              "text": "I:BEAM",
-              "type": "Parameter"
-            }
-          ]);
+          queryResult: {
+            "tabs": [
+              {
+                "title": "Tab 1",
+                "entries": [
+                  {
+                    "entryid": "4",
+                    "pageid": "3",
+                    "position": "0",
+                    "text": "this is comment #1",
+                    "type": "Comment"
+                  },
+                  {
+                    "entryid": "5",
+                    "pageid": "3",
+                    "position": "1",
+                    "text": "this is comment #2",
+                    "type": "Comment"
+                  },
+                  {
+                    "entryid": "6",
+                    "pageid": "3",
+                    "position": "2",
+                    "text": "I:BEAM",
+                    "type": "Parameter"
+                  }
+                ]
+              },
+              {
+                "title": "Tab 2",
+                "entries": [
+                  {
+                    "entryid": "7",
+                    "pageid": "3",
+                    "position": "0",
+                    "text": "R:BEAM",
+                    "type": "Parameter"
+                  }
+                ]
+              }
+            ]
+          });
 
       // When I request the list of entries
       List<PageEntry> entries = page.entriesAsList();
@@ -113,6 +133,8 @@ void main() {
       expect(entries[0], isA<CommentEntry>());
       expect(entries[1], isA<CommentEntry>());
       expect(entries[2], isA<ParameterEntry>());
+      expect(page.tabTitles[0], "Tab 1");
+      expect(page.tabTitles[1], "Tab 2");
     });
 
     test("editing(), initially returns false", () {
@@ -369,6 +391,58 @@ void main() {
 
       // Then the original title is restored
       expect(page.title, equals("New Parameter Page"));
+    });
+
+    test("A new ParameterPage, should have 1 tab called Tab 1", () {
+      // Given nothing...
+      // When I create a new ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // Then there is one tab named Tab 1
+      expect(page.tabTitles.length, 1);
+      expect(page.tabTitles[0], "Tab 1");
+    });
+
+    test("createTab(title:), makes a new tab", () {
+      // Given a new ParameterPage
+      // ... and editing mode is enabled
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I createTab(..)...
+      page.createTab(title: "Tab 2");
+
+      // Then there are two tabs...
+      expect(page.tabTitles.length, 2);
+      expect(page.tabTitles[0], "Tab 1");
+      expect(page.tabTitles[1], "Tab 2");
+    });
+
+    test("createTab(title:), sets the dirty flag", () {
+      // Given a new ParameterPage
+      // ... and editing is enabled
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I create a new tab...
+      page.createTab(title: "Tab 2");
+
+      // Then the page is dirty
+      expect(page.isDirty, true, reason: "dirty flag should be true");
+    });
+
+    test("cancelEditing(), restores changes to tabs", () {
+      // Given I am editing a ParameterPage and have added a new tab
+      ParameterPage page = ParameterPage();
+      page.toggleEditing();
+      page.createTab(title: "Tab 2");
+
+      // When I cancelEditing()
+      page.cancelEditing();
+
+      // Then the new tab is discarded
+      expect(page.tabTitles.length, 1);
+      expect(page.tabTitles[0], "Tab 1");
     });
   });
 }
