@@ -137,7 +137,8 @@ class MockParameterPageService extends ParameterPageService {
     {"pageid": "1", "title": 'east tower'},
     {"pageid": "2", "title": 'west tower'},
     {"pageid": "4", "title": "Test Page 1"},
-    {"pageid": "3", "title": 'Test Page 2'}
+    {"pageid": "3", "title": 'Test Page 2'},
+    {"pageid": "5", "title": "Six Tabs"}
   ];
 
   final _testPageEntries = {
@@ -202,6 +203,18 @@ class MockParameterPageService extends ParameterPageService {
               "pageid": "3",
               "position": "1",
               "text": "this is comment #2",
+              "type": "Comment"
+            }
+          ]
+        },
+        {
+          "title": "Tab 2",
+          "entries": [
+            {
+              "entryid": "16",
+              "pageid": "3",
+              "position": "0",
+              "text": "This is Tab 2",
               "type": "Comment"
             }
           ]
@@ -285,6 +298,16 @@ class MockParameterPageService extends ParameterPageService {
             }
           ]
         }
+      ]
+    },
+    "5": {
+      "tabs": [
+        {"title": "Tab One", "entries": []},
+        {"title": "Tab Two", "entries": []},
+        {"title": "Tab Three", "entries": []},
+        {"title": "Tab Four", "entries": []},
+        {"title": "Tab Five", "entries": []},
+        {"title": "Tab Six", "entries": []}
       ]
     }
   };
