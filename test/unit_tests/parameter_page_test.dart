@@ -121,6 +121,8 @@ void main() {
       expect(entries[0], isA<CommentEntry>());
       expect(entries[1], isA<CommentEntry>());
       expect(entries[2], isA<ParameterEntry>());
+      expect(page.tabTitles[0], "Tab 1");
+      expect(page.tabTitles[1], "Tab 2");
     });
 
     test("editing(), initially returns false", () {

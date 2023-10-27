@@ -126,7 +126,11 @@ class ParameterPage {
 
   List<String> _buildTabTitlesFromQueryResult(
       Map<String, dynamic> queryResult) {
-    return ["Tab 1"];
+    List<String> ret = [];
+    for (Map<String, dynamic> tab in queryResult["tabs"]) {
+      ret.add(tab["title"]);
+    }
+    return ret;
   }
 
   List<PageEntry> _buildEntriesListFromQueryResult(
