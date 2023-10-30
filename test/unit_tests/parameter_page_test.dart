@@ -119,7 +119,8 @@ void main() {
                     "type": "Parameter"
                   }
                 ]
-              }
+              },
+              {"title": "Tab 3", "entries": []}
             ]
           });
 
