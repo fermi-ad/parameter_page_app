@@ -518,5 +518,14 @@ void main() {
       expect(tab1Entries.length, 1);
       expect(tab1Entries[0].entryText(), "This is Tab 1");
     });
+
+    test("switchTab(..) to invalid tab, throws", () {
+      // Given a new ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // When I switchTab(..) to a tab that doesn't exist
+      // Then an exception is thrown
+      expect(() => page.switchTab(to: "bad tab"), throwsException);
+    });
   });
 }

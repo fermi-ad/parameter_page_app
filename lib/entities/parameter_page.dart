@@ -130,6 +130,9 @@ class ParameterPage {
   }
 
   void switchTab({required String to}) {
+    if (!_entries.keys.contains(to)) {
+      throw Exception("switchTab failure - tab does not exist");
+    }
     _currentTab = to;
   }
 
