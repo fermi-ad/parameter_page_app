@@ -327,3 +327,9 @@ Future<void> changePageTitle(WidgetTester tester, {required String to}) async {
   await tester.testTextInput.receiveAction(TextInputAction.done);
   await tester.pumpAndSettle();
 }
+
+Future<void> switchTab(WidgetTester tester, {required String to}) async {
+  await tester
+      .tap(find.descendant(of: find.byType(Tab), matching: find.text(to)));
+  await tester.pumpAndSettle();
+}
