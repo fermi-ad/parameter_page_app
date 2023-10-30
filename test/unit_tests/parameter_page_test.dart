@@ -128,6 +128,8 @@ void main() {
       List<PageEntry> entries = page.entriesAsList();
       page.switchTab(to: "Tab 2");
       final tab2Entries = page.entriesAsList();
+      page.switchTab(to: "Tab 3");
+      final tab3Entries = page.entriesAsList();
 
       // Then the list contains the expected entries
       expect(page.id, equals("99"));
@@ -140,6 +142,36 @@ void main() {
       expect(page.tabTitles[1], "Tab 2");
       expect(tab2Entries.length, 1);
       expect(tab2Entries[0].entryText(), "R:BEAM");
+      expect(tab3Entries.length, 0);
+    });
+
+    test(
+        "fromQueryResult(), should load currentTab with the title from the first tab",
+        () {
+      // Given a queryResult which contains one tab named "AAA"
+      final queryResult = {
+        "tabs": [
+          {
+            "title": "AAA",
+            "entries": [
+              {
+                "entryid": "4",
+                "pageid": "3",
+                "position": "0",
+                "text": "this is comment #1",
+                "type": "Comment"
+              }
+            ]
+          }
+        ]
+      };
+
+      // When I load the query result
+      ParameterPage page = ParameterPage.fromQueryResult(
+          id: "99", title: "Test Page", queryResult: queryResult);
+
+      // Then currentTab is set to "AAA"
+      expect(page.currentTab, "AAA");
     });
 
     test("editing(), initially returns false", () {
