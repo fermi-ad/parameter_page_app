@@ -98,7 +98,11 @@ class _ParameterPageScaffoldWidgetState
       tabs.add(Tab(text: title));
     }
 
-    return TabBar(controller: _tabController, tabs: tabs);
+    return TabBar(
+        controller: _tabController,
+        tabs: tabs,
+        onTap: (tabIndex) =>
+            setState(() => _page!.switchTab(to: titles[tabIndex])));
   }
 
   Widget _buildBody(BuildContext context) {
