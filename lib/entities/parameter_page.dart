@@ -16,7 +16,7 @@ class ParameterPage {
   }
 
   List<String> get tabTitles {
-    return _tabTitles;
+    return _entries.keys.toList();
   }
 
   String get currentTab {
@@ -38,10 +38,6 @@ class ParameterPage {
 
     _title = title;
     _savedTitle = title;
-
-    final initialTabTitles = _buildTabTitlesFromQueryResult(queryResult);
-    _tabTitles = initialTabTitles;
-    _savedTabTitles = initialTabTitles;
   }
 
   void add(PageEntry entry) {
@@ -85,7 +81,6 @@ class ParameterPage {
   void cancelEditing() {
     _entries = _deepCopyEntries(_undoEntries);
     _title = _undoTitle;
-    _tabTitles = _savedTabTitles;
     _editing = false;
   }
 
@@ -114,7 +109,6 @@ class ParameterPage {
   void commit() {
     _savedEntries = _deepCopyEntries(_entries);
     _savedTitle = title;
-    _savedTabTitles = tabTitles;
   }
 
   bool get isDirty {
@@ -123,8 +117,6 @@ class ParameterPage {
 
   void createTab({required String title}) {
     _enforceEditMode();
-
-    _tabTitles.add(title);
     _entries[title] = [];
   }
 
@@ -133,15 +125,6 @@ class ParameterPage {
       throw Exception("switchTab failure - tab does not exist");
     }
     _currentTab = to;
-  }
-
-  List<String> _buildTabTitlesFromQueryResult(
-      Map<String, dynamic> queryResult) {
-    List<String> ret = [];
-    for (Map<String, dynamic> tab in queryResult["tabs"]) {
-      ret.add(tab["title"]);
-    }
-    return ret;
   }
 
   Map<String, List<PageEntry>> _buildEntriesMapFromQueryResult(
@@ -218,10 +201,6 @@ class ParameterPage {
   String _undoTitle = "New Parameter Page";
 
   String _savedTitle = "New Parameter Page";
-
-  List<String> _tabTitles = ["Tab 1"];
-
-  List<String> _savedTabTitles = ["Tab 1"];
 
   String _currentTab = "Tab 1";
 
