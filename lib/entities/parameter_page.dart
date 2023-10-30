@@ -128,6 +128,8 @@ class ParameterPage {
     _tabTitles.add(title);
   }
 
+  void switchTab({required String to}) {}
+
   List<String> _buildTabTitlesFromQueryResult(
       Map<String, dynamic> queryResult) {
     List<String> ret = [];

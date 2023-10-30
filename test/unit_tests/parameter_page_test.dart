@@ -453,5 +453,19 @@ void main() {
       // Then currentTab is...
       expect(page.currentTab, "Tab 1");
     });
+
+    test("switchTab(..), currenTab reflects the new tab", () {
+      // Given a ParameterPage with two tabs: Tab 1 and Tab 2
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createTab(title: "Tab 2");
+      page.commit();
+
+      // When I switchTab(..) to Tab 2...
+      page.switchTab(to: "Tab 2");
+
+      // Then currentTab is...
+      expect(page.currentTab, "Tab 2");
+    });
   });
 }
