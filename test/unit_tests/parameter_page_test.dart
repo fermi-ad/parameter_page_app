@@ -454,7 +454,7 @@ void main() {
       expect(page.currentTab, "Tab 1");
     });
 
-    test("switchTab(..), currenTab reflects the new tab", () {
+    test("switchTab(..), currentTab reflects the new tab", () {
       // Given a ParameterPage with two tabs: Tab 1 and Tab 2
       ParameterPage page = ParameterPage();
       page.enableEditing();
@@ -466,6 +466,28 @@ void main() {
 
       // Then currentTab is...
       expect(page.currentTab, "Tab 2");
+    });
+
+    test("entriesAsList() after switchTab(..), returns entries for currentTab",
+        () {
+      // Given a ParameterPage
+      // ... and Tab 1 has two entries
+      ParameterPage page = ParameterPage([
+        CommentEntry("This is Tab 1"),
+        CommentEntry("Tab 1 has two entries")
+      ]);
+
+      // ... and Tab 2 is empty
+      page.enableEditing();
+      page.createTab(title: "Tab 2");
+      page.commit();
+
+      // When I switchTab to Tab 2...
+      page.switchTab(to: "Tab 2");
+
+      // Then entriesAsList() returns 0 entries
+      final entries = page.entriesAsList();
+      expect(entries.length, 0);
     });
   });
 }
