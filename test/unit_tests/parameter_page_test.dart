@@ -444,5 +444,14 @@ void main() {
       expect(page.tabTitles.length, 1);
       expect(page.tabTitles[0], "Tab 1");
     });
+
+    test("Initially, currentTab is set to Tab 1", () {
+      // Given nothing
+      // When I initialize a new ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // Then currentTab is...
+      expect(page.currentTab, "Tab 1");
+    });
   });
 }

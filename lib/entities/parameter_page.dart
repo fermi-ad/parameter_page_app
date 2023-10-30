@@ -17,6 +17,10 @@ class ParameterPage {
     return _tabTitles;
   }
 
+  String get currentTab {
+    return "";
+  }
+
   ParameterPage([List<PageEntry>? entries])
       : _entries = List<PageEntry>.from(entries ?? []),
         _savedEntries = List<PageEntry>.from(entries ?? []);
