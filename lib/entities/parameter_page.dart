@@ -33,9 +33,8 @@ class ParameterPage {
       required Map<String, dynamic> queryResult})
       : _entries = initialPageEntries,
         _savedEntries = initialPageEntries {
-    final initialEntries = _buildEntriesListFromQueryResult(queryResult);
-    _entries = {"Tab 1": List<PageEntry>.from(initialEntries)};
-    _savedEntries = {"Tab 1": List<PageEntry>.from(initialEntries)};
+    _entries = _buildEntriesMapFromQueryResult(queryResult);
+    _savedEntries = _deepCopyEntries(_entries);
 
     _title = title;
     _savedTitle = title;
@@ -142,6 +141,13 @@ class ParameterPage {
     for (Map<String, dynamic> tab in queryResult["tabs"]) {
       ret.add(tab["title"]);
     }
+    return ret;
+  }
+
+  Map<String, List<PageEntry>> _buildEntriesMapFromQueryResult(
+      Map<String, dynamic> queryResult) {
+    Map<String, List<PageEntry>> ret = {};
+    ret["Tab 1"] = _buildEntriesListFromQueryResult(queryResult);
     return ret;
   }
 
