@@ -125,6 +125,8 @@ void main() {
 
       // When I request the list of entries
       List<PageEntry> entries = page.entriesAsList();
+      page.switchTab(to: "Tab 2");
+      final tab2Entries = page.entriesAsList();
 
       // Then the list contains the expected entries
       expect(page.id, equals("99"));
@@ -135,6 +137,8 @@ void main() {
       expect(entries[2], isA<ParameterEntry>());
       expect(page.tabTitles[0], "Tab 1");
       expect(page.tabTitles[1], "Tab 2");
+      expect(tab2Entries.length, 1);
+      expect(tab2Entries[0].entryText(), "R:BEAM");
     });
 
     test("editing(), initially returns false", () {
