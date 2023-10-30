@@ -18,7 +18,7 @@ class ParameterPage {
   }
 
   String get currentTab {
-    return "";
+    return "Tab 1";
   }
 
   ParameterPage([List<PageEntry>? entries])
