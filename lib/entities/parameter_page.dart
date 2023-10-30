@@ -18,7 +18,7 @@ class ParameterPage {
   }
 
   String get currentTab {
-    return "Tab 1";
+    return _currentTab;
   }
 
   ParameterPage([List<PageEntry>? entries])
@@ -128,7 +128,9 @@ class ParameterPage {
     _tabTitles.add(title);
   }
 
-  void switchTab({required String to}) {}
+  void switchTab({required String to}) {
+    _currentTab = to;
+  }
 
   List<String> _buildTabTitlesFromQueryResult(
       Map<String, dynamic> queryResult) {
@@ -181,6 +183,8 @@ class ParameterPage {
   List<String> _tabTitles = ["Tab 1"];
 
   List<String> _savedTabTitles = ["Tab 1"];
+
+  String _currentTab = "Tab 1";
 
   bool _editing = false;
 }
