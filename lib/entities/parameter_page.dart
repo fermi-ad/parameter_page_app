@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:parameter_page/entities/page_entry.dart';
 
-const Map<String, List<PageEntry>> DEFAULT_PAGE = {"Tab 1": []};
+const Map<String, List<PageEntry>> initialPageEntries = {"Tab 1": []};
 
 class ParameterPage {
   String? id;
@@ -31,8 +31,8 @@ class ParameterPage {
       {required this.id,
       required String title,
       required Map<String, dynamic> queryResult})
-      : _entries = DEFAULT_PAGE,
-        _savedEntries = DEFAULT_PAGE {
+      : _entries = initialPageEntries,
+        _savedEntries = initialPageEntries {
     final initialEntries = _buildEntriesListFromQueryResult(queryResult);
     _entries = {"Tab 1": List<PageEntry>.from(initialEntries)};
     _savedEntries = {"Tab 1": List<PageEntry>.from(initialEntries)};
@@ -195,11 +195,11 @@ class ParameterPage {
     }
   }
 
-  Map<String, List<PageEntry>> _entries = {"Tab 1": []};
+  Map<String, List<PageEntry>> _entries = initialPageEntries;
 
-  Map<String, List<PageEntry>> _undoEntries = {"Tab 1": []};
+  Map<String, List<PageEntry>> _undoEntries = initialPageEntries;
 
-  Map<String, List<PageEntry>> _savedEntries = {"Tab 1": []};
+  Map<String, List<PageEntry>> _savedEntries = initialPageEntries;
 
   String _title = "New Parameter Page";
 
