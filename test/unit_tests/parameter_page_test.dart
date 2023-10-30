@@ -468,7 +468,7 @@ void main() {
       expect(page.currentTab, "Tab 2");
     });
 
-    test("entriesAsList() after switchTab(..), returns entries for currentTab",
+    test("entriesAsList() after switching to a new tab, returns no entries",
         () {
       // Given a ParameterPage
       // ... and Tab 1 has two entries
@@ -488,6 +488,35 @@ void main() {
       // Then entriesAsList() returns 0 entries
       final entries = page.entriesAsList();
       expect(entries.length, 0);
+    });
+
+    test(
+        "add() entries to new tab, entriesAsList() returns new entries for that tab only",
+        () {
+      // Given a new Parameter Page with one comment on Tab 1
+      ParameterPage page = ParameterPage([CommentEntry("This is Tab 1")]);
+
+      // ... and a new tab called Tab 2 has been created...
+      page.enableEditing();
+      page.createTab(title: "Tab 2");
+
+      // When I add two comments to Tab 2
+      page.switchTab(to: "Tab 2");
+      page.add(CommentEntry("This is Tab 2"));
+      page.add(CommentEntry("And it has two comments"));
+      page.commit();
+
+      // Then entriesAsList() returns the new entries
+      final entries = page.entriesAsList();
+      expect(entries[0].entryText(), "This is Tab 2");
+      expect(entries[1].entryText(), "And it has two comments");
+      expect(entries.length, 2);
+
+      // ... and Tab 1 still has 1 entry
+      page.switchTab(to: "Tab 1");
+      final tab1Entries = page.entriesAsList();
+      expect(tab1Entries.length, 1);
+      expect(tab1Entries[0].entryText(), "This is Tab 1");
     });
   });
 }
