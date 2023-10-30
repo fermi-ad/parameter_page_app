@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:parameter_page/entities/page_entry.dart';
 
+const Map<String, List<PageEntry>> DEFAULT_PAGE = {"Tab 1": []};
+
 class ParameterPage {
   String? id;
 
@@ -22,18 +24,18 @@ class ParameterPage {
   }
 
   ParameterPage([List<PageEntry>? entries])
-      : _entries = List<PageEntry>.from(entries ?? []),
-        _savedEntries = List<PageEntry>.from(entries ?? []);
+      : _entries = {"Tab 1": List<PageEntry>.from(entries ?? [])},
+        _savedEntries = {"Tab 1": List<PageEntry>.from(entries ?? [])};
 
   ParameterPage.fromQueryResult(
       {required this.id,
       required String title,
       required Map<String, dynamic> queryResult})
-      : _entries = [],
-        _savedEntries = [] {
+      : _entries = DEFAULT_PAGE,
+        _savedEntries = DEFAULT_PAGE {
     final initialEntries = _buildEntriesListFromQueryResult(queryResult);
-    _entries = List<PageEntry>.from(initialEntries);
-    _savedEntries = List<PageEntry>.from(initialEntries);
+    _entries = {"Tab 1": List<PageEntry>.from(initialEntries)};
+    _savedEntries = {"Tab 1": List<PageEntry>.from(initialEntries)};
 
     _title = title;
     _savedTitle = title;
@@ -45,7 +47,7 @@ class ParameterPage {
 
   void add(PageEntry entry) {
     _enforceEditMode();
-    _entries.add(entry);
+    _entries[_currentTab]!.add(entry);
   }
 
   void _enforceEditMode() {
@@ -56,11 +58,11 @@ class ParameterPage {
   }
 
   List<PageEntry> entriesAsList() {
-    return _currentTab == "Tab 1" ? _entries : [];
+    return _entries[currentTab]!;
   }
 
   int get numberOfEntries {
-    return _entries.length;
+    return _entries[_currentTab]!.length;
   }
 
   bool editing() {
@@ -69,7 +71,7 @@ class ParameterPage {
 
   void enableEditing() {
     _editing = true;
-    _undoEntries = List<PageEntry>.from(_entries);
+    _undoEntries = _deepCopyEntries(_entries);
     _undoTitle = _title;
   }
 
@@ -82,7 +84,7 @@ class ParameterPage {
   }
 
   void cancelEditing() {
-    _entries = List<PageEntry>.from(_undoEntries);
+    _entries = _deepCopyEntries(_undoEntries);
     _title = _undoTitle;
     _tabTitles = _savedTabTitles;
     _editing = false;
@@ -94,38 +96,37 @@ class ParameterPage {
     if (atIndex < toIndex) {
       toIndex -= 1;
     }
-    final PageEntry entry = _entries.removeAt(atIndex);
-    _entries.insert(toIndex, entry);
+    final PageEntry entry = _entries[_currentTab]!.removeAt(atIndex);
+    _entries[_currentTab]!.insert(toIndex, entry);
   }
 
   void removeEntry({required int at}) {
     _enforceEditMode();
 
-    _entries.removeAt(at);
+    _entries[_currentTab]!.removeAt(at);
   }
 
   void clearAll() {
     _enforceEditMode();
 
-    _entries = [];
+    _entries[_currentTab] = [];
   }
 
   void commit() {
-    _savedEntries = List<PageEntry>.from(_entries);
+    _savedEntries = _deepCopyEntries(_entries);
     _savedTitle = title;
     _savedTabTitles = tabTitles;
   }
 
   bool get isDirty {
-    return title != _savedTitle ||
-        !listEquals<PageEntry>(_entries, _savedEntries) ||
-        !listEquals<String>(tabTitles, _savedTabTitles);
+    return title != _savedTitle || !_entriesEqual(_savedEntries);
   }
 
   void createTab({required String title}) {
     _enforceEditMode();
 
     _tabTitles.add(title);
+    _entries[title] = [];
   }
 
   void switchTab({required String to}) {
@@ -151,6 +152,32 @@ class ParameterPage {
     return ret;
   }
 
+  Map<String, List<PageEntry>> _deepCopyEntries(
+      Map<String, List<PageEntry>> from) {
+    Map<String, List<PageEntry>> ret = {};
+    for (String tab in from.keys) {
+      ret[tab] = List<PageEntry>.from(from[tab]!);
+    }
+    return ret;
+  }
+
+  bool _entriesEqual(Map<String, List<PageEntry>> compareTo) {
+    if (_entries.length != compareTo.length) {
+      return false;
+    }
+
+    for (String tab in _entries.keys) {
+      if (!compareTo.containsKey(tab)) {
+        return false;
+      }
+      if (!listEquals(_entries[tab]!, compareTo[tab]!)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   PageEntry _hydratePageEntry({required Map<String, dynamic> from}) {
     switch (from["type"]) {
       case "Comment":
@@ -168,11 +195,11 @@ class ParameterPage {
     }
   }
 
-  List<PageEntry> _entries;
+  Map<String, List<PageEntry>> _entries = {"Tab 1": []};
 
-  List<PageEntry> _undoEntries = [];
+  Map<String, List<PageEntry>> _undoEntries = {"Tab 1": []};
 
-  List<PageEntry> _savedEntries;
+  Map<String, List<PageEntry>> _savedEntries = {"Tab 1": []};
 
   String _title = "New Parameter Page";
 
