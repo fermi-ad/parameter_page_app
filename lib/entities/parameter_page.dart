@@ -56,7 +56,7 @@ class ParameterPage {
   }
 
   List<PageEntry> entriesAsList() {
-    return _entries;
+    return _currentTab == "Tab 1" ? _entries : [];
   }
 
   int get numberOfEntries {
