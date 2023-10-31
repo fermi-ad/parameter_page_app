@@ -59,8 +59,7 @@ class ParameterPage {
       if (!_entries.containsKey(forTab)) {
         throw Exception("entriesAsList failure - Invalid tab title");
       }
-      return [];
-      // return _entries[forTab]!;
+      return _entries[forTab]!;
     } else {
       return _entries[currentTab]!;
     }
