@@ -56,6 +56,8 @@ class _ParameterPageScaffoldWidgetState
       _loadPage(pageId: widget.openPageId!);
     } else if (_aNewPageShouldBeStarted()) {
       _page = ParameterPage();
+      _tabController =
+          TabController(length: _page!.tabTitles.length, vsync: this);
     }
 
     return Scaffold(
