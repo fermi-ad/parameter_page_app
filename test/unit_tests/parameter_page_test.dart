@@ -564,5 +564,35 @@ void main() {
       // Then an exception is thrown
       expect(() => page.switchTab(to: "bad tab"), throwsException);
     });
+
+    test("entriesAsList(forTab:), throws for invalid tab", () {
+      // Given a new ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // When I entriesAsList(forTab:) passing an invalid tab title
+      // Then an exception is thrown
+      expect(() => page.entriesAsList(forTab: "Invalid tab"), throwsException);
+    });
+
+    test("entriesAsList(forTab:), returns entries for given tab", () {
+      // Given a ParameterPage populated with entries on two tabs
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.add(CommentEntry("tab 1 comment"));
+      page.createTab(title: "Tab Two");
+      page.switchTab(to: "Tab Two");
+      page.add(CommentEntry("tab 2 comment"));
+      page.commit();
+
+      // When I entriesAsList(forTab:)
+      final tab1Entries = page.entriesAsList(forTab: "Tab 1");
+      final tab2Entries = page.entriesAsList(forTab: "Tab Two");
+
+      // Then I get the entries for the appropriate tab...
+      expect(tab1Entries.length, 1);
+      expect(tab1Entries[0].entryText(), "tab 1 comment");
+      expect(tab2Entries.length, 1);
+      expect(tab2Entries[0].entryText(), "tab 2 comment");
+    });
   });
 }
