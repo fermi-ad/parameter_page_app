@@ -70,26 +70,26 @@ class MockParameterPageService extends ParameterPageService {
       return Future.error("Fake savePage failure.");
     }
 
-    final entries = page.entriesAsList();
+    _testPageEntries[id] = {"tabs": []};
+    for (final tabTitle in page.tabTitles) {
+      final entries = page.entriesAsList(forTab: tabTitle);
 
-    List<Map<String, String>> newEntries = [];
-    int position = 0;
-    for (final PageEntry entry in entries) {
-      newEntries.add({
-        "pageid": id,
-        "entryid": DateTime.now().microsecondsSinceEpoch.toString(),
-        "position": "$position",
-        "text": entry.entryText(),
-        "type": entry is CommentEntry ? "Comment" : "Parameter"
-      });
-      position += 1;
+      List<Map<String, String>> newEntries = [];
+      int position = 0;
+      for (final PageEntry entry in entries) {
+        newEntries.add({
+          "pageid": id,
+          "entryid": DateTime.now().microsecondsSinceEpoch.toString(),
+          "position": "$position",
+          "text": entry.entryText(),
+          "type": entry is CommentEntry ? "Comment" : "Parameter"
+        });
+        position += 1;
+      }
+
+      _testPageEntries[id]!["tabs"]!
+          .add({"title": tabTitle, "entries": newEntries});
     }
-
-    _testPageEntries[id] = {
-      "tabs": [
-        {"title": "Tab 1", "entries": newEntries}
-      ]
-    };
 
     Timer(const Duration(seconds: 1), () => onSuccess.call());
   }

@@ -273,5 +273,39 @@ void main() {
       // ... and the page is still loaded in memory
       assertPageTitleIs("Test Page One");
     }, semanticsEnabled: false);
+
+    testWidgets('Save a page with multiple tabs, changes persist',
+        (WidgetTester tester) async {
+      // Given I have opened Test Page and added a comment to Tab 2
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+      await enterEditMode(tester);
+      await switchTab(tester, to: "Tab 2");
+      await addANewComment(tester, "this is comment #3");
+      await exitEditMode(tester);
+
+      // When I save the page
+      await openMainMenu(tester);
+      await saveParameterPage(tester);
+      await waitForPageToBeSaved(tester);
+
+      // ... and I open another page
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 1");
+
+      // ... and I open Test Page 2 again
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+
+      // Then the entries on tab 1 are still there
+      assertIsOnPage(comment: "this is comment #1");
+      assertParametersAreOnPage(["I:BEAM", "R:BEAM"]);
+      assertIsOnPage(comment: "this is comment #2");
+
+      // ... and the entries on tab 2 are still there
+      await switchTab(tester, to: "Tab 2");
+      assertIsOnPage(comment: "this is comment #3");
+    }, semanticsEnabled: false);
   });
 }

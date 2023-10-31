@@ -54,8 +54,15 @@ class ParameterPage {
     }
   }
 
-  List<PageEntry> entriesAsList() {
-    return _entries[currentTab]!;
+  List<PageEntry> entriesAsList({String? forTab}) {
+    if (forTab != null) {
+      if (!_entries.containsKey(forTab)) {
+        throw Exception("entriesAsList failure - Invalid tab title");
+      }
+      return _entries[forTab]!;
+    } else {
+      return _entries[currentTab]!;
+    }
   }
 
   int get numberOfEntries {
