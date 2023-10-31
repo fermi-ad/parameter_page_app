@@ -43,6 +43,12 @@ class _ParameterPageScaffoldWidgetState
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
+  void initState() {
+    _tabController = TabController(length: 0, vsync: this);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (_errorMessage != null) {
     } else if (_pageHasNotBeenLoadedYet() || _aDifferentPageShouldBeLoaded()) {
@@ -50,6 +56,8 @@ class _ParameterPageScaffoldWidgetState
       _loadPage(pageId: widget.openPageId!);
     } else if (_aNewPageShouldBeStarted()) {
       _page = ParameterPage();
+      _tabController =
+          TabController(length: _page!.tabTitles.length, vsync: this);
     }
 
     return Scaffold(
@@ -92,13 +100,15 @@ class _ParameterPageScaffoldWidgetState
     List<Widget> tabs = [];
     List<String> titles = _page == null ? [] : _page!.tabTitles;
 
-    _tabController = TabController(length: titles.length, vsync: this);
-
     for (String title in titles) {
       tabs.add(Tab(text: title));
     }
 
-    return TabBar(controller: _tabController, tabs: tabs);
+    return TabBar(
+        controller: _tabController,
+        tabs: tabs,
+        onTap: (tabIndex) =>
+            setState(() => _page!.switchTab(to: titles[tabIndex])));
   }
 
   Widget _buildBody(BuildContext context) {
@@ -297,7 +307,11 @@ class _ParameterPageScaffoldWidgetState
   _loadPage({required String pageId}) {
     widget.pageService
         .fetchPage(id: pageId)
-        .then((ParameterPage page) => setState(() => _page = page))
+        .then((ParameterPage page) => setState(() {
+              _page = page;
+              _tabController =
+                  TabController(length: page.tabTitles.length, vsync: this);
+            }))
         .onError((String error, stackTrace) => setState(() {
               _errorMessage = error;
               _page = null;

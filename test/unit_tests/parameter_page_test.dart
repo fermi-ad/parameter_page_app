@@ -119,12 +119,17 @@ void main() {
                     "type": "Parameter"
                   }
                 ]
-              }
+              },
+              {"title": "Tab 3", "entries": []}
             ]
           });
 
       // When I request the list of entries
       List<PageEntry> entries = page.entriesAsList();
+      page.switchTab(to: "Tab 2");
+      final tab2Entries = page.entriesAsList();
+      page.switchTab(to: "Tab 3");
+      final tab3Entries = page.entriesAsList();
 
       // Then the list contains the expected entries
       expect(page.id, equals("99"));
@@ -135,6 +140,38 @@ void main() {
       expect(entries[2], isA<ParameterEntry>());
       expect(page.tabTitles[0], "Tab 1");
       expect(page.tabTitles[1], "Tab 2");
+      expect(tab2Entries.length, 1);
+      expect(tab2Entries[0].entryText(), "R:BEAM");
+      expect(tab3Entries.length, 0);
+    });
+
+    test(
+        "fromQueryResult(), should load currentTab with the title from the first tab",
+        () {
+      // Given a queryResult which contains one tab named "AAA"
+      final queryResult = {
+        "tabs": [
+          {
+            "title": "AAA",
+            "entries": [
+              {
+                "entryid": "4",
+                "pageid": "3",
+                "position": "0",
+                "text": "this is comment #1",
+                "type": "Comment"
+              }
+            ]
+          }
+        ]
+      };
+
+      // When I load the query result
+      ParameterPage page = ParameterPage.fromQueryResult(
+          id: "99", title: "Test Page", queryResult: queryResult);
+
+      // Then currentTab is set to "AAA"
+      expect(page.currentTab, "AAA");
     });
 
     test("editing(), initially returns false", () {
@@ -443,6 +480,89 @@ void main() {
       // Then the new tab is discarded
       expect(page.tabTitles.length, 1);
       expect(page.tabTitles[0], "Tab 1");
+    });
+
+    test("Initially, currentTab is set to Tab 1", () {
+      // Given nothing
+      // When I initialize a new ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // Then currentTab is...
+      expect(page.currentTab, "Tab 1");
+    });
+
+    test("switchTab(..), currentTab reflects the new tab", () {
+      // Given a ParameterPage with two tabs: Tab 1 and Tab 2
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createTab(title: "Tab 2");
+      page.commit();
+
+      // When I switchTab(..) to Tab 2...
+      page.switchTab(to: "Tab 2");
+
+      // Then currentTab is...
+      expect(page.currentTab, "Tab 2");
+    });
+
+    test("entriesAsList() after switching to a new tab, returns no entries",
+        () {
+      // Given a ParameterPage
+      // ... and Tab 1 has two entries
+      ParameterPage page = ParameterPage([
+        CommentEntry("This is Tab 1"),
+        CommentEntry("Tab 1 has two entries")
+      ]);
+
+      // ... and Tab 2 is empty
+      page.enableEditing();
+      page.createTab(title: "Tab 2");
+      page.commit();
+
+      // When I switchTab to Tab 2...
+      page.switchTab(to: "Tab 2");
+
+      // Then entriesAsList() returns 0 entries
+      final entries = page.entriesAsList();
+      expect(entries.length, 0);
+    });
+
+    test(
+        "add() entries to new tab, entriesAsList() returns new entries for that tab only",
+        () {
+      // Given a new Parameter Page with one comment on Tab 1
+      ParameterPage page = ParameterPage([CommentEntry("This is Tab 1")]);
+
+      // ... and a new tab called Tab 2 has been created...
+      page.enableEditing();
+      page.createTab(title: "Tab 2");
+
+      // When I add two comments to Tab 2
+      page.switchTab(to: "Tab 2");
+      page.add(CommentEntry("This is Tab 2"));
+      page.add(CommentEntry("And it has two comments"));
+      page.commit();
+
+      // Then entriesAsList() returns the new entries
+      final entries = page.entriesAsList();
+      expect(entries[0].entryText(), "This is Tab 2");
+      expect(entries[1].entryText(), "And it has two comments");
+      expect(entries.length, 2);
+
+      // ... and Tab 1 still has 1 entry
+      page.switchTab(to: "Tab 1");
+      final tab1Entries = page.entriesAsList();
+      expect(tab1Entries.length, 1);
+      expect(tab1Entries[0].entryText(), "This is Tab 1");
+    });
+
+    test("switchTab(..) to invalid tab, throws", () {
+      // Given a new ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // When I switchTab(..) to a tab that doesn't exist
+      // Then an exception is thrown
+      expect(() => page.switchTab(to: "bad tab"), throwsException);
     });
   });
 }

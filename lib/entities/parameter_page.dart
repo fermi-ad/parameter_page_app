@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:parameter_page/entities/page_entry.dart';
 
+const Map<String, List<PageEntry>> initialPageEntries = {"Tab 1": []};
+
 class ParameterPage {
   String? id;
 
@@ -14,34 +16,35 @@ class ParameterPage {
   }
 
   List<String> get tabTitles {
-    return _tabTitles;
+    return _entries.keys.toList();
+  }
+
+  String get currentTab {
+    return _currentTab;
   }
 
   ParameterPage([List<PageEntry>? entries])
-      : _entries = List<PageEntry>.from(entries ?? []),
-        _savedEntries = List<PageEntry>.from(entries ?? []);
+      : _entries = {"Tab 1": List<PageEntry>.from(entries ?? [])},
+        _savedEntries = {"Tab 1": List<PageEntry>.from(entries ?? [])};
 
   ParameterPage.fromQueryResult(
       {required this.id,
       required String title,
       required Map<String, dynamic> queryResult})
-      : _entries = [],
-        _savedEntries = [] {
-    final initialEntries = _buildEntriesListFromQueryResult(queryResult);
-    _entries = List<PageEntry>.from(initialEntries);
-    _savedEntries = List<PageEntry>.from(initialEntries);
+      : _entries = initialPageEntries,
+        _savedEntries = initialPageEntries {
+    _entries = _buildEntriesMapFromQueryResult(queryResult);
+    _savedEntries = _deepCopyEntries(_entries);
+
+    _currentTab = _entries.keys.first;
 
     _title = title;
     _savedTitle = title;
-
-    final initialTabTitles = _buildTabTitlesFromQueryResult(queryResult);
-    _tabTitles = initialTabTitles;
-    _savedTabTitles = initialTabTitles;
   }
 
   void add(PageEntry entry) {
     _enforceEditMode();
-    _entries.add(entry);
+    _entries[_currentTab]!.add(entry);
   }
 
   void _enforceEditMode() {
@@ -52,11 +55,11 @@ class ParameterPage {
   }
 
   List<PageEntry> entriesAsList() {
-    return _entries;
+    return _entries[currentTab]!;
   }
 
   int get numberOfEntries {
-    return _entries.length;
+    return _entries[_currentTab]!.length;
   }
 
   bool editing() {
@@ -65,7 +68,7 @@ class ParameterPage {
 
   void enableEditing() {
     _editing = true;
-    _undoEntries = List<PageEntry>.from(_entries);
+    _undoEntries = _deepCopyEntries(_entries);
     _undoTitle = _title;
   }
 
@@ -78,9 +81,8 @@ class ParameterPage {
   }
 
   void cancelEditing() {
-    _entries = List<PageEntry>.from(_undoEntries);
+    _entries = _deepCopyEntries(_undoEntries);
     _title = _undoTitle;
-    _tabTitles = _savedTabTitles;
     _editing = false;
   }
 
@@ -90,57 +92,92 @@ class ParameterPage {
     if (atIndex < toIndex) {
       toIndex -= 1;
     }
-    final PageEntry entry = _entries.removeAt(atIndex);
-    _entries.insert(toIndex, entry);
+    final PageEntry entry = _entries[_currentTab]!.removeAt(atIndex);
+    _entries[_currentTab]!.insert(toIndex, entry);
   }
 
   void removeEntry({required int at}) {
     _enforceEditMode();
 
-    _entries.removeAt(at);
+    _entries[_currentTab]!.removeAt(at);
   }
 
   void clearAll() {
     _enforceEditMode();
 
-    _entries = [];
+    _entries[_currentTab] = [];
   }
 
   void commit() {
-    _savedEntries = List<PageEntry>.from(_entries);
+    _savedEntries = _deepCopyEntries(_entries);
     _savedTitle = title;
-    _savedTabTitles = tabTitles;
   }
 
   bool get isDirty {
-    return title != _savedTitle ||
-        !listEquals<PageEntry>(_entries, _savedEntries) ||
-        !listEquals<String>(tabTitles, _savedTabTitles);
+    return title != _savedTitle || !_entriesEqual(_savedEntries);
   }
 
   void createTab({required String title}) {
     _enforceEditMode();
-
-    _tabTitles.add(title);
+    _entries[title] = [];
   }
 
-  List<String> _buildTabTitlesFromQueryResult(
+  void switchTab({required String to}) {
+    if (!_entries.keys.contains(to)) {
+      throw Exception("switchTab failure - tab does not exist");
+    }
+    _currentTab = to;
+  }
+
+  Map<String, List<PageEntry>> _buildEntriesMapFromQueryResult(
       Map<String, dynamic> queryResult) {
-    List<String> ret = [];
-    for (Map<String, dynamic> tab in queryResult["tabs"]) {
-      ret.add(tab["title"]);
+    Map<String, List<PageEntry>> ret = {};
+    for (final tabData in queryResult["tabs"]) {
+      final entries = tabData["entries"];
+      if (entries.length == 0) {
+        ret[tabData["title"]] = [];
+      } else {
+        ret[tabData["title"]] =
+            _buildEntriesListFromQueryResult(tabData["entries"]);
+      }
     }
     return ret;
   }
 
   List<PageEntry> _buildEntriesListFromQueryResult(
-      Map<String, dynamic> queryResult) {
+      List<Map<String, dynamic>> queryResult) {
     List<PageEntry> ret = [];
-    for (final entryData in queryResult["tabs"][0]["entries"]) {
+    for (final entryData in queryResult) {
       ret.add(_hydratePageEntry(from: entryData));
     }
 
     return ret;
+  }
+
+  Map<String, List<PageEntry>> _deepCopyEntries(
+      Map<String, List<PageEntry>> from) {
+    Map<String, List<PageEntry>> ret = {};
+    for (String tab in from.keys) {
+      ret[tab] = List<PageEntry>.from(from[tab]!);
+    }
+    return ret;
+  }
+
+  bool _entriesEqual(Map<String, List<PageEntry>> compareTo) {
+    if (_entries.length != compareTo.length) {
+      return false;
+    }
+
+    for (String tab in _entries.keys) {
+      if (!compareTo.containsKey(tab)) {
+        return false;
+      }
+      if (!listEquals(_entries[tab]!, compareTo[tab]!)) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   PageEntry _hydratePageEntry({required Map<String, dynamic> from}) {
@@ -160,11 +197,11 @@ class ParameterPage {
     }
   }
 
-  List<PageEntry> _entries;
+  Map<String, List<PageEntry>> _entries = initialPageEntries;
 
-  List<PageEntry> _undoEntries = [];
+  Map<String, List<PageEntry>> _undoEntries = initialPageEntries;
 
-  List<PageEntry> _savedEntries;
+  Map<String, List<PageEntry>> _savedEntries = initialPageEntries;
 
   String _title = "New Parameter Page";
 
@@ -172,9 +209,7 @@ class ParameterPage {
 
   String _savedTitle = "New Parameter Page";
 
-  List<String> _tabTitles = ["Tab 1"];
-
-  List<String> _savedTabTitles = ["Tab 1"];
+  String _currentTab = "Tab 1";
 
   bool _editing = false;
 }

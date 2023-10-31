@@ -30,5 +30,24 @@ void main() {
       // Then two tabs are visible:
       assertTabBarContains(nTabs: 2, withTitles: ["Tab 1", "Tab 2"]);
     });
+
+    testWidgets('Move to Tab 2, parameters for Tab 2 should be visible',
+        (tester) async {
+      // Given Test Page 2 is loaded...
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+
+      // When I switch the tab to Tab 2...
+      await switchTab(tester, to: "Tab 2");
+
+      // Then the entries for Tab 1 go away...
+      assertIsNotOnPage(comment: "this is comment #1");
+      assertIsNotOnPage(comment: "this is comment #2");
+      assertParametersAreNotOnPage(["I:BEAM", "R:BEAM"]);
+
+      // ... and the entries for Tab 2 are displayed...
+      assertIsOnPage(comment: "This is Tab 2");
+    });
   });
 }
