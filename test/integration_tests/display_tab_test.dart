@@ -63,6 +63,10 @@ void main() {
 
       // When I add a new comment to Tab One
       await addANewComment(tester, "Comment for tab 1");
+      //await switchTab(tester, to: "Tab Two");
+      //await addANewComment(tester, "Comment for tab 2");
+      //await switchTab(tester, to: "Tab Three");
+      //await addANewComment(tester, "Comment for tab 3");
 
       // ... and I exit edit mode
       await exitEditMode(tester);
@@ -70,6 +74,20 @@ void main() {
       // Then each tab has the appropriate entries
       assertIsOnPage(comment: "This is Tab One");
       assertIsOnPage(comment: "Comment for tab 1");
+      await switchTab(tester, to: "Tab Two");
+      assertIsOnPage(comment: "Comment for tab 2");
+      await switchTab(tester, to: "Tab Three");
+      assertIsOnPage(comment: "Comment for tab 3");
+      await switchTab(tester, to: "Tab Four");
+      assertIsOnPage(comment: "Comment for tab 4");
+      await switchTab(tester, to: "Tab Five");
+      assertIsOnPage(comment: "Comment for tab 5");
+      await switchTab(tester, to: "Tab Six");
+      assertIsOnPage(comment: "Comment for tab 6");
+      await switchTab(tester, to: "Tab Sevenr");
+      assertIsOnPage(comment: "Comment for tab 7");
+      await switchTab(tester, to: "Tab Eightr");
+      assertIsOnPage(comment: "Comment for tab 8");
     });
   });
 }
