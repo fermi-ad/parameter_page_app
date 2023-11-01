@@ -101,5 +101,20 @@ void main() {
       // Then the tab bar is not visible
       assertTabBar(isVisible: false);
     });
+
+    testWidgets(
+        'Edit a page without tabs, the tab bar and the default Tab 1 is visible',
+        (WidgetTester tester) async {
+      // Given Test Page 1 is loaded and the tab bar is not visible
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      assertTabBar(isVisible: false);
+
+      // When I enter edit mode
+      await enterEditMode(tester);
+
+      // Then the tab bar is visible
+      assertTabBar(isVisible: true);
+    });
   });
 }
