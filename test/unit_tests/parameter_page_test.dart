@@ -594,5 +594,22 @@ void main() {
       expect(tab2Entries.length, 1);
       expect(tab2Entries[0].entryText(), "tab 2 comment");
     });
+
+    test("createTab() three times, creates new tabs titled Tab N", () {
+      // Given a new ParameterPage
+      // ... and editing is enabled
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I createTab() three times
+      page.createTab();
+      page.createTab();
+      page.createTab();
+
+      // Then the new tabs are named "Tab N"
+      expect(page.tabTitles[1], "Tab 2");
+      expect(page.tabTitles[2], "Tab 3");
+      expect(page.tabTitles[3], "Tab 4");
+    });
   });
 }

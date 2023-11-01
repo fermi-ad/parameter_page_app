@@ -116,5 +116,19 @@ void main() {
       // Then the tab bar is visible
       assertTabBar(isVisible: true);
     });
+
+    testWidgets('Tap new tab, a tab is created titled Tab 2',
+        (WidgetTester tester) async {
+      // Given Test Page 1 is loaded and I am in edit mode
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await enterEditMode(tester);
+
+      // When I create a new tab
+      await createNewTab(tester);
+
+      // Then a new tab titled Tab 2 is created
+      assertTabBarContains(nTabs: 2, withTitles: ["Tab 1", "Tab 2"]);
+    });
   });
 }

@@ -124,9 +124,13 @@ class ParameterPage {
     return title != _savedTitle || !_entriesEqual(_savedEntries);
   }
 
-  void createTab({required String title}) {
+  void createTab({String? title}) {
     _enforceEditMode();
-    _entries[title] = [];
+    _entries[title ?? _generateNewTabTitle()] = [];
+  }
+
+  String _generateNewTabTitle() {
+    return "Tab ${tabTitles.length + 1}";
   }
 
   void switchTab({required String to}) {

@@ -334,3 +334,8 @@ Future<void> switchTab(WidgetTester tester, {required String to}) async {
       .tap(find.descendant(of: find.byType(Tab), matching: find.text(to)));
   await tester.pumpAndSettle();
 }
+
+Future<void> createNewTab(WidgetTester tester) async {
+  await tester.tap(find.byKey(const Key("create_tab_button")));
+  await tester.pumpAndSettle();
+}
