@@ -82,18 +82,24 @@ class _ParameterPageScaffoldWidgetState
   }
 
   AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-        title: PageTitleWidget(
-            editing: _page?.editing() ?? false,
-            persistenceState: _persistenceState,
-            title: _page == null ? "Parameter Page" : _page!.title,
-            onTitleUpdate: _handleTitleUpdate),
-        bottom: _buildTabBar(),
-        actions: [
-          DisplaySettingsButtonWidget(
-              wide: MediaQuery.of(context).size.width > 600,
-              onPressed: () => _navigateToDisplaySettings(context)),
-        ]);
+    final title = PageTitleWidget(
+        editing: _page?.editing() ?? false,
+        persistenceState: _persistenceState,
+        title: _page == null ? "Parameter Page" : _page!.title,
+        onTitleUpdate: _handleTitleUpdate);
+    final actions = [
+      DisplaySettingsButtonWidget(
+          wide: MediaQuery.of(context).size.width > 600,
+          onPressed: () => _navigateToDisplaySettings(context)),
+    ];
+    return _isTabBarVisible()
+        ? AppBar(title: title, bottom: _buildTabBar(), actions: actions)
+        : AppBar(title: title, actions: actions);
+  }
+
+  bool _isTabBarVisible() {
+    return _page != null &&
+        !(_page!.tabTitles.length == 1 && _page!.tabTitles[0] == "Tab 1");
   }
 
   TabBar _buildTabBar() {
@@ -105,6 +111,7 @@ class _ParameterPageScaffoldWidgetState
     }
 
     return TabBar(
+        key: const Key("parameter_page_tabbar"),
         controller: _tabController,
         tabs: tabs,
         onTap: (tabIndex) =>

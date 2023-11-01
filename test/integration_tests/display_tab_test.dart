@@ -100,5 +100,17 @@ void main() {
       await switchTab(tester, to: "Tab Eight");
       assertIsOnPage(comment: "Comment for tab 8");
     });
+
+    testWidgets('Display a page without tabs, tab bar is not visible',
+        (WidgetTester tester) async {
+      // Given I am on the landing page
+      await startParameterPageApp(tester);
+
+      // When I navigate to a page without any tabs
+      await navigateToTestPage1(tester);
+
+      // Then the tab bar is not visible
+      assertTabBar(isVisible: false);
+    });
   });
 }
