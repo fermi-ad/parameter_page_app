@@ -99,7 +99,9 @@ class _ParameterPageScaffoldWidgetState
 
   bool _isTabBarVisible() {
     return _page != null &&
-        !(_page!.tabTitles.length == 1 && _page!.tabTitles[0] == "Tab 1");
+        !(!_page!.editing() &&
+            _page!.tabTitles.length == 1 &&
+            _page!.tabTitles[0] == "Tab 1");
   }
 
   TabBar _buildTabBar() {
