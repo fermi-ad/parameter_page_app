@@ -44,7 +44,7 @@ class _ParameterPageScaffoldWidgetState
 
   @override
   void initState() {
-    _tabController = TabController(length: 0, vsync: this);
+    _resetTabController();
     super.initState();
   }
 
@@ -56,8 +56,7 @@ class _ParameterPageScaffoldWidgetState
       _loadPage(pageId: widget.openPageId!);
     } else if (_aNewPageShouldBeStarted()) {
       _page = ParameterPage();
-      _tabController =
-          TabController(length: _page!.tabTitles.length, vsync: this);
+      _resetTabController();
     }
 
     return Scaffold(
@@ -82,29 +81,21 @@ class _ParameterPageScaffoldWidgetState
   }
 
   AppBar _buildAppBar(BuildContext context) {
-    final title = PageTitleWidget(
-        editing: _page?.editing() ?? false,
-        persistenceState: _persistenceState,
-        title: _page == null ? "Parameter Page" : _page!.title,
-        onTitleUpdate: _handleTitleUpdate);
-    final actions = [
-      DisplaySettingsButtonWidget(
-          wide: MediaQuery.of(context).size.width > 600,
-          onPressed: () => _navigateToDisplaySettings(context)),
-    ];
-    return _isTabBarVisible()
-        ? AppBar(title: title, bottom: _buildTabBar(), actions: actions)
-        : AppBar(title: title, actions: actions);
+    return AppBar(
+        title: PageTitleWidget(
+            editing: _page?.editing() ?? false,
+            persistenceState: _persistenceState,
+            title: _page == null ? "Parameter Page" : _page!.title,
+            onTitleUpdate: _handleTitleUpdate),
+        bottom: _buildTabBar(),
+        actions: [
+          DisplaySettingsButtonWidget(
+              wide: MediaQuery.of(context).size.width > 600,
+              onPressed: () => _navigateToDisplaySettings(context)),
+        ]);
   }
 
-  bool _isTabBarVisible() {
-    return _page != null &&
-        !(!_page!.editing() &&
-            _page!.tabTitles.length == 1 &&
-            _page!.tabTitles[0] == "Tab 1");
-  }
-
-  TabBar _buildTabBar() {
+  PreferredSize _buildTabBar() {
     List<Widget> tabs = [];
     List<String> titles = _page == null ? [] : _page!.tabTitles;
 
@@ -112,12 +103,26 @@ class _ParameterPageScaffoldWidgetState
       tabs.add(Tab(text: title));
     }
 
-    return TabBar(
-        key: const Key("parameter_page_tabbar"),
-        controller: _tabController,
-        tabs: tabs,
-        onTap: (tabIndex) =>
-            setState(() => _page!.switchTab(to: titles[tabIndex])));
+    return PreferredSize(
+        preferredSize: const Size(double.infinity, 50),
+        child: Visibility(
+            visible: _isTabBarVisible(),
+            child: Row(children: [
+              Expanded(
+                  child: TabBar(
+                      key: const Key("parameter_page_tabbar"),
+                      controller: _tabController,
+                      tabs: tabs,
+                      onTap: (tabIndex) => setState(
+                          () => _page!.switchTab(to: titles[tabIndex])))),
+              Visibility(
+                  visible: _page != null && _page!.editing(),
+                  child: IconButton(
+                    key: const Key("create_tab_button"),
+                    icon: const Icon(Icons.add),
+                    onPressed: _handleCreateNewTab,
+                  ))
+            ])));
   }
 
   Widget _buildBody(BuildContext context) {
@@ -172,6 +177,13 @@ class _ParameterPageScaffoldWidgetState
     );
   }
 
+  bool _isTabBarVisible() {
+    return _page != null &&
+        !(!_page!.editing() &&
+            _page!.tabTitles.length == 1 &&
+            _page!.tabTitles[0] == "Tab 1");
+  }
+
   bool _saveMenuShouldBeEnabled() {
     return _persistenceState == PagePersistenceState.unsaved ||
         _persistenceState == PagePersistenceState.unsavedError;
@@ -190,6 +202,13 @@ class _ParameterPageScaffoldWidgetState
                   onChanged: (DisplaySettings newSettings) =>
                       _pageKey.currentState?.updateSettings(newSettings),
                 )));
+  }
+
+  void _handleCreateNewTab() {
+    setState(() {
+      _page!.createTab();
+      _resetTabController();
+    });
   }
 
   void _handleCopyLink() {
@@ -318,8 +337,7 @@ class _ParameterPageScaffoldWidgetState
         .fetchPage(id: pageId)
         .then((ParameterPage page) => setState(() {
               _page = page;
-              _tabController =
-                  TabController(length: page.tabTitles.length, vsync: this);
+              _resetTabController();
             }))
         .onError((String error, stackTrace) => setState(() {
               _errorMessage = error;
@@ -346,6 +364,11 @@ class _ParameterPageScaffoldWidgetState
         ],
       ),
     );
+  }
+
+  void _resetTabController() {
+    _tabController = TabController(
+        length: _page == null ? 0 : _page!.tabTitles.length, vsync: this);
   }
 
   String? _errorMessage;
