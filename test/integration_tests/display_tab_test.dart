@@ -8,17 +8,6 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Display Parameter Page', () {
-    testWidgets('Open test page 1, one tab should be visible', (tester) async {
-      // Given the parameter page is started
-      await startParameterPageApp(tester);
-
-      // When I open Test Page 1
-      await navigateToTestPage1(tester);
-
-      // Then two tabs are visible:
-      assertTabBarContains(nTabs: 1, withTitles: ["Tab 1"]);
-    });
-
     testWidgets('Open test page 2, two tabs should be visible', (tester) async {
       // Given the parameter page is started
       await startParameterPageApp(tester);
@@ -99,6 +88,47 @@ void main() {
       assertIsOnPage(comment: "Comment for tab 7");
       await switchTab(tester, to: "Tab Eight");
       assertIsOnPage(comment: "Comment for tab 8");
+    });
+
+    testWidgets('Display a page without tabs, tab bar is not visible',
+        (WidgetTester tester) async {
+      // Given I am on the landing page
+      await startParameterPageApp(tester);
+
+      // When I navigate to a page without any tabs
+      await navigateToTestPage1(tester);
+
+      // Then the tab bar is not visible
+      assertTabBar(isVisible: false);
+    });
+
+    testWidgets(
+        'Edit a page without tabs, the tab bar and the default Tab 1 is visible',
+        (WidgetTester tester) async {
+      // Given Test Page 1 is loaded and the tab bar is not visible
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      assertTabBar(isVisible: false);
+
+      // When I enter edit mode
+      await enterEditMode(tester);
+
+      // Then the tab bar is visible
+      assertTabBar(isVisible: true);
+    });
+
+    testWidgets('Tap new tab, a tab is created titled Tab 2',
+        (WidgetTester tester) async {
+      // Given Test Page 1 is loaded and I am in edit mode
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await enterEditMode(tester);
+
+      // When I create a new tab
+      await createNewTab(tester);
+
+      // Then a new tab titled Tab 2 is created
+      assertTabBarContains(nTabs: 2, withTitles: ["Tab 1", "Tab 2"]);
     });
   });
 }

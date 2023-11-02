@@ -507,3 +507,8 @@ void assertTabBarContains(
         findsOneWidget);
   }
 }
+
+void assertTabBar({required bool isVisible}) {
+  expect(find.byKey(const Key("parameter_page_tabbar")),
+      isVisible ? findsOneWidget : findsNothing);
+}
