@@ -131,10 +131,7 @@ class ParameterPage {
 
   void deleteTab({required String title}) {
     _enforceEditMode();
-
-    if (_entries.length == 1) {
-      throw Exception("Could not delete the only tab on the page");
-    }
+    _enforceAtLeastOneTab();
 
     final tabIndex = tabTitles.indexOf(title);
     String switchToTab = (tabIndex == tabTitles.length - 1)
@@ -145,6 +142,12 @@ class ParameterPage {
 
     if (currentTab == title) {
       switchTab(to: switchToTab);
+    }
+  }
+
+  void _enforceAtLeastOneTab() {
+    if (_entries.length == 1) {
+      throw Exception("Could not delete the only tab on the page");
     }
   }
 
