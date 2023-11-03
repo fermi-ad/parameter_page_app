@@ -136,7 +136,14 @@ class ParameterPage {
       throw Exception("Could not delete the only tab on the page");
     }
 
+    final tabIndex = tabTitles.indexOf(title);
+    String switchToTab = tabTitles[tabIndex + 1];
+
     _entries.remove(title);
+
+    if (currentTab == title) {
+      switchTab(to: switchToTab);
+    }
   }
 
   String _generateNewTabTitle() {

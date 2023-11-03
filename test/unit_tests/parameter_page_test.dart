@@ -649,5 +649,27 @@ void main() {
       // Then an exception is thrown
       expect(() => page.deleteTab(title: "Tab 1"), throwsException);
     });
+
+    test(
+        "deleteTab(title:) on the currentTab, should delete the tab and update currentTab to the next tab in tabTitles",
+        () {
+      // Given a page with 3 tabs
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createTab();
+      page.createTab();
+
+      // ... and the currentTab is Tab 2
+      page.switchTab(to: "Tab 2");
+
+      // When I deleteTab(title: "Tab 2")
+      page.deleteTab(title: "Tab 2");
+
+      // Then "Tab 2" should be removed...
+      expect(page.tabTitles.contains("Tab 2"), false);
+
+      // ... and currentTab should be "Tab 3"
+      expect(page.currentTab, "Tab 3");
+    });
   });
 }
