@@ -49,7 +49,7 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
     return PreferredSize(
         preferredSize: const Size(double.infinity, 50),
         child: Visibility(
-            visible: _isTabbarVisible(),
+            visible: !_hideTabbar(),
             child: Row(children: [
               Expanded(
                   child: TabBar(
@@ -59,7 +59,7 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
                       onTap: (tabIndex) =>
                           widget.onTabSwitched(widget.tabTitles[tabIndex]))),
               Visibility(
-                  visible: widget.tabTitles.isNotEmpty && widget.editing,
+                  visible: widget.editing,
                   child: IconButton(
                     key: const Key("create_tab_button"),
                     icon: const Icon(Icons.add),
@@ -68,11 +68,10 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
             ])));
   }
 
-  bool _isTabbarVisible() {
-    return widget.tabTitles.isNotEmpty &&
-        !(!widget.editing &&
-            widget.tabTitles.length == 1 &&
-            widget.tabTitles[0] == "Tab 1");
+  bool _hideTabbar() {
+    return widget.editing == false &&
+        widget.tabTitles.length == 1 &&
+        widget.tabTitles[0] == "Tab 1";
   }
 
   void _resetTabController() {
