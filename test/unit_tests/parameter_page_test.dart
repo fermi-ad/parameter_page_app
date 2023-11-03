@@ -671,5 +671,26 @@ void main() {
       // ... and currentTab should be "Tab 3"
       expect(page.currentTab, "Tab 3");
     });
+
+    test(
+        "deleteTab(title:) on the currentTab which is also the last tab, delete the tab and update currentTab to tab before the deleted tab",
+        () {
+      // Given a page with 2 tabs
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createTab();
+
+      // ... and the current tab is Tab 2
+      page.switchTab(to: "Tab 2");
+
+      // When I deleteTab(title: "Tab 2");
+      page.deleteTab(title: "Tab 2");
+
+      // Then "Tab 2" should be removed...
+      expect(page.tabTitles.contains("Tab 2"), false);
+
+      // ... and currentTab should be "Tab 1"
+      expect(page.currentTab, "Tab 1");
+    });
   });
 }
