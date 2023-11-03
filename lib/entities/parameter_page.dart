@@ -129,6 +129,10 @@ class ParameterPage {
     _entries[title ?? _generateNewTabTitle()] = [];
   }
 
+  void deleteTab({required String title}) {
+    //_entries.remove(title);
+  }
+
   String _generateNewTabTitle() {
     return "Tab ${tabTitles.length + 1}";
   }

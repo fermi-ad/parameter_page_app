@@ -611,5 +611,19 @@ void main() {
       expect(page.tabTitles[2], "Tab 3");
       expect(page.tabTitles[3], "Tab 4");
     });
+
+    test("deleteTab(title:), deletes the tab identified by title:", () {
+      // Given a ParameterPage with two tabs: Tab 1 and Tab 2
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createTab();
+
+      // When I deleteTab()...
+      page.deleteTab(title: "Tab 2");
+
+      // Then the tab is removed
+      expect(page.tabTitles.length, 1);
+      expect(page.tabTitles[0], "Tab 1");
+    });
   });
 }
