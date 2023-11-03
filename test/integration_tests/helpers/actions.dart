@@ -339,3 +339,11 @@ Future<void> createNewTab(WidgetTester tester) async {
   await tester.tap(find.byKey(const Key("create_tab_button")));
   await tester.pumpAndSettle();
 }
+
+Future<void> deleteTab(WidgetTester tester, {required String withTitle}) async {
+  final tabFinder =
+      find.ancestor(of: find.text(withTitle), matching: find.byType(Tab));
+  await tester
+      .tap(find.descendant(of: tabFinder, matching: find.byIcon(Icons.delete)));
+  await tester.pumpAndSettle();
+}

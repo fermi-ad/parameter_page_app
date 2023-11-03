@@ -89,6 +89,7 @@ class _ParameterPageScaffoldWidgetState
         bottom: ParameterPageTabbarWidget(
             editing: _page?.editing() ?? false,
             tabTitles: _page != null ? _page!.tabTitles : [],
+            onDeleteTab: _handleDeleteTab,
             onCreateNewTab: _handleCreateNewTab,
             onTabSwitched: (String tabTitle) => setState(() {
                   _page!.switchTab(to: tabTitle);
@@ -170,6 +171,12 @@ class _ParameterPageScaffoldWidgetState
                   onChanged: (DisplaySettings newSettings) =>
                       _pageKey.currentState?.updateSettings(newSettings),
                 )));
+  }
+
+  void _handleDeleteTab(String withTitle) {
+    setState(() {
+      _page!.deleteTab(title: withTitle);
+    });
   }
 
   void _handleCreateNewTab() {

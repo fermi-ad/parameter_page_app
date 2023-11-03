@@ -611,5 +611,86 @@ void main() {
       expect(page.tabTitles[2], "Tab 3");
       expect(page.tabTitles[3], "Tab 4");
     });
+
+    test("deleteTab(title:), deletes the tab identified by title:", () {
+      // Given a ParameterPage with two tabs: Tab 1 and Tab 2
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createTab();
+
+      // When I deleteTab()...
+      page.deleteTab(title: "Tab 2");
+
+      // Then the tab is removed
+      expect(page.tabTitles.length, 1);
+      expect(page.tabTitles[0], "Tab 1");
+    });
+
+    test("deleteTab(title:), enforces edit mode", () {
+      // Given a page with a tab called "Tab 2"
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createTab();
+
+      // ... and the page is no longer in edit mode...
+      page.disableEditing();
+
+      // When I deleteTab(..)...
+      // Then an exception is thrown
+      expect(() => page.deleteTab(title: "Tab 2"), throwsException);
+    });
+
+    test("deleteTab(title) called on the only tab, throws an exception", () {
+      // Given a page with only one tab that is in edit mode
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I deleteTab(..)...
+      // Then an exception is thrown
+      expect(() => page.deleteTab(title: "Tab 1"), throwsException);
+    });
+
+    test(
+        "deleteTab(title:) on the currentTab, should delete the tab and update currentTab to the next tab in tabTitles",
+        () {
+      // Given a page with 3 tabs
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createTab();
+      page.createTab();
+
+      // ... and the currentTab is Tab 2
+      page.switchTab(to: "Tab 2");
+
+      // When I deleteTab(title: "Tab 2")
+      page.deleteTab(title: "Tab 2");
+
+      // Then "Tab 2" should be removed...
+      expect(page.tabTitles.contains("Tab 2"), false);
+
+      // ... and currentTab should be "Tab 3"
+      expect(page.currentTab, "Tab 3");
+    });
+
+    test(
+        "deleteTab(title:) on the currentTab which is also the last tab, delete the tab and update currentTab to tab before the deleted tab",
+        () {
+      // Given a page with 2 tabs
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createTab();
+
+      // ... and the current tab is Tab 2
+      page.switchTab(to: "Tab 2");
+
+      // When I deleteTab(title: "Tab 2");
+      page.deleteTab(title: "Tab 2");
+
+      // Then "Tab 2" should be removed...
+      expect(page.tabTitles.contains("Tab 2"), false);
+
+      // ... and currentTab should be "Tab 1"
+      expect(page.currentTab, "Tab 1");
+    });
   });
 }

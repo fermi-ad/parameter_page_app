@@ -8,6 +8,8 @@ class ParameterPageTabbarWidget extends StatefulWidget
 
   final Function() onCreateNewTab;
 
+  final Function(String) onDeleteTab;
+
   final bool editing;
 
   const ParameterPageTabbarWidget(
@@ -15,6 +17,7 @@ class ParameterPageTabbarWidget extends StatefulWidget
       required this.tabTitles,
       required this.onTabSwitched,
       required this.onCreateNewTab,
+      required this.onDeleteTab,
       required this.editing});
 
   @override
@@ -66,7 +69,16 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
     List<Tab> tabs = [];
 
     for (String title in widget.tabTitles) {
-      tabs.add(Tab(text: title));
+      tabs.add(Tab(
+          child: Row(children: [
+        Text(title),
+        const Spacer(),
+        Visibility(
+            visible: widget.editing,
+            child: IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () => widget.onDeleteTab(title))),
+      ])));
     }
 
     return tabs;

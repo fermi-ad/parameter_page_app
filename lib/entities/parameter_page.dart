@@ -129,6 +129,31 @@ class ParameterPage {
     _entries[title ?? _generateNewTabTitle()] = [];
   }
 
+  void deleteTab({required String title}) {
+    _enforceEditMode();
+    _enforceAtLeastOneTab();
+
+    if (currentTab == title) {
+      _switchToAdjacentTab();
+    }
+
+    _entries.remove(title);
+  }
+
+  void _switchToAdjacentTab() {
+    final tabIndex = tabTitles.indexOf(currentTab);
+    String switchToTab = (tabIndex == tabTitles.length - 1)
+        ? tabTitles[tabIndex - 1]
+        : tabTitles[tabIndex + 1];
+    switchTab(to: switchToTab);
+  }
+
+  void _enforceAtLeastOneTab() {
+    if (_entries.length == 1) {
+      throw Exception("Could not delete the only tab on the page");
+    }
+  }
+
   String _generateNewTabTitle() {
     return "Tab ${tabTitles.length + 1}";
   }
