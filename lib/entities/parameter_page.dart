@@ -133,16 +133,19 @@ class ParameterPage {
     _enforceEditMode();
     _enforceAtLeastOneTab();
 
-    final tabIndex = tabTitles.indexOf(title);
+    if (currentTab == title) {
+      _switchToAdjacentTab();
+    }
+
+    _entries.remove(title);
+  }
+
+  void _switchToAdjacentTab() {
+    final tabIndex = tabTitles.indexOf(currentTab);
     String switchToTab = (tabIndex == tabTitles.length - 1)
         ? tabTitles[tabIndex - 1]
         : tabTitles[tabIndex + 1];
-
-    _entries.remove(title);
-
-    if (currentTab == title) {
-      switchTab(to: switchToTab);
-    }
+    switchTab(to: switchToTab);
   }
 
   void _enforceAtLeastOneTab() {
