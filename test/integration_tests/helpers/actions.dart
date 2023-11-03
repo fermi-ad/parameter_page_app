@@ -339,3 +339,7 @@ Future<void> createNewTab(WidgetTester tester) async {
   await tester.tap(find.byKey(const Key("create_tab_button")));
   await tester.pumpAndSettle();
 }
+
+Future<void> deleteTab(WidgetTester tester, {required String withTitle}) async {
+  await tester.pumpAndSettle();
+}

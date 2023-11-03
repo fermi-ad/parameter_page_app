@@ -130,5 +130,28 @@ void main() {
       // Then a new tab titled Tab 2 is created
       assertTabBarContains(nTabs: 2, withTitles: ["Tab 1", "Tab 2"]);
     });
+
+    testWidgets('Delete an empty tab, tab is removed',
+        (WidgetTester tester) async {
+      // Given the "Eight Tabs" test page is loaded and I am in edit mode
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Eight Tabs");
+      await enterEditMode(tester);
+
+      // When I delete tab 2
+      await deleteTab(tester, withTitle: "Tab 2");
+
+      // Then the tab is removed
+      assertTabBarContains(nTabs: 7, withTitles: [
+        "Tab 1",
+        "Tab 3",
+        "Tab 4",
+        "Tab 5",
+        "Tab 6",
+        "Tab 7",
+        "Tab 8"
+      ]);
+    });
   });
 }
