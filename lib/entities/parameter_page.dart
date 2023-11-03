@@ -130,6 +130,7 @@ class ParameterPage {
   }
 
   void deleteTab({required String title}) {
+    _enforceEditMode();
     _entries.remove(title);
   }
 

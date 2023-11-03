@@ -625,5 +625,29 @@ void main() {
       expect(page.tabTitles.length, 1);
       expect(page.tabTitles[0], "Tab 1");
     });
+
+    test("deleteTab(title:), enforces edit mode", () {
+      // Given a page with a tab called "Tab 2"
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createTab();
+
+      // ... and the page is no longer in edit mode...
+      page.disableEditing();
+
+      // When I deleteTab(..)...
+      // Then an exception is thrown
+      expect(() => page.deleteTab(title: "Tab 2"), throwsException);
+    });
+
+    test("deleteTab(title) called on the only tab, throws an exception", () {
+      // Given a page with only one tab that is in edit mode
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I deleteTab(..)...
+      // Then an exception is thrown
+      expect(() => page.deleteTab(title: "Tab 1"), throwsException);
+    });
   });
 }
