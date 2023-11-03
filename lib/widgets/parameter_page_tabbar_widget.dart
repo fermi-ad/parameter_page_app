@@ -40,12 +40,6 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
       _resetTabController();
     }
 
-    List<Widget> tabs = [];
-
-    for (String title in widget.tabTitles) {
-      tabs.add(Tab(text: title));
-    }
-
     return PreferredSize(
         preferredSize: const Size(double.infinity, 50),
         child: Visibility(
@@ -55,7 +49,7 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
                   child: TabBar(
                       key: const Key("parameter_page_tabbar"),
                       controller: _tabController,
-                      tabs: tabs,
+                      tabs: _buildTabs(),
                       onTap: (tabIndex) =>
                           widget.onTabSwitched(widget.tabTitles[tabIndex]))),
               Visibility(
@@ -66,6 +60,16 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
                     onPressed: widget.onCreateNewTab,
                   ))
             ])));
+  }
+
+  List<Tab> _buildTabs() {
+    List<Tab> tabs = [];
+
+    for (String title in widget.tabTitles) {
+      tabs.add(Tab(text: title));
+    }
+
+    return tabs;
   }
 
   bool _hideTabbar() {
