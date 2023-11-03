@@ -137,7 +137,9 @@ class ParameterPage {
     }
 
     final tabIndex = tabTitles.indexOf(title);
-    String switchToTab = tabTitles[tabIndex + 1];
+    String switchToTab = (tabIndex == tabTitles.length - 1)
+        ? tabTitles[tabIndex - 1]
+        : tabTitles[tabIndex + 1];
 
     _entries.remove(title);
 
