@@ -95,35 +95,7 @@ class _ParameterPageScaffoldWidgetState
         ]);
   }
 
-  PreferredSize _buildTabBar() {
-    List<Widget> tabs = [];
-    List<String> titles = _page == null ? [] : _page!.tabTitles;
-
-    for (String title in titles) {
-      tabs.add(Tab(text: title));
-    }
-
-    return PreferredSize(
-        preferredSize: const Size(double.infinity, 50),
-        child: Visibility(
-            visible: _isTabBarVisible(),
-            child: Row(children: [
-              Expanded(
-                  child: TabBar(
-                      key: const Key("parameter_page_tabbar"),
-                      controller: _tabController,
-                      tabs: tabs,
-                      onTap: (tabIndex) => setState(
-                          () => _page!.switchTab(to: titles[tabIndex])))),
-              Visibility(
-                  visible: _page != null && _page!.editing(),
-                  child: IconButton(
-                    key: const Key("create_tab_button"),
-                    icon: const Icon(Icons.add),
-                    onPressed: _handleCreateNewTab,
-                  ))
-            ])));
-  }
+  PreferredSize _buildTabBar() {}
 
   Widget _buildBody(BuildContext context) {
     return _errorMessage != null
