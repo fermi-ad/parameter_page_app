@@ -131,6 +131,11 @@ class ParameterPage {
 
   void deleteTab({required String title}) {
     _enforceEditMode();
+
+    if (_entries.length == 1) {
+      throw Exception("Could not delete the only tab on the page");
+    }
+
     _entries.remove(title);
   }
 
