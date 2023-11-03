@@ -130,7 +130,7 @@ class ParameterPage {
   }
 
   void deleteTab({required String title}) {
-    //_entries.remove(title);
+    _entries.remove(title);
   }
 
   String _generateNewTabTitle() {
