@@ -140,17 +140,17 @@ void main() {
       await enterEditMode(tester);
 
       // When I delete tab 2
-      await deleteTab(tester, withTitle: "Tab 2");
+      await deleteTab(tester, withTitle: "Tab Two");
 
       // Then the tab is removed
       assertTabBarContains(nTabs: 7, withTitles: [
-        "Tab 1",
-        "Tab 3",
-        "Tab 4",
-        "Tab 5",
-        "Tab 6",
-        "Tab 7",
-        "Tab 8"
+        "Tab One",
+        "Tab Three",
+        "Tab Four",
+        "Tab Five",
+        "Tab Six",
+        "Tab Seven",
+        "Tab Eight"
       ]);
     });
   });
