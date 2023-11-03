@@ -10,6 +10,7 @@ import 'package:parameter_page/widgets/display_settings_button_widget.dart';
 import 'package:parameter_page/widgets/fermi_controls_common/error_display_widget.dart';
 import 'package:parameter_page/widgets/main_menu_widget.dart';
 import 'package:parameter_page/widgets/page_title_widget.dart';
+import 'package:parameter_page/widgets/parameter_page_tabbar_widget.dart';
 
 import 'data_acquisition_widget.dart';
 import 'display_settings_widget.dart';
@@ -38,13 +39,12 @@ class ParameterPageScaffoldWidget extends StatefulWidget {
 }
 
 class _ParameterPageScaffoldWidgetState
-    extends State<ParameterPageScaffoldWidget> with TickerProviderStateMixin {
+    extends State<ParameterPageScaffoldWidget> {
   final _pageKey = GlobalKey<PageWidgetState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
-    _resetTabController();
     super.initState();
   }
 
@@ -56,7 +56,6 @@ class _ParameterPageScaffoldWidgetState
       _loadPage(pageId: widget.openPageId!);
     } else if (_aNewPageShouldBeStarted()) {
       _page = ParameterPage();
-      _resetTabController();
     }
 
     return Scaffold(
@@ -87,15 +86,19 @@ class _ParameterPageScaffoldWidgetState
             persistenceState: _persistenceState,
             title: _page == null ? "Parameter Page" : _page!.title,
             onTitleUpdate: _handleTitleUpdate),
-        bottom: _buildTabBar(),
+        bottom: ParameterPageTabbarWidget(
+            editing: _page?.editing() ?? false,
+            tabTitles: _page != null ? _page!.tabTitles : [],
+            onCreateNewTab: _handleCreateNewTab,
+            onTabSwitched: (String tabTitle) => setState(() {
+                  _page!.switchTab(to: tabTitle);
+                })),
         actions: [
           DisplaySettingsButtonWidget(
               wide: MediaQuery.of(context).size.width > 600,
               onPressed: () => _navigateToDisplaySettings(context)),
         ]);
   }
-
-  PreferredSize _buildTabBar() {}
 
   Widget _buildBody(BuildContext context) {
     return _errorMessage != null
@@ -149,13 +152,6 @@ class _ParameterPageScaffoldWidgetState
     );
   }
 
-  bool _isTabBarVisible() {
-    return _page != null &&
-        !(!_page!.editing() &&
-            _page!.tabTitles.length == 1 &&
-            _page!.tabTitles[0] == "Tab 1");
-  }
-
   bool _saveMenuShouldBeEnabled() {
     return _persistenceState == PagePersistenceState.unsaved ||
         _persistenceState == PagePersistenceState.unsavedError;
@@ -179,7 +175,6 @@ class _ParameterPageScaffoldWidgetState
   void _handleCreateNewTab() {
     setState(() {
       _page!.createTab();
-      _resetTabController();
     });
   }
 
@@ -309,7 +304,6 @@ class _ParameterPageScaffoldWidgetState
         .fetchPage(id: pageId)
         .then((ParameterPage page) => setState(() {
               _page = page;
-              _resetTabController();
             }))
         .onError((String error, stackTrace) => setState(() {
               _errorMessage = error;
@@ -338,16 +332,9 @@ class _ParameterPageScaffoldWidgetState
     );
   }
 
-  void _resetTabController() {
-    _tabController = TabController(
-        length: _page == null ? 0 : _page!.tabTitles.length, vsync: this);
-  }
-
   String? _errorMessage;
 
   ParameterPage? _page;
 
   PagePersistenceState _persistenceState = PagePersistenceState.clean;
-
-  TabController? _tabController;
 }

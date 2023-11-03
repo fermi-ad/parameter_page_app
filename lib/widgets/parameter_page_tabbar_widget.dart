@@ -1,44 +1,84 @@
 import 'package:flutter/material.dart';
 
-class ParameterPageTabbarWidget extends StatefulWidget {
-  List<String> titles;
+class ParameterPageTabbarWidget extends StatefulWidget
+    implements PreferredSizeWidget {
+  final List<String> tabTitles;
 
-  const ParameterPageTabbarWidget({super.key, this.titles});
+  final Function(String) onTabSwitched;
+
+  final Function() onCreateNewTab;
+
+  final bool editing;
+
+  const ParameterPageTabbarWidget(
+      {super.key,
+      required this.tabTitles,
+      required this.onTabSwitched,
+      required this.onCreateNewTab,
+      required this.editing});
 
   @override
   State<ParameterPageTabbarWidget> createState() {
     return _ParameterPageTabbarState();
   }
+
+  @override
+  Size get preferredSize => const Size(double.infinity, 50);
 }
 
-class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget> {
+class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
+    with TickerProviderStateMixin {
+  @override
+  void initState() {
+    _resetTabController();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (widget.tabTitles.length != _tabController?.length) {
+      _resetTabController();
+    }
+
     List<Widget> tabs = [];
 
-    for (String title in widget.titles) {
+    for (String title in widget.tabTitles) {
       tabs.add(Tab(text: title));
     }
 
     return PreferredSize(
         preferredSize: const Size(double.infinity, 50),
         child: Visibility(
-            visible: _isTabBarVisible(),
+            visible: _isTabbarVisible(),
             child: Row(children: [
               Expanded(
                   child: TabBar(
                       key: const Key("parameter_page_tabbar"),
                       controller: _tabController,
                       tabs: tabs,
-                      onTap: (tabIndex) => setState(
-                          () => _page!.switchTab(to: titles[tabIndex])))),
+                      onTap: (tabIndex) =>
+                          widget.onTabSwitched(widget.tabTitles[tabIndex]))),
               Visibility(
-                  visible: _page != null && _page!.editing(),
+                  visible: widget.tabTitles.isNotEmpty && widget.editing,
                   child: IconButton(
                     key: const Key("create_tab_button"),
                     icon: const Icon(Icons.add),
-                    onPressed: _handleCreateNewTab,
+                    onPressed: widget.onCreateNewTab,
                   ))
             ])));
   }
+
+  bool _isTabbarVisible() {
+    return widget.tabTitles.isNotEmpty &&
+        !(!widget.editing &&
+            widget.tabTitles.length == 1 &&
+            widget.tabTitles[0] == "Tab 1");
+  }
+
+  void _resetTabController() {
+    _tabController =
+        TabController(length: widget.tabTitles.length, vsync: this);
+  }
+
+  TabController? _tabController;
 }
