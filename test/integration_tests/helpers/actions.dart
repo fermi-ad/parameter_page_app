@@ -344,8 +344,11 @@ Future<void> deleteTab(WidgetTester tester,
     {required String withTitle, bool? confirm}) async {
   final tabFinder =
       find.ancestor(of: find.text(withTitle), matching: find.byType(Tab));
-  await tester
-      .tap(find.descendant(of: tabFinder, matching: find.byIcon(Icons.delete)));
+  await tester.tap(
+      find.descendant(of: tabFinder, matching: find.byIcon(Icons.more_vert)));
+  await tester.pumpAndSettle();
+
+  await tester.tap(find.text("Delete"));
   await tester.pumpAndSettle();
 
   if (confirm != null) {

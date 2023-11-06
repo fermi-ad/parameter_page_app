@@ -83,8 +83,7 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
         Visibility(
             visible: tabCanBeDeleted,
             child: IconButton(
-                icon: const Icon(Icons.delete, size: 16.0),
-                onPressed: () => widget.onDeleteTab(title))),
+                icon: const Icon(Icons.delete, size: 16.0), onPressed: () {})),
         Visibility(
           visible: widget.editing,
           child: PopupMenuButton<TabMenuItem>(
@@ -113,7 +112,13 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
   void _handleMenuSelection(TabMenuItem selected, String tabTitle) {
     if (selected == TabMenuItem.renameTab) {
       _handleRenameTab(tabTitle);
+    } else if (selected == TabMenuItem.deleteTab) {
+      _handleDeleteTab(tabTitle);
     }
+  }
+
+  void _handleDeleteTab(String withTitle) {
+    widget.onDeleteTab(withTitle);
   }
 
   void _handleRenameTab(String tabTitle) {
