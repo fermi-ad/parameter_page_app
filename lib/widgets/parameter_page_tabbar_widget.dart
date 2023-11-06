@@ -74,7 +74,7 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
         Text(title),
         const Spacer(),
         Visibility(
-            visible: widget.editing,
+            visible: widget.editing && widget.tabTitles.length != 1,
             child: IconButton(
                 icon: const Icon(Icons.delete),
                 onPressed: () => widget.onDeleteTab(title))),
