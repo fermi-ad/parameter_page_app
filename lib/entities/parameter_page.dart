@@ -143,6 +143,8 @@ class ParameterPage {
   }
 
   void renameTab({required String to}) {
+    _enforceEditMode();
+
     _entries[to] = _entries[_currentTab]!;
     final oldTab = _currentTab;
     _currentTab = to;
