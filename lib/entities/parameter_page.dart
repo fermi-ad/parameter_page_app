@@ -143,10 +143,10 @@ class ParameterPage {
   }
 
   void renameTab({required String to}) {
-    // _entries[to] = _entries[_currentTab]!;
-    // final oldTab = _currentTab;
-    // _currentTab = to;
-    // _entries.remove(oldTab);
+    _entries[to] = _entries[_currentTab]!;
+    final oldTab = _currentTab;
+    _currentTab = to;
+    _entries.remove(oldTab);
   }
 
   void _switchToAdjacentTab() {
