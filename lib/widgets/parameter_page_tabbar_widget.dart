@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+enum TabMenuItem { renameTab, deleteTab }
+
 class ParameterPageTabbarWidget extends StatefulWidget
     implements PreferredSizeWidget {
   final List<String> tabTitles;
@@ -10,6 +12,8 @@ class ParameterPageTabbarWidget extends StatefulWidget
 
   final Function(String) onDeleteTab;
 
+  final Function(String, String) onRenameTab;
+
   final bool editing;
 
   const ParameterPageTabbarWidget(
@@ -18,6 +22,7 @@ class ParameterPageTabbarWidget extends StatefulWidget
       required this.onTabSwitched,
       required this.onCreateNewTab,
       required this.onDeleteTab,
+      required this.onRenameTab,
       required this.editing});
 
   @override
@@ -80,10 +85,68 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
             child: IconButton(
                 icon: const Icon(Icons.delete, size: 16.0),
                 onPressed: () => widget.onDeleteTab(title))),
+        Visibility(
+          visible: widget.editing,
+          child: PopupMenuButton<TabMenuItem>(
+            // Callback that sets the selected popup menu item.
+            onSelected: (TabMenuItem selected) =>
+                _handleMenuSelection(selected, title),
+            itemBuilder: (BuildContext context) =>
+                <PopupMenuEntry<TabMenuItem>>[
+              const PopupMenuItem<TabMenuItem>(
+                value: TabMenuItem.renameTab,
+                child: Text('Rename'),
+              ),
+              const PopupMenuItem<TabMenuItem>(
+                value: TabMenuItem.deleteTab,
+                child: Text('Delete'),
+              ),
+            ],
+          ),
+        )
       ])));
     }
 
     return tabs;
+  }
+
+  void _handleMenuSelection(TabMenuItem selected, String tabTitle) {
+    if (selected == TabMenuItem.renameTab) {
+      _handleRenameTab(tabTitle);
+    }
+  }
+
+  void _handleRenameTab(String tabTitle) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Rename Tab'),
+            content: TextField(
+              key: const Key("tab_edit_rename_to"),
+              onChanged: (value) {
+                setState(() {
+                  _renameTabTo = value;
+                });
+              },
+            ),
+            actions: <Widget>[
+              MaterialButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              MaterialButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  widget.onRenameTab(tabTitle, _renameTabTo);
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
   }
 
   bool _hideTabbar() {
@@ -96,6 +159,8 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
     _tabController =
         TabController(length: widget.tabTitles.length, vsync: this);
   }
+
+  String _renameTabTo = "";
 
   TabController? _tabController;
 }

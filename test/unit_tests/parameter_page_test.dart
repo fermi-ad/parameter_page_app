@@ -714,14 +714,14 @@ void main() {
       expect(page.numberOfEntries(forTab: "Tab 2"), 2);
     });
 
-    test("renameTab(to:), changes the title of the currentTab", () {
+    test("renameTab(withTitle:, to:), changes the title of the currentTab", () {
       // Given a ParameterPage with 1 tab named "Tab 1"
       // ... and I am in edit mode
       ParameterPage page = ParameterPage();
       page.enableEditing();
 
       // When I change the title of the current tab
-      page.renameTab(to: "New Tab Title");
+      page.renameTab(withTitle: "Tab 1", to: "New Tab Title");
 
       // Then the title has been changed
       expect(page.tabTitles.contains("New Tab Title"), true);
@@ -737,7 +737,8 @@ void main() {
 
       // When I renameTab(..)...
       // Then an exception is thrown
-      expect(() => page.renameTab(to: "Tab 2"), throwsException);
+      expect(() => page.renameTab(withTitle: "Tab 1", to: "Tab 2"),
+          throwsException);
     });
 
     test('renameTab(withTitle:, to:), changes the title of the given tab', () {

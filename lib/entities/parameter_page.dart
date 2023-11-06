@@ -142,9 +142,9 @@ class ParameterPage {
     _entries.remove(title);
   }
 
-  void renameTab({String? withTitle, required String to}) {
+  void renameTab({required String withTitle, required String to}) {
     _enforceEditMode();
-    if (withTitle != null) {
+    if (withTitle != currentTab) {
       _entries[to] = _entries[withTitle]!;
       _entries.remove(withTitle);
     } else {

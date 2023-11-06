@@ -91,6 +91,7 @@ class _ParameterPageScaffoldWidgetState
             tabTitles: _page != null ? _page!.tabTitles : [],
             onDeleteTab: _handleDeleteTab,
             onCreateNewTab: _handleCreateNewTab,
+            onRenameTab: _handleRenameTab,
             onTabSwitched: (String tabTitle) => setState(() {
                   _page!.switchTab(to: tabTitle);
                 })),
@@ -171,6 +172,12 @@ class _ParameterPageScaffoldWidgetState
                   onChanged: (DisplaySettings newSettings) =>
                       _pageKey.currentState?.updateSettings(newSettings),
                 )));
+  }
+
+  void _handleRenameTab(String withTitle, String to) {
+    setState(() {
+      _page!.renameTab(withTitle: withTitle, to: to);
+    });
   }
 
   void _handleDeleteTab(String withTitle) {
