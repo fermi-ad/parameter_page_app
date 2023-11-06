@@ -521,3 +521,8 @@ void assertTabDeleteButton(
       find.descendant(of: tabFinder, matching: find.byIcon(Icons.delete));
   expect(deleteButtonFinder, isVisible ? findsOneWidget : findsNothing);
 }
+
+void assertDeleteTabConfirmation({required bool isVisible}) {
+  expect(find.byKey(const Key("delete_tab_confirmation")),
+      isVisible ? findsOneWidget : findsNothing);
+}

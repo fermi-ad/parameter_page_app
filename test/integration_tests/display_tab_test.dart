@@ -168,5 +168,25 @@ void main() {
       // Then the delete button for Tab 1 is hidden
       assertTabDeleteButton(forTabWithTitle: "Tab 1", isVisible: false);
     });
+
+    testWidgets(
+        'Attempt to delete a tab with entries, confirmation is displayed',
+        (WidgetTester tester) async {
+      // Given a new parameter page with 2 tabs
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+      await enterEditMode(tester);
+      await createNewTab(tester);
+
+      // ... and tab 2 has one entry
+      await addANewComment(
+          tester, "user should be prompted before deleting this tab");
+
+      // When I attempt to delete tab 2
+      await deleteTab(tester, withTitle: "Tab 2");
+
+      // Then I am prompted to confirm that I want to delete a populated tab
+      assertDeleteTabConfirmation(isVisible: true);
+    });
   });
 }
