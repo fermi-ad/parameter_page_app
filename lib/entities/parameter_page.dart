@@ -142,6 +142,13 @@ class ParameterPage {
     _entries.remove(title);
   }
 
+  void renameTab({required String to}) {
+    // _entries[to] = _entries[_currentTab]!;
+    // final oldTab = _currentTab;
+    // _currentTab = to;
+    // _entries.remove(oldTab);
+  }
+
   void _switchToAdjacentTab() {
     final tabIndex = tabTitles.indexOf(currentTab);
     String switchToTab = (tabIndex == tabTitles.length - 1)

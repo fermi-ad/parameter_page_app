@@ -713,5 +713,22 @@ void main() {
       // Then numberOfEntries(forTab: "Tab 2") should yield 2
       expect(page.numberOfEntries(forTab: "Tab 2"), 2);
     });
+
+    test("renameTab(to:), changes the title of the currentTab", () {
+      // Given a ParameterPage with 1 tab named "Tab 1"
+      // ... and I am in edit mode
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I change the title of the current tab
+      page.renameTab(to: "New Tab Title");
+
+      // Then the title has been changed
+      expect(page.tabTitles.contains("New Tab Title"), true);
+      expect(page.tabTitles.contains("Tab 1"), false);
+
+      // ... and currentTab has been updated too
+      expect(page.currentTab, "New Tab Title");
+    });
   });
 }
