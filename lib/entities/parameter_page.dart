@@ -65,7 +65,7 @@ class ParameterPage {
     }
   }
 
-  int get numberOfEntries {
+  int numberOfEntries() {
     return _entries[_currentTab]!.length;
   }
 
