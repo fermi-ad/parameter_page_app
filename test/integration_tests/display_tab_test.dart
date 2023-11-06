@@ -153,5 +153,20 @@ void main() {
         "Tab Eight"
       ]);
     });
+
+    testWidgets('Only one tab, delete button is hidden',
+        (WidgetTester tester) async {
+      // Given a new parameter page with 2 tabs
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+      await enterEditMode(tester);
+      await createNewTab(tester);
+
+      // When I delete Tab 2, leaving only 1 tab
+      await deleteTab(tester, withTitle: "Tab 2");
+
+      // Then the delete button for Tab 1 is hidden
+      assertTabDeleteButton(forTabWithTitle: "Tab 1", isVisible: false);
+    });
   });
 }
