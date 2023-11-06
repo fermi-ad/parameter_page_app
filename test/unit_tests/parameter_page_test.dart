@@ -762,5 +762,24 @@ void main() {
       expect(page.currentTab, "Tab 1",
           reason: "currentTab should be set to New Tab Title");
     });
+
+    test('renameTab(..), preserves order of tabs', () {
+      // Given a new ParameterPage with three tabs
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createTab();
+      page.createTab();
+
+      // When I rename Tab 1
+      page.renameTab(withTitle: "Tab 1", to: "A New Tab Title");
+
+      // Then the tab is renamed
+      expect(page.tabTitles.contains("A New Tab Title"), true);
+
+      // ... and the order of the tabs stays the same
+      expect(page.tabTitles[0], "A New Tab Title");
+      expect(page.tabTitles[1], "Tab 2");
+      expect(page.tabTitles[2], "Tab 3");
+    });
   });
 }
