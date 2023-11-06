@@ -713,5 +713,54 @@ void main() {
       // Then numberOfEntries(forTab: "Tab 2") should yield 2
       expect(page.numberOfEntries(forTab: "Tab 2"), 2);
     });
+
+    test("renameTab(withTitle:, to:), changes the title of the currentTab", () {
+      // Given a ParameterPage with 1 tab named "Tab 1"
+      // ... and I am in edit mode
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I change the title of the current tab
+      page.renameTab(withTitle: "Tab 1", to: "New Tab Title");
+
+      // Then the title has been changed
+      expect(page.tabTitles.contains("New Tab Title"), true);
+      expect(page.tabTitles.contains("Tab 1"), false);
+
+      // ... and currentTab has been updated too
+      expect(page.currentTab, "New Tab Title");
+    });
+
+    test("renameTab(..), enforces edit mode", () {
+      // Given a new parameter page and I am not in edit mode
+      ParameterPage page = ParameterPage();
+
+      // When I renameTab(..)...
+      // Then an exception is thrown
+      expect(() => page.renameTab(withTitle: "Tab 1", to: "Tab 2"),
+          throwsException);
+    });
+
+    test('renameTab(withTitle:, to:), changes the title of the given tab', () {
+      // Given a new ParameterPage with two tabs
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createTab();
+
+      // When I renameTab(withTitle: "Tab 2", to: "New Tab Title")
+      page.renameTab(withTitle: "Tab 2", to: "New Tab Title");
+
+      // Then the title has been changed
+      expect(page.tabTitles.contains("New Tab Title"), true,
+          reason: "The new title should be present in tabTitles");
+      expect(page.tabTitles.contains("Tab 1"), true,
+          reason: "Tab 1 should be un-touched");
+      expect(page.tabTitles.contains("Tab 2"), false,
+          reason: "Tab 2 should have been removed");
+
+      // ... and currentTab is still Tab 1
+      expect(page.currentTab, "Tab 1",
+          reason: "currentTab should be set to New Tab Title");
+    });
   });
 }

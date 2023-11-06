@@ -340,16 +340,36 @@ Future<void> createNewTab(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
+Future<void> openTabEditMenu(WidgetTester tester,
+    {required String forTabWithTitle}) async {
+  final tabFinder =
+      find.ancestor(of: find.text(forTabWithTitle), matching: find.byType(Tab));
+  await tester.tap(
+      find.descendant(of: tabFinder, matching: find.byIcon(Icons.more_vert)));
+  await tester.pumpAndSettle();
+}
+
 Future<void> deleteTab(WidgetTester tester,
     {required String withTitle, bool? confirm}) async {
-  final tabFinder =
-      find.ancestor(of: find.text(withTitle), matching: find.byType(Tab));
-  await tester
-      .tap(find.descendant(of: tabFinder, matching: find.byIcon(Icons.delete)));
+  await openTabEditMenu(tester, forTabWithTitle: withTitle);
+
+  await tester.tap(find.text("Delete"));
   await tester.pumpAndSettle();
 
   if (confirm != null) {
     await tester.tap(confirm ? find.text("Continue") : find.text("Cancel"));
     await tester.pumpAndSettle();
   }
+}
+
+Future<void> renameTab(WidgetTester tester,
+    {required String withTitle, required String to}) async {
+  await openTabEditMenu(tester, forTabWithTitle: withTitle);
+
+  await tester.tap(find.text("Rename"));
+  await tester.pumpAndSettle();
+
+  await tester.enterText(find.byKey(const Key("tab_edit_rename_to")), to);
+  await tester.tap(find.text("OK"));
+  await tester.pumpAndSettle();
 }

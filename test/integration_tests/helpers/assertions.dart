@@ -513,13 +513,8 @@ void assertTabBar({required bool isVisible}) {
       isVisible ? findsOneWidget : findsNothing);
 }
 
-void assertTabDeleteButton(
-    {required String forTabWithTitle, required bool isVisible}) {
-  final tabFinder =
-      find.ancestor(of: find.text(forTabWithTitle), matching: find.byType(Tab));
-  final deleteButtonFinder =
-      find.descendant(of: tabFinder, matching: find.byIcon(Icons.delete));
-  expect(deleteButtonFinder, isVisible ? findsOneWidget : findsNothing);
+void assertTabDeleteItem({required bool isVisible}) {
+  expect(find.text("Delete"), isVisible ? findsOneWidget : findsNothing);
 }
 
 void assertDeleteTabConfirmation({required bool isVisible}) {
