@@ -163,10 +163,10 @@ void main() {
       await createNewTab(tester);
 
       // When I delete Tab 2, leaving only 1 tab
-      await deleteTab(tester, withTitle: "Tab 2");
+      await deleteTab(tester, withTitle: "Tab 1");
 
       // Then the delete button for Tab 1 is hidden
-      assertTabDeleteButton(forTabWithTitle: "Tab 1", isVisible: false);
+      assertTabDeleteButton(forTabWithTitle: "Tab 2", isVisible: false);
     });
 
     testWidgets(
