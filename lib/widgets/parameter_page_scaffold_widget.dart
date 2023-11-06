@@ -174,7 +174,7 @@ class _ParameterPageScaffoldWidgetState
   }
 
   void _handleDeleteTab(String withTitle) {
-    if (withTitle == "Tab 2") {
+    if (_page!.numberOfEntries(forTab: withTitle) > 0) {
       _promptUserToDeleteTab(context).then((bool? dialogResponse) {
         if (!(dialogResponse == null || !dialogResponse)) {
           _deleteTheTab(withTitle);

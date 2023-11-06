@@ -340,10 +340,16 @@ Future<void> createNewTab(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> deleteTab(WidgetTester tester, {required String withTitle}) async {
+Future<void> deleteTab(WidgetTester tester,
+    {required String withTitle, bool? confirm}) async {
   final tabFinder =
       find.ancestor(of: find.text(withTitle), matching: find.byType(Tab));
   await tester
       .tap(find.descendant(of: tabFinder, matching: find.byIcon(Icons.delete)));
   await tester.pumpAndSettle();
+
+  if (confirm != null) {
+    await tester.tap(confirm ? find.text("Continue") : find.text("Cancel"));
+    await tester.pumpAndSettle();
+  }
 }
