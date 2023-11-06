@@ -78,7 +78,7 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
         Visibility(
             visible: tabCanBeDeleted,
             child: IconButton(
-                icon: const Icon(Icons.delete),
+                icon: const Icon(Icons.delete, size: 16.0),
                 onPressed: () => widget.onDeleteTab(title))),
       ])));
     }
