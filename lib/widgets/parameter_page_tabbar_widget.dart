@@ -81,10 +81,6 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
         Text(title),
         const Spacer(),
         Visibility(
-            visible: tabCanBeDeleted,
-            child: IconButton(
-                icon: const Icon(Icons.delete, size: 16.0), onPressed: () {})),
-        Visibility(
           visible: widget.editing,
           child: PopupMenuButton<TabMenuItem>(
             // Callback that sets the selected popup menu item.
@@ -96,9 +92,10 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
                 value: TabMenuItem.renameTab,
                 child: Text('Rename'),
               ),
-              const PopupMenuItem<TabMenuItem>(
+              PopupMenuItem<TabMenuItem>(
                 value: TabMenuItem.deleteTab,
-                child: Text('Delete'),
+                child: Visibility(
+                    visible: tabCanBeDeleted, child: const Text('Delete')),
               ),
             ],
           ),

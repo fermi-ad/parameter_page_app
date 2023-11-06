@@ -18,7 +18,7 @@ void main() {
 
       // Then two tabs are visible:
       assertTabBarContains(nTabs: 2, withTitles: ["Tab 1", "Tab 2"]);
-    });
+    }, semanticsEnabled: false);
 
     testWidgets('Move to Tab 2, parameters for Tab 2 should be visible',
         (tester) async {
@@ -37,7 +37,7 @@ void main() {
 
       // ... and the entries for Tab 2 are displayed...
       assertIsOnPage(comment: "This is Tab 2");
-    });
+    }, semanticsEnabled: false);
 
     testWidgets(
         'Add parameters to multiple tabs, parameters should appear in correct tabs',
@@ -88,7 +88,7 @@ void main() {
       assertIsOnPage(comment: "Comment for tab 7");
       await switchTab(tester, to: "Tab Eight");
       assertIsOnPage(comment: "Comment for tab 8");
-    });
+    }, semanticsEnabled: false);
 
     testWidgets('Display a page without tabs, tab bar is not visible',
         (WidgetTester tester) async {
@@ -100,7 +100,7 @@ void main() {
 
       // Then the tab bar is not visible
       assertTabBar(isVisible: false);
-    });
+    }, semanticsEnabled: false);
 
     testWidgets(
         'Edit a page without tabs, the tab bar and the default Tab 1 is visible',
@@ -115,7 +115,7 @@ void main() {
 
       // Then the tab bar is visible
       assertTabBar(isVisible: true);
-    });
+    }, semanticsEnabled: false);
 
     testWidgets('Tap new tab, a tab is created titled Tab 2',
         (WidgetTester tester) async {
@@ -129,7 +129,7 @@ void main() {
 
       // Then a new tab titled Tab 2 is created
       assertTabBarContains(nTabs: 2, withTitles: ["Tab 1", "Tab 2"]);
-    });
+    }, semanticsEnabled: false);
 
     testWidgets('Delete an empty tab, tab is removed',
         (WidgetTester tester) async {
@@ -152,7 +152,7 @@ void main() {
         "Tab Seven",
         "Tab Eight"
       ]);
-    });
+    }, semanticsEnabled: false);
 
     testWidgets('Only one tab, delete button is hidden',
         (WidgetTester tester) async {
@@ -166,8 +166,9 @@ void main() {
       await deleteTab(tester, withTitle: "Tab 1");
 
       // Then the delete button for Tab 1 is hidden
-      assertTabDeleteButton(forTabWithTitle: "Tab 2", isVisible: false);
-    });
+      await openTabEditMenu(tester, forTabWithTitle: "Tab 2");
+      assertTabDeleteItem(isVisible: false);
+    }, semanticsEnabled: false);
 
     testWidgets(
         'Attempt to delete a tab with entries, confirmation is displayed',
@@ -188,7 +189,7 @@ void main() {
 
       // Then I am prompted to confirm that I want to delete a populated tab
       assertDeleteTabConfirmation(isVisible: true);
-    });
+    }, semanticsEnabled: false);
 
     testWidgets('Cancel delete of tab, tab remains',
         (WidgetTester tester) async {
@@ -208,7 +209,7 @@ void main() {
 
       // Then the tab remains
       assertTabBarContains(nTabs: 2, withTitles: ["Tab 1", "Tab 2"]);
-    });
+    }, semanticsEnabled: false);
 
     testWidgets('Confirm delete of tab, tab is removed',
         (WidgetTester tester) async {
@@ -228,7 +229,7 @@ void main() {
 
       // Then the tab remains
       assertTabBarContains(nTabs: 1, withTitles: ["Tab 1"]);
-    });
+    }, semanticsEnabled: false);
 
     testWidgets('Rename tab, new title is displayed',
         (WidgetTester tester) async {
@@ -242,6 +243,6 @@ void main() {
 
       // Then the new title is displayed in the tab bar
       assertTabBarContains(nTabs: 1, withTitles: ["A New Title"]);
-    });
+    }, semanticsEnabled: false);
   });
 }

@@ -340,13 +340,18 @@ Future<void> createNewTab(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> deleteTab(WidgetTester tester,
-    {required String withTitle, bool? confirm}) async {
+Future<void> openTabEditMenu(WidgetTester tester,
+    {required String forTabWithTitle}) async {
   final tabFinder =
-      find.ancestor(of: find.text(withTitle), matching: find.byType(Tab));
+      find.ancestor(of: find.text(forTabWithTitle), matching: find.byType(Tab));
   await tester.tap(
       find.descendant(of: tabFinder, matching: find.byIcon(Icons.more_vert)));
   await tester.pumpAndSettle();
+}
+
+Future<void> deleteTab(WidgetTester tester,
+    {required String withTitle, bool? confirm}) async {
+  await openTabEditMenu(tester, forTabWithTitle: withTitle);
 
   await tester.tap(find.text("Delete"));
   await tester.pumpAndSettle();
@@ -359,11 +364,7 @@ Future<void> deleteTab(WidgetTester tester,
 
 Future<void> renameTab(WidgetTester tester,
     {required String withTitle, required String to}) async {
-  final tabFinder =
-      find.ancestor(of: find.text(withTitle), matching: find.byType(Tab));
-  await tester.tap(
-      find.descendant(of: tabFinder, matching: find.byIcon(Icons.more_vert)));
-  await tester.pumpAndSettle();
+  await openTabEditMenu(tester, forTabWithTitle: withTitle);
 
   await tester.tap(find.text("Rename"));
   await tester.pumpAndSettle();
