@@ -65,8 +65,10 @@ class ParameterPage {
     }
   }
 
-  int get numberOfEntries {
-    return _entries[_currentTab]!.length;
+  int numberOfEntries({String? forTab}) {
+    String tab = forTab ?? _currentTab;
+
+    return _entries[tab]!.length;
   }
 
   bool editing() {

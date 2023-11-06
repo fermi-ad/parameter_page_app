@@ -64,7 +64,7 @@ class PageWidgetState extends State<PageWidget> {
   }
 
   Widget _buildPage(BuildContext context, bool wide, ParameterPage page) {
-    final bool movable = page.editing() && page.numberOfEntries > 1;
+    final bool movable = page.editing() && page.numberOfEntries() > 1;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,

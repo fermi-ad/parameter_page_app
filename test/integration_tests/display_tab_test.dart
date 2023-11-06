@@ -153,5 +153,81 @@ void main() {
         "Tab Eight"
       ]);
     });
+
+    testWidgets('Only one tab, delete button is hidden',
+        (WidgetTester tester) async {
+      // Given a new parameter page with 2 tabs
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+      await enterEditMode(tester);
+      await createNewTab(tester);
+
+      // When I delete Tab 2, leaving only 1 tab
+      await deleteTab(tester, withTitle: "Tab 1");
+
+      // Then the delete button for Tab 1 is hidden
+      assertTabDeleteButton(forTabWithTitle: "Tab 2", isVisible: false);
+    });
+
+    testWidgets(
+        'Attempt to delete a tab with entries, confirmation is displayed',
+        (WidgetTester tester) async {
+      // Given a new parameter page with 2 tabs
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+      await enterEditMode(tester);
+      await createNewTab(tester);
+
+      // ... and tab 2 has one entry
+      await switchTab(tester, to: "Tab 2");
+      await addANewComment(
+          tester, "user should be prompted before deleting this tab");
+
+      // When I attempt to delete tab 2
+      await deleteTab(tester, withTitle: "Tab 2");
+
+      // Then I am prompted to confirm that I want to delete a populated tab
+      assertDeleteTabConfirmation(isVisible: true);
+    });
+
+    testWidgets('Cancel delete of tab, tab remains',
+        (WidgetTester tester) async {
+      // Given a new parameter page with 2 tabs
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+      await enterEditMode(tester);
+      await createNewTab(tester);
+
+      // ... and tab 2 has one entry
+      await switchTab(tester, to: "Tab 2");
+      await addANewComment(
+          tester, "user should be prompted before deleting this tab");
+
+      // When I attempt to delete Tab 2 and answer "Cancel" when prompted
+      await deleteTab(tester, withTitle: "Tab 2", confirm: false);
+
+      // Then the tab remains
+      assertTabBarContains(nTabs: 2, withTitles: ["Tab 1", "Tab 2"]);
+    });
+
+    testWidgets('Confirm delete of tab, tab is removed',
+        (WidgetTester tester) async {
+      // Given a new parameter page with 2 tabs
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+      await enterEditMode(tester);
+      await createNewTab(tester);
+
+      // ... and tab 2 has one entry
+      await switchTab(tester, to: "Tab 2");
+      await addANewComment(
+          tester, "user should be prompted before deleting this tab");
+
+      // When I attempt to delete Tab 2 and answer "Cancel" when prompted
+      await deleteTab(tester, withTitle: "Tab 2", confirm: true);
+
+      // Then the tab remains
+      assertTabBarContains(nTabs: 1, withTitles: ["Tab 1"]);
+    });
   });
 }

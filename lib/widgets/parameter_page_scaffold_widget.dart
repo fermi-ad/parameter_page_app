@@ -174,6 +174,18 @@ class _ParameterPageScaffoldWidgetState
   }
 
   void _handleDeleteTab(String withTitle) {
+    if (_page!.numberOfEntries(forTab: withTitle) > 0) {
+      _promptUserToDeleteTab(context).then((bool? dialogResponse) {
+        if (!(dialogResponse == null || !dialogResponse)) {
+          _deleteTheTab(withTitle);
+        }
+      });
+    } else {
+      _deleteTheTab(withTitle);
+    }
+  }
+
+  void _deleteTheTab(String withTitle) {
     setState(() {
       _page!.deleteTab(title: withTitle);
     });
@@ -316,6 +328,28 @@ class _ParameterPageScaffoldWidgetState
               _errorMessage = error;
               _page = null;
             }));
+  }
+
+  Future<bool?> _promptUserToDeleteTab(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        key: const Key("delete_tab_confirmation"),
+        title: const Text('Delete Tab'),
+        content: const Text(
+            'This tab contains at least one entry.  Deleting the tab will discard all of it\'s entries.  Do you wish to continue?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Continue'),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<bool?> _promptUserToDiscardChanges(BuildContext context) {

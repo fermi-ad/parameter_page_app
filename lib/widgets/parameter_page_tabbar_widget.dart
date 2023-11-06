@@ -68,15 +68,17 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
   List<Tab> _buildTabs() {
     List<Tab> tabs = [];
 
+    final tabCanBeDeleted = widget.editing && widget.tabTitles.length != 1;
+
     for (String title in widget.tabTitles) {
       tabs.add(Tab(
           child: Row(children: [
         Text(title),
         const Spacer(),
         Visibility(
-            visible: widget.editing,
+            visible: tabCanBeDeleted,
             child: IconButton(
-                icon: const Icon(Icons.delete),
+                icon: const Icon(Icons.delete, size: 16.0),
                 onPressed: () => widget.onDeleteTab(title))),
       ])));
     }
