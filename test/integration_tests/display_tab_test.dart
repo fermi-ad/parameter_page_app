@@ -229,5 +229,19 @@ void main() {
       // Then the tab remains
       assertTabBarContains(nTabs: 1, withTitles: ["Tab 1"]);
     });
+
+    testWidgets('Rename tab, new title is displayed',
+        (WidgetTester tester) async {
+      // Given a new parameter page with 1 tab
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+      await enterEditMode(tester);
+
+      // When I rename the tab...
+      await renameTab(tester, withTitle: "Tab 1", to: "A New Title");
+
+      // Then the new title is displayed in the tab bar
+      assertTabBarContains(nTabs: 1, withTitles: ["A New Title"]);
+    });
   });
 }

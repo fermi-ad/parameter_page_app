@@ -353,3 +353,21 @@ Future<void> deleteTab(WidgetTester tester,
     await tester.pumpAndSettle();
   }
 }
+
+Future<void> renameTab(WidgetTester tester,
+    {required String withTitle, required String to}) async {
+  final tabFinder =
+      find.ancestor(of: find.text(withTitle), matching: find.byType(Tab));
+  await tester.tap(
+      find.descendant(of: tabFinder, matching: find.byIcon(Icons.more_vert)));
+  await tester.pumpAndSettle();
+
+  await tester.tap(find.descendant(
+      of: find.byKey(const Key("tab_edit_menu")),
+      matching: find.text("Rename")));
+  await tester.pumpAndSettle();
+
+  await tester.enterText(find.byKey(const Key("tab_edit_rename_to")), to);
+  await tester.tap(find.text("OK"));
+  await tester.pumpAndSettle();
+}
