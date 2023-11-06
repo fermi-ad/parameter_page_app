@@ -730,5 +730,14 @@ void main() {
       // ... and currentTab has been updated too
       expect(page.currentTab, "New Tab Title");
     });
+
+    test("renameTab(..), enforces edit mode", () {
+      // Given a new parameter page and I am not in edit mode
+      ParameterPage page = ParameterPage();
+
+      // When I renameTab(..)...
+      // Then an exception is thrown
+      expect(() => page.renameTab(to: "Tab 2"), throwsException);
+    });
   });
 }
