@@ -750,12 +750,16 @@ void main() {
       page.renameTab(withTitle: "Tab 2", to: "New Tab Title");
 
       // Then the title has been changed
-      expect(page.tabTitles.contains("New Tab Title"), true);
-      expect(page.tabTitles.contains("Tab 1"), true);
-      expect(page.tabTitles.contains("Tab 2"), false);
+      expect(page.tabTitles.contains("New Tab Title"), true,
+          reason: "The new title should be present in tabTitles");
+      expect(page.tabTitles.contains("Tab 1"), true,
+          reason: "Tab 1 should be un-touched");
+      expect(page.tabTitles.contains("Tab 2"), false,
+          reason: "Tab 2 should have been removed");
 
       // ... and currentTab is still Tab 1
-      expect(page.currentTab, "Tab 1");
+      expect(page.currentTab, "Tab 1",
+          reason: "currentTab should be set to New Tab Title");
     });
   });
 }
