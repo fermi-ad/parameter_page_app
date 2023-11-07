@@ -23,6 +23,14 @@ class ParameterPage {
     return _currentTab;
   }
 
+  bool get editing {
+    return _editing;
+  }
+
+  bool get isDirty {
+    return title != _savedTitle || !_entriesEqual(_savedEntries);
+  }
+
   ParameterPage([List<PageEntry>? entries])
       : _entries = {"Tab 1": List<PageEntry>.from(entries ?? [])},
         _savedEntries = {"Tab 1": List<PageEntry>.from(entries ?? [])};
@@ -47,13 +55,6 @@ class ParameterPage {
     _entries[_currentTab]!.add(entry);
   }
 
-  void _enforceEditMode() {
-    if (!_editing) {
-      throw Exception(
-          "Can not modify a ParameterPage when edit mode is disabled.");
-    }
-  }
-
   List<PageEntry> entriesAsList({String? forTab}) {
     if (forTab != null) {
       if (!_entries.containsKey(forTab)) {
@@ -69,10 +70,6 @@ class ParameterPage {
     String tab = forTab ?? _currentTab;
 
     return _entries[tab]!.length;
-  }
-
-  bool editing() {
-    return _editing;
   }
 
   void enableEditing() {
@@ -93,6 +90,11 @@ class ParameterPage {
     _entries = _deepCopyEntries(_undoEntries);
     _title = _undoTitle;
     _editing = false;
+  }
+
+  void commit() {
+    _savedEntries = _deepCopyEntries(_entries);
+    _savedTitle = title;
   }
 
   void reorderEntry({required int atIndex, required int toIndex}) {
@@ -117,15 +119,6 @@ class ParameterPage {
     _entries[_currentTab] = [];
   }
 
-  void commit() {
-    _savedEntries = _deepCopyEntries(_entries);
-    _savedTitle = title;
-  }
-
-  bool get isDirty {
-    return title != _savedTitle || !_entriesEqual(_savedEntries);
-  }
-
   void createTab({String? title}) {
     _enforceEditMode();
     _entries[title ?? _generateNewTabTitle()] = [];
@@ -144,19 +137,39 @@ class ParameterPage {
 
   void renameTab({required String withTitle, required String to}) {
     _enforceEditMode();
-    if (withTitle != currentTab) {
-      _entries[to] = _entries[withTitle]!;
-      _entries.remove(withTitle);
-    } else {
-      _renameCurrentTab(to);
+
+    Map<String, List<PageEntry>> newEntries = {};
+    for (String tabName in _entries.keys) {
+      if (tabName == withTitle) {
+        newEntries[to] = _entries[tabName]!;
+        if (tabName == _currentTab) {
+          _currentTab = to;
+        }
+      } else {
+        newEntries[tabName] = _entries[tabName]!;
+      }
+    }
+    _entries = newEntries;
+  }
+
+  void switchTab({required String to}) {
+    if (!_entries.keys.contains(to)) {
+      throw Exception("switchTab failure - tab does not exist");
+    }
+    _currentTab = to;
+  }
+
+  void _enforceEditMode() {
+    if (!_editing) {
+      throw Exception(
+          "Can not modify a ParameterPage when edit mode is disabled.");
     }
   }
 
-  void _renameCurrentTab(String to) {
-    _entries[to] = _entries[_currentTab]!;
-    final oldTab = _currentTab;
-    _currentTab = to;
-    _entries.remove(oldTab);
+  void _enforceAtLeastOneTab() {
+    if (_entries.length == 1) {
+      throw Exception("Could not delete the only tab on the page");
+    }
   }
 
   void _switchToAdjacentTab() {
@@ -167,21 +180,8 @@ class ParameterPage {
     switchTab(to: switchToTab);
   }
 
-  void _enforceAtLeastOneTab() {
-    if (_entries.length == 1) {
-      throw Exception("Could not delete the only tab on the page");
-    }
-  }
-
   String _generateNewTabTitle() {
     return "Tab ${tabTitles.length + 1}";
-  }
-
-  void switchTab({required String to}) {
-    if (!_entries.keys.contains(to)) {
-      throw Exception("switchTab failure - tab does not exist");
-    }
-    _currentTab = to;
   }
 
   Map<String, List<PageEntry>> _buildEntriesMapFromQueryResult(

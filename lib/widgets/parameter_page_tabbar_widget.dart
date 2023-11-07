@@ -53,21 +53,26 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
         child: Visibility(
             visible: !_hideTabbar(),
             child: Row(children: [
-              Expanded(
-                  child: TabBar(
-                      key: const Key("parameter_page_tabbar"),
-                      controller: _tabController,
-                      tabs: _buildTabs(),
-                      onTap: (tabIndex) =>
-                          widget.onTabSwitched(widget.tabTitles[tabIndex]))),
+              Expanded(child: _buildTabBar()),
               Visibility(
-                  visible: widget.editing,
-                  child: IconButton(
-                    key: const Key("create_tab_button"),
-                    icon: const Icon(Icons.add),
-                    onPressed: widget.onCreateNewTab,
-                  ))
+                  visible: widget.editing, child: _buildCreateTabButton())
             ])));
+  }
+
+  TabBar _buildTabBar() {
+    return TabBar(
+        key: const Key("parameter_page_tabbar"),
+        controller: _tabController,
+        tabs: _buildTabs(),
+        onTap: (tabIndex) => widget.onTabSwitched(widget.tabTitles[tabIndex]));
+  }
+
+  Widget _buildCreateTabButton() {
+    return IconButton(
+      key: const Key("create_tab_button"),
+      icon: const Icon(Icons.add),
+      onPressed: widget.onCreateNewTab,
+    );
   }
 
   List<Tab> _buildTabs() {
@@ -82,28 +87,44 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
         const Spacer(),
         Visibility(
           visible: widget.editing,
-          child: PopupMenuButton<TabMenuItem>(
-            // Callback that sets the selected popup menu item.
-            onSelected: (TabMenuItem selected) =>
-                _handleMenuSelection(selected, title),
-            itemBuilder: (BuildContext context) =>
-                <PopupMenuEntry<TabMenuItem>>[
-              const PopupMenuItem<TabMenuItem>(
-                value: TabMenuItem.renameTab,
-                child: Text('Rename'),
-              ),
-              PopupMenuItem<TabMenuItem>(
-                value: TabMenuItem.deleteTab,
-                child: Visibility(
-                    visible: tabCanBeDeleted, child: const Text('Delete')),
-              ),
-            ],
-          ),
+          child:
+              _buildTabMenuButton(title: title, canBeDeleted: tabCanBeDeleted),
         )
       ])));
     }
 
     return tabs;
+  }
+
+  PopupMenuButton<TabMenuItem> _buildTabMenuButton(
+      {required String title, required bool canBeDeleted}) {
+    return PopupMenuButton<TabMenuItem>(
+      // Callback that sets the selected popup menu item.
+      onSelected: (TabMenuItem selected) =>
+          _handleMenuSelection(selected, title),
+      itemBuilder: (BuildContext context) {
+        return _buildTabMenuItems(canBeDeleted: canBeDeleted);
+      },
+    );
+  }
+
+  List<PopupMenuItem<TabMenuItem>> _buildTabMenuItems(
+      {required bool canBeDeleted}) {
+    List<PopupMenuItem<TabMenuItem>> ret = [
+      const PopupMenuItem<TabMenuItem>(
+        value: TabMenuItem.renameTab,
+        child: Text('Rename'),
+      )
+    ];
+
+    if (canBeDeleted) {
+      ret.add(const PopupMenuItem<TabMenuItem>(
+        value: TabMenuItem.deleteTab,
+        child: Text('Delete'),
+      ));
+    }
+
+    return ret;
   }
 
   void _handleMenuSelection(TabMenuItem selected, String tabTitle) {
@@ -119,19 +140,14 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
   }
 
   void _handleRenameTab(String tabTitle) {
+    final controller = TextEditingController(text: tabTitle);
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             title: const Text('Rename Tab'),
             content: TextField(
-              key: const Key("tab_edit_rename_to"),
-              onChanged: (value) {
-                setState(() {
-                  _renameTabTo = value;
-                });
-              },
-            ),
+                key: const Key("tab_edit_rename_to"), controller: controller),
             actions: <Widget>[
               MaterialButton(
                 child: const Text('Cancel'),
@@ -142,7 +158,7 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
               MaterialButton(
                 child: const Text('OK'),
                 onPressed: () {
-                  widget.onRenameTab(tabTitle, _renameTabTo);
+                  widget.onRenameTab(tabTitle, controller.text);
                   Navigator.pop(context);
                 },
               ),
@@ -161,8 +177,6 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
     _tabController =
         TabController(length: widget.tabTitles.length, vsync: this);
   }
-
-  String _renameTabTo = "";
 
   TabController? _tabController;
 }

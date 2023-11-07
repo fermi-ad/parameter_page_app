@@ -180,7 +180,7 @@ void main() {
       ParameterPage page = ParameterPage();
 
       // Then edit mode is disabled
-      expect(page.editing(), false);
+      expect(page.editing, false);
     });
 
     test("enableEditing(), turns editing mode on", () {
@@ -191,7 +191,7 @@ void main() {
       page.enableEditing();
 
       // Then edit mode is enabled
-      expect(page.editing(), true);
+      expect(page.editing, true);
     });
 
     test("disableEditing(), disables editing mode", () {
@@ -203,7 +203,7 @@ void main() {
       page.disableEditing();
 
       // Then edit mode is disabled
-      expect(page.editing(), false);
+      expect(page.editing, false);
     });
 
     test("disableEditing(), commits changes to entries list", () {
@@ -227,7 +227,7 @@ void main() {
       page.toggleEditing();
 
       // Then editing mode is enabled
-      expect(page.editing(), true);
+      expect(page.editing, true);
     });
 
     test("toggleEditing(), switches from on to off", () {
@@ -239,7 +239,7 @@ void main() {
       page.toggleEditing();
 
       // Then editing mode is disabled
-      expect(page.editing(), false);
+      expect(page.editing, false);
     });
 
     test("cancelEditing(), discards new entries added during editing mode", () {
@@ -253,7 +253,7 @@ void main() {
       page.cancelEditing();
 
       // Then editing mode is cancelled, the new entries are discarded and the page is empty
-      expect(page.editing(), false);
+      expect(page.editing, false);
       expect(page.numberOfEntries(), 0);
     });
 
@@ -761,6 +761,25 @@ void main() {
       // ... and currentTab is still Tab 1
       expect(page.currentTab, "Tab 1",
           reason: "currentTab should be set to New Tab Title");
+    });
+
+    test('renameTab(..), preserves order of tabs', () {
+      // Given a new ParameterPage with three tabs
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createTab();
+      page.createTab();
+
+      // When I rename Tab 1
+      page.renameTab(withTitle: "Tab 1", to: "A New Tab Title");
+
+      // Then the tab is renamed
+      expect(page.tabTitles.contains("A New Tab Title"), true);
+
+      // ... and the order of the tabs stays the same
+      expect(page.tabTitles[0], "A New Tab Title");
+      expect(page.tabTitles[1], "Tab 2");
+      expect(page.tabTitles[2], "Tab 3");
     });
   });
 }

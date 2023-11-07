@@ -64,7 +64,7 @@ class PageWidgetState extends State<PageWidget> {
   }
 
   Widget _buildPage(BuildContext context, bool wide, ParameterPage page) {
-    final bool movable = page.editing() && page.numberOfEntries() > 1;
+    final bool movable = page.editing && page.numberOfEntries() > 1;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -72,7 +72,7 @@ class PageWidgetState extends State<PageWidget> {
         Expanded(
           child: ReorderableListView(
               padding: const EdgeInsets.fromLTRB(4.0, 4.0, 4.0, 4.0),
-              footer: page.editing()
+              footer: page.editing
                   ? NewEntryEditorWidget(
                       key: const Key('add-entry-textfield'),
                       onSubmitted: (PageEntry newEntry) {
@@ -105,11 +105,10 @@ class PageWidgetState extends State<PageWidget> {
 
   Widget _buildRow(BuildContext context, PageEntry entry, int index, bool wide,
       ParameterPage page) {
-    return page.editing()
+    return page.editing
         ? Row(children: [
             Expanded(
-                child:
-                    entry.buildEntry(context, page.editing(), wide, settings)),
+                child: entry.buildEntry(context, page.editing, wide, settings)),
             const SizedBox(width: 8.0),
             GestureDetector(
                 onTap: () async {
@@ -122,7 +121,7 @@ class PageWidgetState extends State<PageWidget> {
                     onPressed: null,
                     icon: Icon(Icons.delete)))
           ])
-        : entry.buildEntry(context, page.editing(), wide, settings);
+        : entry.buildEntry(context, page.editing, wide, settings);
   }
 
   // Moves an entry from one location to another in the parameter list. It
@@ -137,31 +136,31 @@ class PageWidgetState extends State<PageWidget> {
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Tooltip(
-            message: page.editing() ? "Stop editing" : "Edit this page",
+            message: page.editing ? "Stop editing" : "Edit this page",
             child: FloatingActionButton.small(
                 key: const Key('enable_edit_mode_button'),
                 heroTag: null,
                 backgroundColor: Theme.of(context)
                     .colorScheme
                     .primary
-                    .withAlpha(page.editing() ? 255 : 128),
+                    .withAlpha(page.editing ? 255 : 128),
                 onPressed: () => _toggleEditMode(page),
                 child: const Icon(Icons.edit_note))));
   }
 
   void _toggleEditMode(ParameterPage page) {
     setState(() => page.toggleEditing());
-    if (!page.editing()) {
+    if (!page.editing) {
       widget.onPageModified?.call();
     }
 
-    widget.onToggleEditing?.call(page.editing());
+    widget.onToggleEditing?.call(page.editing);
   }
 
   Widget _buildEditModeFloatingActionBar(ParameterPage page) {
     return Visibility(
         key: const Key("edit_mode_tools_visibility"),
-        visible: page.editing(),
+        visible: page.editing,
         child: Column(children: [
           Padding(
               padding: const EdgeInsets.all(8.0),
