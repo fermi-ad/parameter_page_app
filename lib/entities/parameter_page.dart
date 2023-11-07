@@ -23,6 +23,10 @@ class ParameterPage {
     return _currentTab;
   }
 
+  bool get editing {
+    return _editing;
+  }
+
   ParameterPage([List<PageEntry>? entries])
       : _entries = {"Tab 1": List<PageEntry>.from(entries ?? [])},
         _savedEntries = {"Tab 1": List<PageEntry>.from(entries ?? [])};
@@ -69,10 +73,6 @@ class ParameterPage {
     String tab = forTab ?? _currentTab;
 
     return _entries[tab]!.length;
-  }
-
-  bool editing() {
-    return _editing;
   }
 
   void enableEditing() {
