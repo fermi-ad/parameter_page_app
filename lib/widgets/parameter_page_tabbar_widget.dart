@@ -140,19 +140,14 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
   }
 
   void _handleRenameTab(String tabTitle) {
+    final controller = TextEditingController(text: tabTitle);
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             title: const Text('Rename Tab'),
             content: TextField(
-              key: const Key("tab_edit_rename_to"),
-              onChanged: (value) {
-                setState(() {
-                  _renameTabTo = value;
-                });
-              },
-            ),
+                key: const Key("tab_edit_rename_to"), controller: controller),
             actions: <Widget>[
               MaterialButton(
                 child: const Text('Cancel'),
@@ -163,7 +158,7 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
               MaterialButton(
                 child: const Text('OK'),
                 onPressed: () {
-                  widget.onRenameTab(tabTitle, _renameTabTo);
+                  widget.onRenameTab(tabTitle, controller.text);
                   Navigator.pop(context);
                 },
               ),
@@ -182,8 +177,6 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
     _tabController =
         TabController(length: widget.tabTitles.length, vsync: this);
   }
-
-  String _renameTabTo = "";
 
   TabController? _tabController;
 }
