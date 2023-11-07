@@ -71,23 +71,22 @@ void main() {
       await exitEditMode(tester);
 
       // Then each tab has the appropriate entries
+      assertIsOnPage(comment: "Comment for tab 8");
+      await switchTab(tester, to: "Tab Seven");
+      assertIsOnPage(comment: "Comment for tab 7");
+      await switchTab(tester, to: "Tab Six");
+      assertIsOnPage(comment: "Comment for tab 6");
+      await switchTab(tester, to: "Tab Five");
+      assertIsOnPage(comment: "Comment for tab 5");
+      await switchTab(tester, to: "Tab Four");
+      assertIsOnPage(comment: "Comment for tab 4");
+      await switchTab(tester, to: "Tab Three");
+      assertIsOnPage(comment: "Comment for tab 3");
+      await switchTab(tester, to: "Tab Two");
+      assertIsOnPage(comment: "Comment for tab 2");
       await switchTab(tester, to: "Tab One");
       assertIsOnPage(comment: "This is Tab One");
       assertIsOnPage(comment: "Comment for tab 1");
-      await switchTab(tester, to: "Tab Two");
-      assertIsOnPage(comment: "Comment for tab 2");
-      await switchTab(tester, to: "Tab Three");
-      assertIsOnPage(comment: "Comment for tab 3");
-      await switchTab(tester, to: "Tab Four");
-      assertIsOnPage(comment: "Comment for tab 4");
-      await switchTab(tester, to: "Tab Five");
-      assertIsOnPage(comment: "Comment for tab 5");
-      await switchTab(tester, to: "Tab Six");
-      assertIsOnPage(comment: "Comment for tab 6");
-      await switchTab(tester, to: "Tab Seven");
-      assertIsOnPage(comment: "Comment for tab 7");
-      await switchTab(tester, to: "Tab Eight");
-      assertIsOnPage(comment: "Comment for tab 8");
     }, semanticsEnabled: false);
 
     testWidgets('Display a page without tabs, tab bar is not visible',
