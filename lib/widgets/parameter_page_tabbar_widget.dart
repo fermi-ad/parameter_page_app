@@ -55,12 +55,7 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
             child: Row(children: [
               Expanded(child: _buildTabBar()),
               Visibility(
-                  visible: widget.editing,
-                  child: IconButton(
-                    key: const Key("create_tab_button"),
-                    icon: const Icon(Icons.add),
-                    onPressed: widget.onCreateNewTab,
-                  ))
+                  visible: widget.editing, child: _buildCreateTabButton())
             ])));
   }
 
@@ -70,6 +65,14 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
         controller: _tabController,
         tabs: _buildTabs(),
         onTap: (tabIndex) => widget.onTabSwitched(widget.tabTitles[tabIndex]));
+  }
+
+  Widget _buildCreateTabButton() {
+    return IconButton(
+      key: const Key("create_tab_button"),
+      icon: const Icon(Icons.add),
+      onPressed: widget.onCreateNewTab,
+    );
   }
 
   List<Tab> _buildTabs() {
@@ -84,28 +87,44 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
         const Spacer(),
         Visibility(
           visible: widget.editing,
-          child: PopupMenuButton<TabMenuItem>(
-            // Callback that sets the selected popup menu item.
-            onSelected: (TabMenuItem selected) =>
-                _handleMenuSelection(selected, title),
-            itemBuilder: (BuildContext context) =>
-                <PopupMenuEntry<TabMenuItem>>[
-              const PopupMenuItem<TabMenuItem>(
-                value: TabMenuItem.renameTab,
-                child: Text('Rename'),
-              ),
-              PopupMenuItem<TabMenuItem>(
-                value: TabMenuItem.deleteTab,
-                child: Visibility(
-                    visible: tabCanBeDeleted, child: const Text('Delete')),
-              ),
-            ],
-          ),
+          child:
+              _buildTabMenuButton(title: title, canBeDeleted: tabCanBeDeleted),
         )
       ])));
     }
 
     return tabs;
+  }
+
+  PopupMenuButton<TabMenuItem> _buildTabMenuButton(
+      {required String title, required bool canBeDeleted}) {
+    return PopupMenuButton<TabMenuItem>(
+      // Callback that sets the selected popup menu item.
+      onSelected: (TabMenuItem selected) =>
+          _handleMenuSelection(selected, title),
+      itemBuilder: (BuildContext context) {
+        return _buildTabMenuItems(canBeDeleted: canBeDeleted);
+      },
+    );
+  }
+
+  List<PopupMenuItem<TabMenuItem>> _buildTabMenuItems(
+      {required bool canBeDeleted}) {
+    List<PopupMenuItem<TabMenuItem>> ret = [
+      const PopupMenuItem<TabMenuItem>(
+        value: TabMenuItem.renameTab,
+        child: Text('Rename'),
+      )
+    ];
+
+    if (canBeDeleted) {
+      ret.add(const PopupMenuItem<TabMenuItem>(
+        value: TabMenuItem.deleteTab,
+        child: Text('Delete'),
+      ));
+    }
+
+    return ret;
   }
 
   void _handleMenuSelection(TabMenuItem selected, String tabTitle) {
