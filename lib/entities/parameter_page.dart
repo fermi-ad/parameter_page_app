@@ -51,13 +51,6 @@ class ParameterPage {
     _entries[_currentTab]!.add(entry);
   }
 
-  void _enforceEditMode() {
-    if (!_editing) {
-      throw Exception(
-          "Can not modify a ParameterPage when edit mode is disabled.");
-    }
-  }
-
   List<PageEntry> entriesAsList({String? forTab}) {
     if (forTab != null) {
       if (!_entries.containsKey(forTab)) {
@@ -159,18 +152,25 @@ class ParameterPage {
     _entries = newEntries;
   }
 
-  void _switchToAdjacentTab() {
-    final tabIndex = tabTitles.indexOf(currentTab);
-    String switchToTab = (tabIndex == tabTitles.length - 1)
-        ? tabTitles[tabIndex - 1]
-        : tabTitles[tabIndex + 1];
-    switchTab(to: switchToTab);
+  void _enforceEditMode() {
+    if (!_editing) {
+      throw Exception(
+          "Can not modify a ParameterPage when edit mode is disabled.");
+    }
   }
 
   void _enforceAtLeastOneTab() {
     if (_entries.length == 1) {
       throw Exception("Could not delete the only tab on the page");
     }
+  }
+
+  void _switchToAdjacentTab() {
+    final tabIndex = tabTitles.indexOf(currentTab);
+    String switchToTab = (tabIndex == tabTitles.length - 1)
+        ? tabTitles[tabIndex - 1]
+        : tabTitles[tabIndex + 1];
+    switchTab(to: switchToTab);
   }
 
   String _generateNewTabTitle() {
