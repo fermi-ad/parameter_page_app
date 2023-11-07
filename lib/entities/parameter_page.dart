@@ -27,6 +27,10 @@ class ParameterPage {
     return _editing;
   }
 
+  bool get isDirty {
+    return title != _savedTitle || !_entriesEqual(_savedEntries);
+  }
+
   ParameterPage([List<PageEntry>? entries])
       : _entries = {"Tab 1": List<PageEntry>.from(entries ?? [])},
         _savedEntries = {"Tab 1": List<PageEntry>.from(entries ?? [])};
@@ -113,10 +117,6 @@ class ParameterPage {
   void commit() {
     _savedEntries = _deepCopyEntries(_entries);
     _savedTitle = title;
-  }
-
-  bool get isDirty {
-    return title != _savedTitle || !_entriesEqual(_savedEntries);
   }
 
   void createTab({String? title}) {
