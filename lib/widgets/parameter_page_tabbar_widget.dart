@@ -53,13 +53,7 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
         child: Visibility(
             visible: !_hideTabbar(),
             child: Row(children: [
-              Expanded(
-                  child: TabBar(
-                      key: const Key("parameter_page_tabbar"),
-                      controller: _tabController,
-                      tabs: _buildTabs(),
-                      onTap: (tabIndex) =>
-                          widget.onTabSwitched(widget.tabTitles[tabIndex]))),
+              Expanded(child: _buildTabBar()),
               Visibility(
                   visible: widget.editing,
                   child: IconButton(
@@ -68,6 +62,14 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
                     onPressed: widget.onCreateNewTab,
                   ))
             ])));
+  }
+
+  TabBar _buildTabBar() {
+    return TabBar(
+        key: const Key("parameter_page_tabbar"),
+        controller: _tabController,
+        tabs: _buildTabs(),
+        onTap: (tabIndex) => widget.onTabSwitched(widget.tabTitles[tabIndex]));
   }
 
   List<Tab> _buildTabs() {
