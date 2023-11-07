@@ -152,6 +152,13 @@ class ParameterPage {
     _entries = newEntries;
   }
 
+  void switchTab({required String to}) {
+    if (!_entries.keys.contains(to)) {
+      throw Exception("switchTab failure - tab does not exist");
+    }
+    _currentTab = to;
+  }
+
   void _enforceEditMode() {
     if (!_editing) {
       throw Exception(
@@ -175,13 +182,6 @@ class ParameterPage {
 
   String _generateNewTabTitle() {
     return "Tab ${tabTitles.length + 1}";
-  }
-
-  void switchTab({required String to}) {
-    if (!_entries.keys.contains(to)) {
-      throw Exception("switchTab failure - tab does not exist");
-    }
-    _currentTab = to;
   }
 
   Map<String, List<PageEntry>> _buildEntriesMapFromQueryResult(
