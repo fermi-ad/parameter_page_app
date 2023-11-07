@@ -62,6 +62,7 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
   TabBar _buildTabBar() {
     return TabBar(
         key: const Key("parameter_page_tabbar"),
+        isScrollable: true,
         controller: _tabController,
         tabs: _buildTabs(),
         onTap: (tabIndex) => widget.onTabSwitched(widget.tabTitles[tabIndex]));
@@ -82,15 +83,16 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
 
     for (String title in widget.tabTitles) {
       tabs.add(Tab(
-          child: Row(children: [
-        Text(title),
-        const Spacer(),
-        Visibility(
-          visible: widget.editing,
-          child:
-              _buildTabMenuButton(title: title, canBeDeleted: tabCanBeDeleted),
-        )
-      ])));
+          child: SizedBox(
+              width: 200.0,
+              child: Row(children: [
+                Expanded(child: Text(title, overflow: TextOverflow.ellipsis)),
+                Visibility(
+                  visible: widget.editing,
+                  child: _buildTabMenuButton(
+                      title: title, canBeDeleted: tabCanBeDeleted),
+                )
+              ]))));
     }
 
     return tabs;
