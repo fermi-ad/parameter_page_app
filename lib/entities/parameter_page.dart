@@ -92,6 +92,11 @@ class ParameterPage {
     _editing = false;
   }
 
+  void commit() {
+    _savedEntries = _deepCopyEntries(_entries);
+    _savedTitle = title;
+  }
+
   void reorderEntry({required int atIndex, required int toIndex}) {
     _enforceEditMode();
 
@@ -112,11 +117,6 @@ class ParameterPage {
     _enforceEditMode();
 
     _entries[_currentTab] = [];
-  }
-
-  void commit() {
-    _savedEntries = _deepCopyEntries(_entries);
-    _savedTitle = title;
   }
 
   void createTab({String? title}) {
