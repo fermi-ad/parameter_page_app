@@ -715,11 +715,10 @@ void main() {
       // Given a ParameterPage with 2 tabs and some entries on tab 1
       ParameterPage page = ParameterPage();
       page.enableEditing();
-      page.createTab();
       page.add(CommentEntry("comment #1"));
+      page.createTab();
 
       // When I populate Tab 2 with 2 entries
-      page.switchTab(to: "Tab 2");
       page.add(CommentEntry("comment #2"));
       page.add(CommentEntry("comment #3"));
 
@@ -762,6 +761,9 @@ void main() {
       ParameterPage page = ParameterPage();
       page.enableEditing();
       page.createTab();
+
+      // ... and currentTab is Tab 1
+      page.switchTab(to: "Tab 1");
 
       // When I renameTab(withTitle: "Tab 2", to: "New Tab Title")
       page.renameTab(withTitle: "Tab 2", to: "New Tab Title");
