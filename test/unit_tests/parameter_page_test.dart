@@ -455,6 +455,22 @@ void main() {
       expect(page.tabTitles[1], "Tab 2");
     });
 
+    test('createTab(title:), switches currentTab to the new tab', () {
+      // Given a new ParameterPage in editing mode with a comment on Tab 1
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.add(CommentEntry("comment #1"));
+
+      // When I createTab()...
+      page.createTab();
+
+      // Then currentTab is set to the new tab
+      expect(page.currentTab, "Tab 2");
+
+      // ... and entriesAsList() is empty
+      expect(page.entriesAsList().length, 0);
+    });
+
     test("createTab(title:), sets the dirty flag", () {
       // Given a new ParameterPage
       // ... and editing is enabled
@@ -699,11 +715,10 @@ void main() {
       // Given a ParameterPage with 2 tabs and some entries on tab 1
       ParameterPage page = ParameterPage();
       page.enableEditing();
-      page.createTab();
       page.add(CommentEntry("comment #1"));
+      page.createTab();
 
       // When I populate Tab 2 with 2 entries
-      page.switchTab(to: "Tab 2");
       page.add(CommentEntry("comment #2"));
       page.add(CommentEntry("comment #3"));
 
@@ -747,6 +762,9 @@ void main() {
       page.enableEditing();
       page.createTab();
 
+      // ... and currentTab is Tab 1
+      page.switchTab(to: "Tab 1");
+
       // When I renameTab(withTitle: "Tab 2", to: "New Tab Title")
       page.renameTab(withTitle: "Tab 2", to: "New Tab Title");
 
@@ -780,6 +798,22 @@ void main() {
       expect(page.tabTitles[0], "A New Tab Title");
       expect(page.tabTitles[1], "Tab 2");
       expect(page.tabTitles[2], "Tab 3");
+    });
+
+    test('tabIndex, returns the index of currentTab in tabTitles', () {
+      // Given a new ParameterPage that is being edited
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I create two more tabs
+      page.createTab();
+      page.createTab();
+
+      // Then currentTabIndex is 2
+      expect(page.currentTabIndex, 2);
+
+      // ... and currentTab is Tab 3
+      expect(page.currentTab, "Tab 3");
     });
   });
 }

@@ -16,6 +16,8 @@ class ParameterPageTabbarWidget extends StatefulWidget
 
   final bool editing;
 
+  final int index;
+
   const ParameterPageTabbarWidget(
       {super.key,
       required this.tabTitles,
@@ -23,7 +25,8 @@ class ParameterPageTabbarWidget extends StatefulWidget
       required this.onCreateNewTab,
       required this.onDeleteTab,
       required this.onRenameTab,
-      required this.editing});
+      required this.editing,
+      required this.index});
 
   @override
   State<ParameterPageTabbarWidget> createState() {
@@ -178,6 +181,7 @@ class _ParameterPageTabbarState extends State<ParameterPageTabbarWidget>
   void _resetTabController() {
     _tabController =
         TabController(length: widget.tabTitles.length, vsync: this);
+    _tabController!.animateTo(widget.index);
   }
 
   TabController? _tabController;

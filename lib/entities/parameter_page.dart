@@ -23,6 +23,10 @@ class ParameterPage {
     return _currentTab;
   }
 
+  int get currentTabIndex {
+    return tabTitles.indexOf(_currentTab);
+  }
+
   bool get editing {
     return _editing;
   }
@@ -121,7 +125,11 @@ class ParameterPage {
 
   void createTab({String? title}) {
     _enforceEditMode();
-    _entries[title ?? _generateNewTabTitle()] = [];
+
+    final newTabTitle = title ?? _generateNewTabTitle();
+    _entries[newTabTitle] = [];
+
+    switchTab(to: newTabTitle);
   }
 
   void deleteTab({required String title}) {
