@@ -22,6 +22,20 @@ void main() {
       assertPageTitleIs("New Parameter Page");
     }, semanticsEnabled: false);
 
+    testWidgets('Create New Page, should be in edit mode',
+        (WidgetTester tester) async {
+      // Given I am on the landing page
+      await startParameterPageApp(tester);
+
+      // When I create a new parameter
+      await createNewParameterPage(tester);
+
+      // Then the new page should be displayed and I should be in edit mode
+      assertNumberOfEntriesOnPageIs(0);
+      assertPageTitleIs("New Parameter Page");
+      assertEditMode(isEnabled: true);
+    }, semanticsEnabled: false);
+
     testWidgets(
         'Tap New Page and discard changes, should be presented with a new blank page',
         (tester) async {
