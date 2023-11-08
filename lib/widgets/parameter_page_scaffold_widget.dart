@@ -56,6 +56,7 @@ class _ParameterPageScaffoldWidgetState
       _loadPage(pageId: widget.openPageId!);
     } else if (_aNewPageShouldBeStarted()) {
       _page = ParameterPage();
+      _page!.enableEditing();
     }
 
     return Scaffold(

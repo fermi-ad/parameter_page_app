@@ -130,6 +130,10 @@ void assertParameterIsInRow(String parameter, int isInRow) {
           "expected $parameter in row $isInRow but something else was there.");
 }
 
+void assertEditMode({required bool isEnabled}) {
+  assertEditModeCancelButton(isVisible: isEnabled);
+}
+
 void assertEditModeCancelButton({required bool isVisible}) {
   expect(find.byKey(const Key("cancel_edit_mode_button")),
       isVisible ? findsOneWidget : findsNothing);

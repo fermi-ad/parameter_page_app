@@ -98,7 +98,6 @@ void main() {
       // Given I've created and saved a new parameter page called 'New Parameter Page'
       await startParameterPageApp(tester);
       await createNewParameterPage(tester);
-      await enterEditMode(tester);
       await addANewComment(tester, "this is a new page");
       await exitEditMode(tester);
       await openMainMenu(tester);
@@ -162,7 +161,6 @@ void main() {
       // Given I have created a new page
       await startParameterPageApp(tester);
       await createNewParameterPage(tester);
-      await enterEditMode(tester);
 
       // ... and I have given it a title of "Test Page 3"
       await changePageTitle(tester, to: "Test Page 3");
@@ -195,7 +193,6 @@ void main() {
       // Given I have created a new page
       await startParameterPageApp(tester);
       await createNewParameterPage(tester);
-      await enterEditMode(tester);
 
       // ... and I have given it a title of "Test Page 3"
       await changePageTitle(tester, to: "Test Page 3");
