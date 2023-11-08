@@ -455,6 +455,22 @@ void main() {
       expect(page.tabTitles[1], "Tab 2");
     });
 
+    test('createTab(title:), switches currentTab to the new tab', () {
+      // Given a new ParameterPage in editing mode with a comment on Tab 1
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.add(CommentEntry("comment #1"));
+
+      // When I createTab()...
+      page.createTab();
+
+      // Then currentTab is set to the new tab
+      expect(page.currentTab, "Tab 2");
+
+      // ... and entriesAsList() is empty
+      expect(page.entriesAsList().length, 0);
+    });
+
     test("createTab(title:), sets the dirty flag", () {
       // Given a new ParameterPage
       // ... and editing is enabled
