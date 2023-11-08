@@ -158,7 +158,6 @@ void main() {
       // Given a new parameter page with 2 tabs
       await startParameterPageApp(tester);
       await createNewParameterPage(tester);
-      await enterEditMode(tester);
       await createNewTab(tester);
 
       // When I delete Tab 2, leaving only 1 tab
@@ -175,7 +174,6 @@ void main() {
       // Given a new parameter page with 2 tabs
       await startParameterPageApp(tester);
       await createNewParameterPage(tester);
-      await enterEditMode(tester);
       await createNewTab(tester);
 
       // ... and tab 2 has one entry
@@ -195,7 +193,6 @@ void main() {
       // Given a new parameter page with 2 tabs
       await startParameterPageApp(tester);
       await createNewParameterPage(tester);
-      await enterEditMode(tester);
       await createNewTab(tester);
 
       // ... and tab 2 has one entry
@@ -215,7 +212,6 @@ void main() {
       // Given a new parameter page with 2 tabs
       await startParameterPageApp(tester);
       await createNewParameterPage(tester);
-      await enterEditMode(tester);
       await createNewTab(tester);
 
       // ... and tab 2 has one entry
@@ -235,7 +231,6 @@ void main() {
       // Given a new parameter page with 1 tab
       await startParameterPageApp(tester);
       await createNewParameterPage(tester);
-      await enterEditMode(tester);
 
       // When I rename the tab...
       await renameTab(tester, withTitle: "Tab 1", to: "A New Title");
