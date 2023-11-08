@@ -41,7 +41,6 @@ void main() {
       // Given I have a new parameter page that hasn't been saved yet
       await startParameterPageApp(tester);
       await createNewParameterPage(tester);
-      await enterEditMode(tester);
       await addANewComment(tester, "test copy link");
       await exitEditMode(tester);
       await openMainMenu(tester);
