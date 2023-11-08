@@ -799,5 +799,21 @@ void main() {
       expect(page.tabTitles[1], "Tab 2");
       expect(page.tabTitles[2], "Tab 3");
     });
+
+    test('tabIndex, returns the index of currentTab in tabTitles', () {
+      // Given a new ParameterPage that is being edited
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I create two more tabs
+      page.createTab();
+      page.createTab();
+
+      // Then currentTabIndex is 2
+      expect(page.currentTabIndex, 2);
+
+      // ... and currentTab is Tab 3
+      expect(page.currentTab, "Tab 3");
+    });
   });
 }

@@ -90,6 +90,7 @@ class _ParameterPageScaffoldWidgetState
         bottom: ParameterPageTabbarWidget(
             editing: _page?.editing ?? false,
             tabTitles: _page != null ? _page!.tabTitles : [],
+            index: _page != null ? _page!.currentTabIndex : 0,
             onDeleteTab: _handleDeleteTab,
             onCreateNewTab: _handleCreateNewTab,
             onRenameTab: _handleRenameTab,
