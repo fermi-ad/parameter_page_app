@@ -119,7 +119,6 @@ void main() {
 
       // When I press new page and add some new entries
       await newPage(tester);
-      await enterEditMode(tester);
       await addANewParameter(tester, "I:BEAM");
       await exitEditMode(tester);
 
