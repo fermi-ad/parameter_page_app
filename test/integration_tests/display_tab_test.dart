@@ -128,6 +128,9 @@ void main() {
 
       // Then a new tab titled Tab 2 is created
       assertTabBarContains(nTabs: 2, withTitles: ["Tab 1", "Tab 2"]);
+
+      // ... and the tab is blank
+      assertNumberOfEntriesOnPageIs(0);
     }, semanticsEnabled: false);
 
     testWidgets('Delete an empty tab, tab is removed',
