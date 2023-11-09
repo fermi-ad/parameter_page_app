@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:parameter_page/entities/page_entry.dart';
 
-const Map<String, List<PageEntry>> initialPageEntries = {"Tab 1": []};
+const Map<String, List<List<PageEntry>>> initialPageEntries = {
+  "Tab 1": [[]]
+};
 
 class ParameterPage {
   String? id;
@@ -44,8 +46,12 @@ class ParameterPage {
   }
 
   ParameterPage([List<PageEntry>? entries])
-      : _entries = {"Tab 1": List<PageEntry>.from(entries ?? [])},
-        _savedEntries = {"Tab 1": List<PageEntry>.from(entries ?? [])};
+      : _entries = {
+          "Tab 1": [List<PageEntry>.from(entries ?? [])]
+        },
+        _savedEntries = {
+          "Tab 1": [List<PageEntry>.from(entries ?? [])]
+        };
 
   ParameterPage.fromQueryResult(
       {required this.id,
@@ -64,7 +70,7 @@ class ParameterPage {
 
   void add(PageEntry entry) {
     _enforceEditMode();
-    _entries[_currentTab]!.add(entry);
+    _entries[_currentTab]![_currentSubPage].add(entry);
   }
 
   List<PageEntry> entriesAsList({String? forTab}) {
@@ -72,16 +78,16 @@ class ParameterPage {
       if (!_entries.containsKey(forTab)) {
         throw Exception("entriesAsList failure - Invalid tab title");
       }
-      return _entries[forTab]!;
+      return _entries[forTab]![_currentSubPage];
     } else {
-      return _entries[currentTab]!;
+      return _entries[currentTab]![_currentSubPage];
     }
   }
 
   int numberOfEntries({String? forTab}) {
     String tab = forTab ?? _currentTab;
 
-    return _entries[tab]!.length;
+    return _entries[tab]![_currentSubPage].length;
   }
 
   void enableEditing() {
@@ -115,27 +121,28 @@ class ParameterPage {
     if (atIndex < toIndex) {
       toIndex -= 1;
     }
-    final PageEntry entry = _entries[_currentTab]!.removeAt(atIndex);
-    _entries[_currentTab]!.insert(toIndex, entry);
+    final PageEntry entry =
+        _entries[_currentTab]![_currentSubPage].removeAt(atIndex);
+    _entries[_currentTab]![_currentSubPage].insert(toIndex, entry);
   }
 
   void removeEntry({required int at}) {
     _enforceEditMode();
 
-    _entries[_currentTab]!.removeAt(at);
+    _entries[_currentTab]![_currentSubPage].removeAt(at);
   }
 
   void clearAll() {
     _enforceEditMode();
 
-    _entries[_currentTab] = [];
+    _entries[_currentTab]![_currentSubPage] = [];
   }
 
   void createTab({String? title}) {
     _enforceEditMode();
 
     final newTabTitle = title ?? _generateNewTabTitle();
-    _entries[newTabTitle] = [];
+    _entries[newTabTitle] = [[]];
 
     switchTab(to: newTabTitle);
   }
@@ -154,7 +161,7 @@ class ParameterPage {
   void renameTab({required String withTitle, required String to}) {
     _enforceEditMode();
 
-    Map<String, List<PageEntry>> newEntries = {};
+    Map<String, List<List<PageEntry>>> newEntries = {};
     for (String tabName in _entries.keys) {
       if (tabName == withTitle) {
         newEntries[to] = _entries[tabName]!;
@@ -211,16 +218,17 @@ class ParameterPage {
     return "Tab ${tabTitles.length + 1}";
   }
 
-  Map<String, List<PageEntry>> _buildEntriesMapFromQueryResult(
+  Map<String, List<List<PageEntry>>> _buildEntriesMapFromQueryResult(
       Map<String, dynamic> queryResult) {
-    Map<String, List<PageEntry>> ret = {};
+    Map<String, List<List<PageEntry>>> ret = {};
     for (final tabData in queryResult["tabs"]) {
       final entries = tabData["entries"];
       if (entries.length == 0) {
-        ret[tabData["title"]] = [];
+        ret[tabData["title"]] = [[]];
       } else {
-        ret[tabData["title"]] =
-            _buildEntriesListFromQueryResult(tabData["entries"]);
+        ret[tabData["title"]] = [
+          _buildEntriesListFromQueryResult(tabData["entries"])
+        ];
       }
     }
     return ret;
@@ -236,16 +244,19 @@ class ParameterPage {
     return ret;
   }
 
-  Map<String, List<PageEntry>> _deepCopyEntries(
-      Map<String, List<PageEntry>> from) {
-    Map<String, List<PageEntry>> ret = {};
+  Map<String, List<List<PageEntry>>> _deepCopyEntries(
+      Map<String, List<List<PageEntry>>> from) {
+    Map<String, List<List<PageEntry>>> ret = {};
     for (String tab in from.keys) {
-      ret[tab] = List<PageEntry>.from(from[tab]!);
+      for (int i = 0; i != from[tab]!.length; i++) {
+        ret[tab] = [];
+        ret[tab]!.add(List<PageEntry>.from(from[tab]![i]));
+      }
     }
     return ret;
   }
 
-  bool _entriesEqual(Map<String, List<PageEntry>> compareTo) {
+  bool _entriesEqual(Map<String, List<List<PageEntry>>> compareTo) {
     if (_entries.length != compareTo.length) {
       return false;
     }
@@ -254,8 +265,11 @@ class ParameterPage {
       if (!compareTo.containsKey(tab)) {
         return false;
       }
-      if (!listEquals(_entries[tab]!, compareTo[tab]!)) {
-        return false;
+
+      for (int i = 0; i != _entries[tab]!.length; i++) {
+        if (!listEquals(_entries[tab]![i], compareTo[tab]![i])) {
+          return false;
+        }
       }
     }
 
@@ -279,11 +293,11 @@ class ParameterPage {
     }
   }
 
-  Map<String, List<PageEntry>> _entries = initialPageEntries;
+  Map<String, List<List<PageEntry>>> _entries = initialPageEntries;
 
-  Map<String, List<PageEntry>> _undoEntries = initialPageEntries;
+  Map<String, List<List<PageEntry>>> _undoEntries = initialPageEntries;
 
-  Map<String, List<PageEntry>> _savedEntries = initialPageEntries;
+  Map<String, List<List<PageEntry>>> _savedEntries = initialPageEntries;
 
   String _title = "New Parameter Page";
 
