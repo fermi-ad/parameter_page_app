@@ -891,5 +891,18 @@ void main() {
       // Then an exception is thrown
       expect(() => page.createSubPage(), throwsException);
     });
+
+    test('decrementSubPage(), moves subPageIndex backwards', () {
+      // Given a ParameterPage with 2 sub-pages
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubPage();
+
+      // When I decrementSubPageIndex()
+      page.decrementSubPage();
+
+      // Then subPageIndex is 1
+      expect(page.subPageIndex, 1);
+    });
   });
 }
