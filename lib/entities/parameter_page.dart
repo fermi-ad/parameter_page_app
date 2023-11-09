@@ -34,7 +34,7 @@ class ParameterPage {
   }
 
   int get numberOfSubPages {
-    return _subPages;
+    return _entries[_currentTab]!.length;
   }
 
   bool get editing {
@@ -189,8 +189,9 @@ class ParameterPage {
   void createSubPage() {
     _enforceEditMode();
 
-    _subPages++;
-    _currentSubPage = _subPages - 1;
+    _entries[currentTab]!.add([]);
+
+    _currentSubPage = _entries[currentTab]!.length - 1;
   }
 
   void _enforceEditMode() {
@@ -308,8 +309,6 @@ class ParameterPage {
   String _currentTab = "Tab 1";
 
   bool _editing = false;
-
-  int _subPages = 1;
 
   int _currentSubPage = 0;
 }
