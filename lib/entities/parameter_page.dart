@@ -27,6 +27,10 @@ class ParameterPage {
     return tabTitles.indexOf(_currentTab);
   }
 
+  int get subPageIndex {
+    return 1;
+  }
+
   bool get editing {
     return _editing;
   }

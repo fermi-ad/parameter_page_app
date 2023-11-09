@@ -815,5 +815,14 @@ void main() {
       // ... and currentTab is Tab 3
       expect(page.currentTab, "Tab 3");
     });
+
+    test('subPageIndex, returns 1 initially', () {
+      // Given nothing
+      // When I create a new ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // Then the subPageIndex is 1
+      expect(page.subPageIndex, 1);
+    });
   });
 }
