@@ -308,7 +308,7 @@ class ParameterPage {
 
   String _currentTab = "Tab 1";
 
-  bool _editing = false;
-
   int _currentSubPage = 0;
+
+  bool _editing = false;
 }
