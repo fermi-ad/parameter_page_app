@@ -920,5 +920,35 @@ void main() {
       // Then the subPageIndex is 2
       expect(page.subPageIndex, 2);
     });
+
+    test('add() to a new sub-page, entriesAsList returns appropriate entries',
+        () {
+      // Given a new ParameterPage with 2 sub-pages
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubPage();
+
+      // When I add entries to sub-page 1
+      page.decrementSubPage();
+      page.add(CommentEntry("sub-page 1 comment 1"));
+      page.add(CommentEntry("sub-page 1 comment 2"));
+
+      // ... and I add entries to sub-page 2
+      page.incrementSubPage();
+      page.add(CommentEntry("sub-page 2 comment 1"));
+      page.add(CommentEntry("sub-page 2 comment 2"));
+
+      // Then entriesAsList() returns the entries for sub-page 1
+      page.decrementSubPage();
+      final subPage1 = page.entriesAsList();
+      expect(subPage1[0].entryText(), "sub-page 1 comment 1");
+      expect(subPage1[1].entryText(), "sub-page 1 comment 2");
+
+      // ... and for sub-page 2
+      page.incrementSubPage();
+      final subPage2 = page.entriesAsList();
+      expect(subPage2[0].entryText(), "sub-page 2 comment 1");
+      expect(subPage2[1].entryText(), "sub-page 2 comment 2");
+    });
   });
 }
