@@ -28,11 +28,11 @@ class ParameterPage {
   }
 
   int get subPageIndex {
-    return 1;
+    return _currentSubPage + 1;
   }
 
   int get numberOfSubPages {
-    return _subPages + 1;
+    return _subPages;
   }
 
   bool get editing {
@@ -181,6 +181,7 @@ class ParameterPage {
 
   void createSubPage() {
     _subPages++;
+    _currentSubPage = _subPages - 1;
   }
 
   void _enforceEditMode() {
@@ -292,5 +293,7 @@ class ParameterPage {
 
   bool _editing = false;
 
-  int _subPages = 0;
+  int _subPages = 1;
+
+  int _currentSubPage = 0;
 }

@@ -868,5 +868,17 @@ void main() {
       // Then the numberOfSubPages is 2
       expect(page.numberOfSubPages, 2);
     });
+
+    test('createSubPage(), sets subPageIndex to the index of the new sub-page',
+        () {
+      // Given a new ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // When I createSubPage()
+      page.createSubPage();
+
+      // Then the subPageIndex should be 2
+      expect(page.subPageIndex, 2);
+    });
   });
 }
