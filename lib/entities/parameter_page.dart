@@ -42,9 +42,9 @@ class ParameterPage {
     _savedTitle = title;
   }
 
-  void add(PageEntry entry) {
+  void add(List<PageEntry> entry) {
     _enforceEditMode();
-    _entries[_currentTab]!.add(entry);
+    _entries[_currentTab]!.addAll(entry);
   }
 
   void _enforceEditMode() {

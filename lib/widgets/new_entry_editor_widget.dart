@@ -4,7 +4,7 @@ import 'data_acquisition_widget.dart';
 import '../entities/page_entry.dart';
 
 class NewEntryEditorWidget extends StatefulWidget {
-  final Function(PageEntry) onSubmitted;
+  final Function(List<PageEntry>) onSubmitted;
 
   const NewEntryEditorWidget({super.key, required this.onSubmitted});
 
@@ -48,16 +48,20 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
         });
   }
 
-  PageEntry _generatePageEntryFrom({required final String textInput}) {
-    if (_daqWidget.isACNETDRF(textInput) ||
-        _daqWidget.isProcessVariable(textInput)) {
-      return ParameterEntry(textInput,
-          label: "", key: Key("parameter_row_$textInput"));
-    } else if (_isHardComment(textInput)) {
-      return CommentEntry(_stripBang(textInput));
-    } else {
-      return CommentEntry(textInput);
+  List<PageEntry> _generatePageEntryFrom({required final String textInput}) {
+    List<String> textArr = textInput.split(" ");
+    List<PageEntry> pageEntries = [];
+
+    for(String textElement in textArr) {
+      if (_daqWidget.isACNETDRF(textElement) || _daqWidget.isProcessVariable(textElement)) {
+        pageEntries.add(ParameterEntry(textElement, label: "", key: Key("parameter_row_$textElement")));
+      } else if (_isHardComment(textElement)) {
+        pageEntries.add(CommentEntry(_stripBang(textElement)));
+      } else {
+        pageEntries.add(CommentEntry(textElement));
+      }
     }
+    return pageEntries;
   }
 
   bool _isHardComment(String val) {
