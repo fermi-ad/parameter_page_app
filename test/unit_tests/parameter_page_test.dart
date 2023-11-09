@@ -848,5 +848,14 @@ void main() {
       // Then the subPageIndex is still 1
       expect(page.subPageIndex, 1);
     });
+
+    test('numberOfSubPages, returns 1 initially', () {
+      // Given nothing
+      // When I create a new ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // Then the numberOfSubPages is 1
+      expect(page.numberOfSubPages, 1);
+    });
   });
 }

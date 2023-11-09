@@ -31,6 +31,10 @@ class ParameterPage {
     return 1;
   }
 
+  int get numberOfSubPages {
+    return 1;
+  }
+
   bool get editing {
     return _editing;
   }
