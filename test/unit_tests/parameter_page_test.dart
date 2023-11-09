@@ -904,5 +904,21 @@ void main() {
       // Then subPageIndex is 1
       expect(page.subPageIndex, 1);
     });
+
+    test('incrementSubPage(), moves subPageIndex forward', () {
+      // Given a ParameterPage with 2 sub-pages
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubPage();
+
+      // ... and the currentSubPage is 1
+      page.decrementSubPage();
+
+      // When I incrementSubPage()
+      page.incrementSubPage();
+
+      // Then the subPageIndex is 2
+      expect(page.subPageIndex, 2);
+    });
   });
 }

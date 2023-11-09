@@ -184,7 +184,11 @@ class ParameterPage {
 
   void incrementSubPage() {}
 
-  void decrementSubPage() {}
+  void decrementSubPage() {
+    if (_currentSubPage > 0) {
+      _currentSubPage--;
+    }
+  }
 
   void createSubPage() {
     _enforceEditMode();
