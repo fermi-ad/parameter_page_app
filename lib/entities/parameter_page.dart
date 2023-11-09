@@ -180,6 +180,8 @@ class ParameterPage {
   void decrementSubPage() {}
 
   void createSubPage() {
+    _enforceEditMode();
+
     _subPages++;
     _currentSubPage = _subPages - 1;
   }
