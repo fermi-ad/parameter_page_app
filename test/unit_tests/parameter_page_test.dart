@@ -857,5 +857,16 @@ void main() {
       // Then the numberOfSubPages is 1
       expect(page.numberOfSubPages, 1);
     });
+
+    test('createSubPage(), increments the numberOfSubPages by 1', () {
+      // Given a new ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // When I createSubPage()
+      page.createSubPage();
+
+      // Then the numberOfSubPages is 2
+      expect(page.numberOfSubPages, 2);
+    });
   });
 }
