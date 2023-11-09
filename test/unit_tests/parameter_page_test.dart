@@ -950,5 +950,36 @@ void main() {
       expect(subPage2[0].entryText(), "sub-page 2 comment 1");
       expect(subPage2[1].entryText(), "sub-page 2 comment 2");
     });
+
+    test(
+        'createTab()s and createSubPages(), product the correct page structure',
+        () {
+      // Given a new ParameterPage with 3 tabs
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createTab();
+      page.createTab();
+      page.createTab();
+
+      // ... and tab 1 has 1 sub-page
+
+      // ... and tab 2 has 2 sub-pages
+      page.switchTab(to: "Tab 2");
+      page.createSubPage();
+
+      // ... and tab 3 has 3 sub-pages;
+      page.switchTab(to: "Tab 3");
+      page.createSubPage();
+      page.createSubPage();
+
+      // When I populate the page with entries across each tab and sub-page...
+      page.switchTab(to: "Tab 1");
+      page.add(CommentEntry("Tab 1 / Sub-page 1 / Comment 1"));
+
+      // Then the structure is as follows...
+      page.switchTab(to: "Tab 1");
+      final tab1Sub1 = page.entriesAsList();
+      expect(tab1Sub1[0].entryText(), "Tab 1 / Sub-page 1 / Comment 1");
+    });
   });
 }
