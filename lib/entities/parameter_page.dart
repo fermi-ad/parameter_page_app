@@ -182,7 +182,11 @@ class ParameterPage {
     _currentTab = to;
   }
 
-  void incrementSubPage() {}
+  void incrementSubPage() {
+    if (_currentSubPage != numberOfSubPages - 1) {
+      _currentSubPage++;
+    }
+  }
 
   void decrementSubPage() {
     if (_currentSubPage > 0) {
