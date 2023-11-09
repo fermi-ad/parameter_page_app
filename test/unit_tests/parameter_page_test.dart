@@ -861,6 +861,7 @@ void main() {
     test('createSubPage(), increments the numberOfSubPages by 1', () {
       // Given a new ParameterPage
       ParameterPage page = ParameterPage();
+      page.enableEditing();
 
       // When I createSubPage()
       page.createSubPage();
@@ -873,6 +874,7 @@ void main() {
         () {
       // Given a new ParameterPage
       ParameterPage page = ParameterPage();
+      page.enableEditing();
 
       // When I createSubPage()
       page.createSubPage();
