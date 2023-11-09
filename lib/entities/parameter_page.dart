@@ -173,6 +173,8 @@ class ParameterPage {
 
   void incrementSubPage() {}
 
+  void decrementSubPage() {}
+
   void _enforceEditMode() {
     if (!_editing) {
       throw Exception(

@@ -837,5 +837,16 @@ void main() {
       // Then the subPageIndex is still 1
       expect(page.subPageIndex, 1);
     });
+
+    test('decrementSubPageIndex, will not decrease subPageIndex beyond 1', () {
+      // Given a new ParameterPage with only 1 sub-page
+      ParameterPage page = ParameterPage();
+
+      // When I try to decrementSubPage()
+      page.decrementSubPage();
+
+      // Then the subPageIndex is still 1
+      expect(page.subPageIndex, 1);
+    });
   });
 }
