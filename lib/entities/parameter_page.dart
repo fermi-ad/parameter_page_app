@@ -180,6 +180,7 @@ class ParameterPage {
       throw Exception("switchTab failure - tab does not exist");
     }
     _currentTab = to;
+    _currentSubPage = 0;
   }
 
   void incrementSubPage() {

@@ -951,6 +951,46 @@ void main() {
       expect(subPage2[1].entryText(), "sub-page 2 comment 2");
     });
 
+    test('subPageIndex, is tracked separately for each tab', () {
+      // Given a ParameterPage with two tabs
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createTab();
+
+      // ... and Tab 2 has three sub-pages
+      page.createSubPage();
+      page.createSubPage();
+      expect(page.subPageIndex, 3);
+
+      // When I switch back to Tab 1
+      page.switchTab(to: "Tab 1");
+
+      // Then currentSubPage is restored to 1
+      expect(page.subPageIndex, 1);
+    });
+
+    test('switchTab(to:), remembers subPageIndex', () {
+      // Given a ParameterPage with two tabs
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createTab();
+
+      // ... and Tab 2 has three sub-pages
+      page.createSubPage();
+      page.createSubPage();
+      expect(page.subPageIndex, 3);
+
+      // When I switch back Tab 1
+      page.switchTab(to: "Tab 1");
+      expect(page.subPageIndex, 1);
+
+      // ... and then back to Tab 2
+      page.switchTab(to: "Tab 2");
+
+      // Then currentSubPage is restored to 3
+      expect(page.subPageIndex, 3);
+    });
+
     test(
         'createTab()s and createSubPages(), product the correct page structure',
         () {
