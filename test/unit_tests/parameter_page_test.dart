@@ -880,5 +880,14 @@ void main() {
       // Then the subPageIndex should be 2
       expect(page.subPageIndex, 2);
     });
+
+    test('createSubPage(), enforces edit mode', () {
+      // Given a new ParameterPage that is not in edit mode
+      ParameterPage page = ParameterPage();
+
+      // When I createSubPage()
+      // Then an exception is thrown
+      expect(() => page.createSubPage(), throwsException);
+    });
   });
 }
