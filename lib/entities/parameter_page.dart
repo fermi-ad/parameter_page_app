@@ -171,6 +171,8 @@ class ParameterPage {
     _currentTab = to;
   }
 
+  void incrementSubPage() {}
+
   void _enforceEditMode() {
     if (!_editing) {
       throw Exception(

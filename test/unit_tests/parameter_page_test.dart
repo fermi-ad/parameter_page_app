@@ -824,5 +824,18 @@ void main() {
       // Then the subPageIndex is 1
       expect(page.subPageIndex, 1);
     });
+
+    test(
+        'incrementSubPage, will not increment subPageIndex if there is only one sub-page',
+        () {
+      // Given a new ParameterPage with only 1 sub-page
+      ParameterPage page = ParameterPage();
+
+      // When I try to incrementSubPage()
+      page.incrementSubPage();
+
+      // Then the subPageIndex is still 1
+      expect(page.subPageIndex, 1);
+    });
   });
 }
