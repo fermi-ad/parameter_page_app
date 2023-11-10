@@ -30,9 +30,7 @@ class MainMenuWidget extends StatelessWidget {
             key: const Key("main_menu"),
             padding: EdgeInsets.zero,
             children: [
-              const DrawerHeader(
-                  decoration: BoxDecoration(color: Colors.blue),
-                  child: Text("Parameter Page Menu")),
+              const DrawerHeader(child: Text("Parameter Page Menu")),
               ListTile(title: const Text("New Page"), onTap: onNewPage),
               ListTile(
                   title: const Text("Open Page"),
