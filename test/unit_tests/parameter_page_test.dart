@@ -180,7 +180,7 @@ void main() {
       ParameterPage page = ParameterPage();
 
       // Then edit mode is disabled
-      expect(page.editing(), false);
+      expect(page.editing, false);
     });
 
     test("enableEditing(), turns editing mode on", () {
@@ -191,7 +191,7 @@ void main() {
       page.enableEditing();
 
       // Then edit mode is enabled
-      expect(page.editing(), true);
+      expect(page.editing, true);
     });
 
     test("disableEditing(), disables editing mode", () {
@@ -203,7 +203,7 @@ void main() {
       page.disableEditing();
 
       // Then edit mode is disabled
-      expect(page.editing(), false);
+      expect(page.editing, false);
     });
 
     test("disableEditing(), commits changes to entries list", () {
@@ -227,7 +227,7 @@ void main() {
       page.toggleEditing();
 
       // Then editing mode is enabled
-      expect(page.editing(), true);
+      expect(page.editing, true);
     });
 
     test("toggleEditing(), switches from on to off", () {
@@ -239,7 +239,7 @@ void main() {
       page.toggleEditing();
 
       // Then editing mode is disabled
-      expect(page.editing(), false);
+      expect(page.editing, false);
     });
 
     test("cancelEditing(), discards new entries added during editing mode", () {
@@ -253,7 +253,7 @@ void main() {
       page.cancelEditing();
 
       // Then editing mode is cancelled, the new entries are discarded and the page is empty
-      expect(page.editing(), false);
+      expect(page.editing, false);
       expect(page.numberOfEntries(), 0);
     });
 
@@ -453,6 +453,22 @@ void main() {
       expect(page.tabTitles.length, 2);
       expect(page.tabTitles[0], "Tab 1");
       expect(page.tabTitles[1], "Tab 2");
+    });
+
+    test('createTab(title:), switches currentTab to the new tab', () {
+      // Given a new ParameterPage in editing mode with a comment on Tab 1
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.add(CommentEntry("comment #1"));
+
+      // When I createTab()...
+      page.createTab();
+
+      // Then currentTab is set to the new tab
+      expect(page.currentTab, "Tab 2");
+
+      // ... and entriesAsList() is empty
+      expect(page.entriesAsList().length, 0);
     });
 
     test("createTab(title:), sets the dirty flag", () {
@@ -699,11 +715,10 @@ void main() {
       // Given a ParameterPage with 2 tabs and some entries on tab 1
       ParameterPage page = ParameterPage();
       page.enableEditing();
-      page.createTab();
       page.add(CommentEntry("comment #1"));
+      page.createTab();
 
       // When I populate Tab 2 with 2 entries
-      page.switchTab(to: "Tab 2");
       page.add(CommentEntry("comment #2"));
       page.add(CommentEntry("comment #3"));
 
@@ -747,6 +762,9 @@ void main() {
       page.enableEditing();
       page.createTab();
 
+      // ... and currentTab is Tab 1
+      page.switchTab(to: "Tab 1");
+
       // When I renameTab(withTitle: "Tab 2", to: "New Tab Title")
       page.renameTab(withTitle: "Tab 2", to: "New Tab Title");
 
@@ -761,6 +779,247 @@ void main() {
       // ... and currentTab is still Tab 1
       expect(page.currentTab, "Tab 1",
           reason: "currentTab should be set to New Tab Title");
+    });
+
+    test('renameTab(..), preserves order of tabs', () {
+      // Given a new ParameterPage with three tabs
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createTab();
+      page.createTab();
+
+      // When I rename Tab 1
+      page.renameTab(withTitle: "Tab 1", to: "A New Tab Title");
+
+      // Then the tab is renamed
+      expect(page.tabTitles.contains("A New Tab Title"), true);
+
+      // ... and the order of the tabs stays the same
+      expect(page.tabTitles[0], "A New Tab Title");
+      expect(page.tabTitles[1], "Tab 2");
+      expect(page.tabTitles[2], "Tab 3");
+    });
+
+    test('tabIndex, returns the index of currentTab in tabTitles', () {
+      // Given a new ParameterPage that is being edited
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I create two more tabs
+      page.createTab();
+      page.createTab();
+
+      // Then currentTabIndex is 2
+      expect(page.currentTabIndex, 2);
+
+      // ... and currentTab is Tab 3
+      expect(page.currentTab, "Tab 3");
+    });
+
+    test('subPageIndex, returns 1 initially', () {
+      // Given nothing
+      // When I create a new ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // Then the subPageIndex is 1
+      expect(page.subPageIndex, 1);
+    });
+
+    test(
+        'incrementSubPage, will not increment subPageIndex if there is only one sub-page',
+        () {
+      // Given a new ParameterPage with only 1 sub-page
+      ParameterPage page = ParameterPage();
+
+      // When I try to incrementSubPage()
+      page.incrementSubPage();
+
+      // Then the subPageIndex is still 1
+      expect(page.subPageIndex, 1);
+    });
+
+    test('decrementSubPageIndex, will not decrease subPageIndex beyond 1', () {
+      // Given a new ParameterPage with only 1 sub-page
+      ParameterPage page = ParameterPage();
+
+      // When I try to decrementSubPage()
+      page.decrementSubPage();
+
+      // Then the subPageIndex is still 1
+      expect(page.subPageIndex, 1);
+    });
+
+    test('numberOfSubPages, returns 1 initially', () {
+      // Given nothing
+      // When I create a new ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // Then the numberOfSubPages is 1
+      expect(page.numberOfSubPages, 1);
+    });
+
+    test('createSubPage(), increments the numberOfSubPages by 1', () {
+      // Given a new ParameterPage
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I createSubPage()
+      page.createSubPage();
+
+      // Then the numberOfSubPages is 2
+      expect(page.numberOfSubPages, 2);
+    });
+
+    test('createSubPage(), sets subPageIndex to the index of the new sub-page',
+        () {
+      // Given a new ParameterPage
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I createSubPage()
+      page.createSubPage();
+
+      // Then the subPageIndex should be 2
+      expect(page.subPageIndex, 2);
+    });
+
+    test('createSubPage(), enforces edit mode', () {
+      // Given a new ParameterPage that is not in edit mode
+      ParameterPage page = ParameterPage();
+
+      // When I createSubPage()
+      // Then an exception is thrown
+      expect(() => page.createSubPage(), throwsException);
+    });
+
+    test('decrementSubPage(), moves subPageIndex backwards', () {
+      // Given a ParameterPage with 2 sub-pages
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubPage();
+
+      // When I decrementSubPageIndex()
+      page.decrementSubPage();
+
+      // Then subPageIndex is 1
+      expect(page.subPageIndex, 1);
+    });
+
+    test('incrementSubPage(), moves subPageIndex forward', () {
+      // Given a ParameterPage with 2 sub-pages
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubPage();
+
+      // ... and the currentSubPage is 1
+      page.decrementSubPage();
+
+      // When I incrementSubPage()
+      page.incrementSubPage();
+
+      // Then the subPageIndex is 2
+      expect(page.subPageIndex, 2);
+    });
+
+    test('add() to a new sub-page, entriesAsList returns appropriate entries',
+        () {
+      // Given a new ParameterPage with 2 sub-pages
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubPage();
+
+      // When I add entries to sub-page 1
+      page.decrementSubPage();
+      page.add(CommentEntry("sub-page 1 comment 1"));
+      page.add(CommentEntry("sub-page 1 comment 2"));
+
+      // ... and I add entries to sub-page 2
+      page.incrementSubPage();
+      page.add(CommentEntry("sub-page 2 comment 1"));
+      page.add(CommentEntry("sub-page 2 comment 2"));
+
+      // Then entriesAsList() returns the entries for sub-page 1
+      page.decrementSubPage();
+      final subPage1 = page.entriesAsList();
+      expect(subPage1[0].entryText(), "sub-page 1 comment 1");
+      expect(subPage1[1].entryText(), "sub-page 1 comment 2");
+
+      // ... and for sub-page 2
+      page.incrementSubPage();
+      final subPage2 = page.entriesAsList();
+      expect(subPage2[0].entryText(), "sub-page 2 comment 1");
+      expect(subPage2[1].entryText(), "sub-page 2 comment 2");
+    });
+
+    test('subPageIndex, is tracked separately for each tab', () {
+      // Given a ParameterPage with two tabs
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createTab();
+
+      // ... and Tab 2 has three sub-pages
+      page.createSubPage();
+      page.createSubPage();
+      expect(page.subPageIndex, 3);
+
+      // When I switch back to Tab 1
+      page.switchTab(to: "Tab 1");
+
+      // Then currentSubPage is restored to 1
+      expect(page.subPageIndex, 1);
+    });
+
+    test('switchTab(to:), remembers subPageIndex', () {
+      // Given a ParameterPage with two tabs
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createTab();
+
+      // ... and Tab 2 has three sub-pages
+      page.createSubPage();
+      page.createSubPage();
+      expect(page.subPageIndex, 3);
+
+      // When I switch back Tab 1
+      page.switchTab(to: "Tab 1");
+      expect(page.subPageIndex, 1);
+
+      // ... and then back to Tab 2
+      page.switchTab(to: "Tab 2");
+
+      // Then currentSubPage is restored to 3
+      expect(page.subPageIndex, 3);
+    });
+
+    test(
+        'createTab()s and createSubPages(), product the correct page structure',
+        () {
+      // Given a new ParameterPage with 3 tabs
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createTab();
+      page.createTab();
+      page.createTab();
+
+      // ... and tab 1 has 1 sub-page
+
+      // ... and tab 2 has 2 sub-pages
+      page.switchTab(to: "Tab 2");
+      page.createSubPage();
+
+      // ... and tab 3 has 3 sub-pages;
+      page.switchTab(to: "Tab 3");
+      page.createSubPage();
+      page.createSubPage();
+
+      // When I populate the page with entries across each tab and sub-page...
+      page.switchTab(to: "Tab 1");
+      page.add(CommentEntry("Tab 1 / Sub-page 1 / Comment 1"));
+
+      // Then the structure is as follows...
+      page.switchTab(to: "Tab 1");
+      final tab1Sub1 = page.entriesAsList();
+      expect(tab1Sub1[0].entryText(), "Tab 1 / Sub-page 1 / Comment 1");
     });
   });
 }

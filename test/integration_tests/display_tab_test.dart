@@ -71,23 +71,22 @@ void main() {
       await exitEditMode(tester);
 
       // Then each tab has the appropriate entries
+      assertIsOnPage(comment: "Comment for tab 8");
+      await switchTab(tester, to: "Tab Seven");
+      assertIsOnPage(comment: "Comment for tab 7");
+      await switchTab(tester, to: "Tab Six");
+      assertIsOnPage(comment: "Comment for tab 6");
+      await switchTab(tester, to: "Tab Five");
+      assertIsOnPage(comment: "Comment for tab 5");
+      await switchTab(tester, to: "Tab Four");
+      assertIsOnPage(comment: "Comment for tab 4");
+      await switchTab(tester, to: "Tab Three");
+      assertIsOnPage(comment: "Comment for tab 3");
+      await switchTab(tester, to: "Tab Two");
+      assertIsOnPage(comment: "Comment for tab 2");
       await switchTab(tester, to: "Tab One");
       assertIsOnPage(comment: "This is Tab One");
       assertIsOnPage(comment: "Comment for tab 1");
-      await switchTab(tester, to: "Tab Two");
-      assertIsOnPage(comment: "Comment for tab 2");
-      await switchTab(tester, to: "Tab Three");
-      assertIsOnPage(comment: "Comment for tab 3");
-      await switchTab(tester, to: "Tab Four");
-      assertIsOnPage(comment: "Comment for tab 4");
-      await switchTab(tester, to: "Tab Five");
-      assertIsOnPage(comment: "Comment for tab 5");
-      await switchTab(tester, to: "Tab Six");
-      assertIsOnPage(comment: "Comment for tab 6");
-      await switchTab(tester, to: "Tab Seven");
-      assertIsOnPage(comment: "Comment for tab 7");
-      await switchTab(tester, to: "Tab Eight");
-      assertIsOnPage(comment: "Comment for tab 8");
     }, semanticsEnabled: false);
 
     testWidgets('Display a page without tabs, tab bar is not visible',
@@ -129,6 +128,9 @@ void main() {
 
       // Then a new tab titled Tab 2 is created
       assertTabBarContains(nTabs: 2, withTitles: ["Tab 1", "Tab 2"]);
+
+      // ... and the tab is blank
+      assertNumberOfEntriesOnPageIs(0);
     }, semanticsEnabled: false);
 
     testWidgets('Delete an empty tab, tab is removed',
@@ -159,7 +161,6 @@ void main() {
       // Given a new parameter page with 2 tabs
       await startParameterPageApp(tester);
       await createNewParameterPage(tester);
-      await enterEditMode(tester);
       await createNewTab(tester);
 
       // When I delete Tab 2, leaving only 1 tab
@@ -176,7 +177,6 @@ void main() {
       // Given a new parameter page with 2 tabs
       await startParameterPageApp(tester);
       await createNewParameterPage(tester);
-      await enterEditMode(tester);
       await createNewTab(tester);
 
       // ... and tab 2 has one entry
@@ -196,7 +196,6 @@ void main() {
       // Given a new parameter page with 2 tabs
       await startParameterPageApp(tester);
       await createNewParameterPage(tester);
-      await enterEditMode(tester);
       await createNewTab(tester);
 
       // ... and tab 2 has one entry
@@ -216,7 +215,6 @@ void main() {
       // Given a new parameter page with 2 tabs
       await startParameterPageApp(tester);
       await createNewParameterPage(tester);
-      await enterEditMode(tester);
       await createNewTab(tester);
 
       // ... and tab 2 has one entry
@@ -236,7 +234,6 @@ void main() {
       // Given a new parameter page with 1 tab
       await startParameterPageApp(tester);
       await createNewParameterPage(tester);
-      await enterEditMode(tester);
 
       // When I rename the tab...
       await renameTab(tester, withTitle: "Tab 1", to: "A New Title");

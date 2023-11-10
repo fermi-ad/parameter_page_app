@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:parameter_page/entities/page_entry.dart';
 
-const Map<String, List<PageEntry>> initialPageEntries = {"Tab 1": []};
+const Map<String, List<List<PageEntry>>> initialPageEntries = {
+  "Tab 1": [[]]
+};
 
 class ParameterPage {
   String? id;
@@ -23,9 +25,33 @@ class ParameterPage {
     return _currentTab;
   }
 
+  int get currentTabIndex {
+    return tabTitles.indexOf(_currentTab);
+  }
+
+  int get subPageIndex {
+    return _currentSubPagePerTab[_currentTab]! + 1;
+  }
+
+  int get numberOfSubPages {
+    return _entries[_currentTab]!.length;
+  }
+
+  bool get editing {
+    return _editing;
+  }
+
+  bool get isDirty {
+    return title != _savedTitle || !_entriesEqual(_savedEntries);
+  }
+
   ParameterPage([List<PageEntry>? entries])
-      : _entries = {"Tab 1": List<PageEntry>.from(entries ?? [])},
-        _savedEntries = {"Tab 1": List<PageEntry>.from(entries ?? [])};
+      : _entries = {
+          "Tab 1": [List<PageEntry>.from(entries ?? [])]
+        },
+        _savedEntries = {
+          "Tab 1": [List<PageEntry>.from(entries ?? [])]
+        };
 
   ParameterPage.fromQueryResult(
       {required this.id,
@@ -38,25 +64,23 @@ class ParameterPage {
 
     _currentTab = _entries.keys.first;
 
+    for (String tabName in _entries.keys) {
+      _currentSubPagePerTab[tabName] = 0;
+    }
+
     _title = title;
     _savedTitle = title;
   }
 
   void add(PageEntry entry) {
     _enforceEditMode();
-    _entries[_currentTab]!.add(entry);
+
+    _entries[_currentTab]![subPageIndex - 1].add(entry);
   }
 
-  void addAll(List<PageEntry> entry) {
+  void addAll(List<PageEntry> entries) {
     _enforceEditMode();
-    _entries[_currentTab]!.addAll(entry);
-  }
-
-  void _enforceEditMode() {
-    if (!_editing) {
-      throw Exception(
-          "Can not modify a ParameterPage when edit mode is disabled.");
-    }
+    _entries[_currentTab]![subPageIndex - 1].addAll(entries);
   }
 
   List<PageEntry> entriesAsList({String? forTab}) {
@@ -64,20 +88,16 @@ class ParameterPage {
       if (!_entries.containsKey(forTab)) {
         throw Exception("entriesAsList failure - Invalid tab title");
       }
-      return _entries[forTab]!;
+      return _entries[forTab]![subPageIndex - 1];
     } else {
-      return _entries[currentTab]!;
+      return _entries[currentTab]![subPageIndex - 1];
     }
   }
 
   int numberOfEntries({String? forTab}) {
     String tab = forTab ?? _currentTab;
 
-    return _entries[tab]!.length;
-  }
-
-  bool editing() {
-    return _editing;
+    return _entries[tab]![subPageIndex - 1].length;
   }
 
   void enableEditing() {
@@ -100,40 +120,43 @@ class ParameterPage {
     _editing = false;
   }
 
+  void commit() {
+    _savedEntries = _deepCopyEntries(_entries);
+    _savedTitle = title;
+  }
+
   void reorderEntry({required int atIndex, required int toIndex}) {
     _enforceEditMode();
 
     if (atIndex < toIndex) {
       toIndex -= 1;
     }
-    final PageEntry entry = _entries[_currentTab]!.removeAt(atIndex);
-    _entries[_currentTab]!.insert(toIndex, entry);
+    final PageEntry entry =
+        _entries[_currentTab]![subPageIndex - 1].removeAt(atIndex);
+    _entries[_currentTab]![subPageIndex - 1].insert(toIndex, entry);
   }
 
   void removeEntry({required int at}) {
     _enforceEditMode();
 
-    _entries[_currentTab]!.removeAt(at);
+    _entries[_currentTab]![subPageIndex - 1].removeAt(at);
   }
 
   void clearAll() {
     _enforceEditMode();
 
-    _entries[_currentTab] = [];
-  }
-
-  void commit() {
-    _savedEntries = _deepCopyEntries(_entries);
-    _savedTitle = title;
-  }
-
-  bool get isDirty {
-    return title != _savedTitle || !_entriesEqual(_savedEntries);
+    _entries[_currentTab]![subPageIndex - 1] = [];
   }
 
   void createTab({String? title}) {
     _enforceEditMode();
-    _entries[title ?? _generateNewTabTitle()] = [];
+
+    final newTabTitle = title ?? _generateNewTabTitle();
+    _entries[newTabTitle] = [[]];
+
+    _currentSubPagePerTab[newTabTitle] = 0;
+
+    switchTab(to: newTabTitle);
   }
 
   void deleteTab({required String title}) {
@@ -145,23 +168,69 @@ class ParameterPage {
     }
 
     _entries.remove(title);
+    _currentSubPagePerTab.remove(title);
   }
 
   void renameTab({required String withTitle, required String to}) {
     _enforceEditMode();
-    if (withTitle != currentTab) {
-      _entries[to] = _entries[withTitle]!;
-      _entries.remove(withTitle);
-    } else {
-      _renameCurrentTab(to);
+
+    Map<String, List<List<PageEntry>>> newEntries = {};
+    for (String tabName in _entries.keys) {
+      if (tabName == withTitle) {
+        newEntries[to] = _entries[tabName]!;
+        if (tabName == _currentTab) {
+          _currentTab = to;
+        }
+      } else {
+        newEntries[tabName] = _entries[tabName]!;
+      }
+    }
+    _entries = newEntries;
+
+    _currentSubPagePerTab[to] = _currentSubPagePerTab[withTitle]!;
+    _currentSubPagePerTab.remove(withTitle);
+  }
+
+  void switchTab({required String to}) {
+    if (!_entries.keys.contains(to)) {
+      throw Exception("switchTab failure - tab does not exist");
+    }
+    _currentTab = to;
+  }
+
+  void incrementSubPage() {
+    if (subPageIndex != numberOfSubPages) {
+      _currentSubPagePerTab[_currentTab] =
+          _currentSubPagePerTab[_currentTab]! + 1;
     }
   }
 
-  void _renameCurrentTab(String to) {
-    _entries[to] = _entries[_currentTab]!;
-    final oldTab = _currentTab;
-    _currentTab = to;
-    _entries.remove(oldTab);
+  void decrementSubPage() {
+    if (subPageIndex > 1) {
+      _currentSubPagePerTab[_currentTab] =
+          _currentSubPagePerTab[_currentTab]! - 1;
+    }
+  }
+
+  void createSubPage() {
+    _enforceEditMode();
+
+    _entries[currentTab]!.add([]);
+
+    _currentSubPagePerTab[_currentTab] = _entries[currentTab]!.length - 1;
+  }
+
+  void _enforceEditMode() {
+    if (!_editing) {
+      throw Exception(
+          "Can not modify a ParameterPage when edit mode is disabled.");
+    }
+  }
+
+  void _enforceAtLeastOneTab() {
+    if (_entries.length == 1) {
+      throw Exception("Could not delete the only tab on the page");
+    }
   }
 
   void _switchToAdjacentTab() {
@@ -172,33 +241,21 @@ class ParameterPage {
     switchTab(to: switchToTab);
   }
 
-  void _enforceAtLeastOneTab() {
-    if (_entries.length == 1) {
-      throw Exception("Could not delete the only tab on the page");
-    }
-  }
-
   String _generateNewTabTitle() {
     return "Tab ${tabTitles.length + 1}";
   }
 
-  void switchTab({required String to}) {
-    if (!_entries.keys.contains(to)) {
-      throw Exception("switchTab failure - tab does not exist");
-    }
-    _currentTab = to;
-  }
-
-  Map<String, List<PageEntry>> _buildEntriesMapFromQueryResult(
+  Map<String, List<List<PageEntry>>> _buildEntriesMapFromQueryResult(
       Map<String, dynamic> queryResult) {
-    Map<String, List<PageEntry>> ret = {};
+    Map<String, List<List<PageEntry>>> ret = {};
     for (final tabData in queryResult["tabs"]) {
       final entries = tabData["entries"];
       if (entries.length == 0) {
-        ret[tabData["title"]] = [];
+        ret[tabData["title"]] = [[]];
       } else {
-        ret[tabData["title"]] =
-            _buildEntriesListFromQueryResult(tabData["entries"]);
+        ret[tabData["title"]] = [
+          _buildEntriesListFromQueryResult(tabData["entries"])
+        ];
       }
     }
     return ret;
@@ -214,16 +271,19 @@ class ParameterPage {
     return ret;
   }
 
-  Map<String, List<PageEntry>> _deepCopyEntries(
-      Map<String, List<PageEntry>> from) {
-    Map<String, List<PageEntry>> ret = {};
+  Map<String, List<List<PageEntry>>> _deepCopyEntries(
+      Map<String, List<List<PageEntry>>> from) {
+    Map<String, List<List<PageEntry>>> ret = {};
     for (String tab in from.keys) {
-      ret[tab] = List<PageEntry>.from(from[tab]!);
+      for (int i = 0; i != from[tab]!.length; i++) {
+        ret[tab] = [];
+        ret[tab]!.add(List<PageEntry>.from(from[tab]![i]));
+      }
     }
     return ret;
   }
 
-  bool _entriesEqual(Map<String, List<PageEntry>> compareTo) {
+  bool _entriesEqual(Map<String, List<List<PageEntry>>> compareTo) {
     if (_entries.length != compareTo.length) {
       return false;
     }
@@ -232,8 +292,11 @@ class ParameterPage {
       if (!compareTo.containsKey(tab)) {
         return false;
       }
-      if (!listEquals(_entries[tab]!, compareTo[tab]!)) {
-        return false;
+
+      for (int i = 0; i != _entries[tab]!.length; i++) {
+        if (!listEquals(_entries[tab]![i], compareTo[tab]![i])) {
+          return false;
+        }
       }
     }
 
@@ -257,11 +320,11 @@ class ParameterPage {
     }
   }
 
-  Map<String, List<PageEntry>> _entries = initialPageEntries;
+  Map<String, List<List<PageEntry>>> _entries = initialPageEntries;
 
-  Map<String, List<PageEntry>> _undoEntries = initialPageEntries;
+  Map<String, List<List<PageEntry>>> _undoEntries = initialPageEntries;
 
-  Map<String, List<PageEntry>> _savedEntries = initialPageEntries;
+  Map<String, List<List<PageEntry>>> _savedEntries = initialPageEntries;
 
   String _title = "New Parameter Page";
 
@@ -270,6 +333,8 @@ class ParameterPage {
   String _savedTitle = "New Parameter Page";
 
   String _currentTab = "Tab 1";
+
+  final Map<String, int> _currentSubPagePerTab = {"Tab 1": 0};
 
   bool _editing = false;
 }

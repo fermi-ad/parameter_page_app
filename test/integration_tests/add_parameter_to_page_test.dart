@@ -10,12 +10,11 @@ void main() {
   group('Add Parameter to Page', () {
     testWidgets('Enter edit mode, focus should be on the NewEntryEditor',
         (tester) async {
-      // Given a new page has been created
+      // Given I am on the landing page
       await startParameterPageApp(tester);
-      await createNewParameterPage(tester);
 
-      // When I enter edit mode
-      await enterEditMode(tester);
+      // When I create a new page
+      await createNewParameterPage(tester);
 
       // Then the focus should be on the NewEntryEditor text field
       assertNewEntryEditorHasFocus(tester);
@@ -26,7 +25,6 @@ void main() {
       // Given a new page has been created
       await startParameterPageApp(tester);
       await createNewParameterPage(tester);
-      await enterEditMode(tester);
 
       // When I add a parameter
       await addANewParameter(tester, 'Z:BDCCT');

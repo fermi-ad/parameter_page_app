@@ -4,7 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:parameter_page/theme/theme.dart';
+import 'package:parameter_page/theme/color_schemes.dart';
 
 class FermiControlsApp extends StatelessWidget {
   final String title;
@@ -19,9 +19,8 @@ class FermiControlsApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: title,
-      theme: GlobalAppTheme.lightTheme,
-      darkTheme: GlobalAppTheme.darkTheme,
-      themeMode: ThemeMode.system,
+      theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
+      darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
       routerConfig: router,
     );
   }

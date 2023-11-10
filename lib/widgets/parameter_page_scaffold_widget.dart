@@ -56,6 +56,7 @@ class _ParameterPageScaffoldWidgetState
       _loadPage(pageId: widget.openPageId!);
     } else if (_aNewPageShouldBeStarted()) {
       _page = ParameterPage();
+      _page!.enableEditing();
     }
 
     return Scaffold(
@@ -82,13 +83,14 @@ class _ParameterPageScaffoldWidgetState
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
         title: PageTitleWidget(
-            editing: _page?.editing() ?? false,
+            editing: _page?.editing ?? false,
             persistenceState: _persistenceState,
             title: _page == null ? "Parameter Page" : _page!.title,
             onTitleUpdate: _handleTitleUpdate),
         bottom: ParameterPageTabbarWidget(
-            editing: _page?.editing() ?? false,
+            editing: _page?.editing ?? false,
             tabTitles: _page != null ? _page!.tabTitles : [],
+            index: _page != null ? _page!.currentTabIndex : 0,
             onDeleteTab: _handleDeleteTab,
             onCreateNewTab: _handleCreateNewTab,
             onRenameTab: _handleRenameTab,
