@@ -207,6 +207,8 @@ class ParameterPage {
     }
   }
 
+  void switchSubPage({required int to}) {}
+
   void createSubPage() {
     _enforceEditMode();
 
