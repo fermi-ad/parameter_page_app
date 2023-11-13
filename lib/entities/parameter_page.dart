@@ -41,6 +41,10 @@ class ParameterPage {
     return "";
   }
 
+  List<String> get subPageDirectory {
+    return [];
+  }
+
   bool get editing {
     return _editing;
   }

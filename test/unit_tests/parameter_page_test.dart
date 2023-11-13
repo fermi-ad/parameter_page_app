@@ -1101,4 +1101,23 @@ void main() {
     // Then the sub page title is empty
     expect(page.subPageTitle, "");
   });
+
+  test('subPageDirectory, is initially all empty titles', () {
+    // Given a new ParameterPage
+    ParameterPage page = ParameterPage();
+
+    // When I create three new sub-pages
+    page.enableEditing();
+    page.createSubPage();
+    page.createSubPage();
+    page.createSubPage();
+
+    // Then the subPageDirectory contains four empty strings
+    final dir = page.subPageDirectory;
+    expect(dir.length, 4);
+    expect(dir[0], "");
+    expect(dir[1], "");
+    expect(dir[2], "");
+    expect(dir[3], "");
+  });
 }
