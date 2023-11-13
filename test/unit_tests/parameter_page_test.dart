@@ -1120,6 +1120,15 @@ void main() {
       expect(dir[3], "");
     });
 
+    test('set subPageTitle, enforces edit mode', () {
+      // Given a ParameterPage with editing disabled
+      ParameterPage page = ParameterPage();
+
+      // When I attempt to set the subPageTitle
+      // Then an exception is thrown
+      expect(() => page.subPageTitle = "Should Throw", throwsException);
+    });
+
     test('set subPageTitle, change is reflected in subPageDirectory', () {
       // Given a new ParameterPage
       ParameterPage page = ParameterPage();

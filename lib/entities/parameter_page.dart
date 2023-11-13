@@ -46,13 +46,17 @@ class ParameterPage {
   }
 
   String get subPageTitle {
-    return "";
+    return _entries[_currentTab]![subPageIndex - 1].title;
   }
 
-  set subPageTitle(String newTitle) {}
+  set subPageTitle(String newTitle) {
+    _entries[_currentTab]![subPageIndex - 1].title = newTitle;
+  }
 
   List<String> get subPageDirectory {
-    return ["", "", "", ""];
+    return _entries[_currentTab]!
+        .map((_SubPage subPage) => subPage.title)
+        .toList();
   }
 
   bool get editing {
