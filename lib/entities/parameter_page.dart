@@ -195,15 +195,13 @@ class ParameterPage {
 
   void incrementSubPage() {
     if (subPageIndex != numberOfSubPages) {
-      _currentSubPagePerTab[_currentTab] =
-          _currentSubPagePerTab[_currentTab]! + 1;
+      switchSubPage(to: subPageIndex + 1);
     }
   }
 
   void decrementSubPage() {
     if (subPageIndex > 1) {
-      _currentSubPagePerTab[_currentTab] =
-          _currentSubPagePerTab[_currentTab]! - 1;
+      switchSubPage(to: subPageIndex - 1);
     }
   }
 
