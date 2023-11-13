@@ -38,7 +38,7 @@ class ParameterPage {
   }
 
   String get subPageTitle {
-    return "title";
+    return "";
   }
 
   bool get editing {
