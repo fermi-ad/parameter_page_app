@@ -1119,5 +1119,16 @@ void main() {
       expect(dir[2], "");
       expect(dir[3], "");
     });
+
+    test('set subPageTitle, change is reflected in subPageDirectory', () {
+      // Given a new ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // When I set the sub page title
+      page.subPageTitle = "Sub-page One";
+
+      // Then the new title shows up in subPageDirectory
+      expect(page.subPageDirectory[0], "Sub-page One");
+    });
   });
 }

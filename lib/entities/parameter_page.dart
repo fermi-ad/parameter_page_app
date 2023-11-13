@@ -41,6 +41,8 @@ class ParameterPage {
     return "";
   }
 
+  set subPageTitle(String newTitle) {}
+
   List<String> get subPageDirectory {
     return ["", "", "", ""];
   }
