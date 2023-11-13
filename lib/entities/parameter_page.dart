@@ -207,7 +207,9 @@ class ParameterPage {
     }
   }
 
-  void switchSubPage({required int to}) {}
+  void switchSubPage({required int to}) {
+    _currentSubPagePerTab[_currentTab] = to - 1;
+  }
 
   void createSubPage() {
     _enforceEditMode();
