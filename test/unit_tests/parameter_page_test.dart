@@ -1020,6 +1020,15 @@ void main() {
       expect(() => page.switchSubPage(to: 0), throwsException);
     });
 
+    test('switchSubPage(to:) an invalid sub-page, throws', () {
+      // Given a ParameterPage with 1 sub-page
+      ParameterPage page = ParameterPage();
+
+      // When I switchSubPage(to:) a sub-page that doesn't exist
+      // Then an exception is thrown
+      expect(() => page.switchSubPage(to: 2), throwsException);
+    });
+
     test(
         'createTab()s and createSubPage()s, produce the correct page structure',
         () {
