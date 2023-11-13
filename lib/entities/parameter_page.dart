@@ -325,6 +325,9 @@ class ParameterPage {
       }
 
       for (int i = 0; i != _entries[tab]!.length; i++) {
+        if (_entries[tab]![i].title != compareTo[tab]![i].title) {
+          return false;
+        }
         if (!listEquals(
             _entries[tab]![i].entries, compareTo[tab]![i].entries)) {
           return false;

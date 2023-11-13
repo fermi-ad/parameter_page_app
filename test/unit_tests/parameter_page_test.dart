@@ -1140,5 +1140,17 @@ void main() {
       // Then the new title shows up in subPageDirectory
       expect(page.subPageDirectory[0], "Sub-page One");
     });
+
+    test('changing a subPageTitle, sets the isDirty flag to true', () {
+      // Given a new ParameterPage with editing mode turned on
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I change the subPageTitle
+      page.subPageTitle = "Sub-page One";
+
+      // Then the isDirty flag is set to true
+      expect(page.isDirty, true);
+    });
   });
 }
