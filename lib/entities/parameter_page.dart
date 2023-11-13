@@ -208,8 +208,8 @@ class ParameterPage {
   }
 
   void switchSubPage({required int to}) {
-    if (to < 1) {
-      throw Exception('to: must be 1 or more');
+    if (to < 1 || to > numberOfSubPages) {
+      throw Exception('Attempt to switch to an invalid sub-page');
     }
     _currentSubPagePerTab[_currentTab] = to - 1;
   }
