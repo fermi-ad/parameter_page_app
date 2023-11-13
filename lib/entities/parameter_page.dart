@@ -195,16 +195,21 @@ class ParameterPage {
 
   void incrementSubPage() {
     if (subPageIndex != numberOfSubPages) {
-      _currentSubPagePerTab[_currentTab] =
-          _currentSubPagePerTab[_currentTab]! + 1;
+      switchSubPage(to: subPageIndex + 1);
     }
   }
 
   void decrementSubPage() {
     if (subPageIndex > 1) {
-      _currentSubPagePerTab[_currentTab] =
-          _currentSubPagePerTab[_currentTab]! - 1;
+      switchSubPage(to: subPageIndex - 1);
     }
+  }
+
+  void switchSubPage({required int to}) {
+    if (to < 1 || to > numberOfSubPages) {
+      throw Exception('Attempt to switch to an invalid sub-page');
+    }
+    _currentSubPagePerTab[_currentTab] = to - 1;
   }
 
   void createSubPage() {

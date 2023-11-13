@@ -991,8 +991,46 @@ void main() {
       expect(page.subPageIndex, 3);
     });
 
+    test('switchSubPage(to:), switches subPageIndex to n', () {
+      // Given a ParameterPage with 1 tab and three sub-pages with entries on sub page 1
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.add(CommentEntry("Tab 1 / Sub-page 1 / Comment 1"));
+      page.createSubPage();
+      page.createSubPage();
+
+      // When I switchSubPage(to: 1)
+      page.switchSubPage(to: 1);
+
+      // Then subPageIndex is 0
+      expect(page.subPageIndex, 1);
+
+      // ... and sub-page 1 entries are returned
+      final entries = page.entriesAsList();
+      expect(entries.length, 1);
+      expect(entries[0].entryText(), "Tab 1 / Sub-page 1 / Comment 1");
+    });
+
+    test('switchSubPage(to:0), throws', () {
+      // Given a new ParameterPage with 1 sub-page
+      ParameterPage page = ParameterPage();
+
+      // When I switchSubPage(to:0)
+      // Then an exception is thrown
+      expect(() => page.switchSubPage(to: 0), throwsException);
+    });
+
+    test('switchSubPage(to:) an invalid sub-page, throws', () {
+      // Given a ParameterPage with 1 sub-page
+      ParameterPage page = ParameterPage();
+
+      // When I switchSubPage(to:) a sub-page that doesn't exist
+      // Then an exception is thrown
+      expect(() => page.switchSubPage(to: 2), throwsException);
+    });
+
     test(
-        'createTab()s and createSubPages(), product the correct page structure',
+        'createTab()s and createSubPage()s, produce the correct page structure',
         () {
       // Given a new ParameterPage with 3 tabs
       ParameterPage page = ParameterPage();
@@ -1016,10 +1054,42 @@ void main() {
       page.switchTab(to: "Tab 1");
       page.add(CommentEntry("Tab 1 / Sub-page 1 / Comment 1"));
 
+      page.switchTab(to: "Tab 2");
+      page.switchSubPage(to: 1);
+      page.add(CommentEntry("Tab 2 / Sub-page 1 / Comment 1"));
+      page.incrementSubPage();
+      page.add(CommentEntry("Tab 2 / Sub-page 2 / Comment 1"));
+
+      page.switchTab(to: "Tab 3");
+      page.switchSubPage(to: 1);
+      page.add(CommentEntry("Tab 3 / Sub-page 1 / Comment 1"));
+      page.incrementSubPage();
+      page.add(CommentEntry("Tab 3 / Sub-page 2 / Comment 1"));
+      page.incrementSubPage();
+      page.add(CommentEntry("Tab 3 / Sub-page 3 / Comment 1"));
+
       // Then the structure is as follows...
       page.switchTab(to: "Tab 1");
       final tab1Sub1 = page.entriesAsList();
+      page.switchTab(to: "Tab 2");
+      page.switchSubPage(to: 1);
+      final tab2Sub1 = page.entriesAsList();
+      page.incrementSubPage();
+      final tab2Sub2 = page.entriesAsList();
+      page.switchTab(to: "Tab 3");
+      page.switchSubPage(to: 1);
+      final tab3Sub1 = page.entriesAsList();
+      page.incrementSubPage();
+      final tab3Sub2 = page.entriesAsList();
+      page.incrementSubPage();
+      final tab3Sub3 = page.entriesAsList();
+
       expect(tab1Sub1[0].entryText(), "Tab 1 / Sub-page 1 / Comment 1");
+      expect(tab2Sub1[0].entryText(), "Tab 2 / Sub-page 1 / Comment 1");
+      expect(tab2Sub2[0].entryText(), "Tab 2 / Sub-page 2 / Comment 1");
+      expect(tab3Sub1[0].entryText(), "Tab 3 / Sub-page 1 / Comment 1");
+      expect(tab3Sub2[0].entryText(), "Tab 3 / Sub-page 2 / Comment 1");
+      expect(tab3Sub3[0].entryText(), "Tab 3 / Sub-page 3 / Comment 1");
     });
   });
 }
