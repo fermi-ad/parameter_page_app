@@ -991,7 +991,7 @@ void main() {
       expect(page.subPageIndex, 3);
     });
 
-    test('switchSubpage(to:), switches subPageIndex to n', () {
+    test('switchSubPage(to:), switches subPageIndex to n', () {
       // Given a ParameterPage with 1 tab and three sub-pages with entries on sub page 1
       ParameterPage page = ParameterPage();
       page.enableEditing();
@@ -1009,6 +1009,15 @@ void main() {
       final entries = page.entriesAsList();
       expect(entries.length, 1);
       expect(entries[0].entryText(), "Tab 1 / Sub-page 1 / Comment 1");
+    });
+
+    test('switchSubPage(to:0), throws', () {
+      // Given a new ParameterPage with 1 sub-page
+      ParameterPage page = ParameterPage();
+
+      // When I switchSubPage(to:0)
+      // Then an exception is thrown
+      expect(() => page.switchSubPage(to: 0), throwsException);
     });
 
     test(
