@@ -50,6 +50,7 @@ class ParameterPage {
   }
 
   set subPageTitle(String newTitle) {
+    _enforceEditMode();
     _entries[_currentTab]![subPageIndex - 1].title = newTitle;
   }
 

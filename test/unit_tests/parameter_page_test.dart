@@ -1132,6 +1132,7 @@ void main() {
     test('set subPageTitle, change is reflected in subPageDirectory', () {
       // Given a new ParameterPage
       ParameterPage page = ParameterPage();
+      page.enableEditing();
 
       // When I set the sub page title
       page.subPageTitle = "Sub-page One";
