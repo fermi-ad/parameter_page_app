@@ -1055,7 +1055,7 @@ void main() {
       page.add(CommentEntry("Tab 1 / Sub-page 1 / Comment 1"));
 
       page.switchTab(to: "Tab 2");
-      page.decrementSubPage();
+      page.switchSubPage(to: 1);
       page.add(CommentEntry("Tab 2 / Sub-page 1 / Comment 1"));
       page.incrementSubPage();
       page.add(CommentEntry("Tab 2 / Sub-page 2 / Comment 1"));
@@ -1064,9 +1064,10 @@ void main() {
       page.switchTab(to: "Tab 1");
       final tab1Sub1 = page.entriesAsList();
       page.switchTab(to: "Tab 2");
-      final tab2Sub2 = page.entriesAsList();
-      page.decrementSubPage();
+      page.switchSubPage(to: 1);
       final tab2Sub1 = page.entriesAsList();
+      page.incrementSubPage();
+      final tab2Sub2 = page.entriesAsList();
 
       expect(tab1Sub1[0].entryText(), "Tab 1 / Sub-page 1 / Comment 1");
       expect(tab2Sub1[0].entryText(), "Tab 2 / Sub-page 1 / Comment 1");
