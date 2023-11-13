@@ -1092,4 +1092,13 @@ void main() {
       expect(tab3Sub3[0].entryText(), "Tab 3 / Sub-page 3 / Comment 1");
     });
   });
+
+  test('subPageTitle, is initially empty', () {
+    // Given nothing
+    // When I create a new ParameterPage with 1 sub-page
+    ParameterPage page = ParameterPage();
+
+    // Then the sub page title is empty
+    expect(page.subPageTitle, "");
+  });
 }

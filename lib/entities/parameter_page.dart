@@ -37,6 +37,10 @@ class ParameterPage {
     return _entries[_currentTab]!.length;
   }
 
+  String get subPageTitle {
+    return "title";
+  }
+
   bool get editing {
     return _editing;
   }
