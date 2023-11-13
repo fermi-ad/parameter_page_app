@@ -44,7 +44,7 @@ class ParameterPage {
   }
 
   int get currentTabIndex {
-    return tabTitles.indexOf(_currentTab);
+    return _currentTabIndex;
   }
 
   int get subPageIndex {
@@ -100,7 +100,6 @@ class ParameterPage {
     _pageData = _buildEntriesMapFromQueryResult(queryResult);
     _savedPageData = _deepCopyEntries(_pageData);
 
-    _currentTab = _pageData[0].title;
     _currentTabIndex = 0;
 
     _title = title;
@@ -219,7 +218,6 @@ class ParameterPage {
     if (!tabTitles.contains(to)) {
       throw Exception("switchTab failure - tab does not exist");
     }
-    _currentTab = to;
     _currentTabIndex = _findIndex(forTab: to);
   }
 
@@ -385,8 +383,6 @@ class ParameterPage {
   String _undoTitle = "New Parameter Page";
 
   String _savedTitle = "New Parameter Page";
-
-  String _currentTab = "Tab 1";
 
   int _currentTabIndex = 0;
 
