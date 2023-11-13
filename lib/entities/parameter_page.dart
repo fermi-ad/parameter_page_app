@@ -6,6 +6,8 @@ class _Tab {
 
   List<_SubPage> subPages;
 
+  int currentSubPage = 0;
+
   _Tab({this.title = "Tab n", this.subPages = const <_SubPage>[]});
 }
 
@@ -46,7 +48,7 @@ class ParameterPage {
   }
 
   int get subPageIndex {
-    return _currentSubPagePerTab[_currentTab]! + 1;
+    return _pageData[_currentTabIndex].currentSubPage + 1;
   }
 
   int get numberOfSubPages {
@@ -100,10 +102,6 @@ class ParameterPage {
 
     _currentTab = _pageData[0].title;
     _currentTabIndex = 0;
-
-    for (String tabName in tabTitles) {
-      _currentSubPagePerTab[tabName] = 0;
-    }
 
     _title = title;
     _savedTitle = title;
@@ -191,8 +189,6 @@ class ParameterPage {
     _pageData.add(
         _Tab(title: newTabTitle, subPages: [_SubPage(title: "", entries: [])]));
 
-    _currentSubPagePerTab[newTabTitle] = 0;
-
     switchTab(to: newTabTitle);
   }
 
@@ -211,16 +207,12 @@ class ParameterPage {
     if (_currentTabIndex > tabIndex) {
       _currentTabIndex--;
     }
-    _currentSubPagePerTab.remove(title);
   }
 
   void renameTab({required String withTitle, required String to}) {
     _enforceEditMode();
 
     _pageData[_findIndex(forTab: withTitle)].title = to;
-
-    _currentSubPagePerTab[to] = _currentSubPagePerTab[withTitle]!;
-    _currentSubPagePerTab.remove(withTitle);
   }
 
   void switchTab({required String to}) {
@@ -247,7 +239,7 @@ class ParameterPage {
     if (to < 1 || to > numberOfSubPages) {
       throw Exception('Attempt to switch to an invalid sub-page');
     }
-    _currentSubPagePerTab[_currentTab] = to - 1;
+    _pageData[_currentTabIndex].currentSubPage = to - 1;
   }
 
   void createSubPage() {
@@ -255,7 +247,7 @@ class ParameterPage {
 
     _pageData[currentTabIndex].subPages.add(_SubPage(title: "", entries: []));
 
-    _currentSubPagePerTab[_currentTab] =
+    _pageData[currentTabIndex].currentSubPage =
         _pageData[currentTabIndex].subPages.length - 1;
   }
 
@@ -397,8 +389,6 @@ class ParameterPage {
   String _currentTab = "Tab 1";
 
   int _currentTabIndex = 0;
-
-  final Map<String, int> _currentSubPagePerTab = {"Tab 1": 0};
 
   bool _editing = false;
 }
