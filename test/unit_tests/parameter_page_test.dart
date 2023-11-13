@@ -1060,6 +1060,14 @@ void main() {
       page.incrementSubPage();
       page.add(CommentEntry("Tab 2 / Sub-page 2 / Comment 1"));
 
+      page.switchTab(to: "Tab 3");
+      page.switchSubPage(to: 1);
+      page.add(CommentEntry("Tab 3 / Sub-page 1 / Comment 1"));
+      page.incrementSubPage();
+      page.add(CommentEntry("Tab 3 / Sub-page 2 / Comment 1"));
+      page.incrementSubPage();
+      page.add(CommentEntry("Tab 3 / Sub-page 3 / Comment 1"));
+
       // Then the structure is as follows...
       page.switchTab(to: "Tab 1");
       final tab1Sub1 = page.entriesAsList();
@@ -1068,10 +1076,20 @@ void main() {
       final tab2Sub1 = page.entriesAsList();
       page.incrementSubPage();
       final tab2Sub2 = page.entriesAsList();
+      page.switchTab(to: "Tab 3");
+      page.switchSubPage(to: 1);
+      final tab3Sub1 = page.entriesAsList();
+      page.incrementSubPage();
+      final tab3Sub2 = page.entriesAsList();
+      page.incrementSubPage();
+      final tab3Sub3 = page.entriesAsList();
 
       expect(tab1Sub1[0].entryText(), "Tab 1 / Sub-page 1 / Comment 1");
       expect(tab2Sub1[0].entryText(), "Tab 2 / Sub-page 1 / Comment 1");
       expect(tab2Sub2[0].entryText(), "Tab 2 / Sub-page 2 / Comment 1");
+      expect(tab3Sub1[0].entryText(), "Tab 3 / Sub-page 1 / Comment 1");
+      expect(tab3Sub2[0].entryText(), "Tab 3 / Sub-page 2 / Comment 1");
+      expect(tab3Sub3[0].entryText(), "Tab 3 / Sub-page 3 / Comment 1");
     });
   });
 }
