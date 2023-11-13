@@ -1091,5 +1091,66 @@ void main() {
       expect(tab3Sub2[0].entryText(), "Tab 3 / Sub-page 2 / Comment 1");
       expect(tab3Sub3[0].entryText(), "Tab 3 / Sub-page 3 / Comment 1");
     });
+
+    test('subPageTitle, is initially empty', () {
+      // Given nothing
+      // When I create a new ParameterPage with 1 sub-page
+      ParameterPage page = ParameterPage();
+
+      // Then the sub page title is empty
+      expect(page.subPageTitle, "");
+    });
+
+    test('subPageDirectory, is initially all empty titles', () {
+      // Given a new ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // When I create three new sub-pages
+      page.enableEditing();
+      page.createSubPage();
+      page.createSubPage();
+      page.createSubPage();
+
+      // Then the subPageDirectory contains four empty strings
+      final dir = page.subPageDirectory;
+      expect(dir.length, 4);
+      expect(dir[0], "");
+      expect(dir[1], "");
+      expect(dir[2], "");
+      expect(dir[3], "");
+    });
+
+    test('set subPageTitle, enforces edit mode', () {
+      // Given a ParameterPage with editing disabled
+      ParameterPage page = ParameterPage();
+
+      // When I attempt to set the subPageTitle
+      // Then an exception is thrown
+      expect(() => page.subPageTitle = "Should Throw", throwsException);
+    });
+
+    test('set subPageTitle, change is reflected in subPageDirectory', () {
+      // Given a new ParameterPage
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I set the sub page title
+      page.subPageTitle = "Sub-page One";
+
+      // Then the new title shows up in subPageDirectory
+      expect(page.subPageDirectory[0], "Sub-page One");
+    });
+
+    test('changing a subPageTitle, sets the isDirty flag to true', () {
+      // Given a new ParameterPage with editing mode turned on
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I change the subPageTitle
+      page.subPageTitle = "Sub-page One";
+
+      // Then the isDirty flag is set to true
+      expect(page.isDirty, true);
+    });
   });
 }
