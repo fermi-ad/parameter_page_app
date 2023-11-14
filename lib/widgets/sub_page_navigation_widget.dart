@@ -12,7 +12,7 @@ class SubPageNavigationWidget extends StatelessWidget {
       Row(children: [
         Container(
             key: const Key("subpagenavigation-subpage-title"),
-            child: const Text(""))
+            child: Text(page.subPageTitle))
       ]),
       const SizedBox(height: 5.0),
       Row(children: [
