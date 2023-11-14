@@ -69,7 +69,7 @@ void main() {
       MaterialApp app = MaterialApp(
           home: Scaffold(
               body: SubPageNavigationWidget(
-                  page: page, onIncrement: () => onIncrementCalled = true)));
+                  page: page, onForward: () => onIncrementCalled = true)));
       await tester.pumpWidget(app);
 
       // When I tap the 'increment page' button
@@ -88,7 +88,7 @@ void main() {
       MaterialApp app = MaterialApp(
           home: Scaffold(
               body: SubPageNavigationWidget(
-                  page: page, onPrevious: () => onPreviousCalled = true)));
+                  page: page, onBackward: () => onPreviousCalled = true)));
       await tester.pumpWidget(app);
 
       // When I tap the 'increment page' button

@@ -4,12 +4,12 @@ import 'package:parameter_page/entities/parameter_page.dart';
 class SubPageNavigationWidget extends StatelessWidget {
   final ParameterPage page;
 
-  final Function()? onIncrement;
+  final Function()? onForward;
 
-  final Function()? onPrevious;
+  final Function()? onBackward;
 
   const SubPageNavigationWidget(
-      {super.key, this.onIncrement, this.onPrevious, required this.page});
+      {super.key, this.onForward, this.onBackward, required this.page});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class SubPageNavigationWidget extends StatelessWidget {
       Row(children: [
         IconButton(
             icon: const Icon(Icons.navigate_before),
-            onPressed: () => onPrevious?.call()),
+            onPressed: () => onBackward?.call()),
         const SizedBox(width: 5.0),
         Container(
             key: const Key("subpagenavigation-current-subpage"),
@@ -37,7 +37,7 @@ class SubPageNavigationWidget extends StatelessWidget {
         const SizedBox(width: 5.0),
         IconButton(
           icon: const Icon(Icons.navigate_next, size: 16.0),
-          onPressed: () => onIncrement?.call(),
+          onPressed: () => onForward?.call(),
         )
       ])
     ]);
