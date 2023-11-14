@@ -7,9 +7,9 @@ class SubPageNavigationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
-    // key: const Key("subpagenavigation-current-subpage"),
-    // child: const Text("2"));
+    return Container(
+        key: const Key("subpagenavigation-current-subpage"),
+        child: const Text("2"));
   }
 }
 
