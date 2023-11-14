@@ -1,17 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
-
-class SubPageNavigationWidget extends StatelessWidget {
-  const SubPageNavigationWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        key: const Key("subpagenavigation-current-subpage"),
-        child: const Text("2"));
-  }
-}
+import 'package:parameter_page/widgets/sub_page_navigation_widget.dart';
 
 void main() {
   group("SubPageNavigationWidget", () {
