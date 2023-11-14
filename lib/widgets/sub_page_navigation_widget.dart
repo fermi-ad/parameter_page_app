@@ -8,8 +8,14 @@ class SubPageNavigationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        key: const Key("subpagenavigation-current-subpage"),
-        child: Text("${page.subPageIndex}"));
+    return Row(children: [
+      Container(
+          key: const Key("subpagenavigation-current-subpage"),
+          child: Text("${page.subPageIndex}")),
+      const SizedBox(width: 5.0),
+      Container(
+          key: const Key("subpagenavigation-total-subpages"),
+          child: Text("${page.numberOfSubPages}"))
+    ]);
   }
 }
