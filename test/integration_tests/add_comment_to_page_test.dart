@@ -16,7 +16,7 @@ void main() {
       await enterEditMode(tester);
 
       // When I add a new comment...
-      await addANewComment(tester, 'Test comment #1');
+      await addANewComment(tester, '!Test comment #1');
 
       // Then the new comment is added to the page
       assertIsOnPage(comment: 'Test comment #1');
