@@ -17,7 +17,7 @@ void main() {
       page.switchSubPage(to: 2);
 
       // When I render the SubPageNavigationWidget
-      MaterialApp app = const MaterialApp(home: SubPageNavigationWidget());
+      MaterialApp app = MaterialApp(home: SubPageNavigationWidget(page: page));
       await tester.pumpWidget(app);
 
       // Then the current sub-page is 2
