@@ -40,6 +40,23 @@ void main() {
       // Then the number of sub-pages is 3
       _assertNumberOfSubPagesIs(3);
     });
+
+    testWidgets('Title indicator, displays the title of the current sub-page',
+        (WidgetTester tester) async {
+      // Given a ParameterPage with 2 sub-pages, each with a distinct title
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.subPageTitle = "Sub-page 1 Title";
+      page.createSubPage();
+      page.subPageTitle = "Sub-page 2 Title";
+
+      // When I render the SubPageNavigationWidget
+      MaterialApp app = MaterialApp(home: SubPageNavigationWidget(page: page));
+      await tester.pumpWidget(app);
+
+      // Then the title display is "Sub-page 2 Title"
+      _assertSubPageTitleIs("Sub-page 2 Title");
+    });
   });
 }
 
@@ -56,5 +73,13 @@ void _assertNumberOfSubPagesIs(int numberOfSubPagesIs) {
       find.descendant(
           of: find.byKey(const Key("subpagenavigation-total-subpages")),
           matching: find.text("$numberOfSubPagesIs")),
+      findsOneWidget);
+}
+
+void _assertSubPageTitleIs(String title) {
+  expect(
+      find.descendant(
+          of: find.byKey(const Key("subpagenavigation-subpage-title")),
+          matching: find.text(title)),
       findsOneWidget);
 }
