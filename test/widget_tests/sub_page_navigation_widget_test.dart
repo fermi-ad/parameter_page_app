@@ -17,7 +17,8 @@ void main() {
       page.switchSubPage(to: 2);
 
       // When I render the SubPageNavigationWidget
-      MaterialApp app = MaterialApp(home: SubPageNavigationWidget(page: page));
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SubPageNavigationWidget(page: page)));
       await tester.pumpWidget(app);
 
       // Then the current sub-page is 2
@@ -34,7 +35,8 @@ void main() {
       page.createSubPage();
 
       // When I render the SubPageNavigationWidget
-      MaterialApp app = MaterialApp(home: SubPageNavigationWidget(page: page));
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SubPageNavigationWidget(page: page)));
       await tester.pumpWidget(app);
 
       // Then the number of sub-pages is 3
@@ -51,7 +53,8 @@ void main() {
       page.subPageTitle = "Sub-page 2 Title";
 
       // When I render the SubPageNavigationWidget
-      MaterialApp app = MaterialApp(home: SubPageNavigationWidget(page: page));
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SubPageNavigationWidget(page: page)));
       await tester.pumpWidget(app);
 
       // Then the title display is "Sub-page 2 Title"
@@ -64,20 +67,24 @@ void main() {
       bool onIncrementCalled = false;
       ParameterPage page = ParameterPage();
       MaterialApp app = MaterialApp(
-          home: SubPageNavigationWidget(
-              page: page, onIncrement: () => onIncrementCalled = true));
+          home: Scaffold(
+              body: SubPageNavigationWidget(
+                  page: page, onIncrement: () => onIncrementCalled = true)));
       await tester.pumpWidget(app);
 
       // When I tap the 'increment page' button
-      await tester
-          .tap(find.byKey(const Key("subpagenavigation-increment-button")));
-      await tester.pumpAndSettle();
+      await _navigateForward(tester);
 
       // Then the onIncrement callback has been invoked
       expect(onIncrementCalled, true,
           reason: "onIncrement callback should be called");
     });
   });
+}
+
+Future<void> _navigateForward(WidgetTester tester) async {
+  await tester.tap(find.byIcon(Icons.navigate_next));
+  await tester.pumpAndSettle();
 }
 
 void _assertCurrentSubPageIs(int isSetTo) {
