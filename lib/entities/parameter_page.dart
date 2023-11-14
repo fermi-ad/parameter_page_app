@@ -114,7 +114,10 @@ class ParameterPage {
 
   void addAll(List<PageEntry> entries) {
     _enforceEditMode();
-    _entries[_currentTab]![subPageIndex - 1].addAll(entries);
+    _pageData[_currentTabIndex]
+        .subPages[subPageIndex - 1]
+        .entries
+        .addAll(entries);
   }
 
   List<PageEntry> entriesAsList({String? forTab}) {
