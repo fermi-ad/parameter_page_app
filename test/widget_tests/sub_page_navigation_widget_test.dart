@@ -79,7 +79,31 @@ void main() {
       expect(onIncrementCalled, true,
           reason: "onIncrement callback should be called");
     });
+
+    testWidgets('Previous tapped, onPrevious is called',
+        (WidgetTester tester) async {
+      // Given a SubPageNavigationWidget has been rendered
+      bool onPreviousCalled = false;
+      ParameterPage page = ParameterPage();
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubPageNavigationWidget(
+                  page: page, onPrevious: () => onPreviousCalled = true)));
+      await tester.pumpWidget(app);
+
+      // When I tap the 'increment page' button
+      await _navigateBackwards(tester);
+
+      // Then the onPrevious callback has been invoked
+      expect(onPreviousCalled, true,
+          reason: "onPrevious callback should be called");
+    });
   });
+}
+
+Future<void> _navigateBackwards(WidgetTester tester) async {
+  await tester.tap(find.byIcon(Icons.navigate_before));
+  await tester.pumpAndSettle();
 }
 
 Future<void> _navigateForward(WidgetTester tester) async {

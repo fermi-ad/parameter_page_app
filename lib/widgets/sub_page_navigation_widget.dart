@@ -6,8 +6,10 @@ class SubPageNavigationWidget extends StatelessWidget {
 
   final Function()? onIncrement;
 
+  final Function()? onPrevious;
+
   const SubPageNavigationWidget(
-      {super.key, this.onIncrement, required this.page});
+      {super.key, this.onIncrement, this.onPrevious, required this.page});
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +21,10 @@ class SubPageNavigationWidget extends StatelessWidget {
       ]),
       const SizedBox(height: 5.0),
       Row(children: [
+        IconButton(
+            icon: const Icon(Icons.navigate_before),
+            onPressed: () => onPrevious?.call()),
+        const SizedBox(width: 5.0),
         Container(
             key: const Key("subpagenavigation-current-subpage"),
             child: Text("${page.subPageIndex}")),
