@@ -44,24 +44,18 @@ class _CommandButtonState extends State<CommandButtonWidget> {
   Widget _buildReadyButton() {
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blue,
-            elevation: 0.0,
-            minimumSize: const Size.fromHeight(40)),
+            elevation: 0.0, minimumSize: const Size.fromHeight(40)),
         onPressed: _handlePress,
-        child:
-            Text(style: const TextStyle(color: Colors.white), widget.longName));
+        child: Text(widget.longName));
   }
 
   Widget _buildPendingButton() {
     return Stack(alignment: Alignment.center, children: [
       ElevatedButton(
           style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              elevation: 0.0,
-              minimumSize: const Size.fromHeight(40)),
+              elevation: 0.0, minimumSize: const Size.fromHeight(40)),
           onPressed: null,
-          child: Text(
-              style: const TextStyle(color: Colors.white), widget.longName)),
+          child: Text(widget.longName)),
       const Icon(Icons.pending)
     ]);
   }
