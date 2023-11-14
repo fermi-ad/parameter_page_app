@@ -57,6 +57,26 @@ void main() {
       // Then the title display is "Sub-page 2 Title"
       _assertSubPageTitleIs("Sub-page 2 Title");
     });
+
+    testWidgets('Increment tapped, onIncrement is called',
+        (WidgetTester tester) async {
+      // Given a SubPageNavigationWidget has been rendered
+      bool onIncrementCalled = false;
+      ParameterPage page = ParameterPage();
+      MaterialApp app = MaterialApp(
+          home: SubPageNavigationWidget(
+              page: page, onIncrement: () => onIncrementCalled = true));
+      await tester.pumpWidget(app);
+
+      // When I tap the 'increment page' button
+      await tester
+          .tap(find.byKey(const Key("subpagenavigation-increment-button")));
+      await tester.pumpAndSettle();
+
+      // Then the onIncrement callback has been invoked
+      expect(onIncrementCalled, true,
+          reason: "onIncrement callback should be called");
+    });
   });
 }
 

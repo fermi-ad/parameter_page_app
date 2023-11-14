@@ -4,7 +4,10 @@ import 'package:parameter_page/entities/parameter_page.dart';
 class SubPageNavigationWidget extends StatelessWidget {
   final ParameterPage page;
 
-  const SubPageNavigationWidget({super.key, required this.page});
+  final Function()? onIncrement;
+
+  const SubPageNavigationWidget(
+      {super.key, this.onIncrement, required this.page});
 
   @override
   Widget build(BuildContext context) {
