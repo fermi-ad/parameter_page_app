@@ -22,8 +22,10 @@ void main() {
       assertNumberOfSubPagesIs(2);
 
       // ... and the current sub-page is 1
+      assertCurrentSubPageIs(1);
 
       // ... and the sub-page title is "Sub-Page One"
+      assertSubPageTitleIs("Sub-Page One");
     });
   });
 }

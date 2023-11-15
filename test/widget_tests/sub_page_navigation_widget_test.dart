@@ -60,7 +60,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // Then the title display is "Sub-page 2 Title"
-      _assertSubPageTitleIs("Sub-page 2 Title");
+      assertSubPageTitleIs("Sub-page 2 Title");
     });
 
     testWidgets('Increment tapped, onIncrement is called',
@@ -259,14 +259,6 @@ Future<void> _navigateBackwards(WidgetTester tester) async {
 Future<void> _navigateForward(WidgetTester tester) async {
   await tester.tap(find.byIcon(Icons.navigate_next));
   await tester.pumpAndSettle();
-}
-
-void _assertSubPageTitleIs(String title) {
-  expect(
-      find.descendant(
-          of: find.byKey(const Key("subpagenavigation-subpage-title")),
-          matching: find.text(title)),
-      findsOneWidget);
 }
 
 void _assertSubPageDirectory({required List<String> contains}) {

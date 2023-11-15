@@ -542,3 +542,11 @@ void assertCurrentSubPageIs(int isSetTo) {
       .widget as TextFormField;
   expect(textField.controller!.text, equals("$isSetTo"));
 }
+
+void assertSubPageTitleIs(String title) {
+  expect(
+      find.descendant(
+          of: find.byKey(const Key("subpagenavigation-subpage-title")),
+          matching: find.text(title)),
+      findsOneWidget);
+}
