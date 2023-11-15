@@ -84,43 +84,60 @@ void main() {
             "tabs": [
               {
                 "title": "Tab 1",
-                "entries": [
+                "sub-pages": [
                   {
-                    "entryid": "4",
-                    "pageid": "3",
-                    "position": "0",
-                    "text": "this is comment #1",
-                    "type": "Comment"
-                  },
-                  {
-                    "entryid": "5",
-                    "pageid": "3",
-                    "position": "1",
-                    "text": "this is comment #2",
-                    "type": "Comment"
-                  },
-                  {
-                    "entryid": "6",
-                    "pageid": "3",
-                    "position": "2",
-                    "text": "I:BEAM",
-                    "type": "Parameter"
+                    "id": "1",
+                    "title": "Sub-Page One",
+                    "entries": [
+                      {
+                        "entryid": "4",
+                        "pageid": "3",
+                        "position": "0",
+                        "text": "this is comment #1",
+                        "type": "Comment"
+                      },
+                      {
+                        "entryid": "5",
+                        "pageid": "3",
+                        "position": "1",
+                        "text": "this is comment #2",
+                        "type": "Comment"
+                      },
+                      {
+                        "entryid": "6",
+                        "pageid": "3",
+                        "position": "2",
+                        "text": "I:BEAM",
+                        "type": "Parameter"
+                      }
+                    ]
                   }
                 ]
               },
               {
                 "title": "Tab 2",
-                "entries": [
+                "sub-pages": [
                   {
-                    "entryid": "7",
-                    "pageid": "3",
-                    "position": "0",
-                    "text": "R:BEAM",
-                    "type": "Parameter"
+                    "id": "1",
+                    "title": "Sub-Page One",
+                    "entries": [
+                      {
+                        "entryid": "7",
+                        "pageid": "3",
+                        "position": "0",
+                        "text": "R:BEAM",
+                        "type": "Parameter"
+                      }
+                    ]
                   }
                 ]
               },
-              {"title": "Tab 3", "entries": []}
+              {
+                "title": "Tab 3",
+                "sub-pages": [
+                  {"id": "1", "title": "", "entries": []}
+                ]
+              }
             ]
           });
 
