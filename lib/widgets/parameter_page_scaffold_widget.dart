@@ -11,6 +11,7 @@ import 'package:parameter_page/widgets/fermi_controls_common/error_display_widge
 import 'package:parameter_page/widgets/main_menu_widget.dart';
 import 'package:parameter_page/widgets/page_title_widget.dart';
 import 'package:parameter_page/widgets/parameter_page_tabbar_widget.dart';
+import 'package:parameter_page/widgets/sub_page_navigation_widget.dart';
 
 import 'data_acquisition_widget.dart';
 import 'display_settings_widget.dart';
@@ -60,10 +61,12 @@ class _ParameterPageScaffoldWidgetState
     }
 
     return Scaffold(
-        key: _scaffoldKey,
-        appBar: _buildAppBar(context),
-        drawer: _buildDrawer(context),
-        body: _buildBody(context));
+      key: _scaffoldKey,
+      appBar: _buildAppBar(context),
+      drawer: _buildDrawer(context),
+      body: _buildBody(context),
+      bottomNavigationBar: _buildSubPageNavigation(),
+    );
   }
 
   bool _pageHasNotBeenLoadedYet() {
@@ -78,6 +81,14 @@ class _ParameterPageScaffoldWidgetState
 
   bool _aNewPageShouldBeStarted() {
     return _page == null && widget.openPageId == null;
+  }
+
+  Widget _buildSubPageNavigation() {
+    return _page == null
+        ? const Text("Nothing to see")
+        : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            SizedBox(height: 128, child: SubPageNavigationWidget(page: _page!))
+          ]);
   }
 
   AppBar _buildAppBar(BuildContext context) {
