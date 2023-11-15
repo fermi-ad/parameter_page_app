@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/widgets/sub_page_navigation_widget.dart';
 
+import '../integration_tests/helpers/assertions.dart';
+
 void main() {
   group("SubPageNavigationWidget", () {
     testWidgets('Current sub-page indicator, shows the current sub-page',
@@ -40,7 +42,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // Then the number of sub-pages is 3
-      _assertNumberOfSubPagesIs(3);
+      assertNumberOfSubPagesIs(3);
     });
 
     testWidgets('Title indicator, displays the title of the current sub-page',
@@ -266,14 +268,6 @@ void _assertCurrentSubPageIs(int isSetTo) {
       .first
       .widget as TextFormField;
   expect(textField.controller!.text, equals("$isSetTo"));
-}
-
-void _assertNumberOfSubPagesIs(int numberOfSubPagesIs) {
-  expect(
-      find.descendant(
-          of: find.byKey(const Key("subpagenavigation-total-subpages")),
-          matching: find.text("$numberOfSubPagesIs")),
-      findsOneWidget);
 }
 
 void _assertSubPageTitleIs(String title) {

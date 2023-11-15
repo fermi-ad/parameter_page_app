@@ -525,3 +525,11 @@ void assertDeleteTabConfirmation({required bool isVisible}) {
   expect(find.byKey(const Key("delete_tab_confirmation")),
       isVisible ? findsOneWidget : findsNothing);
 }
+
+void assertNumberOfSubPagesIs(int numberOfSubPagesIs) {
+  expect(
+      find.descendant(
+          of: find.byKey(const Key("subpagenavigation-total-subpages")),
+          matching: find.text("$numberOfSubPagesIs")),
+      findsOneWidget);
+}
