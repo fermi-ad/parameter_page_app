@@ -147,7 +147,40 @@ void main() {
       // Then the onSelected callback is called and the selectedIndex is 2
       expect(selectedIndex, 2);
     });
+
+    testWidgets('Enter sub-page index directly, onSelected is called',
+        (WidgetTester tester) async {
+      // Given a SubPageNavigationWidget has been rendered for a ParameterPage containing 3 sub-pages
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.subPageTitle = "Sub-Page One";
+      page.createSubPage();
+      page.subPageTitle = "Sub-Page Two";
+      page.createSubPage();
+      page.subPageTitle = "Sub-Page Three";
+
+      int? selectedIndex;
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubPageNavigationWidget(
+                  page: page,
+                  onSelected: (int index) => selectedIndex = index)));
+      await tester.pumpWidget(app);
+
+      // When I navigate directly to sub-page 2
+      await _navigateDirectlyTo(tester, subPageIndex: 2);
+
+      // Then the onSelected callback is called and the selectedIndex is 2
+      expect(selectedIndex, 2);
+    });
   });
+}
+
+Future<void> _navigateDirectlyTo(WidgetTester tester,
+    {required int subPageIndex}) async {
+  await tester.enterText(find.byKey(const Key('txtFieldKey')), '$subPageIndex');
+  await tester.testTextInput.receiveAction(TextInputAction.done);
+  await tester.pumpAndSettle();
 }
 
 Future<void> _navigateUsingDirectory(WidgetTester tester,
