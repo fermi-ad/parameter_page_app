@@ -8,8 +8,14 @@ class SubPageNavigationWidget extends StatelessWidget {
 
   final Function()? onBackward;
 
+  final Function(int)? onSelected;
+
   const SubPageNavigationWidget(
-      {super.key, this.onForward, this.onBackward, required this.page});
+      {super.key,
+      this.onForward,
+      this.onBackward,
+      this.onSelected,
+      required this.page});
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +31,13 @@ class SubPageNavigationWidget extends StatelessWidget {
             icon: const Icon(Icons.navigate_before),
             onPressed: () => onBackward?.call()),
         const SizedBox(width: 5.0),
-        Container(
-            key: const Key("subpagenavigation-current-subpage"),
-            child: Text("${page.subPageIndex}")),
+        SizedBox(
+            width: 48.0,
+            child: TextFormField(
+              key: const Key('subpagenavigation-current-index-input'),
+              controller: TextEditingController(text: "${page.subPageIndex}"),
+              onFieldSubmitted: _handleDirectNavigation,
+            )),
         const SizedBox(width: 5.0),
         const Text("/"),
         const SizedBox(width: 5.0),
@@ -39,7 +49,43 @@ class SubPageNavigationWidget extends StatelessWidget {
           icon: const Icon(Icons.navigate_next, size: 16.0),
           onPressed: () => onForward?.call(),
         )
-      ])
+      ]),
+      Row(children: [_buildDirectoryMenuButton()])
     ]);
   }
+
+  Widget _buildDirectoryMenuButton() {
+    return PopupMenuButton<_SubPageDirectoryItem>(
+        icon: const Icon(Icons.more_vert),
+        onSelected: (_SubPageDirectoryItem selected) =>
+            onSelected?.call(selected.index),
+        itemBuilder: _directoryItemBuilder);
+  }
+
+  List<PopupMenuItem<_SubPageDirectoryItem>> _directoryItemBuilder(
+      BuildContext context) {
+    List<PopupMenuItem<_SubPageDirectoryItem>> ret = [];
+    for (int i = 0; i != page.subPageDirectory.length; i++) {
+      ret.add(PopupMenuItem<_SubPageDirectoryItem>(
+          value: _SubPageDirectoryItem(
+              index: i + 1, title: page.subPageDirectory[i]),
+          child: Text(page.subPageDirectory[i])));
+    }
+    return ret;
+  }
+
+  void _handleDirectNavigation(String indexInput) {
+    final int? index = int.tryParse(indexInput);
+    if (index != null && index > 0 && index <= page.subPageDirectory.length) {
+      onSelected?.call(index);
+    }
+  }
+}
+
+class _SubPageDirectoryItem {
+  final String title;
+
+  final int index;
+
+  const _SubPageDirectoryItem({required this.index, required this.title});
 }
