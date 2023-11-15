@@ -98,7 +98,129 @@ void main() {
       expect(onPreviousCalled, true,
           reason: "onPrevious callback should be called");
     });
+
+    testWidgets('Open sub-page directory, all sub-pages are presented',
+        (WidgetTester tester) async {
+      // Given a SubPageNavigationWidget has been rendered for a ParameterPage containing 3 sub-pages
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.subPageTitle = "Sub-Page One";
+      page.createSubPage();
+      page.subPageTitle = "Sub-Page Two";
+      page.createSubPage();
+      page.subPageTitle = "Sub-Page Three";
+
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SubPageNavigationWidget(page: page)));
+      await tester.pumpWidget(app);
+
+      // When I open the sub-page directory
+      await _openSubPageDirectory(tester);
+
+      // Then the sub-page directory is presented to the user
+      _assertSubPageDirectory(
+          contains: ["Sub-Page One", "Sub-Page Two", "Sub-Page Three"]);
+    });
+
+    testWidgets('Select sub-page from directory, onSelected is called',
+        (WidgetTester tester) async {
+      // Given a SubPageNavigationWidget has been rendered for a ParameterPage containing 3 sub-pages
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.subPageTitle = "Sub-Page One";
+      page.createSubPage();
+      page.subPageTitle = "Sub-Page Two";
+      page.createSubPage();
+      page.subPageTitle = "Sub-Page Three";
+
+      int? selectedIndex;
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubPageNavigationWidget(
+                  page: page,
+                  onSelected: (int index) => selectedIndex = index)));
+      await tester.pumpWidget(app);
+
+      // When I navigate to "Sub-Page Two" using the directory
+      await _navigateUsingDirectory(tester, toSubPageWithTitle: "Sub-Page Two");
+
+      // Then the onSelected callback is called and the selectedIndex is 2
+      expect(selectedIndex, 2);
+    });
+
+    testWidgets('Enter sub-page index directly, onSelected is called',
+        (WidgetTester tester) async {
+      // Given a SubPageNavigationWidget has been rendered for a ParameterPage containing 3 sub-pages
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.subPageTitle = "Sub-Page One";
+      page.createSubPage();
+      page.subPageTitle = "Sub-Page Two";
+      page.createSubPage();
+      page.subPageTitle = "Sub-Page Three";
+
+      int? selectedIndex;
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubPageNavigationWidget(
+                  page: page,
+                  onSelected: (int index) => selectedIndex = index)));
+      await tester.pumpWidget(app);
+
+      // When I navigate directly to sub-page 2
+      await _navigateDirectlyTo(tester, subPageIndex: 2);
+
+      // Then the onSelected callback is called and the selectedIndex is 2
+      expect(selectedIndex, 2);
+    });
+
+    testWidgets('Enter invalid sub-page index, onSelected is not called',
+        (WidgetTester tester) async {
+      // Given a SubPageNavigationWidget has been rendered for a ParameterPage containing 3 sub-pages
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.subPageTitle = "Sub-Page One";
+      page.createSubPage();
+      page.subPageTitle = "Sub-Page Two";
+      page.createSubPage();
+      page.subPageTitle = "Sub-Page Three";
+
+      int? selectedIndex;
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubPageNavigationWidget(
+                  page: page,
+                  onSelected: (int index) => selectedIndex = index)));
+      await tester.pumpWidget(app);
+
+      // When I attempt to navigate directly to an invalid sub-page index
+      await _navigateDirectlyTo(tester, subPageIndex: 4);
+
+      // Then the onSelected callback is not invoked
+      expect(selectedIndex, null);
+    });
   });
+}
+
+Future<void> _navigateDirectlyTo(WidgetTester tester,
+    {required int subPageIndex}) async {
+  await tester.enterText(
+      find.byKey(const Key('subpagenavigation-current-index-input')),
+      '$subPageIndex');
+  await tester.testTextInput.receiveAction(TextInputAction.done);
+  await tester.pumpAndSettle();
+}
+
+Future<void> _navigateUsingDirectory(WidgetTester tester,
+    {required String toSubPageWithTitle}) async {
+  await _openSubPageDirectory(tester);
+  await tester.tap(find.text(toSubPageWithTitle));
+  await tester.pumpAndSettle();
+}
+
+Future<void> _openSubPageDirectory(WidgetTester tester) async {
+  await tester.tap(find.byIcon(Icons.more_vert));
+  await tester.pumpAndSettle();
 }
 
 Future<void> _navigateBackwards(WidgetTester tester) async {
@@ -112,11 +234,12 @@ Future<void> _navigateForward(WidgetTester tester) async {
 }
 
 void _assertCurrentSubPageIs(int isSetTo) {
-  expect(
-      find.descendant(
-          of: find.byKey(const Key("subpagenavigation-current-subpage")),
-          matching: find.text("$isSetTo")),
-      findsOneWidget);
+  final textField = find
+      .byKey(const Key('subpagenavigation-current-index-input'))
+      .evaluate()
+      .first
+      .widget as TextFormField;
+  expect(textField.controller!.text, equals("$isSetTo"));
 }
 
 void _assertNumberOfSubPagesIs(int numberOfSubPagesIs) {
@@ -133,4 +256,10 @@ void _assertSubPageTitleIs(String title) {
           of: find.byKey(const Key("subpagenavigation-subpage-title")),
           matching: find.text(title)),
       findsOneWidget);
+}
+
+void _assertSubPageDirectory({required List<String> contains}) {
+  for (final title in contains) {
+    expect(find.text(title), findsAtLeastNWidgets(1));
+  }
 }
