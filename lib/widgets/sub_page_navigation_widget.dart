@@ -31,9 +31,14 @@ class SubPageNavigationWidget extends StatelessWidget {
             icon: const Icon(Icons.navigate_before),
             onPressed: () => onBackward?.call()),
         const SizedBox(width: 5.0),
-        Container(
-            key: const Key("subpagenavigation-current-subpage"),
-            child: Text("${page.subPageIndex}")),
+        SizedBox(
+            key: const Key('subpagenavigation-current-index-input'),
+            width: 48.0,
+            child: TextFormField(
+              initialValue: "${page.subPageIndex}",
+              onFieldSubmitted: (String input) =>
+                  onSelected?.call(int.parse(input)),
+            )),
         const SizedBox(width: 5.0),
         const Text("/"),
         const SizedBox(width: 5.0),

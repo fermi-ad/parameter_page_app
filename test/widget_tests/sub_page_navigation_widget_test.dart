@@ -178,7 +178,9 @@ void main() {
 
 Future<void> _navigateDirectlyTo(WidgetTester tester,
     {required int subPageIndex}) async {
-  await tester.enterText(find.byKey(const Key('txtFieldKey')), '$subPageIndex');
+  await tester.enterText(
+      find.byKey(const Key('subpagenavigation-current-index-input')),
+      '$subPageIndex');
   await tester.testTextInput.receiveAction(TextInputAction.done);
   await tester.pumpAndSettle();
 }
