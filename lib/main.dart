@@ -8,7 +8,6 @@ import 'package:parameter_page/services/parameter_page/parameter_page_service.da
 import 'package:parameter_page/services/user_device/mock_user_device_service.dart';
 import 'package:parameter_page/services/user_device/system_user_device_service.dart';
 import 'package:parameter_page/services/user_device/user_device_service.dart';
-import 'package:parameter_page/widgets/fermi_controls_common/fermi_controls_app.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'services/dpm/mock_dpm_service.dart';
 
@@ -22,7 +21,7 @@ void main() async {
 
   var (dpmService, pageService, deviceService) = _configureServices();
 
-  runApp(FermiControlsApp(
+  runApp(ControlsRouterApp(
       title: "Parameter Page",
       router: GoRouter(
           routes: configureRoutes(dpmService, pageService, deviceService))));
