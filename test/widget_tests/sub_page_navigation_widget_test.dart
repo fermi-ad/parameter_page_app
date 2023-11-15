@@ -168,7 +168,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I navigate directly to sub-page 2
-      await _navigateDirectlyTo(tester, subPageIndex: 2);
+      await _navigateDirectlyTo(tester, subPageIndex: '2');
 
       // Then the onSelected callback is called and the selectedIndex is 2
       expect(selectedIndex, 2);
@@ -194,7 +194,33 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I attempt to navigate directly to an invalid sub-page index
-      await _navigateDirectlyTo(tester, subPageIndex: 4);
+      await _navigateDirectlyTo(tester, subPageIndex: '4');
+
+      // Then the onSelected callback is not invoked
+      expect(selectedIndex, null);
+    });
+
+    testWidgets('Enter garbage sub-page index, onSelected is not called',
+        (WidgetTester tester) async {
+      // Given a SubPageNavigationWidget has been rendered for a ParameterPage containing 3 sub-pages
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.subPageTitle = "Sub-Page One";
+      page.createSubPage();
+      page.subPageTitle = "Sub-Page Two";
+      page.createSubPage();
+      page.subPageTitle = "Sub-Page Three";
+
+      int? selectedIndex;
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubPageNavigationWidget(
+                  page: page,
+                  onSelected: (int index) => selectedIndex = index)));
+      await tester.pumpWidget(app);
+
+      // When I attempt to navigate directly to an invalid sub-page index
+      await _navigateDirectlyTo(tester, subPageIndex: "four");
 
       // Then the onSelected callback is not invoked
       expect(selectedIndex, null);
@@ -203,10 +229,10 @@ void main() {
 }
 
 Future<void> _navigateDirectlyTo(WidgetTester tester,
-    {required int subPageIndex}) async {
+    {required String subPageIndex}) async {
   await tester.enterText(
       find.byKey(const Key('subpagenavigation-current-index-input')),
-      '$subPageIndex');
+      subPageIndex);
   await tester.testTextInput.receiveAction(TextInputAction.done);
   await tester.pumpAndSettle();
 }
