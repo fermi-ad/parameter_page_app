@@ -24,7 +24,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // Then the current sub-page is 2
-      _assertCurrentSubPageIs(2);
+      assertCurrentSubPageIs(2);
     });
 
     testWidgets(
@@ -259,15 +259,6 @@ Future<void> _navigateBackwards(WidgetTester tester) async {
 Future<void> _navigateForward(WidgetTester tester) async {
   await tester.tap(find.byIcon(Icons.navigate_next));
   await tester.pumpAndSettle();
-}
-
-void _assertCurrentSubPageIs(int isSetTo) {
-  final textField = find
-      .byKey(const Key('subpagenavigation-current-index-input'))
-      .evaluate()
-      .first
-      .widget as TextFormField;
-  expect(textField.controller!.text, equals("$isSetTo"));
 }
 
 void _assertSubPageTitleIs(String title) {

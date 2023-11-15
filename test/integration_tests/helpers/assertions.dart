@@ -533,3 +533,12 @@ void assertNumberOfSubPagesIs(int numberOfSubPagesIs) {
           matching: find.text("$numberOfSubPagesIs")),
       findsOneWidget);
 }
+
+void assertCurrentSubPageIs(int isSetTo) {
+  final textField = find
+      .byKey(const Key('subpagenavigation-current-index-input'))
+      .evaluate()
+      .first
+      .widget as TextFormField;
+  expect(textField.controller!.text, equals("$isSetTo"));
+}
