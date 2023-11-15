@@ -121,7 +121,40 @@ void main() {
       _assertSubPageDirectory(
           contains: ["Sub-Page One", "Sub-Page Two", "Sub-Page Three"]);
     });
+
+    testWidgets('Select sub-page from directory, onSelected is called',
+        (WidgetTester tester) async {
+      // Given a SubPageNavigationWidget has been rendered for a ParameterPage containing 3 sub-pages
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.subPageTitle = "Sub-Page One";
+      page.createSubPage();
+      page.subPageTitle = "Sub-Page Two";
+      page.createSubPage();
+      page.subPageTitle = "Sub-Page Three";
+
+      int? selectedIndex;
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubPageNavigationWidget(
+                  page: page,
+                  onSelected: (int index) => selectedIndex = index)));
+      await tester.pumpWidget(app);
+
+      // When I navigate to "Sub-Page Two" using the directory
+      await _navigateUsingDirectory(tester, toSubPageWithTitle: "Sub-Page Two");
+
+      // Then the onSelected callback is called and the selectedIndex is 2
+      expect(selectedIndex, 2);
+    });
   });
+}
+
+Future<void> _navigateUsingDirectory(WidgetTester tester,
+    {required String toSubPageWithTitle}) async {
+  await _openSubPageDirectory(tester);
+  await tester.tap(find.text(toSubPageWithTitle));
+  await tester.pumpAndSettle();
 }
 
 Future<void> _openSubPageDirectory(WidgetTester tester) async {
