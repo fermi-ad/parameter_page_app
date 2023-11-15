@@ -173,6 +173,32 @@ void main() {
       // Then the onSelected callback is called and the selectedIndex is 2
       expect(selectedIndex, 2);
     });
+
+    testWidgets('Enter invalid sub-page index, onSelected is not called',
+        (WidgetTester tester) async {
+      // Given a SubPageNavigationWidget has been rendered for a ParameterPage containing 3 sub-pages
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.subPageTitle = "Sub-Page One";
+      page.createSubPage();
+      page.subPageTitle = "Sub-Page Two";
+      page.createSubPage();
+      page.subPageTitle = "Sub-Page Three";
+
+      int? selectedIndex;
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubPageNavigationWidget(
+                  page: page,
+                  onSelected: (int index) => selectedIndex = index)));
+      await tester.pumpWidget(app);
+
+      // When I attempt to navigate directly to an invalid sub-page index
+      await _navigateDirectlyTo(tester, subPageIndex: 4);
+
+      // Then the onSelected callback is not invoked
+      expect(selectedIndex, null);
+    });
   });
 }
 

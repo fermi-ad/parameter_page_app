@@ -36,8 +36,7 @@ class SubPageNavigationWidget extends StatelessWidget {
             child: TextFormField(
               key: const Key('subpagenavigation-current-index-input'),
               controller: TextEditingController(text: "${page.subPageIndex}"),
-              onFieldSubmitted: (String input) =>
-                  onSelected?.call(int.parse(input)),
+              onFieldSubmitted: _handleDirectNavigation,
             )),
         const SizedBox(width: 5.0),
         const Text("/"),
@@ -73,6 +72,13 @@ class SubPageNavigationWidget extends StatelessWidget {
           child: Text(page.subPageDirectory[i])));
     }
     return ret;
+  }
+
+  void _handleDirectNavigation(String indexInput) {
+    final int? index = int.tryParse(indexInput);
+    if (index != null && index > 0 && index <= page.subPageDirectory.length) {
+      onSelected?.call(index);
+    }
   }
 }
 
