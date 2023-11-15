@@ -46,28 +46,28 @@ class SubPageNavigationWidget extends StatelessWidget {
           onPressed: () => onForward?.call(),
         )
       ]),
-      Row(children: [
-        PopupMenuButton<_SubPageDirectoryItem>(
-            icon: const Icon(Icons.more_vert),
-            onSelected: (_SubPageDirectoryItem selected) =>
-                onSelected?.call(selected.index),
-            itemBuilder: (BuildContext context) =>
-                <PopupMenuItem<_SubPageDirectoryItem>>[
-                  const PopupMenuItem<_SubPageDirectoryItem>(
-                      value: _SubPageDirectoryItem(
-                          index: 1, title: "Sub-Page One"),
-                      child: Text("Sub-Page One")),
-                  const PopupMenuItem<_SubPageDirectoryItem>(
-                      value: _SubPageDirectoryItem(
-                          index: 2, title: "Sub-Page Two"),
-                      child: Text("Sub-Page Two")),
-                  const PopupMenuItem<_SubPageDirectoryItem>(
-                      value: _SubPageDirectoryItem(
-                          index: 3, title: "Sub-Page Three"),
-                      child: Text("Sub-Page Three"))
-                ])
-      ])
+      Row(children: [_buildDirectoryMenuButton()])
     ]);
+  }
+
+  Widget _buildDirectoryMenuButton() {
+    return PopupMenuButton<_SubPageDirectoryItem>(
+        icon: const Icon(Icons.more_vert),
+        onSelected: (_SubPageDirectoryItem selected) =>
+            onSelected?.call(selected.index),
+        itemBuilder: _directoryItemBuilder);
+  }
+
+  List<PopupMenuItem<_SubPageDirectoryItem>> _directoryItemBuilder(
+      BuildContext context) {
+    List<PopupMenuItem<_SubPageDirectoryItem>> ret = [];
+    for (int i = 0; i != page.subPageDirectory.length; i++) {
+      ret.add(PopupMenuItem<_SubPageDirectoryItem>(
+          value: _SubPageDirectoryItem(
+              index: i + 1, title: page.subPageDirectory[i]),
+          child: Text(page.subPageDirectory[i])));
+    }
+    return ret;
   }
 }
 
