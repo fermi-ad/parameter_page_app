@@ -98,7 +98,35 @@ void main() {
       expect(onPreviousCalled, true,
           reason: "onPrevious callback should be called");
     });
+
+    testWidgets('Open sub-page directory, all sub-pages are presented',
+        (WidgetTester tester) async {
+      // Given a SubPageNavigationWidget has been rendered for a ParameterPage containing 3 sub-pages
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.subPageTitle = "Sub-Page One";
+      page.createSubPage();
+      page.subPageTitle = "Sub-Page Two";
+      page.createSubPage();
+      page.subPageTitle = "Sub-Page Three";
+
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SubPageNavigationWidget(page: page)));
+      await tester.pumpWidget(app);
+
+      // When I open the sub-page directory
+      await _openSubPageDirectory(tester);
+
+      // Then the sub-page directory is presented to the user
+      _assertSubPageDirectory(
+          contains: ["Sub-Page One", "Sub-Page Two", "Sub-Page Three"]);
+    });
   });
+}
+
+Future<void> _openSubPageDirectory(WidgetTester tester) async {
+  await tester.tap(find.byIcon(Icons.more_vert));
+  await tester.pumpAndSettle();
 }
 
 Future<void> _navigateBackwards(WidgetTester tester) async {
@@ -133,4 +161,14 @@ void _assertSubPageTitleIs(String title) {
           of: find.byKey(const Key("subpagenavigation-subpage-title")),
           matching: find.text(title)),
       findsOneWidget);
+}
+
+void _assertSubPageDirectory({required List<String> contains}) {
+  for (final title in contains) {
+    expect(
+        find.descendant(
+            of: find.byKey(const Key("subpagenavigation-directory-menu")),
+            matching: find.text(title)),
+        findsOneWidget);
+  }
 }
