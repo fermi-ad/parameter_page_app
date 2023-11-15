@@ -1,8 +1,7 @@
 import 'dart:async';
+import 'package:flutter_controls_core/flutter_controls_core.dart';
 
-import 'package:parameter_page/services/dpm/dpm_service.dart';
-
-class MockDpmService extends DpmService {
+class MockDpmService implements ACSysServiceAPI {
   bool getDeviceInfoShouldFail = false;
 
   final bool useEmptyStream;
