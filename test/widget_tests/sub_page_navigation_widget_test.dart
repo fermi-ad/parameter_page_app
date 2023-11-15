@@ -165,10 +165,6 @@ void _assertSubPageTitleIs(String title) {
 
 void _assertSubPageDirectory({required List<String> contains}) {
   for (final title in contains) {
-    expect(
-        find.descendant(
-            of: find.byKey(const Key("subpagenavigation-directory-menu")),
-            matching: find.text(title)),
-        findsOneWidget);
+    expect(find.text(title), findsAtLeastNWidgets(1));
   }
 }

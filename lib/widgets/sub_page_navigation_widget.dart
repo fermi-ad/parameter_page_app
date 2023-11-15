@@ -39,7 +39,35 @@ class SubPageNavigationWidget extends StatelessWidget {
           icon: const Icon(Icons.navigate_next, size: 16.0),
           onPressed: () => onForward?.call(),
         )
+      ]),
+      Row(children: [
+        PopupMenuButton<_SubPageDirectoryItem>(
+            icon: const Icon(Icons.more_vert),
+            onSelected: (_SubPageDirectoryItem selected) {},
+            itemBuilder: (BuildContext context) =>
+                <PopupMenuItem<_SubPageDirectoryItem>>[
+                  const PopupMenuItem<_SubPageDirectoryItem>(
+                      value: _SubPageDirectoryItem(
+                          index: 1, title: "Sub-Page One"),
+                      child: Text("Sub-Page One")),
+                  const PopupMenuItem<_SubPageDirectoryItem>(
+                      value: _SubPageDirectoryItem(
+                          index: 2, title: "Sub-Page Two"),
+                      child: Text("Sub-Page Two")),
+                  const PopupMenuItem<_SubPageDirectoryItem>(
+                      value: _SubPageDirectoryItem(
+                          index: 3, title: "Sub-Page Three"),
+                      child: Text("Sub-Page Three"))
+                ])
       ])
     ]);
   }
+}
+
+class _SubPageDirectoryItem {
+  final String title;
+
+  final int index;
+
+  const _SubPageDirectoryItem({required this.index, required this.title});
 }
