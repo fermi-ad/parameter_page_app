@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../services/dpm/dpm_service.dart';
+import 'package:flutter_controls_core/flutter_controls_core.dart';
 
 class ParameterAlarmDetailsWidget extends StatelessWidget {
   final DeviceInfoAnalogAlarm alarmBlock;

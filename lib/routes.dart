@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_controls_core/flutter_controls_core.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
 import 'package:parameter_page/services/user_device/user_device_service.dart';
 import 'package:parameter_page/widgets/landing_page_widget.dart';
 import 'package:parameter_page/widgets/open_page_widget.dart';
 import 'package:parameter_page/widgets/parameter_page_scaffold_widget.dart';
 
-import 'services/dpm/dpm_service.dart';
-
-List<GoRoute> configureRoutes(DpmService dpmService,
+List<GoRoute> configureRoutes(ACSysServiceAPI dpmService,
     ParameterPageService pageService, UserDeviceService deviceService) {
   return [
     GoRoute(
@@ -31,14 +30,14 @@ List<GoRoute> configureRoutes(DpmService dpmService,
         name: "NewParameterPage",
         path: "/page",
         builder: (context, state) => ParameterPageScaffoldWidget(
-            dpmService: dpmService,
+            acsysService: dpmService,
             pageService: pageService,
             deviceService: deviceService)),
     GoRoute(
         name: "DisplayParameterPage",
         path: "/page/:id",
         builder: (context, state) => ParameterPageScaffoldWidget(
-            dpmService: dpmService,
+            acsysService: dpmService,
             pageService: pageService,
             deviceService: deviceService,
             openPageId: state.pathParameters['id']))
