@@ -208,11 +208,12 @@ Future<void> _navigateForward(WidgetTester tester) async {
 }
 
 void _assertCurrentSubPageIs(int isSetTo) {
-  expect(
-      find.descendant(
-          of: find.byKey(const Key("subpagenavigation-current-subpage")),
-          matching: find.text("$isSetTo")),
-      findsOneWidget);
+  final textField = find
+      .byKey(const Key('subpagenavigation-current-index-input'))
+      .evaluate()
+      .first
+      .widget as TextFormField;
+  expect(textField.controller!.text, equals("$isSetTo"));
 }
 
 void _assertNumberOfSubPagesIs(int numberOfSubPagesIs) {
