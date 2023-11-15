@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_controls_core/flutter_controls_core.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
-import 'package:parameter_page/services/dpm/dpm_service.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
 import 'package:parameter_page/services/user_device/user_device_service.dart';
 import 'package:parameter_page/widgets/display_settings_button_widget.dart';
@@ -21,12 +21,12 @@ import 'page_widget.dart';
 class ParameterPageScaffoldWidget extends StatefulWidget {
   const ParameterPageScaffoldWidget(
       {super.key,
-      required this.dpmService,
+      required this.acsysService,
       required this.pageService,
       required this.deviceService,
       this.openPageId});
 
-  final DpmService dpmService;
+  final ACSysServiceAPI acsysService;
 
   final ParameterPageService pageService;
 
@@ -133,7 +133,7 @@ class _ParameterPageScaffoldWidgetState
 
   Widget _buildPageWidget() {
     return DataAcquisitionWidget(
-        service: widget.dpmService,
+        service: widget.acsysService,
         child: Center(
             child: PageWidget(
                 key: _pageKey,

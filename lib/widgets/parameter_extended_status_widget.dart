@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_controls_core/flutter_controls_core.dart';
 import 'package:parameter_page/widgets/util.dart';
-
-import '../services/dpm/dpm_service.dart';
 
 class ParameterExtendedStatusWidget extends StatelessWidget {
   final String drf;
