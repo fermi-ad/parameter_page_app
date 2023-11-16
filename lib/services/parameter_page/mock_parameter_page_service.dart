@@ -142,27 +142,33 @@ class MockParameterPageService extends ParameterPageService {
       "tabs": [
         {
           "title": "Tab 1",
-          "entries": [
+          "sub-pages": [
             {
-              "entryid": "1",
-              "pageid": "1",
-              "position": "0",
-              "text": "this is entry to east tower",
-              "type": "Comment"
-            },
-            {
-              "entryid": "2",
-              "pageid": "1",
-              "position": "1",
-              "text": "graph route",
-              "type": "Comment"
-            },
-            {
-              "entryid": "3",
-              "pageid": "1",
-              "position": "2",
-              "text": "graph route",
-              "type": "Comment"
+              "id": "1",
+              "title:": "",
+              "entries": [
+                {
+                  "entryid": "1",
+                  "pageid": "1",
+                  "position": "0",
+                  "text": "this is entry to east tower",
+                  "type": "Comment"
+                },
+                {
+                  "entryid": "2",
+                  "pageid": "1",
+                  "position": "1",
+                  "text": "graph route",
+                  "type": "Comment"
+                },
+                {
+                  "entryid": "3",
+                  "pageid": "1",
+                  "position": "2",
+                  "text": "graph route",
+                  "type": "Comment"
+                }
+              ]
             }
           ]
         }
@@ -172,46 +178,58 @@ class MockParameterPageService extends ParameterPageService {
       "tabs": [
         {
           "title": "Tab 1",
-          "entries": [
+          "sub-pages": [
             {
-              "entryid": "4",
-              "pageid": "3",
-              "position": "0",
-              "text": "this is comment #1",
-              "type": "Comment"
-            },
-            {
-              "entryid": "5",
-              "pageid": "3",
-              "position": "1",
-              "text": "I:BEAM",
-              "type": "Parameter"
-            },
-            {
-              "entryid": "6",
-              "pageid": "3",
-              "position": "2",
-              "text": "R:BEAM",
-              "type": "Parameter"
-            },
-            {
-              "entryid": "5",
-              "pageid": "3",
-              "position": "1",
-              "text": "this is comment #2",
-              "type": "Comment"
+              "id": "1",
+              "title": "",
+              "entries": [
+                {
+                  "entryid": "4",
+                  "pageid": "3",
+                  "position": "0",
+                  "text": "this is comment #1",
+                  "type": "Comment"
+                },
+                {
+                  "entryid": "5",
+                  "pageid": "3",
+                  "position": "1",
+                  "text": "I:BEAM",
+                  "type": "Parameter"
+                },
+                {
+                  "entryid": "6",
+                  "pageid": "3",
+                  "position": "2",
+                  "text": "R:BEAM",
+                  "type": "Parameter"
+                },
+                {
+                  "entryid": "5",
+                  "pageid": "3",
+                  "position": "1",
+                  "text": "this is comment #2",
+                  "type": "Comment"
+                }
+              ]
             }
           ]
         },
         {
           "title": "Tab 2",
-          "entries": [
+          "sub-pages": [
             {
-              "entryid": "16",
-              "pageid": "3",
-              "position": "0",
-              "text": "This is Tab 2",
-              "type": "Comment"
+              "id": "1",
+              "title": "",
+              "entries": [
+                {
+                  "entryid": "16",
+                  "pageid": "3",
+                  "position": "0",
+                  "text": "This is Tab 2",
+                  "type": "Comment"
+                }
+              ]
             }
           ]
         }
@@ -221,76 +239,82 @@ class MockParameterPageService extends ParameterPageService {
       "tabs": [
         {
           "title": "Tab 1",
-          "entries": [
+          "sub-pages": [
             {
-              "entryid": "6",
-              "pageid": "4",
-              "position": "0",
-              "text": "M:OUTTMP@e,02",
-              "type": "Parameter"
-            },
-            {
-              "entryid": "7",
-              "pageid": "4",
-              "position": "1",
-              "text": "This is our first comment!",
-              "type": "Comment"
-            },
-            {
-              "entryid": "8",
-              "pageid": "4",
-              "position": "2",
-              "text": "G:AMANDA",
-              "type": "Parameter"
-            },
-            {
-              "entryid": "9",
-              "pageid": "4",
-              "position": "3",
-              "text": "Z:NO_ALARMS",
-              "type": "Parameter"
-            },
-            {
-              "entryid": "10",
-              "pageid": "4",
-              "position": "4",
-              "text": "PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE",
-              "type": "Parameter"
-            },
-            {
-              "entryid": "11",
-              "pageid": "4",
-              "position": "5",
-              "text": "PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY",
-              "type": "Parameter"
-            },
-            {
-              "entryid": "12",
-              "pageid": "4",
-              "position": "6",
-              "text": "Z:BTE200_TEMP",
-              "type": "Parameter"
-            },
-            {
-              "entryid": "13",
-              "pageid": "4",
-              "position": "7",
-              "text": "Z:INC_SETTING",
-              "type": "Parameter"
-            },
-            {
-              "entryid": "14",
-              "pageid": "4",
-              "position": "8",
-              "text": "Z:NO_SET",
-              "type": "Parameter"
-            },
-            {
-              "entryid": "15",
-              "pageid": "4",
-              "position": "9",
-              "text": "Z:NO_READ",
-              "type": "Parameter"
+              "id": "1",
+              "title": "",
+              "entries": [
+                {
+                  "entryid": "6",
+                  "pageid": "4",
+                  "position": "0",
+                  "text": "M:OUTTMP@e,02",
+                  "type": "Parameter"
+                },
+                {
+                  "entryid": "7",
+                  "pageid": "4",
+                  "position": "1",
+                  "text": "This is our first comment!",
+                  "type": "Comment"
+                },
+                {
+                  "entryid": "8",
+                  "pageid": "4",
+                  "position": "2",
+                  "text": "G:AMANDA",
+                  "type": "Parameter"
+                },
+                {
+                  "entryid": "9",
+                  "pageid": "4",
+                  "position": "3",
+                  "text": "Z:NO_ALARMS",
+                  "type": "Parameter"
+                },
+                {
+                  "entryid": "10",
+                  "pageid": "4",
+                  "position": "4",
+                  "text": "PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE",
+                  "type": "Parameter"
+                },
+                {
+                  "entryid": "11",
+                  "pageid": "4",
+                  "position": "5",
+                  "text": "PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY",
+                  "type": "Parameter"
+                },
+                {
+                  "entryid": "12",
+                  "pageid": "4",
+                  "position": "6",
+                  "text": "Z:BTE200_TEMP",
+                  "type": "Parameter"
+                },
+                {
+                  "entryid": "13",
+                  "pageid": "4",
+                  "position": "7",
+                  "text": "Z:INC_SETTING",
+                  "type": "Parameter"
+                },
+                {
+                  "entryid": "14",
+                  "pageid": "4",
+                  "position": "8",
+                  "text": "Z:NO_SET",
+                  "type": "Parameter"
+                },
+                {
+                  "entryid": "15",
+                  "pageid": "4",
+                  "position": "9",
+                  "text": "Z:NO_READ",
+                  "type": "Parameter"
+                }
+              ]
             }
           ]
         }
@@ -300,23 +324,64 @@ class MockParameterPageService extends ParameterPageService {
       "tabs": [
         {
           "title": "Tab One",
-          "entries": [
+          "sub-pages": [
             {
-              "entryid": "17",
-              "pageid": "5",
-              "position": "1",
-              "text": "This is Tab One",
-              "type": "Comment"
+              "id": "1",
+              "title": "",
+              "entries": [
+                {
+                  "entryid": "17",
+                  "pageid": "5",
+                  "position": "1",
+                  "text": "This is Tab One",
+                  "type": "Comment"
+                }
+              ]
             }
           ]
         },
-        {"title": "Tab Two", "entries": []},
-        {"title": "Tab Three", "entries": []},
-        {"title": "Tab Four", "entries": []},
-        {"title": "Tab Five", "entries": []},
-        {"title": "Tab Six", "entries": []},
-        {"title": "Tab Seven", "entries": []},
-        {"title": "Tab Eight", "entries": []}
+        {
+          "title": "Tab Two",
+          "sub-pages": [
+            {"id": "1", "title": "", "entries": []}
+          ]
+        },
+        {
+          "title": "Tab Three",
+          "sub-pages": [
+            {"id": "1", "title": "", "entries": []}
+          ]
+        },
+        {
+          "title": "Tab Four",
+          "sub-pages": [
+            {"id": "1", "title": "", "entries": []}
+          ]
+        },
+        {
+          "title": "Tab Five",
+          "sub-pages": [
+            {"id": "1", "title": "", "entries": []}
+          ]
+        },
+        {
+          "title": "Tab Six",
+          "sub-pages": [
+            {"id": "1", "title": "", "entries": []}
+          ]
+        },
+        {
+          "title": "Tab Seven",
+          "sub-pages": [
+            {"id": "1", "title": "", "entries": []}
+          ]
+        },
+        {
+          "title": "Tab Eight",
+          "sub-pages": [
+            {"id": "1", "title": "", "entries": []}
+          ]
+        },
       ]
     }
   };
