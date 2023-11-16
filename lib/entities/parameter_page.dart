@@ -221,6 +221,10 @@ class ParameterPage {
     _currentTabIndex = _findIndex(forTab: to);
   }
 
+  int subPageCount({required String forTab}) {
+    return _pageData[_findIndex(forTab: forTab)].subPages.length;
+  }
+
   void incrementSubPage() {
     if (subPageIndex != numberOfSubPages) {
       switchSubPage(to: subPageIndex + 1);

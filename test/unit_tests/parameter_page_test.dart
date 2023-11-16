@@ -1175,5 +1175,33 @@ void main() {
       // Then the isDirty flag is set to true
       expect(page.isDirty, true);
     });
+
+    test(
+        'subPageCount(forTab:), returns the number of sub-pages belonging to forTab',
+        () {
+      // Given a new ParameterPage with edit mode enabled
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // .. and three tabs
+      page.createTab();
+      page.createTab();
+
+      // When I create a varying number of sub pages for each tab
+      page.switchTab(to: "Tab 2");
+      page.createSubPage();
+      page.switchTab(to: "Tab 3");
+      page.createSubPage();
+      page.createSubPage();
+
+      // Then subPageCount(forTab: "Tab 1") returns 1
+      expect(page.subPageCount(forTab: "Tab 1"), 1);
+
+      // ... and 2 for Tab 2
+      expect(page.subPageCount(forTab: "Tab 2"), 2);
+
+      // ... and 3 for Tab 3
+      expect(page.subPageCount(forTab: "Tab 3"), 3);
+    });
   });
 }
