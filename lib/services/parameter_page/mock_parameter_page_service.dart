@@ -72,23 +72,30 @@ class MockParameterPageService extends ParameterPageService {
 
     _testPageEntries[id] = {"tabs": []};
     for (final tabTitle in page.tabTitles) {
-      final entries = page.entriesAsListFrom(tab: tabTitle, subPage: 1);
+      List<Map<String, dynamic>> newSubPages = [];
 
-      List<Map<String, String>> newEntries = [];
-      int position = 0;
-      for (final PageEntry entry in entries) {
-        newEntries.add({
-          "pageid": id,
-          "entryid": DateTime.now().microsecondsSinceEpoch.toString(),
-          "position": "$position",
-          "text": entry.entryText(),
-          "type": entry is CommentEntry ? "Comment" : "Parameter"
-        });
-        position += 1;
+      for (int i = 0; i != page.subPageCount(forTab: tabTitle); i++) {
+        final entries = page.entriesAsListFrom(tab: tabTitle, subPage: i + 1);
+
+        List<Map<String, String>> newEntries = [];
+        int position = 0;
+        for (final PageEntry entry in entries) {
+          newEntries.add({
+            "pageid": id,
+            "entryid": DateTime.now().microsecondsSinceEpoch.toString(),
+            "position": "$position",
+            "text": entry.entryText(),
+            "type": entry is CommentEntry ? "Comment" : "Parameter"
+          });
+          position += 1;
+        }
+
+        newSubPages.add(
+            {"id": "$i", "title": "Sub-page ${i + 1}", "entries": newEntries});
       }
 
       _testPageEntries[id]!["tabs"]!
-          .add({"title": tabTitle, "entries": newEntries});
+          .add({"title": tabTitle, "sub-pages": newSubPages});
     }
 
     Timer(const Duration(seconds: 1), () => onSuccess.call());
