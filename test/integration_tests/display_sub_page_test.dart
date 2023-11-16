@@ -27,5 +27,27 @@ void main() {
       // ... and the sub-page title is "Sub-Page One"
       assertSubPageTitleIs("Sub-Page One");
     });
+    testWidgets(
+        'Open Test Page 2 and switch to Tab 2, sub-page navigation should show we are on sub-page 1 of 1',
+        (WidgetTester tester) async {
+      // Given the parameter page is started
+      await startParameterPageApp(tester);
+
+      // When I open Test Page 2
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+
+      // ... and then switch to Tab 2
+      await switchTab(tester, to: "Tab 2");
+
+      // Then there is only 1 sub-page
+      assertNumberOfSubPagesIs(1);
+
+      // ... and the current sub-page is 1
+      assertCurrentSubPageIs(1);
+
+      // ... and there is no sub-page title
+      assertSubPageTitleIs("");
+    });
   });
 }
