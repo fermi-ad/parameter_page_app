@@ -9,10 +9,10 @@ class EntryQueryWrapper extends StatefulWidget {
   final Function fetchData;
 
   const EntryQueryWrapper({
-    Key? key,
+    super.key,
     required this.entries,
     required this.fetchData,
-  }) : super(key: key);
+  });
 
   @override
   State<EntryQueryWrapper> createState() => _EntryQueryWrapperState();
