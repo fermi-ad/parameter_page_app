@@ -292,21 +292,21 @@ class ParameterPage {
   List<_Tab> _buildEntriesMapFromQueryResult(Map<String, dynamic> queryResult) {
     List<_Tab> ret = [];
     for (final tabData in queryResult["tabs"]) {
+      List<_SubPage> subPages = [];
+
       for (final subPageData in tabData["sub-pages"]) {
         final entries = subPageData["entries"];
         if (entries.length == 0) {
-          ret.add(_Tab(
-              title: tabData["title"],
-              subPages: [_SubPage(title: "", entries: [])]));
+          subPages.add(_SubPage(title: "", entries: []));
         } else {
-          ret.add(_Tab(title: tabData["title"], subPages: [
-            _SubPage(
-                title: subPageData["title"],
-                entries:
-                    _buildEntriesListFromQueryResult(subPageData["entries"]))
-          ]));
+          subPages.add(_SubPage(
+              title: subPageData["title"],
+              entries:
+                  _buildEntriesListFromQueryResult(subPageData["entries"])));
         }
       }
+
+      ret.add(_Tab(title: tabData["title"], subPages: subPages));
     }
     return ret;
   }

@@ -7,7 +7,7 @@ import 'helpers/assertions.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('Display Parameter Page', () {
+  group('Display Sub-Page', () {
     testWidgets(
         'Open Test Page 2, sub-page navigation should show we are on sub-page 1 of 2',
         (WidgetTester tester) async {

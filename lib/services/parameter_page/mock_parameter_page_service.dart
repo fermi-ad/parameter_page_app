@@ -188,7 +188,7 @@ class MockParameterPageService extends ParameterPageService {
           "sub-pages": [
             {
               "id": "1",
-              "title": "",
+              "title": "Sub-Page One",
               "entries": [
                 {
                   "entryid": "4",
@@ -216,6 +216,19 @@ class MockParameterPageService extends ParameterPageService {
                   "pageid": "3",
                   "position": "1",
                   "text": "this is comment #2",
+                  "type": "Comment"
+                }
+              ]
+            },
+            {
+              "id": "2",
+              "title": "Sub-Page Two",
+              "entries": [
+                {
+                  "entryid": "7",
+                  "pageid": "3",
+                  "position": "1",
+                  "text": "this is comment #3",
                   "type": "Comment"
                 }
               ]
