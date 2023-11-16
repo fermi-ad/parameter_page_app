@@ -112,13 +112,14 @@ class ParameterPage {
     _pageData[_currentTabIndex].subPages[subPageIndex - 1].entries.add(entry);
   }
 
-  List<PageEntry> entriesAsList({String? forTab}) {
-    if (forTab != null) {
-      final tabIndex = _findIndex(forTab: forTab);
-      return _pageData[tabIndex].subPages[subPageIndex - 1].entries;
-    } else {
-      return _pageData[currentTabIndex].subPages[subPageIndex - 1].entries;
-    }
+  List<PageEntry> entriesAsList() {
+    return _pageData[currentTabIndex].subPages[subPageIndex - 1].entries;
+  }
+
+  List<PageEntry> entriesAsListFrom(
+      {required String tab, required int subPage}) {
+    final tabIndex = _findIndex(forTab: tab);
+    return _pageData[tabIndex].subPages[subPage - 1].entries;
   }
 
   int numberOfEntries({String? forTab}) {
@@ -221,6 +222,10 @@ class ParameterPage {
     _currentTabIndex = _findIndex(forTab: to);
   }
 
+  int subPageCount({required String forTab}) {
+    return _pageData[_findIndex(forTab: forTab)].subPages.length;
+  }
+
   void incrementSubPage() {
     if (subPageIndex != numberOfSubPages) {
       switchSubPage(to: subPageIndex + 1);
@@ -287,18 +292,21 @@ class ParameterPage {
   List<_Tab> _buildEntriesMapFromQueryResult(Map<String, dynamic> queryResult) {
     List<_Tab> ret = [];
     for (final tabData in queryResult["tabs"]) {
-      final entries = tabData["entries"];
-      if (entries.length == 0) {
-        ret.add(_Tab(
-            title: tabData["title"],
-            subPages: [_SubPage(title: "", entries: [])]));
-      } else {
-        ret.add(_Tab(title: tabData["title"], subPages: [
-          _SubPage(
-              title: "",
-              entries: _buildEntriesListFromQueryResult(tabData["entries"]))
-        ]));
+      List<_SubPage> subPages = [];
+
+      for (final subPageData in tabData["sub-pages"]) {
+        final entries = subPageData["entries"];
+        if (entries.length == 0) {
+          subPages.add(_SubPage(title: "", entries: []));
+        } else {
+          subPages.add(_SubPage(
+              title: subPageData["title"],
+              entries:
+                  _buildEntriesListFromQueryResult(subPageData["entries"])));
+        }
       }
+
+      ret.add(_Tab(title: tabData["title"], subPages: subPages));
     }
     return ret;
   }

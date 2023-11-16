@@ -84,43 +84,60 @@ void main() {
             "tabs": [
               {
                 "title": "Tab 1",
-                "entries": [
+                "sub-pages": [
                   {
-                    "entryid": "4",
-                    "pageid": "3",
-                    "position": "0",
-                    "text": "this is comment #1",
-                    "type": "Comment"
-                  },
-                  {
-                    "entryid": "5",
-                    "pageid": "3",
-                    "position": "1",
-                    "text": "this is comment #2",
-                    "type": "Comment"
-                  },
-                  {
-                    "entryid": "6",
-                    "pageid": "3",
-                    "position": "2",
-                    "text": "I:BEAM",
-                    "type": "Parameter"
+                    "id": "1",
+                    "title": "Sub-Page One",
+                    "entries": [
+                      {
+                        "entryid": "4",
+                        "pageid": "3",
+                        "position": "0",
+                        "text": "this is comment #1",
+                        "type": "Comment"
+                      },
+                      {
+                        "entryid": "5",
+                        "pageid": "3",
+                        "position": "1",
+                        "text": "this is comment #2",
+                        "type": "Comment"
+                      },
+                      {
+                        "entryid": "6",
+                        "pageid": "3",
+                        "position": "2",
+                        "text": "I:BEAM",
+                        "type": "Parameter"
+                      }
+                    ]
                   }
                 ]
               },
               {
                 "title": "Tab 2",
-                "entries": [
+                "sub-pages": [
                   {
-                    "entryid": "7",
-                    "pageid": "3",
-                    "position": "0",
-                    "text": "R:BEAM",
-                    "type": "Parameter"
+                    "id": "1",
+                    "title": "Sub-Page One",
+                    "entries": [
+                      {
+                        "entryid": "7",
+                        "pageid": "3",
+                        "position": "0",
+                        "text": "R:BEAM",
+                        "type": "Parameter"
+                      }
+                    ]
                   }
                 ]
               },
-              {"title": "Tab 3", "entries": []}
+              {
+                "title": "Tab 3",
+                "sub-pages": [
+                  {"id": "1", "title": "", "entries": []}
+                ]
+              }
             ]
           });
 
@@ -153,13 +170,19 @@ void main() {
         "tabs": [
           {
             "title": "AAA",
-            "entries": [
+            "sub-pages": [
               {
-                "entryid": "4",
-                "pageid": "3",
-                "position": "0",
-                "text": "this is comment #1",
-                "type": "Comment"
+                "id": "1",
+                "title": "",
+                "entries": [
+                  {
+                    "entryid": "4",
+                    "pageid": "3",
+                    "position": "0",
+                    "text": "this is comment #1",
+                    "type": "Comment"
+                  }
+                ]
               }
             ]
           }
@@ -581,34 +604,48 @@ void main() {
       expect(() => page.switchTab(to: "bad tab"), throwsException);
     });
 
-    test("entriesAsList(forTab:), throws for invalid tab", () {
+    test("entriesAsList(forTab:, subPage:), throws for invalid tab", () {
       // Given a new ParameterPage
       ParameterPage page = ParameterPage();
 
       // When I entriesAsList(forTab:) passing an invalid tab title
       // Then an exception is thrown
-      expect(() => page.entriesAsList(forTab: "Invalid tab"), throwsException);
+      expect(() => page.entriesAsListFrom(tab: "Invalid tab", subPage: 1),
+          throwsException);
     });
 
-    test("entriesAsList(forTab:), returns entries for given tab", () {
-      // Given a ParameterPage populated with entries on two tabs
+    test(
+        "entriesAsListFrom(tab:, subPage:), returns entries for given tab & sub-page",
+        () {
+      // Given a ParameterPage populated with entries on two tabs, each with two sub-pages
       ParameterPage page = ParameterPage();
       page.enableEditing();
-      page.add(CommentEntry("tab 1 comment"));
+      page.add(CommentEntry("tab 1 sub 1 comment"));
+      page.createSubPage();
+      page.add(CommentEntry("tab 1 sub 2 comment"));
       page.createTab(title: "Tab Two");
-      page.switchTab(to: "Tab Two");
-      page.add(CommentEntry("tab 2 comment"));
+      page.add(CommentEntry("tab 2 sub 1 comment"));
+      page.createSubPage();
+      page.add(CommentEntry("tab 2 sub 2 comment"));
       page.commit();
 
       // When I entriesAsList(forTab:)
-      final tab1Entries = page.entriesAsList(forTab: "Tab 1");
-      final tab2Entries = page.entriesAsList(forTab: "Tab Two");
+      final tab1Sub1Entries = page.entriesAsListFrom(tab: "Tab 1", subPage: 1);
+      final tab1Sub2Entries = page.entriesAsListFrom(tab: "Tab 1", subPage: 2);
+      final tab2Sub1Entries =
+          page.entriesAsListFrom(tab: "Tab Two", subPage: 1);
+      final tab2Sub2Entries =
+          page.entriesAsListFrom(tab: "Tab Two", subPage: 2);
 
       // Then I get the entries for the appropriate tab...
-      expect(tab1Entries.length, 1);
-      expect(tab1Entries[0].entryText(), "tab 1 comment");
-      expect(tab2Entries.length, 1);
-      expect(tab2Entries[0].entryText(), "tab 2 comment");
+      expect(tab1Sub1Entries.length, 1);
+      expect(tab1Sub1Entries[0].entryText(), "tab 1 sub 1 comment");
+      expect(tab1Sub2Entries.length, 1);
+      expect(tab1Sub2Entries[0].entryText(), "tab 1 sub 2 comment");
+      expect(tab2Sub1Entries.length, 1);
+      expect(tab2Sub1Entries[0].entryText(), "tab 2 sub 1 comment");
+      expect(tab2Sub2Entries.length, 1);
+      expect(tab2Sub2Entries[0].entryText(), "tab 2 sub 2 comment");
     });
 
     test("createTab() three times, creates new tabs titled Tab N", () {
@@ -1151,6 +1188,34 @@ void main() {
 
       // Then the isDirty flag is set to true
       expect(page.isDirty, true);
+    });
+
+    test(
+        'subPageCount(forTab:), returns the number of sub-pages belonging to forTab',
+        () {
+      // Given a new ParameterPage with edit mode enabled
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // .. and three tabs
+      page.createTab();
+      page.createTab();
+
+      // When I create a varying number of sub pages for each tab
+      page.switchTab(to: "Tab 2");
+      page.createSubPage();
+      page.switchTab(to: "Tab 3");
+      page.createSubPage();
+      page.createSubPage();
+
+      // Then subPageCount(forTab: "Tab 1") returns 1
+      expect(page.subPageCount(forTab: "Tab 1"), 1);
+
+      // ... and 2 for Tab 2
+      expect(page.subPageCount(forTab: "Tab 2"), 2);
+
+      // ... and 3 for Tab 3
+      expect(page.subPageCount(forTab: "Tab 3"), 3);
     });
   });
 }
