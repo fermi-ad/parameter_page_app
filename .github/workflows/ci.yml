@@ -58,6 +58,7 @@ jobs:
       - name: Starting chromedriver and executing integration test
         run: |
           chromedriver --port=4444 &
+          flutter pub get
           flutter drive --chrome-binary=${{ steps.setup-chrome.outputs.chrome-path }} --driver=test_driver/integration_test.dart --target=test/integration_tests/${{ matrix.test }}.dart -d web-server --dart-define=USE_MOCK_SERVICES=true
 
   Linter-UnitTest-SmokeTest-Build:
