@@ -9,12 +9,11 @@ class OpenPagesListViewWidget extends StatefulWidget {
   final Function(String pageId, String pageTitle) onSelected;
 
   const OpenPagesListViewWidget(
-      {Key? key,
+      {super.key,
       required this.titles,
       required this.fetchData,
       required this.service,
-      required this.onSelected})
-      : super(key: key);
+      required this.onSelected});
 
   @override
   State<OpenPagesListViewWidget> createState() =>
