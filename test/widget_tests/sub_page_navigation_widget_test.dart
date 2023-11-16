@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/widgets/sub_page_navigation_widget.dart';
 
+import '../integration_tests/helpers/assertions.dart';
+
 void main() {
   group("SubPageNavigationWidget", () {
     testWidgets('Current sub-page indicator, shows the current sub-page',
@@ -22,7 +24,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // Then the current sub-page is 2
-      _assertCurrentSubPageIs(2);
+      assertCurrentSubPageIs(2);
     });
 
     testWidgets(
@@ -40,7 +42,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // Then the number of sub-pages is 3
-      _assertNumberOfSubPagesIs(3);
+      assertNumberOfSubPagesIs(3);
     });
 
     testWidgets('Title indicator, displays the title of the current sub-page',
@@ -58,7 +60,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // Then the title display is "Sub-page 2 Title"
-      _assertSubPageTitleIs("Sub-page 2 Title");
+      assertSubPageTitleIs("Sub-page 2 Title");
     });
 
     testWidgets('Increment tapped, onIncrement is called',
@@ -168,7 +170,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I navigate directly to sub-page 2
-      await _navigateDirectlyTo(tester, subPageIndex: 2);
+      await _navigateDirectlyTo(tester, subPageIndex: '2');
 
       // Then the onSelected callback is called and the selectedIndex is 2
       expect(selectedIndex, 2);
@@ -194,7 +196,33 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I attempt to navigate directly to an invalid sub-page index
-      await _navigateDirectlyTo(tester, subPageIndex: 4);
+      await _navigateDirectlyTo(tester, subPageIndex: '4');
+
+      // Then the onSelected callback is not invoked
+      expect(selectedIndex, null);
+    });
+
+    testWidgets('Enter garbage sub-page index, onSelected is not called',
+        (WidgetTester tester) async {
+      // Given a SubPageNavigationWidget has been rendered for a ParameterPage containing 3 sub-pages
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.subPageTitle = "Sub-Page One";
+      page.createSubPage();
+      page.subPageTitle = "Sub-Page Two";
+      page.createSubPage();
+      page.subPageTitle = "Sub-Page Three";
+
+      int? selectedIndex;
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubPageNavigationWidget(
+                  page: page,
+                  onSelected: (int index) => selectedIndex = index)));
+      await tester.pumpWidget(app);
+
+      // When I attempt to navigate directly to an invalid sub-page index
+      await _navigateDirectlyTo(tester, subPageIndex: "four");
 
       // Then the onSelected callback is not invoked
       expect(selectedIndex, null);
@@ -203,10 +231,10 @@ void main() {
 }
 
 Future<void> _navigateDirectlyTo(WidgetTester tester,
-    {required int subPageIndex}) async {
+    {required String subPageIndex}) async {
   await tester.enterText(
       find.byKey(const Key('subpagenavigation-current-index-input')),
-      '$subPageIndex');
+      subPageIndex);
   await tester.testTextInput.receiveAction(TextInputAction.done);
   await tester.pumpAndSettle();
 }
@@ -231,31 +259,6 @@ Future<void> _navigateBackwards(WidgetTester tester) async {
 Future<void> _navigateForward(WidgetTester tester) async {
   await tester.tap(find.byIcon(Icons.navigate_next));
   await tester.pumpAndSettle();
-}
-
-void _assertCurrentSubPageIs(int isSetTo) {
-  final textField = find
-      .byKey(const Key('subpagenavigation-current-index-input'))
-      .evaluate()
-      .first
-      .widget as TextFormField;
-  expect(textField.controller!.text, equals("$isSetTo"));
-}
-
-void _assertNumberOfSubPagesIs(int numberOfSubPagesIs) {
-  expect(
-      find.descendant(
-          of: find.byKey(const Key("subpagenavigation-total-subpages")),
-          matching: find.text("$numberOfSubPagesIs")),
-      findsOneWidget);
-}
-
-void _assertSubPageTitleIs(String title) {
-  expect(
-      find.descendant(
-          of: find.byKey(const Key("subpagenavigation-subpage-title")),
-          matching: find.text(title)),
-      findsOneWidget);
 }
 
 void _assertSubPageDirectory({required List<String> contains}) {

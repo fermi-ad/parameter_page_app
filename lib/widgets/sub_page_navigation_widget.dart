@@ -45,12 +45,13 @@ class SubPageNavigationWidget extends StatelessWidget {
             key: const Key("subpagenavigation-total-subpages"),
             child: Text("${page.numberOfSubPages}")),
         const SizedBox(width: 5.0),
+        _buildDirectoryMenuButton(),
+        const SizedBox(width: 5.0),
         IconButton(
           icon: const Icon(Icons.navigate_next, size: 16.0),
           onPressed: () => onForward?.call(),
         )
       ]),
-      Row(children: [_buildDirectoryMenuButton()])
     ]);
   }
 
