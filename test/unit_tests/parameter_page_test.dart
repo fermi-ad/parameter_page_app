@@ -615,26 +615,37 @@ void main() {
     });
 
     test(
-        "entriesAsList(forTab:, subPage:), returns entries for given tab & sub-page",
+        "entriesAsListFrom(tab:, subPage:), returns entries for given tab & sub-page",
         () {
-      // Given a ParameterPage populated with entries on two tabs
+      // Given a ParameterPage populated with entries on two tabs, each with two sub-pages
       ParameterPage page = ParameterPage();
       page.enableEditing();
-      page.add(CommentEntry("tab 1 comment"));
+      page.add(CommentEntry("tab 1 sub 1 comment"));
+      page.createSubPage();
+      page.add(CommentEntry("tab 1 sub 2 comment"));
       page.createTab(title: "Tab Two");
-      page.switchTab(to: "Tab Two");
-      page.add(CommentEntry("tab 2 comment"));
+      page.add(CommentEntry("tab 2 sub 1 comment"));
+      page.createSubPage();
+      page.add(CommentEntry("tab 2 sub 2 comment"));
       page.commit();
 
       // When I entriesAsList(forTab:)
-      final tab1Entries = page.entriesAsListFrom(tab: "Tab 1", subPage: 1);
-      final tab2Entries = page.entriesAsListFrom(tab: "Tab Two", subPage: 1);
+      final tab1Sub1Entries = page.entriesAsListFrom(tab: "Tab 1", subPage: 1);
+      final tab1Sub2Entries = page.entriesAsListFrom(tab: "Tab 1", subPage: 2);
+      final tab2Sub1Entries =
+          page.entriesAsListFrom(tab: "Tab Two", subPage: 1);
+      final tab2Sub2Entries =
+          page.entriesAsListFrom(tab: "Tab Two", subPage: 2);
 
       // Then I get the entries for the appropriate tab...
-      expect(tab1Entries.length, 1);
-      expect(tab1Entries[0].entryText(), "tab 1 comment");
-      expect(tab2Entries.length, 1);
-      expect(tab2Entries[0].entryText(), "tab 2 comment");
+      expect(tab1Sub1Entries.length, 1);
+      expect(tab1Sub1Entries[0].entryText(), "tab 1 sub 1 comment");
+      expect(tab1Sub2Entries.length, 1);
+      expect(tab1Sub2Entries[0].entryText(), "tab 1 sub 2 comment");
+      expect(tab2Sub1Entries.length, 1);
+      expect(tab2Sub1Entries[0].entryText(), "tab 2 sub 1 comment");
+      expect(tab2Sub2Entries.length, 1);
+      expect(tab2Sub2Entries[0].entryText(), "tab 2 sub 2 comment");
     });
 
     test("createTab() three times, creates new tabs titled Tab N", () {
