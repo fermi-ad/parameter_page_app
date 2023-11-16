@@ -72,7 +72,7 @@ class MockParameterPageService extends ParameterPageService {
 
     _testPageEntries[id] = {"tabs": []};
     for (final tabTitle in page.tabTitles) {
-      final entries = page.entriesAsList(forTab: tabTitle);
+      final entries = page.entriesAsListFrom(tab: tabTitle);
 
       List<Map<String, String>> newEntries = [];
       int position = 0;

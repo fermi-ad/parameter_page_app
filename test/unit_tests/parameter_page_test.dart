@@ -610,7 +610,7 @@ void main() {
 
       // When I entriesAsList(forTab:) passing an invalid tab title
       // Then an exception is thrown
-      expect(() => page.entriesAsList(forTab: "Invalid tab"), throwsException);
+      expect(() => page.entriesAsListFrom(tab: "Invalid tab"), throwsException);
     });
 
     test("entriesAsList(forTab:), returns entries for given tab", () {
@@ -624,8 +624,8 @@ void main() {
       page.commit();
 
       // When I entriesAsList(forTab:)
-      final tab1Entries = page.entriesAsList(forTab: "Tab 1");
-      final tab2Entries = page.entriesAsList(forTab: "Tab Two");
+      final tab1Entries = page.entriesAsListFrom(tab: "Tab 1");
+      final tab2Entries = page.entriesAsListFrom(tab: "Tab Two");
 
       // Then I get the entries for the appropriate tab...
       expect(tab1Entries.length, 1);

@@ -112,13 +112,13 @@ class ParameterPage {
     _pageData[_currentTabIndex].subPages[subPageIndex - 1].entries.add(entry);
   }
 
-  List<PageEntry> entriesAsList({String? forTab}) {
-    if (forTab != null) {
-      final tabIndex = _findIndex(forTab: forTab);
-      return _pageData[tabIndex].subPages[subPageIndex - 1].entries;
-    } else {
-      return _pageData[currentTabIndex].subPages[subPageIndex - 1].entries;
-    }
+  List<PageEntry> entriesAsList() {
+    return _pageData[currentTabIndex].subPages[subPageIndex - 1].entries;
+  }
+
+  List<PageEntry> entriesAsListFrom({required String tab}) {
+    final tabIndex = _findIndex(forTab: tab);
+    return _pageData[tabIndex].subPages[subPageIndex - 1].entries;
   }
 
   int numberOfEntries({String? forTab}) {
