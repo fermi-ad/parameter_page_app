@@ -81,6 +81,7 @@ jobs:
 
       - name: Running unit tests
         run: |
+          flutter pub get
           flutter test test/unit_tests
 
       - name: Running widget tests
