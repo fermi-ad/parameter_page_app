@@ -39,12 +39,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Cache Flutter dependencies
-        uses: actions/cache@v3
-        with:
-          path: /opt/hostedtoolcache/flutter
-          key: flutter-install-cache
-
       - uses: subosito/flutter-action@v2
         with:
           channel: "stable"
@@ -64,6 +58,7 @@ jobs:
       - name: Starting chromedriver and executing integration test
         run: |
           chromedriver --port=4444 &
+          flutter pub get
           flutter drive --chrome-binary=${{ steps.setup-chrome.outputs.chrome-path }} --driver=test_driver/integration_test.dart --target=test/integration_tests/${{ matrix.test }}.dart -d web-server --dart-define=USE_MOCK_SERVICES=true
 
   Linter-UnitTest-SmokeTest-Build:
@@ -72,12 +67,6 @@ jobs:
     steps:
       - name: Checking out source code
         uses: actions/checkout@v3
-
-      - name: Cache Flutter dependencies
-        uses: actions/cache@v3
-        with:
-          path: /opt/hostedtoolcache/flutter
-          key: flutter-install-cache
 
       - uses: subosito/flutter-action@v2
         with:

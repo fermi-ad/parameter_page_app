@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
 
 class OpenPagesListViewWidget extends StatefulWidget {
@@ -21,8 +20,6 @@ class OpenPagesListViewWidget extends StatefulWidget {
 }
 
 class _OpenPagesListViewWidgetState extends State<OpenPagesListViewWidget> {
-  final Logger logger = Logger();
-
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
