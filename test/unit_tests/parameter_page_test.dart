@@ -604,16 +604,19 @@ void main() {
       expect(() => page.switchTab(to: "bad tab"), throwsException);
     });
 
-    test("entriesAsList(forTab:), throws for invalid tab", () {
+    test("entriesAsList(forTab:, subPage:), throws for invalid tab", () {
       // Given a new ParameterPage
       ParameterPage page = ParameterPage();
 
       // When I entriesAsList(forTab:) passing an invalid tab title
       // Then an exception is thrown
-      expect(() => page.entriesAsListFrom(tab: "Invalid tab"), throwsException);
+      expect(() => page.entriesAsListFrom(tab: "Invalid tab", subPage: 1),
+          throwsException);
     });
 
-    test("entriesAsList(forTab:), returns entries for given tab", () {
+    test(
+        "entriesAsList(forTab:, subPage:), returns entries for given tab & sub-page",
+        () {
       // Given a ParameterPage populated with entries on two tabs
       ParameterPage page = ParameterPage();
       page.enableEditing();
@@ -624,8 +627,8 @@ void main() {
       page.commit();
 
       // When I entriesAsList(forTab:)
-      final tab1Entries = page.entriesAsListFrom(tab: "Tab 1");
-      final tab2Entries = page.entriesAsListFrom(tab: "Tab Two");
+      final tab1Entries = page.entriesAsListFrom(tab: "Tab 1", subPage: 1);
+      final tab2Entries = page.entriesAsListFrom(tab: "Tab Two", subPage: 1);
 
       // Then I get the entries for the appropriate tab...
       expect(tab1Entries.length, 1);
