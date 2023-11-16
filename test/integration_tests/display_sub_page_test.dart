@@ -26,7 +26,8 @@ void main() {
 
       // ... and the sub-page title is "Sub-Page One"
       assertSubPageTitleIs("Sub-Page One");
-    });
+    }, semanticsEnabled: false);
+
     testWidgets(
         'Open Test Page 2 and switch to Tab 2, sub-page navigation should show we are on sub-page 1 of 1',
         (WidgetTester tester) async {
@@ -48,6 +49,6 @@ void main() {
 
       // ... and there is no sub-page title
       assertSubPageTitleIs("");
-    });
+    }, semanticsEnabled: false);
   });
 }
