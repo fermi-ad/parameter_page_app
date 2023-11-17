@@ -87,7 +87,12 @@ class _ParameterPageScaffoldWidgetState
     return _page == null
         ? const Text("Nothing to see")
         : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            SizedBox(height: 128, child: SubPageNavigationWidget(page: _page!))
+            SizedBox(
+                height: 128,
+                child: SubPageNavigationWidget(
+                  page: _page!,
+                  onForward: () => setState(() => _page!.incrementSubPage()),
+                ))
           ]);
   }
 

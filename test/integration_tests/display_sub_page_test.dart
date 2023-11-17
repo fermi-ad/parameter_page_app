@@ -70,6 +70,13 @@ void main() {
 
       // ... and the sub-page title is "Sub-Page Two"
       assertSubPageTitleIs("Sub-Page Two");
+
+      // ... and the contents of sub-page 2 are displayed
+      assertIsOnPage(comment: "this is comment #3");
+
+      // ... and not the contents of sub-page 1
+      assertIsNotOnPage(comment: "this is comment #1");
+      assertIsNotOnPage(comment: "this is comment #2");
     }, semanticsEnabled: false);
   });
 }
