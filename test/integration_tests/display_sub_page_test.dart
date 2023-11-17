@@ -47,8 +47,23 @@ void main() {
       // ... and the current sub-page is 1
       assertCurrentSubPageIs(1);
 
-      // ... and there is no sub-page title
+      // ... and the sub-page title is Sub-Page Two
       assertSubPageTitleIs("");
+    }, semanticsEnabled: false);
+
+    testWidgets(
+        'Open Test Page 2 and advance (forward) the sub-page, sub-page navigation should update accordingly',
+        (WidgetTester tester) async {
+      // When I navigate to sub-page 2
+
+      // Then there are still 2 sub-pages
+      assertNumberOfSubPagesIs(2);
+
+      // ... and the current sub-page is 2
+      assertCurrentSubPageIs(2);
+
+      // ... and the sub-page title is "Sub-Page Two"
+      assertSubPageTitleIs("Sub-Page Two");
     }, semanticsEnabled: false);
   });
 }

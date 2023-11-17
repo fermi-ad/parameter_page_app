@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/widgets/sub_page_navigation_widget.dart';
 
+import '../integration_tests/helpers/actions.dart';
 import '../integration_tests/helpers/assertions.dart';
 
 void main() {
@@ -75,7 +76,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I tap the 'increment page' button
-      await _navigateForward(tester);
+      await navigateSubPageForward(tester);
 
       // Then the onIncrement callback has been invoked
       expect(onIncrementCalled, true,
@@ -94,7 +95,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I tap the 'increment page' button
-      await _navigateBackwards(tester);
+      await navigateSubPageBackwards(tester);
 
       // Then the onPrevious callback has been invoked
       expect(onPreviousCalled, true,
@@ -248,16 +249,6 @@ Future<void> _navigateUsingDirectory(WidgetTester tester,
 
 Future<void> _openSubPageDirectory(WidgetTester tester) async {
   await tester.tap(find.byIcon(Icons.more_vert));
-  await tester.pumpAndSettle();
-}
-
-Future<void> _navigateBackwards(WidgetTester tester) async {
-  await tester.tap(find.byIcon(Icons.navigate_before));
-  await tester.pumpAndSettle();
-}
-
-Future<void> _navigateForward(WidgetTester tester) async {
-  await tester.tap(find.byIcon(Icons.navigate_next));
   await tester.pumpAndSettle();
 }
 
