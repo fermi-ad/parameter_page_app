@@ -54,7 +54,13 @@ void main() {
     testWidgets(
         'Open Test Page 2 and advance (forward) the sub-page, sub-page navigation should update accordingly',
         (WidgetTester tester) async {
-      // When I navigate to sub-page 2
+      // Given I have Test Page 2 / Tab 1 open
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+
+      // When I navigate forward to sub-page 2
+      await navigateSubPageForward(tester);
 
       // Then there are still 2 sub-pages
       assertNumberOfSubPagesIs(2);
