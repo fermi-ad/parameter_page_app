@@ -138,5 +138,20 @@ void main() {
       assertIsNotOnPage(comment: "this is comment #1");
       assertIsNotOnPage(comment: "this is comment #2");
     }, semanticsEnabled: false);
+
+    testWidgets(
+        'Open Test Page 2 sub-page directory, titles of sub-pages should be displayed',
+        (WidgetTester tester) async {
+      // Given I have Test Page 2 / Tab 1 open
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+
+      // When I open the sup-page directory
+      await openSubPageDirectory(tester);
+
+      // Then the titles for both sub-pages are displayed
+      assertSubPageDirectory(contains: ["Sub-Page One", "Sub-Page Two"]);
+    }, semanticsEnabled: false);
   });
 }
