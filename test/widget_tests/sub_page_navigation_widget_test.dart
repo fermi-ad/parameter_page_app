@@ -121,7 +121,7 @@ void main() {
       await openSubPageDirectory(tester);
 
       // Then the sub-page directory is presented to the user
-      _assertSubPageDirectory(
+      assertSubPageDirectory(
           contains: ["Sub-Page One", "Sub-Page Two", "Sub-Page Three"]);
     });
 
@@ -236,10 +236,4 @@ Future<void> _navigateUsingDirectory(WidgetTester tester,
   await openSubPageDirectory(tester);
   await tester.tap(find.text(toSubPageWithTitle));
   await tester.pumpAndSettle();
-}
-
-void _assertSubPageDirectory({required List<String> contains}) {
-  for (final title in contains) {
-    expect(find.text(title), findsAtLeastNWidgets(1));
-  }
 }

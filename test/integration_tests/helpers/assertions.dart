@@ -550,3 +550,9 @@ void assertSubPageTitleIs(String title) {
           matching: find.text(title)),
       findsOneWidget);
 }
+
+void assertSubPageDirectory({required List<String> contains}) {
+  for (final title in contains) {
+    expect(find.text(title), findsAtLeastNWidgets(1));
+  }
+}
