@@ -86,15 +86,13 @@ class _ParameterPageScaffoldWidgetState
         ? const Text("Nothing to see")
         : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Expanded(
-                child: SizedBox(
-              height: 128,
               child: SubPageNavigationWidget(
                   page: _page!,
                   onForward: () => setState(() => _page!.incrementSubPage()),
                   onBackward: () => setState(() => _page!.decrementSubPage()),
                   onSelected: (int index) =>
                       setState(() => _page!.switchSubPage(to: index))),
-            ))
+            )
           ]);
   }
 
@@ -106,7 +104,7 @@ class _ParameterPageScaffoldWidgetState
             title: _page == null ? "Parameter Page" : _page!.title,
             onTitleUpdate: _handleTitleUpdate),
         bottom: PreferredSize(
-            preferredSize: const Size(double.infinity, 200.0),
+            preferredSize: const Size(double.infinity, 100.0),
             child: Column(children: [
               ParameterPageTabbarWidget(
                   editing: _page?.editing ?? false,
