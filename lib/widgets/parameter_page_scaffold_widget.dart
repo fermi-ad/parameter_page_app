@@ -61,12 +61,10 @@ class _ParameterPageScaffoldWidgetState
     }
 
     return Scaffold(
-      key: _scaffoldKey,
-      appBar: _buildAppBar(context),
-      drawer: _buildDrawer(context),
-      body: _buildBody(context),
-      bottomNavigationBar: _buildSubPageNavigation(),
-    );
+        key: _scaffoldKey,
+        appBar: _buildAppBar(context),
+        drawer: _buildDrawer(context),
+        body: _buildBody(context));
   }
 
   bool _pageHasNotBeenLoadedYet() {
@@ -106,16 +104,21 @@ class _ParameterPageScaffoldWidgetState
             persistenceState: _persistenceState,
             title: _page == null ? "Parameter Page" : _page!.title,
             onTitleUpdate: _handleTitleUpdate),
-        bottom: ParameterPageTabbarWidget(
-            editing: _page?.editing ?? false,
-            tabTitles: _page != null ? _page!.tabTitles : [],
-            index: _page != null ? _page!.currentTabIndex : 0,
-            onDeleteTab: _handleDeleteTab,
-            onCreateNewTab: _handleCreateNewTab,
-            onRenameTab: _handleRenameTab,
-            onTabSwitched: (String tabTitle) => setState(() {
-                  _page!.switchTab(to: tabTitle);
-                })),
+        bottom: PreferredSize(
+            preferredSize: const Size(double.infinity, 200.0),
+            child: Column(children: [
+              ParameterPageTabbarWidget(
+                  editing: _page?.editing ?? false,
+                  tabTitles: _page != null ? _page!.tabTitles : [],
+                  index: _page != null ? _page!.currentTabIndex : 0,
+                  onDeleteTab: _handleDeleteTab,
+                  onCreateNewTab: _handleCreateNewTab,
+                  onRenameTab: _handleRenameTab,
+                  onTabSwitched: (String tabTitle) => setState(() {
+                        _page!.switchTab(to: tabTitle);
+                      })),
+              _buildSubPageNavigation()
+            ])),
         actions: [
           DisplaySettingsButtonWidget(
               wide: MediaQuery.of(context).size.width > 600,
