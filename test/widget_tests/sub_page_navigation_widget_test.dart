@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/widgets/sub_page_navigation_widget.dart';
 
+import '../integration_tests/helpers/actions.dart';
 import '../integration_tests/helpers/assertions.dart';
 
 void main() {
@@ -75,7 +76,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I tap the 'increment page' button
-      await _navigateForward(tester);
+      await navigateSubPageForward(tester);
 
       // Then the onIncrement callback has been invoked
       expect(onIncrementCalled, true,
@@ -94,7 +95,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I tap the 'increment page' button
-      await _navigateBackwards(tester);
+      await navigateSubPageBackwards(tester);
 
       // Then the onPrevious callback has been invoked
       expect(onPreviousCalled, true,
@@ -117,10 +118,10 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I open the sub-page directory
-      await _openSubPageDirectory(tester);
+      await openSubPageDirectory(tester);
 
       // Then the sub-page directory is presented to the user
-      _assertSubPageDirectory(
+      assertSubPageDirectory(
           contains: ["Sub-Page One", "Sub-Page Two", "Sub-Page Three"]);
     });
 
@@ -144,7 +145,8 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I navigate to "Sub-Page Two" using the directory
-      await _navigateUsingDirectory(tester, toSubPageWithTitle: "Sub-Page Two");
+      await navigateSubPageUsingDirectory(tester,
+          toSubPageWithTitle: "Sub-Page Two");
 
       // Then the onSelected callback is called and the selectedIndex is 2
       expect(selectedIndex, 2);
@@ -170,7 +172,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I navigate directly to sub-page 2
-      await _navigateDirectlyTo(tester, subPageIndex: '2');
+      await navigateDirectlyToSubpage(tester, withIndex: '2');
 
       // Then the onSelected callback is called and the selectedIndex is 2
       expect(selectedIndex, 2);
@@ -196,7 +198,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I attempt to navigate directly to an invalid sub-page index
-      await _navigateDirectlyTo(tester, subPageIndex: '4');
+      await navigateDirectlyToSubpage(tester, withIndex: '4');
 
       // Then the onSelected callback is not invoked
       expect(selectedIndex, null);
@@ -222,47 +224,10 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I attempt to navigate directly to an invalid sub-page index
-      await _navigateDirectlyTo(tester, subPageIndex: "four");
+      await navigateDirectlyToSubpage(tester, withIndex: "four");
 
       // Then the onSelected callback is not invoked
       expect(selectedIndex, null);
     });
   });
-}
-
-Future<void> _navigateDirectlyTo(WidgetTester tester,
-    {required String subPageIndex}) async {
-  await tester.enterText(
-      find.byKey(const Key('subpagenavigation-current-index-input')),
-      subPageIndex);
-  await tester.testTextInput.receiveAction(TextInputAction.done);
-  await tester.pumpAndSettle();
-}
-
-Future<void> _navigateUsingDirectory(WidgetTester tester,
-    {required String toSubPageWithTitle}) async {
-  await _openSubPageDirectory(tester);
-  await tester.tap(find.text(toSubPageWithTitle));
-  await tester.pumpAndSettle();
-}
-
-Future<void> _openSubPageDirectory(WidgetTester tester) async {
-  await tester.tap(find.byIcon(Icons.more_vert));
-  await tester.pumpAndSettle();
-}
-
-Future<void> _navigateBackwards(WidgetTester tester) async {
-  await tester.tap(find.byIcon(Icons.navigate_before));
-  await tester.pumpAndSettle();
-}
-
-Future<void> _navigateForward(WidgetTester tester) async {
-  await tester.tap(find.byIcon(Icons.navigate_next));
-  await tester.pumpAndSettle();
-}
-
-void _assertSubPageDirectory({required List<String> contains}) {
-  for (final title in contains) {
-    expect(find.text(title), findsAtLeastNWidgets(1));
-  }
 }
