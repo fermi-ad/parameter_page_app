@@ -171,7 +171,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I navigate directly to sub-page 2
-      await _navigateDirectlyTo(tester, subPageIndex: '2');
+      await navigateDirectlyToSubpage(tester, withIndex: '2');
 
       // Then the onSelected callback is called and the selectedIndex is 2
       expect(selectedIndex, 2);
@@ -197,7 +197,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I attempt to navigate directly to an invalid sub-page index
-      await _navigateDirectlyTo(tester, subPageIndex: '4');
+      await navigateDirectlyToSubpage(tester, withIndex: '4');
 
       // Then the onSelected callback is not invoked
       expect(selectedIndex, null);
@@ -223,21 +223,12 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I attempt to navigate directly to an invalid sub-page index
-      await _navigateDirectlyTo(tester, subPageIndex: "four");
+      await navigateDirectlyToSubpage(tester, withIndex: "four");
 
       // Then the onSelected callback is not invoked
       expect(selectedIndex, null);
     });
   });
-}
-
-Future<void> _navigateDirectlyTo(WidgetTester tester,
-    {required String subPageIndex}) async {
-  await tester.enterText(
-      find.byKey(const Key('subpagenavigation-current-index-input')),
-      subPageIndex);
-  await tester.testTextInput.receiveAction(TextInputAction.done);
-  await tester.pumpAndSettle();
 }
 
 Future<void> _navigateUsingDirectory(WidgetTester tester,

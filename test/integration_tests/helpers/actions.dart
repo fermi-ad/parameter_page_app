@@ -383,3 +383,12 @@ Future<void> navigateSubPageForward(WidgetTester tester) async {
   await tester.tap(find.byIcon(Icons.navigate_next));
   await tester.pumpAndSettle();
 }
+
+Future<void> navigateDirectlyToSubpage(WidgetTester tester,
+    {required String withIndex}) async {
+  await tester.enterText(
+      find.byKey(const Key('subpagenavigation-current-index-input')),
+      withIndex);
+  await tester.testTextInput.receiveAction(TextInputAction.done);
+  await tester.pumpAndSettle();
+}
