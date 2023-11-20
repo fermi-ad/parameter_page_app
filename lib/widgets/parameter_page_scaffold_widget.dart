@@ -105,24 +105,26 @@ class _ParameterPageScaffoldWidgetState
             onTitleUpdate: _handleTitleUpdate),
         bottom: PreferredSize(
             preferredSize: const Size(double.infinity, 100.0),
-            child: Column(children: [
-              ParameterPageTabbarWidget(
-                  editing: _page?.editing ?? false,
-                  tabTitles: _page != null ? _page!.tabTitles : [],
-                  index: _page != null ? _page!.currentTabIndex : 0,
-                  onDeleteTab: _handleDeleteTab,
-                  onCreateNewTab: _handleCreateNewTab,
-                  onRenameTab: _handleRenameTab,
-                  onTabSwitched: (String tabTitle) => setState(() {
-                        _page!.switchTab(to: tabTitle);
-                      })),
-              _buildSubPageNavigation()
-            ])),
+            child: Column(
+                children: [_buildTabNavigation(), _buildSubPageNavigation()])),
         actions: [
           DisplaySettingsButtonWidget(
               wide: MediaQuery.of(context).size.width > 600,
               onPressed: () => _navigateToDisplaySettings(context)),
         ]);
+  }
+
+  Widget _buildTabNavigation() {
+    return ParameterPageTabbarWidget(
+        editing: _page?.editing ?? false,
+        tabTitles: _page != null ? _page!.tabTitles : [],
+        index: _page != null ? _page!.currentTabIndex : 0,
+        onDeleteTab: _handleDeleteTab,
+        onCreateNewTab: _handleCreateNewTab,
+        onRenameTab: _handleRenameTab,
+        onTabSwitched: (String tabTitle) => setState(() {
+              _page!.switchTab(to: tabTitle);
+            }));
   }
 
   Widget _buildBody(BuildContext context) {
