@@ -93,6 +93,8 @@ class _ParameterPageScaffoldWidgetState
                   page: _page!,
                   onForward: () => setState(() => _page!.incrementSubPage()),
                   onBackward: () => setState(() => _page!.decrementSubPage()),
+                  onSelected: (int index) =>
+                      setState(() => _page!.switchSubPage(to: index)),
                 ))
           ]);
   }
