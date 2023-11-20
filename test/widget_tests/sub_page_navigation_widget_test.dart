@@ -145,7 +145,8 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I navigate to "Sub-Page Two" using the directory
-      await _navigateUsingDirectory(tester, toSubPageWithTitle: "Sub-Page Two");
+      await navigateSubPageUsingDirectory(tester,
+          toSubPageWithTitle: "Sub-Page Two");
 
       // Then the onSelected callback is called and the selectedIndex is 2
       expect(selectedIndex, 2);
@@ -229,11 +230,4 @@ void main() {
       expect(selectedIndex, null);
     });
   });
-}
-
-Future<void> _navigateUsingDirectory(WidgetTester tester,
-    {required String toSubPageWithTitle}) async {
-  await openSubPageDirectory(tester);
-  await tester.tap(find.text(toSubPageWithTitle));
-  await tester.pumpAndSettle();
 }

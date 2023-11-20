@@ -397,3 +397,10 @@ Future<void> openSubPageDirectory(WidgetTester tester) async {
   await tester.tap(find.byIcon(Icons.more_vert));
   await tester.pumpAndSettle();
 }
+
+Future<void> navigateSubPageUsingDirectory(WidgetTester tester,
+    {required String toSubPageWithTitle}) async {
+  await openSubPageDirectory(tester);
+  await tester.tap(find.text(toSubPageWithTitle));
+  await tester.pumpAndSettle();
+}
