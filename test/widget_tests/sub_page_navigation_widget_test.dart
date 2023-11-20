@@ -118,7 +118,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I open the sub-page directory
-      await _openSubPageDirectory(tester);
+      await openSubPageDirectory(tester);
 
       // Then the sub-page directory is presented to the user
       _assertSubPageDirectory(
@@ -233,13 +233,8 @@ void main() {
 
 Future<void> _navigateUsingDirectory(WidgetTester tester,
     {required String toSubPageWithTitle}) async {
-  await _openSubPageDirectory(tester);
+  await openSubPageDirectory(tester);
   await tester.tap(find.text(toSubPageWithTitle));
-  await tester.pumpAndSettle();
-}
-
-Future<void> _openSubPageDirectory(WidgetTester tester) async {
-  await tester.tap(find.byIcon(Icons.more_vert));
   await tester.pumpAndSettle();
 }
 
