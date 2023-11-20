@@ -92,6 +92,7 @@ class _ParameterPageScaffoldWidgetState
                 child: SubPageNavigationWidget(
                   page: _page!,
                   onForward: () => setState(() => _page!.incrementSubPage()),
+                  onBackward: () => setState(() => _page!.decrementSubPage()),
                 ))
           ]);
   }
