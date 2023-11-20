@@ -147,11 +147,13 @@ class _ParameterPageScaffoldWidgetState
     return DataAcquisitionWidget(
         service: widget.acsysService,
         child: Center(
-            child: PageWidget(
-                key: _pageKey,
-                page: _page!,
-                onPageModified: _handlePageModified,
-                onToggleEditing: (bool isEditing) => setState(() {}))));
+            child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 20.0, 0, 0),
+                child: PageWidget(
+                    key: _pageKey,
+                    page: _page!,
+                    onPageModified: _handlePageModified,
+                    onToggleEditing: (bool isEditing) => setState(() {})))));
   }
 
   Widget _buildLoadingPage() {
