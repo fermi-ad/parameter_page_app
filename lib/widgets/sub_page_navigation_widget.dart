@@ -20,35 +20,55 @@ class SubPageNavigationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(children: [
-      IconButton(
-          icon: const Icon(Icons.navigate_before),
-          onPressed: () => onBackward?.call()),
+      _buildBackwardsButton(),
       const SizedBox(width: 5.0),
-      SizedBox(
-          width: 48.0,
-          child: TextFormField(
-            key: const Key('subpagenavigation-current-index-input'),
-            controller: TextEditingController(text: "${page.subPageIndex}"),
-            onFieldSubmitted: _handleDirectNavigation,
-          )),
+      _buildCurrentSubPageIndex(),
       const SizedBox(width: 5.0),
       const Text("/"),
       const SizedBox(width: 5.0),
-      Container(
-          key: const Key("subpagenavigation-total-subpages"),
-          child: Text("${page.numberOfSubPages}")),
+      _buildTotalNumberOfSubPages(),
       const SizedBox(width: 5.0),
-      IconButton(
-        icon: const Icon(Icons.navigate_next, size: 16.0),
-        onPressed: () => onForward?.call(),
-      ),
+      _buildForwardsButton(),
       const Spacer(),
-      Container(
-          key: const Key("subpagenavigation-subpage-title"),
-          child: Text(page.subPageTitle)),
+      _buildSubPageTitle(),
       const SizedBox(width: 5.0),
       _buildDirectoryMenuButton(),
     ]);
+  }
+
+  Widget _buildCurrentSubPageIndex() {
+    return SizedBox(
+        width: 48.0,
+        child: TextFormField(
+          key: const Key('subpagenavigation-current-index-input'),
+          controller: TextEditingController(text: "${page.subPageIndex}"),
+          onFieldSubmitted: _handleDirectNavigation,
+        ));
+  }
+
+  Widget _buildTotalNumberOfSubPages() {
+    return Container(
+        key: const Key("subpagenavigation-total-subpages"),
+        child: Text("${page.numberOfSubPages}"));
+  }
+
+  Widget _buildBackwardsButton() {
+    return IconButton(
+        icon: const Icon(Icons.navigate_before),
+        onPressed: () => onBackward?.call());
+  }
+
+  Widget _buildForwardsButton() {
+    return IconButton(
+      icon: const Icon(Icons.navigate_next, size: 16.0),
+      onPressed: () => onForward?.call(),
+    );
+  }
+
+  Widget _buildSubPageTitle() {
+    return Container(
+        key: const Key("subpagenavigation-subpage-title"),
+        child: Text(page.subPageTitle));
   }
 
   Widget _buildDirectoryMenuButton() {
