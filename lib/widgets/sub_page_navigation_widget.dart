@@ -42,7 +42,7 @@ class SubPageNavigationWidget extends StatelessWidget {
         icon: const Icon(Icons.navigate_next, size: 16.0),
         onPressed: () => onForward?.call(),
       ),
-      const SizedBox(width: 5.0),
+      const Spacer(),
       Container(
           key: const Key("subpagenavigation-subpage-title"),
           child: Text(page.subPageTitle)),
