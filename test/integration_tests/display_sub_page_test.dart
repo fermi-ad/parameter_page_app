@@ -110,5 +110,33 @@ void main() {
       assertIsOnPage(comment: "this is comment #1");
       assertIsOnPage(comment: "this is comment #2");
     }, semanticsEnabled: false);
+
+    testWidgets(
+        'Open Test Page 2 and navigate directly to sub-page 2, sub-page navigation updates accordingly',
+        (WidgetTester tester) async {
+      // Given I have Test Page 2 / Tab 1 open
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+
+      // When I navigate directly to sub-page 2
+      await navigateDirectlyToSubpage(tester, withIndex: "2");
+
+      // Then there are still 2 sub-pages
+      assertNumberOfSubPagesIs(2);
+
+      // ... and the current sub-page is 2
+      assertCurrentSubPageIs(2);
+
+      // ... and the sub-page title is "Sub-Page Two"
+      assertSubPageTitleIs("Sub-Page Two");
+
+      // ... and the contents of sub-page 2 are displayed
+      assertIsOnPage(comment: "this is comment #3");
+
+      // ... and the contents of sub-page 1 are not
+      assertIsNotOnPage(comment: "this is comment #1");
+      assertIsNotOnPage(comment: "this is comment #2");
+    }, semanticsEnabled: false);
   });
 }
