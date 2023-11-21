@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 
 class SubPageNavigationWidget extends StatelessWidget {
@@ -96,8 +97,8 @@ class SubPageNavigationWidget extends StatelessWidget {
     return Container(
         key: const Key("subpagenavigation-subpage-title"),
         child: page.editing
-            ? _buildSubPageTitleDisplay()
-            : _buildSubPageTitleTextField());
+            ? _buildSubPageTitleTextField()
+            : _buildSubPageTitleDisplay());
   }
 
   Widget _buildSubPageTitleDisplay() {
@@ -105,7 +106,9 @@ class SubPageNavigationWidget extends StatelessWidget {
   }
 
   Widget _buildSubPageTitleTextField() {
-    return Container();
+    return Expanded(
+        child: TextField(
+            controller: TextEditingController(text: page.subPageTitle)));
   }
 
   Widget _buildDirectoryMenuButton() {

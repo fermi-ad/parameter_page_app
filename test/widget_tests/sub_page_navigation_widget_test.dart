@@ -69,6 +69,7 @@ void main() {
       page.subPageTitle = "Sub-page 1 Title";
       page.createSubPage();
       page.subPageTitle = "Sub-page 2 Title";
+      page.disableEditing();
 
       // When I render the SubPageNavigationWidget
       MaterialApp app = MaterialApp(
@@ -346,7 +347,9 @@ void main() {
       expect(
           find.descendant(
               of: find.byKey(const Key("subpagenavigation-subpage-title")),
-              matching: find.byType(TextField)),
+              matching: find.descendant(
+                  of: find.byType(TextField),
+                  matching: find.text("Sub-Page One"))),
           findsOneWidget);
     });
   });
