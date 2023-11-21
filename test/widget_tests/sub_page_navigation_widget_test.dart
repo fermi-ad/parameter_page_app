@@ -321,15 +321,10 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I delete the current sub-page
-      await _deleteSubPage(tester);
+      await deleteSubPage(tester);
 
       // Then the onDeleteSubPage call-back is called
       expect(onDeleteSubPageCalled, true);
     });
   });
-}
-
-Future<void> _deleteSubPage(WidgetTester tester) async {
-  await tester.tap(find.text('Delete Sub-Page'));
-  await tester.pumpAndSettle();
 }

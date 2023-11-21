@@ -409,3 +409,8 @@ Future<void> createNewSubPage(WidgetTester tester) async {
   await tester.tap(find.text("New Sub-Page"));
   await tester.pumpAndSettle();
 }
+
+Future<void> deleteSubPage(WidgetTester tester) async {
+  await tester.tap(find.text('Delete Sub-Page'));
+  await tester.pumpAndSettle();
+}
