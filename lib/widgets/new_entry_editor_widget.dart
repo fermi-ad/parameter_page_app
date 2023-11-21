@@ -52,13 +52,14 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
     List<String> textArr = textInput.split(" ");
     List<PageEntry> pageEntries = [];
 
-    for(String textElement in textArr) {
-      if (_daqWidget.isACNETDRF(textElement) || _daqWidget.isProcessVariable(textElement)) {
-        pageEntries.add(ParameterEntry(textElement, label: "", key: Key("parameter_row_$textElement")));
-      } else if (_isHardComment(textElement)) {
-        pageEntries.add(CommentEntry(_stripBang(textElement)));
-      } else {
-        pageEntries.add(CommentEntry(textElement));
+    if(_isHardComment(textInput)) {
+      pageEntries.add(CommentEntry(_stripBang(textInput)));
+    }
+    else {    
+      for(String textElement in textArr) {
+        if (_daqWidget.isACNETDRF(textElement) || _daqWidget.isProcessVariable(textElement)) {
+          pageEntries.add(ParameterEntry(textElement, label: "", key: Key("parameter_row_$textElement")));
+        }
       }
     }
     return pageEntries;
