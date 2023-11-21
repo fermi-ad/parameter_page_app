@@ -88,7 +88,10 @@ class SubPageNavigationWidget extends StatelessWidget {
       ret.add(PopupMenuItem<_SubPageDirectoryItem>(
           value: _SubPageDirectoryItem(
               index: i + 1, title: page.subPageDirectory[i]),
-          child: Text(page.subPageDirectory[i])));
+          child: Row(children: [
+            SizedBox(width: 30, child: Text("${i + 1}:")),
+            Text(page.subPageDirectory[i])
+          ])));
     }
     return ret;
   }
