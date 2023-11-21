@@ -259,5 +259,28 @@ void main() {
       // Then the number of sub-pages is the same
       assertNumberOfSubPagesIs(3);
     }, semanticsEnabled: false);
+
+    testWidgets('Create new sub-page, new sub-page is created and navigated to',
+        (WidgetTester tester) async {
+      // Given I am on Test Page 2, tab 1, sub-page 1
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+
+      // ... and I am in editing mode
+      await enterEditMode(tester);
+
+      // When I create a new sub-page
+      await createNewSubPage(tester);
+
+      // Then the number of sub-pages increases by one
+      assertNumberOfSubPagesIs(4);
+
+      // ... and the current sub-page is 4
+      assertCurrentSubPageIs(4);
+
+      // ... and the page is empty
+      assertNumberOfEntriesOnPageIs(0);
+    }, semanticsEnabled: false);
   });
 }
