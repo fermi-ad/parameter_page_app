@@ -282,5 +282,26 @@ void main() {
       // ... and the page is empty
       assertNumberOfEntriesOnPageIs(0);
     }, semanticsEnabled: false);
+
+    testWidgets(
+        'Change sub-page title, new title reflected outside of edit mode',
+        (WidgetTester tester) async {
+      // Given I am on Test Page 2, tab 1, sub-page 1
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+
+      // ... and I am in editing mode
+      await enterEditMode(tester);
+
+      // When I change the sub-page title
+      await changeSubPageTitle(tester, to: "New Sub-Page One");
+
+      // ... and exit edit mode
+      await exitEditMode(tester);
+
+      // Then the sub-page title is updated to reflect the new title
+      assertSubPageTitleIs("New Sub-Page One");
+    }, semanticsEnabled: false);
   });
 }
