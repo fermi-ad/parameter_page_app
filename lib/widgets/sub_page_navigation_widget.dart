@@ -60,7 +60,7 @@ class SubPageNavigationWidget extends StatelessWidget {
 
   Widget _buildForwardsButton() {
     return IconButton(
-      icon: const Icon(Icons.navigate_next, size: 16.0),
+      icon: const Icon(Icons.navigate_next),
       onPressed: () => onForward?.call(),
     );
   }
