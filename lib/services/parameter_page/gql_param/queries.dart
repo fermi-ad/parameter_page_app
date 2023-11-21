@@ -1,3 +1,7 @@
+/* query to retrieve all parameter page titles
+** input: none
+** return: list of existing parameter page titles and corresponding pageids
+*/
 const titlequery = r"""
             query getAllTitles{
               allTitles {
@@ -7,29 +11,36 @@ const titlequery = r"""
             }
           """;
 
-const pageentryquery = r"""
-            query findtitleentry ($pageid: ID!) {
-              entriesInPageX(pageid: $pageid) {
-                entryid
-                pageid
-                position
-                text
-                type
-              }
-            }
-          """;
 
+/* query to retrieve the complete tree structure of one parameter page
+** input: parameter page id
+** return: complete tree structure and values of this parameter page.
+*/
 const pagequery = r"""
-            query getOnePage($pageid: ID!) {
-              onePage(pageid: $pageid) {
-                pageid
-                title
-                entries {
-                        entryid
-                        position
-                        text
-                        type
+            query getOnePageTree($pageid: ID!) {
+              onePageTree(pageid: $pageid) {
+                  pageid
+                  title
+                  subsyslist {
+                      subsysid
+                      title
+                      seqnum
+                      subsystablist {
+                          subsystabid
+                          title
+                          seqnum
+                          tabpagelist {
+                              tabpageid
+                              seqnum
+                              pageentrylist {
+                                  entryid
+                                  text
+                                  type
+                                  seqnum
+                              }
+                          }
                       }
-                }
+                  }
+              }
             }
           """;

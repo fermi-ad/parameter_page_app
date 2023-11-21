@@ -1,13 +1,38 @@
 
-const addpagetitle = r"""
-        mutation addTitle($title: String!) {
-          addTitle(title: $title) {
-            pageid
-            title
-          }
+/* mutation to create default tree structure of new parametr page
+** input: page title
+** return: default tree struture of a new parameter page without page entry
+*/
+const newParamPageDefTree = r"""
+        mutation newParamPage($title: String!) {
+                newParamPage(title: $title) {
+                  pageid
+                  title
+                  subsyslist {
+                      subsysid
+                      title
+                      seqnum
+                      subsystablist {
+                          subsystabid
+                          title
+                          seqnum
+                          tabpagelist {
+                              tabpageid
+                              seqnum
+                              pageentrylist {
+                                  entryid
+                              }
+                          }
+                      }
+                  }
+              }
         }
       """;
 
+/* mutation to update parameter page title
+** input: parameter page id, page title to update
+** return: status code and message of transaction execution
+*/
 const updatepagetitle = r"""
         mutation updateTitle($pageid: ID!, $title: String!) {
           updateTitle(pageid: $pageid, title: $title) {
@@ -17,6 +42,10 @@ const updatepagetitle = r"""
         }
       """;
 
+/* mutation to delete parameter page title, it should have no associated subsys
+** input: parameter page id
+** return: status code and message of transaction execution
+*/
 const deletepagetitle = r"""
         mutation delTitle($pageid: ID!) {
           deleteTitle(pageid: $pageid) {
@@ -26,63 +55,5 @@ const deletepagetitle = r"""
         }
       """;
 
-
-const addpageentry = r"""
-      mutation addEntry($pageid: ID!, $position: Int!, $text: String!, $type: EntryType!) {
-        addEntry(pageid: $pageid, position: $position, text: $text, type: $type) {
-              entryid
-              pageid
-              position
-              text
-              type
-          }
-        }
-        """;
-
-const updatepageentry = r"""
-      mutation updateEntry($entryid: ID!, $position: Int!, $text: String!, $type: EntryType!) {
-        updateEntry(entryid: $entryid, position: $position, text: $text, type: $type) {
-          code,
-          message
-        }
-      }
-      """;
-
-const deletepageentry = r"""
-      mutation deleteEntry($entryid: ID!) {
-        deleteEntry(entryid: $entryid) {
-          code
-          message
-        }
-      }
-      """;
-
-const addentrylist =  r"""
-      mutation AddEntryList($newEntryList: [newParamEntry]!) {
-        addEntryList(newEntryList: $newEntryList) {
-          entryid
-        }
-      }
-""";
-/*[newParamEntry] = [{pageid, position, text, type}, ...] */
-
-const updateentrylist =  r"""
-      mutation UpdateEntryList($updEntryList: [ParamEntryInput]!) {
-        updateEntryList(updEntryList: $updEntryList) {
-          code
-          message
-        }
-      }
-""";
-/*[ParamEntryInput] = [{entryid, position, text, type}, ...] */
- 
-const deleteentrylist =  r"""
-      mutation DeleteEntryList($delEntryList: [EntryIdInput]!) {
-        deleteEntryList(delEntryList: $delEntryList) {
-          code,
-          message
-        }
-      }
-""";
 /*[EntryIdInput] = [{entryid}, ...] */
 
