@@ -300,7 +300,7 @@ class ParameterPage {
           subPages.add(_SubPage(title: "", entries: []));
         } else {
           subPages.add(_SubPage(
-              title: subPageData["title"],
+              title: subPageData["title"] ?? "",
               entries:
                   _buildEntriesListFromQueryResult(subPageData["entries"])));
         }
