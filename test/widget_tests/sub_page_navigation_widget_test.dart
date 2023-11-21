@@ -285,10 +285,38 @@ void main() {
       // Then the onNewSubPage call-back is called
       expect(onNewSubPageCalled, true);
     });
+
+    testWidgets('Delete sub-page, calls onDeleteSubPage',
+        (WidgetTester tester) async {
+      // Given a ParameterPage with 2 sub-pages
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubPage();
+
+      // ... and I have rendered a SubPageNavigationWidget with an onDeleteSubPage call-back registered
+      bool onDeleteSubPageCalled = false;
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubPageNavigationWidget(
+                  page: page,
+                  onNewSubPage: () => onDeleteSubPageCalled = true)));
+      await tester.pumpWidget(app);
+
+      // When I delete the current sub-page
+      await _deleteSubPage(tester);
+
+      // Then the onDeleteSubPage call-back is called
+      expect(onDeleteSubPageCalled, true);
+    });
   });
 }
 
 Future<void> _createNewSubPage(WidgetTester tester) async {
   await tester.tap(find.text("New Sub-Page"));
+  await tester.pumpAndSettle();
+}
+
+Future<void> _deleteSubPage(WidgetTester tester) async {
+  await tester.tap(find.text('Delete Sub-Page'));
   await tester.pumpAndSettle();
 }
