@@ -1273,5 +1273,17 @@ void main() {
       // Then an exception is thrown
       expect(() => page.deleteSubPage(), throwsException);
     });
+
+    test('deleteSubPage(), won\'t delete the only sub-page', () {
+      // Given a ParameterPage with just 1 sub-page
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I deleteSubPage()
+      page.deleteSubPage();
+
+      // Then an exception is thrown
+      expect(() => page.deleteSubPage(), throwsException);
+    });
   });
 }
