@@ -41,9 +41,9 @@ class SubPageNavigationWidget extends StatelessWidget {
       Visibility(
           visible: page.numberOfSubPages > 1,
           child: _buildDirectoryMenuButton()),
-      _buildNewSubPageButton(),
+      Visibility(visible: page.editing, child: _buildNewSubPageButton()),
       const SizedBox(width: 5.0),
-      _buildDeleteSubPageButton()
+      Visibility(visible: page.editing, child: _buildDeleteSubPageButton())
     ]);
   }
 
