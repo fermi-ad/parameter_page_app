@@ -1217,5 +1217,27 @@ void main() {
       // ... and 3 for Tab 3
       expect(page.subPageCount(forTab: "Tab 3"), 3);
     });
+
+    test(
+        'deleteSubPage() on a middle sub-page, removes sub-page and moves to the next sub-page',
+        () {
+      // Given a ParameterPage with 3 sub-pages
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubPage();
+      page.createSubPage();
+
+      // ... and I am on sub-page 2
+      page.decrementSubPage();
+
+      // When I deleteSubPage()
+      page.deleteSubPage();
+
+      // Then the number of sub-pages is reduced to 2
+      expect(page.numberOfSubPages, 2);
+
+      // ... and the currentSubPageIndex is 2
+      expect(page.subPageIndex, 2);
+    });
   });
 }
