@@ -419,3 +419,14 @@ Future<void> deleteSubPage(WidgetTester tester, {bool? confirm}) async {
     await tester.pumpAndSettle();
   }
 }
+
+Future<void> changeSubPageTitle(WidgetTester tester,
+    {required String to}) async {
+  await tester.enterText(
+      find.descendant(
+          of: find.byKey(const Key('subpagenavigation-subpage-title')),
+          matching: find.byType(TextField)),
+      to);
+  await tester.testTextInput.receiveAction(TextInputAction.done);
+  await tester.pumpAndSettle();
+}
