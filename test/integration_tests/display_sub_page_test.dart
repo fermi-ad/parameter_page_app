@@ -181,5 +181,27 @@ void main() {
       assertIsNotOnPage(comment: "this is comment #1");
       assertIsNotOnPage(comment: "this is comment #2");
     }, semanticsEnabled: false);
+
+    testWidgets(
+        'Delete empty sub-page, sub-page is removed and navigation moves to an adjacent sub-page',
+        (WidgetTester tester) async {
+      // Given I am on an empty sub-page
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+      await navigateSubPageForward(tester);
+      await navigateSubPageForward(tester);
+      await enterEditMode(tester);
+      await deleteRow(tester, index: 0);
+
+      // When I delete the current sub-page
+      await deleteSubPage(tester);
+
+      // Then the number of sub-pages is decreased
+      assertNumberOfSubPagesIs(2);
+
+      // ... and the current sub-page is 2
+      assertCurrentSubPageIs(2);
+    });
   });
 }
