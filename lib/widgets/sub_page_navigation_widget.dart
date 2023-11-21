@@ -29,7 +29,7 @@ class SubPageNavigationWidget extends StatelessWidget {
       _buildTotalNumberOfSubPages(),
       const SizedBox(width: 5.0),
       _buildForwardsButton(),
-      const Spacer(),
+      const SizedBox(width: 15.0),
       _buildSubPageTitle(),
       const SizedBox(width: 5.0),
       _buildDirectoryMenuButton(),
