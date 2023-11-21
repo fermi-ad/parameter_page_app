@@ -352,5 +352,39 @@ void main() {
                   matching: find.text("Sub-Page One"))),
           findsOneWidget);
     });
+
+    testWidgets('Change sub-page title, onTitleChange is called with new title',
+        (WidgetTester tester) async {
+      // Given a ParameterPage in edit mode
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // ... and a SubPageNavigationWidget with an onTitleChanged call-back
+      String? newTitle;
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubPageNavigationWidget(
+        onTitleChanged: (String to) => newTitle = to,
+        page: page,
+      )));
+      await tester.pumpWidget(app);
+
+      // When I change the sub-page title
+      await _changeSubPageTitle(tester, to: "New Sub-Page Title");
+
+      // Then the onTitleChange call-back receives the new sub-page title
+      expect(newTitle, "New Sub-Page Title");
+    });
   });
+}
+
+Future<void> _changeSubPageTitle(WidgetTester tester,
+    {required String to}) async {
+  await tester.enterText(
+      find.descendant(
+          of: find.byKey(const Key('subpagenavigation-subpage-title')),
+          matching: find.byType(TextField)),
+      to);
+  await tester.testTextInput.receiveAction(TextInputAction.done);
+  await tester.pumpAndSettle();
 }

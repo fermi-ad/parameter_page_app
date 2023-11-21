@@ -14,6 +14,8 @@ class SubPageNavigationWidget extends StatelessWidget {
 
   final Function()? onDeleteSubPage;
 
+  final Function(String)? onTitleChanged;
+
   SubPageNavigationWidget(
       {super.key,
       this.onForward,
@@ -21,6 +23,7 @@ class SubPageNavigationWidget extends StatelessWidget {
       this.onSelected,
       this.onNewSubPage,
       this.onDeleteSubPage,
+      this.onTitleChanged,
       required this.page})
       : _titleTextController = TextEditingController(text: page.subPageTitle);
 
