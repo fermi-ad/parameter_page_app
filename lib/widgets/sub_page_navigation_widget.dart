@@ -12,12 +12,15 @@ class SubPageNavigationWidget extends StatelessWidget {
 
   final Function()? onNewSubPage;
 
+  final Function()? onDeleteSubPage;
+
   const SubPageNavigationWidget(
       {super.key,
       this.onForward,
       this.onBackward,
       this.onSelected,
       this.onNewSubPage,
+      this.onDeleteSubPage,
       required this.page});
 
   @override
@@ -38,8 +41,16 @@ class SubPageNavigationWidget extends StatelessWidget {
       Visibility(
           visible: page.numberOfSubPages > 1,
           child: _buildDirectoryMenuButton()),
-      _buildNewSubPageButton()
+      _buildNewSubPageButton(),
+      const SizedBox(width: 5.0),
+      _buildDeleteSubPageButton()
     ]);
+  }
+
+  Widget _buildDeleteSubPageButton() {
+    return FilledButton(
+        onPressed: () => onDeleteSubPage?.call(),
+        child: const Text("Delete Sub-Page"));
   }
 
   Widget _buildNewSubPageButton() {

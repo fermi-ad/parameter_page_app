@@ -299,7 +299,7 @@ void main() {
           home: Scaffold(
               body: SubPageNavigationWidget(
                   page: page,
-                  onNewSubPage: () => onDeleteSubPageCalled = true)));
+                  onDeleteSubPage: () => onDeleteSubPageCalled = true)));
       await tester.pumpWidget(app);
 
       // When I delete the current sub-page
