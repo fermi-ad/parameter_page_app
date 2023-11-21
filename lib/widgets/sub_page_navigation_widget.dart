@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 
 class SubPageNavigationWidget extends StatelessWidget {
@@ -15,14 +14,15 @@ class SubPageNavigationWidget extends StatelessWidget {
 
   final Function()? onDeleteSubPage;
 
-  const SubPageNavigationWidget(
+  SubPageNavigationWidget(
       {super.key,
       this.onForward,
       this.onBackward,
       this.onSelected,
       this.onNewSubPage,
       this.onDeleteSubPage,
-      required this.page});
+      required this.page})
+      : _titleTextController = TextEditingController(text: page.subPageTitle);
 
   @override
   Widget build(BuildContext context) {
@@ -106,9 +106,7 @@ class SubPageNavigationWidget extends StatelessWidget {
   }
 
   Widget _buildSubPageTitleTextField() {
-    return Expanded(
-        child: TextField(
-            controller: TextEditingController(text: page.subPageTitle)));
+    return Expanded(child: TextField(controller: _titleTextController));
   }
 
   Widget _buildDirectoryMenuButton() {
@@ -140,6 +138,8 @@ class SubPageNavigationWidget extends StatelessWidget {
       onSelected?.call(index);
     }
   }
+
+  final TextEditingController _titleTextController;
 }
 
 class _SubPageDirectoryItem {
