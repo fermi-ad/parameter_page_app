@@ -38,7 +38,14 @@ class SubPageNavigationWidget extends StatelessWidget {
       Visibility(
           visible: page.numberOfSubPages > 1,
           child: _buildDirectoryMenuButton()),
+      _buildNewSubPageButton()
     ]);
+  }
+
+  Widget _buildNewSubPageButton() {
+    return FilledButton(
+        onPressed: () => onNewSubPage?.call(),
+        child: const Text("New Sub-Page"));
   }
 
   Widget _buildCurrentSubPageIndex() {
