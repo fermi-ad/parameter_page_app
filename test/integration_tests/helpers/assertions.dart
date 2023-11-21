@@ -553,8 +553,14 @@ void assertSubPageTitleIs(String title) {
 }
 
 void assertSubPageDirectory({required List<String> contains}) {
-  for (final title in contains) {
-    expect(find.text(title), findsAtLeastNWidgets(1));
+  for (int i = 0; i != contains.length; i++) {
+    final titleFinder = find.text(contains[i]);
+    expect(titleFinder, findsAtLeastNWidgets(1));
+    expect(
+        find.descendant(
+            of: find.ancestor(of: titleFinder, matching: find.byType(Row)),
+            matching: find.text("${i + 1}:")),
+        findsOneWidget);
   }
 }
 
