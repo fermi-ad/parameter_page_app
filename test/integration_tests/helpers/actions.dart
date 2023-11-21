@@ -404,3 +404,8 @@ Future<void> navigateSubPageUsingDirectory(WidgetTester tester,
   await tester.tap(find.text(toSubPageWithTitle));
   await tester.pumpAndSettle();
 }
+
+Future<void> createNewSubPage(WidgetTester tester) async {
+  await tester.tap(find.text("New Sub-Page"));
+  await tester.pumpAndSettle();
+}

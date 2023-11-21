@@ -298,7 +298,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I create a new sub-page
-      await _createNewSubPage(tester);
+      await createNewSubPage(tester);
 
       // Then the onNewSubPage call-back is called
       expect(onNewSubPageCalled, true);
@@ -327,11 +327,6 @@ void main() {
       expect(onDeleteSubPageCalled, true);
     });
   });
-}
-
-Future<void> _createNewSubPage(WidgetTester tester) async {
-  await tester.tap(find.text("New Sub-Page"));
-  await tester.pumpAndSettle();
 }
 
 Future<void> _deleteSubPage(WidgetTester tester) async {
