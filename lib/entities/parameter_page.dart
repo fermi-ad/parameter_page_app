@@ -254,6 +254,18 @@ class ParameterPage {
         _pageData[currentTabIndex].subPages.length - 1;
   }
 
+  void deleteSubPage() {
+    _enforceEditMode();
+
+    _enforceAtLeastOneSubPage();
+
+    _pageData[currentTabIndex].subPages.removeAt(subPageIndex - 1);
+
+    if (subPageIndex - 1 == _pageData[currentTabIndex].subPages.length) {
+      decrementSubPage();
+    }
+  }
+
   void _enforceEditMode() {
     if (!_editing) {
       throw Exception(
@@ -264,6 +276,12 @@ class ParameterPage {
   void _enforceAtLeastOneTab() {
     if (_pageData.length == 1) {
       throw Exception("Could not delete the only tab on the page");
+    }
+  }
+
+  void _enforceAtLeastOneSubPage() {
+    if (_pageData[currentTabIndex].subPages.length == 1) {
+      throw Exception("Could not delete the only sub-page on the page");
     }
   }
 
@@ -300,7 +318,7 @@ class ParameterPage {
           subPages.add(_SubPage(title: "", entries: []));
         } else {
           subPages.add(_SubPage(
-              title: subPageData["title"],
+              title: subPageData["title"] ?? "",
               entries:
                   _buildEntriesListFromQueryResult(subPageData["entries"])));
         }

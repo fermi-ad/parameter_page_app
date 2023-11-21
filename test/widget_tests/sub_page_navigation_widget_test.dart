@@ -46,6 +46,21 @@ void main() {
       assertNumberOfSubPagesIs(3);
     });
 
+    testWidgets('edit mode disabled, new and delete buttons are hidden',
+        (WidgetTester tester) async {
+      // Given a ParameterPage that is not in edit mode
+      ParameterPage page = ParameterPage();
+
+      // When I render the SubPageNavigationWidget
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SubPageNavigationWidget(page: page)));
+      await tester.pumpWidget(app);
+
+      // Then the new and delete buttons are not displayed
+      expect(find.text('New Sub-Page'), findsNothing);
+      expect(find.text('Delete Sub-Page'), findsNothing);
+    });
+
     testWidgets('Title indicator, displays the title of the current sub-page',
         (WidgetTester tester) async {
       // Given a ParameterPage with 2 sub-pages, each with a distinct title
@@ -54,6 +69,7 @@ void main() {
       page.subPageTitle = "Sub-page 1 Title";
       page.createSubPage();
       page.subPageTitle = "Sub-page 2 Title";
+      page.disableEditing();
 
       // When I render the SubPageNavigationWidget
       MaterialApp app = MaterialApp(
@@ -123,6 +139,28 @@ void main() {
       // Then the sub-page directory is presented to the user
       assertSubPageDirectory(
           contains: ["Sub-Page One", "Sub-Page Two", "Sub-Page Three"]);
+    });
+
+    testWidgets(
+        'Open sub-page directory, all sub-pages are presented with blank pages',
+        (WidgetTester tester) async {
+      // Given a SubPageNavigationWidget has been rendered for a ParameterPage containing 3 sub-pages
+      // ... and some of the sub-pages have blank titles
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubPage();
+      page.createSubPage();
+      page.subPageTitle = "Sub-Page Three";
+
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SubPageNavigationWidget(page: page)));
+      await tester.pumpWidget(app);
+
+      // When I open the sub-page directory
+      await openSubPageDirectory(tester);
+
+      // Then the sub-page directory is presented to the user
+      assertSubPageDirectory(contains: ["", "", "Sub-Page Three"]);
     });
 
     testWidgets('Select sub-page from directory, onSelected is called',
@@ -228,6 +266,114 @@ void main() {
 
       // Then the onSelected callback is not invoked
       expect(selectedIndex, null);
+    });
+
+    testWidgets('Only one sub-page, hide sub-page directory',
+        (WidgetTester tester) async {
+      // Given a ParameterPage with only 1 sub-page
+      ParameterPage page = ParameterPage();
+
+      // When I render the SubPageNavigationWidget
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SubPageNavigationWidget(page: page)));
+      await tester.pumpWidget(app);
+
+      // Then the sub-page directory is not visible
+      assertExpandSubPageDirectory(isVisible: false);
+    });
+
+    testWidgets('Create sub-page, calls onNewSubPage',
+        (WidgetTester tester) async {
+      // Given a ParameterPage with 1 sug-page
+      ParameterPage page = ParameterPage();
+
+      // ... and editing mode is enabled
+      page.enableEditing();
+
+      // ... and I have rendered a SubPageNavigationWidget with an onNewSubPage call-back registered
+      bool onNewSubPageCalled = false;
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubPageNavigationWidget(
+                  page: page, onNewSubPage: () => onNewSubPageCalled = true)));
+      await tester.pumpWidget(app);
+
+      // When I create a new sub-page
+      await createNewSubPage(tester);
+
+      // Then the onNewSubPage call-back is called
+      expect(onNewSubPageCalled, true);
+    });
+
+    testWidgets('Delete sub-page, calls onDeleteSubPage',
+        (WidgetTester tester) async {
+      // Given a ParameterPage with 2 sub-pages
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubPage();
+
+      // ... and I have rendered a SubPageNavigationWidget with an onDeleteSubPage call-back registered
+      bool onDeleteSubPageCalled = false;
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubPageNavigationWidget(
+                  page: page,
+                  onDeleteSubPage: () => onDeleteSubPageCalled = true)));
+      await tester.pumpWidget(app);
+
+      // When I delete the current sub-page
+      await deleteSubPage(tester);
+
+      // Then the onDeleteSubPage call-back is called
+      expect(onDeleteSubPageCalled, true);
+    });
+
+    testWidgets('Editing enabled, sub-page title is editable',
+        (WidgetTester tester) async {
+      // Given a ParameterPage with a sub-page titled "Sub-Page One"
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.subPageTitle = "Sub-Page One";
+
+      // When I render the SubPageNavigationWidget
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubPageNavigationWidget(
+        page: page,
+      )));
+      await tester.pumpWidget(app);
+
+      // Then the sub-page title is in a textfield
+      expect(
+          find.descendant(
+              of: find.byKey(const Key("subpagenavigation-subpage-title")),
+              matching: find.descendant(
+                  of: find.byType(TextField),
+                  matching: find.text("Sub-Page One"))),
+          findsOneWidget);
+    });
+
+    testWidgets('Change sub-page title, onTitleChange is called with new title',
+        (WidgetTester tester) async {
+      // Given a ParameterPage in edit mode
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // ... and a SubPageNavigationWidget with an onTitleChanged call-back
+      String? newTitle;
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubPageNavigationWidget(
+        onTitleChanged: (String to) => newTitle = to,
+        page: page,
+      )));
+      await tester.pumpWidget(app);
+
+      // When I change the sub-page title
+      await changeSubPageTitle(tester, to: "New Sub-Page Title");
+
+      // Then the onTitleChange call-back receives the new sub-page title
+      expect(newTitle, "New Sub-Page Title");
     });
   });
 }

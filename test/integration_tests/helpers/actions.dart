@@ -394,7 +394,7 @@ Future<void> navigateDirectlyToSubpage(WidgetTester tester,
 }
 
 Future<void> openSubPageDirectory(WidgetTester tester) async {
-  await tester.tap(find.byIcon(Icons.more_vert));
+  await tester.tap(find.byIcon(Icons.expand_more));
   await tester.pumpAndSettle();
 }
 
@@ -402,5 +402,31 @@ Future<void> navigateSubPageUsingDirectory(WidgetTester tester,
     {required String toSubPageWithTitle}) async {
   await openSubPageDirectory(tester);
   await tester.tap(find.text(toSubPageWithTitle));
+  await tester.pumpAndSettle();
+}
+
+Future<void> createNewSubPage(WidgetTester tester) async {
+  await tester.tap(find.text("New Sub-Page"));
+  await tester.pumpAndSettle();
+}
+
+Future<void> deleteSubPage(WidgetTester tester, {bool? confirm}) async {
+  await tester.tap(find.text('Delete Sub-Page'));
+  await tester.pumpAndSettle();
+
+  if (confirm != null) {
+    await tester.tap(confirm ? find.text("Continue") : find.text("Cancel"));
+    await tester.pumpAndSettle();
+  }
+}
+
+Future<void> changeSubPageTitle(WidgetTester tester,
+    {required String to}) async {
+  await tester.enterText(
+      find.descendant(
+          of: find.byKey(const Key('subpagenavigation-subpage-title')),
+          matching: find.byType(TextField)),
+      to);
+  await tester.testTextInput.receiveAction(TextInputAction.done);
   await tester.pumpAndSettle();
 }

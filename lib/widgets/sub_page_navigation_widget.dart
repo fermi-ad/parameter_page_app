@@ -10,12 +10,22 @@ class SubPageNavigationWidget extends StatelessWidget {
 
   final Function(int)? onSelected;
 
-  const SubPageNavigationWidget(
+  final Function()? onNewSubPage;
+
+  final Function()? onDeleteSubPage;
+
+  final Function(String)? onTitleChanged;
+
+  SubPageNavigationWidget(
       {super.key,
       this.onForward,
       this.onBackward,
       this.onSelected,
-      required this.page});
+      this.onNewSubPage,
+      this.onDeleteSubPage,
+      this.onTitleChanged,
+      required this.page})
+      : _titleTextController = TextEditingController(text: page.subPageTitle);
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +39,32 @@ class SubPageNavigationWidget extends StatelessWidget {
       _buildTotalNumberOfSubPages(),
       const SizedBox(width: 5.0),
       _buildForwardsButton(),
-      const Spacer(),
+      const SizedBox(width: 15.0),
       _buildSubPageTitle(),
       const SizedBox(width: 5.0),
-      _buildDirectoryMenuButton(),
+      Visibility(
+          visible: page.numberOfSubPages > 1,
+          child: _buildDirectoryMenuButton()),
+      Visibility(visible: page.editing, child: _buildNewSubPageButton()),
+      const SizedBox(width: 5.0),
+      Visibility(visible: page.editing, child: _buildDeleteSubPageButton())
     ]);
+  }
+
+  Widget _buildDeleteSubPageButton() {
+    return Flexible(
+        child: TextButton.icon(
+            onPressed: () => onDeleteSubPage?.call(),
+            icon: const Icon(Icons.delete),
+            label: const Text("Delete Sub-Page")));
+  }
+
+  Widget _buildNewSubPageButton() {
+    return Flexible(
+        child: TextButton.icon(
+            onPressed: () => onNewSubPage?.call(),
+            icon: const Icon(Icons.add),
+            label: const Text("New Sub-Page")));
   }
 
   Widget _buildCurrentSubPageIndex() {
@@ -60,7 +91,7 @@ class SubPageNavigationWidget extends StatelessWidget {
 
   Widget _buildForwardsButton() {
     return IconButton(
-      icon: const Icon(Icons.navigate_next, size: 16.0),
+      icon: const Icon(Icons.navigate_next),
       onPressed: () => onForward?.call(),
     );
   }
@@ -68,12 +99,26 @@ class SubPageNavigationWidget extends StatelessWidget {
   Widget _buildSubPageTitle() {
     return Container(
         key: const Key("subpagenavigation-subpage-title"),
-        child: Text(page.subPageTitle));
+        child: page.editing
+            ? _buildSubPageTitleTextField()
+            : _buildSubPageTitleDisplay());
+  }
+
+  Widget _buildSubPageTitleDisplay() {
+    return Text(page.subPageTitle);
+  }
+
+  Widget _buildSubPageTitleTextField() {
+    return Expanded(
+        child: TextField(
+      controller: _titleTextController,
+      onEditingComplete: () => onTitleChanged?.call(_titleTextController.text),
+    ));
   }
 
   Widget _buildDirectoryMenuButton() {
     return PopupMenuButton<_SubPageDirectoryItem>(
-        icon: const Icon(Icons.more_vert),
+        icon: const Icon(Icons.expand_more),
         onSelected: (_SubPageDirectoryItem selected) =>
             onSelected?.call(selected.index),
         itemBuilder: _directoryItemBuilder);
@@ -86,7 +131,10 @@ class SubPageNavigationWidget extends StatelessWidget {
       ret.add(PopupMenuItem<_SubPageDirectoryItem>(
           value: _SubPageDirectoryItem(
               index: i + 1, title: page.subPageDirectory[i]),
-          child: Text(page.subPageDirectory[i])));
+          child: Row(children: [
+            SizedBox(width: 30, child: Text("${i + 1}:")),
+            Text(page.subPageDirectory[i])
+          ])));
     }
     return ret;
   }
@@ -97,6 +145,8 @@ class SubPageNavigationWidget extends StatelessWidget {
       onSelected?.call(index);
     }
   }
+
+  final TextEditingController _titleTextController;
 }
 
 class _SubPageDirectoryItem {

@@ -232,6 +232,18 @@ class MockParameterPageService extends ParameterPageService {
                   "type": "Comment"
                 }
               ]
+            },
+            {
+              "id": "3",
+              "entries": [
+                {
+                  "entryid": "17",
+                  "pageid": "3",
+                  "position": "1",
+                  "text": "this sub-page has no title",
+                  "type": "Comment"
+                }
+              ]
             }
           ]
         },
