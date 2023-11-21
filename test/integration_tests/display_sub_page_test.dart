@@ -241,5 +241,23 @@ void main() {
       // ... and the current sub-page is 1
       assertCurrentSubPageIs(1);
     });
+
+    testWidgets('Cancel delete sub-page, sub-page is not removed',
+        (WidgetTester tester) async {
+      // Given I am on Test Page 2, tab 1, sub-page 1
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+
+      // ... and I am in edit mode
+      await enterEditMode(tester);
+
+      // When I attempt to delete the current sub-page
+      // ... and I answer 'Cancel' when prompted to confirm
+      await deleteSubPage(tester, confirm: false);
+
+      // Then the number of sub-pages is the same
+      assertNumberOfSubPagesIs(3);
+    });
   });
 }
