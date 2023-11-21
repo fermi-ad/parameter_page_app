@@ -1239,5 +1239,24 @@ void main() {
       // ... and the currentSubPageIndex is 2
       expect(page.subPageIndex, 2);
     });
+
+    test(
+        'deleteSubPage() the last sub-page, removes sub-page and moves to the previous sub-page',
+        () {
+      // Given a ParameterPage with 3 sub-pages
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubPage();
+      page.createSubPage();
+
+      // When I deleteSubPage()
+      page.deleteSubPage();
+
+      // Then the number of sub-pages is reduced to 2
+      expect(page.numberOfSubPages, 2);
+
+      // ... and the currentSubPageIndex is 2
+      expect(page.subPageIndex, 2);
+    });
   });
 }
