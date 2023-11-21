@@ -202,7 +202,7 @@ void main() {
 
       // ... and the current sub-page is 2
       assertCurrentSubPageIs(2);
-    });
+    }, semanticsEnabled: false);
 
     testWidgets(
         'Attempt to delete a sub-page with entries, confirmation prompt is displayed',
@@ -220,7 +220,7 @@ void main() {
 
       // Then the confirmation prompt is displayed
       assertDeleteSubPageConfirmation(isVisible: true);
-    });
+    }, semanticsEnabled: false);
 
     testWidgets('Delete a sub-page with entries, sub-page is removed',
         (WidgetTester tester) async {
@@ -240,7 +240,7 @@ void main() {
 
       // ... and the current sub-page is 1
       assertCurrentSubPageIs(1);
-    });
+    }, semanticsEnabled: false);
 
     testWidgets('Cancel delete sub-page, sub-page is not removed',
         (WidgetTester tester) async {
@@ -258,6 +258,6 @@ void main() {
 
       // Then the number of sub-pages is the same
       assertNumberOfSubPagesIs(3);
-    });
+    }, semanticsEnabled: false);
   });
 }
