@@ -286,6 +286,9 @@ void main() {
       // Given a ParameterPage with 1 sug-page
       ParameterPage page = ParameterPage();
 
+      // ... and editing mode is enabled
+      page.enableEditing();
+
       // ... and I have rendered a SubPageNavigationWidget with an onNewSubPage call-back registered
       bool onNewSubPageCalled = false;
       MaterialApp app = MaterialApp(
