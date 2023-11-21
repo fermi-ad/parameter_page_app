@@ -73,7 +73,7 @@ class SubPageNavigationWidget extends StatelessWidget {
 
   Widget _buildDirectoryMenuButton() {
     return PopupMenuButton<_SubPageDirectoryItem>(
-        icon: const Icon(Icons.more_vert),
+        icon: const Icon(Icons.expand_more),
         onSelected: (_SubPageDirectoryItem selected) =>
             onSelected?.call(selected.index),
         itemBuilder: _directoryItemBuilder);
