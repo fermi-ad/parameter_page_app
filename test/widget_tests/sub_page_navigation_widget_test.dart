@@ -46,6 +46,21 @@ void main() {
       assertNumberOfSubPagesIs(3);
     });
 
+    testWidgets('edit mode disabled, new and delete buttons are hidden',
+        (WidgetTester tester) async {
+      // Given a ParameterPage that is not in edit mode
+      ParameterPage page = ParameterPage();
+
+      // When I render the SubPageNavigationWidget
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SubPageNavigationWidget(page: page)));
+      await tester.pumpWidget(app);
+
+      // Then the new and delete buttons are not displayed
+      expect(find.text('New Sub-Page'), findsNothing);
+      expect(find.text('Delete Sub-Page'), findsNothing);
+    });
+
     testWidgets('Title indicator, displays the title of the current sub-page',
         (WidgetTester tester) async {
       // Given a ParameterPage with 2 sub-pages, each with a distinct title
