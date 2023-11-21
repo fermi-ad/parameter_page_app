@@ -1258,5 +1258,20 @@ void main() {
       // ... and the currentSubPageIndex is 2
       expect(page.subPageIndex, 2);
     });
+
+    test('deleteSubPage(), enforces edit mode', () {
+      // Given a ParameterPage with 3 sub-pages
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubPage();
+      page.createSubPage();
+
+      // ... and edit mode is disabled
+      page.disableEditing();
+
+      // When I deleteSubPage()
+      // Then an exception is thrown
+      expect(() => page.deleteSubPage(), throwsException);
+    });
   });
 }

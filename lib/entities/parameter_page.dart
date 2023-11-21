@@ -256,6 +256,10 @@ class ParameterPage {
 
   void deleteSubPage() {
     _pageData[currentTabIndex].subPages.removeAt(subPageIndex - 1);
+
+    if (subPageIndex - 1 == _pageData[currentTabIndex].subPages.length) {
+      decrementSubPage();
+    }
   }
 
   void _enforceEditMode() {
