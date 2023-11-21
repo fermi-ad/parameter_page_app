@@ -329,7 +329,25 @@ void main() {
 
     testWidgets('Editing enabled, sub-page title is editable',
         (WidgetTester tester) async {
+      // Given a ParameterPage with a sub-page titled "Sub-Page One"
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.subPageTitle = "Sub-Page One";
+
+      // When I render the SubPageNavigationWidget
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubPageNavigationWidget(
+        page: page,
+      )));
+      await tester.pumpWidget(app);
+
       // Then the sub-page title is in a textfield
+      expect(
+          find.descendant(
+              of: find.byKey(const Key("subpagenavigation-subpage-title")),
+              matching: find.byType(TextField)),
+          findsOneWidget);
     });
   });
 }
