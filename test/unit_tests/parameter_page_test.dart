@@ -1280,8 +1280,6 @@ void main() {
       page.enableEditing();
 
       // When I deleteSubPage()
-      page.deleteSubPage();
-
       // Then an exception is thrown
       expect(() => page.deleteSubPage(), throwsException);
     });
