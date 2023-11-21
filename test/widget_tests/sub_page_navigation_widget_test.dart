@@ -125,6 +125,28 @@ void main() {
           contains: ["Sub-Page One", "Sub-Page Two", "Sub-Page Three"]);
     });
 
+    testWidgets(
+        'Open sub-page directory, all sub-pages are presented with blank pages',
+        (WidgetTester tester) async {
+      // Given a SubPageNavigationWidget has been rendered for a ParameterPage containing 3 sub-pages
+      // ... and some of the sub-pages have blank titles
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubPage();
+      page.createSubPage();
+      page.subPageTitle = "Sub-Page Three";
+
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SubPageNavigationWidget(page: page)));
+      await tester.pumpWidget(app);
+
+      // When I open the sub-page directory
+      await openSubPageDirectory(tester);
+
+      // Then the sub-page directory is presented to the user
+      assertSubPageDirectory(contains: ["", "", "Sub-Page Three"]);
+    });
+
     testWidgets('Select sub-page from directory, onSelected is called',
         (WidgetTester tester) async {
       // Given a SubPageNavigationWidget has been rendered for a ParameterPage containing 3 sub-pages
