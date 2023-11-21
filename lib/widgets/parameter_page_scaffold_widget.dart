@@ -88,6 +88,7 @@ class _ParameterPageScaffoldWidgetState
             Expanded(
               child: SubPageNavigationWidget(
                   page: _page!,
+                  onDeleteSubPage: _handleDeleteSubPage,
                   onForward: () => setState(() => _page!.incrementSubPage()),
                   onBackward: () => setState(() => _page!.decrementSubPage()),
                   onSelected: (int index) =>
@@ -199,6 +200,22 @@ class _ParameterPageScaffoldWidgetState
                   onChanged: (DisplaySettings newSettings) =>
                       _pageKey.currentState?.updateSettings(newSettings),
                 )));
+  }
+
+  void _handleDeleteSubPage() {
+    if (_page!.numberOfEntries() > 0) {
+      _promptUserToDeleteSubPage(context).then((bool? dialogResponse) {
+        if (!(dialogResponse == null || !dialogResponse)) {
+          _deleteTheSubPage();
+        }
+      });
+    } else {
+      _deleteTheSubPage();
+    }
+  }
+
+  void _deleteTheSubPage() {
+    setState(() => _page!.deleteSubPage());
   }
 
   void _handleRenameTab(String withTitle, String to) {
@@ -362,6 +379,28 @@ class _ParameterPageScaffoldWidgetState
               _errorMessage = error;
               _page = null;
             }));
+  }
+
+  Future<bool?> _promptUserToDeleteSubPage(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        key: const Key("delete_subpage_confirmation"),
+        title: const Text('Delete Sub-Page'),
+        content: const Text(
+            'This sub-page contains at least one entry.  Deleting the sub-page will discard all of it\'s entries.  Do you wish to continue?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Continue'),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<bool?> _promptUserToDeleteTab(BuildContext context) {
