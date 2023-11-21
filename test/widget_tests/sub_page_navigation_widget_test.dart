@@ -229,5 +229,19 @@ void main() {
       // Then the onSelected callback is not invoked
       expect(selectedIndex, null);
     });
+
+    testWidgets('Only one sub-page, hide sub-page directory',
+        (WidgetTester tester) async {
+      // Given a ParameterPage with only 1 sub-page
+      ParameterPage page = ParameterPage();
+
+      // When I render the SubPageNavigationWidget
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SubPageNavigationWidget(page: page)));
+      await tester.pumpWidget(app);
+
+      // Then the sub-page directory is not visible
+      assertExpandSubPageDirectory(isVisible: false);
+    });
   });
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/widgets/comment_entry_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
+import 'package:parameter_page/widgets/sub_page_navigation_widget.dart';
 
 void assertIsOnPage({required String comment}) {
   expect(
@@ -555,4 +556,12 @@ void assertSubPageDirectory({required List<String> contains}) {
   for (final title in contains) {
     expect(find.text(title), findsAtLeastNWidgets(1));
   }
+}
+
+void assertExpandSubPageDirectory({required bool isVisible}) {
+  expect(
+      find.descendant(
+          of: find.byType(SubPageNavigationWidget),
+          matching: find.byIcon(Icons.expand_more)),
+      isVisible ? findsOneWidget : findsNothing);
 }
