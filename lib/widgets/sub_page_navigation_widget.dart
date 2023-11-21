@@ -10,11 +10,14 @@ class SubPageNavigationWidget extends StatelessWidget {
 
   final Function(int)? onSelected;
 
+  final Function()? onNewSubPage;
+
   const SubPageNavigationWidget(
       {super.key,
       this.onForward,
       this.onBackward,
       this.onSelected,
+      this.onNewSubPage,
       required this.page});
 
   @override

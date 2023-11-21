@@ -265,5 +265,30 @@ void main() {
       // Then the sub-page directory is not visible
       assertExpandSubPageDirectory(isVisible: false);
     });
+
+    testWidgets('Create sub-page, calls onNewSubPage',
+        (WidgetTester tester) async {
+      // Given a ParameterPage with 1 sug-page
+      ParameterPage page = ParameterPage();
+
+      // ... and I have rendered a SubPageNavigationWidget with an onNewSubPage call-back registered
+      bool onNewSubPageCalled = false;
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubPageNavigationWidget(
+                  page: page, onNewSubPage: () => onNewSubPageCalled = true)));
+      await tester.pumpWidget(app);
+
+      // When I create a new sub-page
+      await _createNewSubPage(tester);
+
+      // Then the onNewSubPage call-back is called
+      expect(onNewSubPageCalled, true);
+    });
   });
+}
+
+Future<void> _createNewSubPage(WidgetTester tester) async {
+  await tester.tap(find.text("New Sub-Page"));
+  await tester.pumpAndSettle();
 }
