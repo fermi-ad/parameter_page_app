@@ -32,7 +32,9 @@ class SubPageNavigationWidget extends StatelessWidget {
       const SizedBox(width: 15.0),
       _buildSubPageTitle(),
       const SizedBox(width: 5.0),
-      _buildDirectoryMenuButton(),
+      Visibility(
+          visible: page.numberOfSubPages > 1,
+          child: _buildDirectoryMenuButton()),
     ]);
   }
 

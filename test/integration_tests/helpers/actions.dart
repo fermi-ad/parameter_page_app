@@ -394,7 +394,7 @@ Future<void> navigateDirectlyToSubpage(WidgetTester tester,
 }
 
 Future<void> openSubPageDirectory(WidgetTester tester) async {
-  await tester.tap(find.byIcon(Icons.more_vert));
+  await tester.tap(find.byIcon(Icons.expand_more));
   await tester.pumpAndSettle();
 }
 
