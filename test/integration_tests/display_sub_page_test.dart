@@ -18,8 +18,8 @@ void main() {
       await navigateToOpenPage(tester);
       await openParameterPage(tester, withTitle: "Test Page 2");
 
-      // Then there are 2 sub-pages
-      assertNumberOfSubPagesIs(2);
+      // Then there are 3 sub-pages
+      assertNumberOfSubPagesIs(3);
 
       // ... and the current sub-page is 1
       assertCurrentSubPageIs(1);
@@ -62,8 +62,8 @@ void main() {
       // When I navigate forward to sub-page 2
       await navigateSubPageForward(tester);
 
-      // Then there are still 2 sub-pages
-      assertNumberOfSubPagesIs(2);
+      // Then there are still 3 sub-pages
+      assertNumberOfSubPagesIs(3);
 
       // ... and the current sub-page is 2
       assertCurrentSubPageIs(2);
@@ -94,8 +94,8 @@ void main() {
       // When I move backwards
       await navigateSubPageBackwards(tester);
 
-      // Then there are still 2 sub-pages
-      assertNumberOfSubPagesIs(2);
+      // Then there are still 3 sub-pages
+      assertNumberOfSubPagesIs(3);
 
       // ... and the current sub-page is 1
       assertCurrentSubPageIs(1);
@@ -122,8 +122,8 @@ void main() {
       // When I navigate directly to sub-page 2
       await navigateDirectlyToSubpage(tester, withIndex: "2");
 
-      // Then there are still 2 sub-pages
-      assertNumberOfSubPagesIs(2);
+      // Then there are still 3 sub-pages
+      assertNumberOfSubPagesIs(3);
 
       // ... and the current sub-page is 2
       assertCurrentSubPageIs(2);
@@ -165,8 +165,8 @@ void main() {
       await navigateSubPageUsingDirectory(tester,
           toSubPageWithTitle: "Sub-Page Two");
 
-      // Then there are still 2 sub-pages
-      assertNumberOfSubPagesIs(2);
+      // Then there are still 3 sub-pages
+      assertNumberOfSubPagesIs(3);
 
       // ... and the current sub-page is 2
       assertCurrentSubPageIs(2);
