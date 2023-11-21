@@ -255,7 +255,7 @@ class ParameterPage {
   }
 
   void deleteSubPage() {
-    // _pageData[currentTabIndex].subPages.removeAt(subPageIndex - 1);
+    _pageData[currentTabIndex].subPages.removeAt(subPageIndex - 1);
   }
 
   void _enforceEditMode() {
