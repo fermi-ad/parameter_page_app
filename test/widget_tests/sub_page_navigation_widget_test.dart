@@ -326,5 +326,10 @@ void main() {
       // Then the onDeleteSubPage call-back is called
       expect(onDeleteSubPageCalled, true);
     });
+
+    testWidgets('Editing enabled, sub-page title is editable',
+        (WidgetTester tester) async {
+      // Then the sub-page title is in a textfield
+    });
   });
 }

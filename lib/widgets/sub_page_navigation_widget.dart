@@ -95,7 +95,17 @@ class SubPageNavigationWidget extends StatelessWidget {
   Widget _buildSubPageTitle() {
     return Container(
         key: const Key("subpagenavigation-subpage-title"),
-        child: Text(page.subPageTitle));
+        child: page.editing
+            ? _buildSubPageTitleDisplay()
+            : _buildSubPageTitleTextField());
+  }
+
+  Widget _buildSubPageTitleDisplay() {
+    return Text(page.subPageTitle);
+  }
+
+  Widget _buildSubPageTitleTextField() {
+    return Container();
   }
 
   Widget _buildDirectoryMenuButton() {
