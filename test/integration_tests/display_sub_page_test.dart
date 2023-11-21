@@ -203,5 +203,23 @@ void main() {
       // ... and the current sub-page is 2
       assertCurrentSubPageIs(2);
     });
+
+    testWidgets(
+        'Attempt to delete a sub-page with entries, confirmation prompt is displayed',
+        (WidgetTester tester) async {
+      // Given I am on an empty sub-page
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+      await navigateSubPageForward(tester);
+      await navigateSubPageForward(tester);
+      await enterEditMode(tester);
+
+      // When I attempt to delete the current sub-page
+      await deleteSubPage(tester);
+
+      // Then the confirmation prompt is displayed
+      assertDeleteSubPageConfirmation(isVisible: true);
+    });
   });
 }

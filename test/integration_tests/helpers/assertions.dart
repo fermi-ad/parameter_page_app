@@ -571,3 +571,8 @@ void assertExpandSubPageDirectory({required bool isVisible}) {
           matching: find.byIcon(Icons.expand_more)),
       isVisible ? findsOneWidget : findsNothing);
 }
+
+void assertDeleteSubPageConfirmation({required bool isVisible}) {
+  expect(find.byKey(const Key("delete_subpage_confirmation")),
+      isVisible ? findsOneWidget : findsNothing);
+}
