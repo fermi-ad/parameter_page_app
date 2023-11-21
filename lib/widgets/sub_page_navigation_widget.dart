@@ -109,7 +109,11 @@ class SubPageNavigationWidget extends StatelessWidget {
   }
 
   Widget _buildSubPageTitleTextField() {
-    return Expanded(child: TextField(controller: _titleTextController));
+    return Expanded(
+        child: TextField(
+      controller: _titleTextController,
+      onEditingComplete: () => onTitleChanged?.call(_titleTextController.text),
+    ));
   }
 
   Widget _buildDirectoryMenuButton() {
