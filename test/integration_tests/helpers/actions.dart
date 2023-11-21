@@ -410,7 +410,12 @@ Future<void> createNewSubPage(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> deleteSubPage(WidgetTester tester) async {
+Future<void> deleteSubPage(WidgetTester tester, {bool? confirm}) async {
   await tester.tap(find.text('Delete Sub-Page'));
   await tester.pumpAndSettle();
+
+  if (confirm != null) {
+    await tester.tap(confirm ? find.text("Continue") : find.text("Cancel"));
+    await tester.pumpAndSettle();
+  }
 }

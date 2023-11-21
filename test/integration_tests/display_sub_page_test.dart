@@ -221,5 +221,25 @@ void main() {
       // Then the confirmation prompt is displayed
       assertDeleteSubPageConfirmation(isVisible: true);
     });
+
+    testWidgets('Delete a sub-page with entries, sub-page is removed',
+        (WidgetTester tester) async {
+      // Given I am on Test Page 2, tab 1, sub-page 1
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+
+      // ... and I am in edit mode
+      await enterEditMode(tester);
+
+      // When I attempt to delete the current sub-page
+      await deleteSubPage(tester, confirm: true);
+
+      // Then the number of sub-pages is decreased
+      assertNumberOfSubPagesIs(2);
+
+      // ... and the current sub-page is 1
+      assertCurrentSubPageIs(1);
+    });
   });
 }
