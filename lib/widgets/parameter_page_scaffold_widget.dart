@@ -88,6 +88,8 @@ class _ParameterPageScaffoldWidgetState
             Expanded(
               child: SubPageNavigationWidget(
                   page: _page!,
+                  onTitleChanged: (String to) =>
+                      setState(() => _page!.subPageTitle = to),
                   onNewSubPage: () => setState(() => _page!.createSubPage()),
                   onDeleteSubPage: _handleDeleteSubPage,
                   onForward: () => setState(() => _page!.incrementSubPage()),
