@@ -1217,5 +1217,71 @@ void main() {
       // ... and 3 for Tab 3
       expect(page.subPageCount(forTab: "Tab 3"), 3);
     });
+
+    test(
+        'deleteSubPage() on a middle sub-page, removes sub-page and moves to the next sub-page',
+        () {
+      // Given a ParameterPage with 3 sub-pages
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubPage();
+      page.createSubPage();
+
+      // ... and I am on sub-page 2
+      page.decrementSubPage();
+
+      // When I deleteSubPage()
+      page.deleteSubPage();
+
+      // Then the number of sub-pages is reduced to 2
+      expect(page.numberOfSubPages, 2);
+
+      // ... and the currentSubPageIndex is 2
+      expect(page.subPageIndex, 2);
+    });
+
+    test(
+        'deleteSubPage() the last sub-page, removes sub-page and moves to the previous sub-page',
+        () {
+      // Given a ParameterPage with 3 sub-pages
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubPage();
+      page.createSubPage();
+
+      // When I deleteSubPage()
+      page.deleteSubPage();
+
+      // Then the number of sub-pages is reduced to 2
+      expect(page.numberOfSubPages, 2);
+
+      // ... and the currentSubPageIndex is 2
+      expect(page.subPageIndex, 2);
+    });
+
+    test('deleteSubPage(), enforces edit mode', () {
+      // Given a ParameterPage with 3 sub-pages
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubPage();
+      page.createSubPage();
+
+      // ... and edit mode is disabled
+      page.disableEditing();
+
+      // When I deleteSubPage()
+      // Then an exception is thrown
+      expect(() => page.deleteSubPage(), throwsException);
+    });
+
+    test('deleteSubPage(), won\'t delete the only sub-page', () {
+      // Given a ParameterPage with just 1 sub-page
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I deleteSubPage()
+      // Then an exception is thrown
+      expect(() => page.deleteSubPage(), throwsException);
+    });
   });
 }

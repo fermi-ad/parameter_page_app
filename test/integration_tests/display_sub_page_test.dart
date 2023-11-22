@@ -18,8 +18,8 @@ void main() {
       await navigateToOpenPage(tester);
       await openParameterPage(tester, withTitle: "Test Page 2");
 
-      // Then there are 2 sub-pages
-      assertNumberOfSubPagesIs(2);
+      // Then there are 3 sub-pages
+      assertNumberOfSubPagesIs(3);
 
       // ... and the current sub-page is 1
       assertCurrentSubPageIs(1);
@@ -62,8 +62,8 @@ void main() {
       // When I navigate forward to sub-page 2
       await navigateSubPageForward(tester);
 
-      // Then there are still 2 sub-pages
-      assertNumberOfSubPagesIs(2);
+      // Then there are still 3 sub-pages
+      assertNumberOfSubPagesIs(3);
 
       // ... and the current sub-page is 2
       assertCurrentSubPageIs(2);
@@ -94,8 +94,8 @@ void main() {
       // When I move backwards
       await navigateSubPageBackwards(tester);
 
-      // Then there are still 2 sub-pages
-      assertNumberOfSubPagesIs(2);
+      // Then there are still 3 sub-pages
+      assertNumberOfSubPagesIs(3);
 
       // ... and the current sub-page is 1
       assertCurrentSubPageIs(1);
@@ -122,8 +122,8 @@ void main() {
       // When I navigate directly to sub-page 2
       await navigateDirectlyToSubpage(tester, withIndex: "2");
 
-      // Then there are still 2 sub-pages
-      assertNumberOfSubPagesIs(2);
+      // Then there are still 3 sub-pages
+      assertNumberOfSubPagesIs(3);
 
       // ... and the current sub-page is 2
       assertCurrentSubPageIs(2);
@@ -165,8 +165,8 @@ void main() {
       await navigateSubPageUsingDirectory(tester,
           toSubPageWithTitle: "Sub-Page Two");
 
-      // Then there are still 2 sub-pages
-      assertNumberOfSubPagesIs(2);
+      // Then there are still 3 sub-pages
+      assertNumberOfSubPagesIs(3);
 
       // ... and the current sub-page is 2
       assertCurrentSubPageIs(2);
@@ -180,6 +180,128 @@ void main() {
       // ... and the contents of sub-page 1 are not
       assertIsNotOnPage(comment: "this is comment #1");
       assertIsNotOnPage(comment: "this is comment #2");
+    }, semanticsEnabled: false);
+
+    testWidgets(
+        'Delete empty sub-page, sub-page is removed and navigation moves to an adjacent sub-page',
+        (WidgetTester tester) async {
+      // Given I am on an empty sub-page
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+      await navigateSubPageForward(tester);
+      await navigateSubPageForward(tester);
+      await enterEditMode(tester);
+      await deleteRow(tester, index: 0);
+
+      // When I delete the current sub-page
+      await deleteSubPage(tester);
+
+      // Then the number of sub-pages is decreased
+      assertNumberOfSubPagesIs(2);
+
+      // ... and the current sub-page is 2
+      assertCurrentSubPageIs(2);
+    }, semanticsEnabled: false);
+
+    testWidgets(
+        'Attempt to delete a sub-page with entries, confirmation prompt is displayed',
+        (WidgetTester tester) async {
+      // Given I am on an empty sub-page
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+      await navigateSubPageForward(tester);
+      await navigateSubPageForward(tester);
+      await enterEditMode(tester);
+
+      // When I attempt to delete the current sub-page
+      await deleteSubPage(tester);
+
+      // Then the confirmation prompt is displayed
+      assertDeleteSubPageConfirmation(isVisible: true);
+    }, semanticsEnabled: false);
+
+    testWidgets('Delete a sub-page with entries, sub-page is removed',
+        (WidgetTester tester) async {
+      // Given I am on Test Page 2, tab 1, sub-page 1
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+
+      // ... and I am in edit mode
+      await enterEditMode(tester);
+
+      // When I attempt to delete the current sub-page
+      await deleteSubPage(tester, confirm: true);
+
+      // Then the number of sub-pages is decreased
+      assertNumberOfSubPagesIs(2);
+
+      // ... and the current sub-page is 1
+      assertCurrentSubPageIs(1);
+    }, semanticsEnabled: false);
+
+    testWidgets('Cancel delete sub-page, sub-page is not removed',
+        (WidgetTester tester) async {
+      // Given I am on Test Page 2, tab 1, sub-page 1
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+
+      // ... and I am in edit mode
+      await enterEditMode(tester);
+
+      // When I attempt to delete the current sub-page
+      // ... and I answer 'Cancel' when prompted to confirm
+      await deleteSubPage(tester, confirm: false);
+
+      // Then the number of sub-pages is the same
+      assertNumberOfSubPagesIs(3);
+    }, semanticsEnabled: false);
+
+    testWidgets('Create new sub-page, new sub-page is created and navigated to',
+        (WidgetTester tester) async {
+      // Given I am on Test Page 2, tab 1, sub-page 1
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+
+      // ... and I am in editing mode
+      await enterEditMode(tester);
+
+      // When I create a new sub-page
+      await createNewSubPage(tester);
+
+      // Then the number of sub-pages increases by one
+      assertNumberOfSubPagesIs(4);
+
+      // ... and the current sub-page is 4
+      assertCurrentSubPageIs(4);
+
+      // ... and the page is empty
+      assertNumberOfEntriesOnPageIs(0);
+    }, semanticsEnabled: false);
+
+    testWidgets(
+        'Change sub-page title, new title reflected outside of edit mode',
+        (WidgetTester tester) async {
+      // Given I am on Test Page 2, tab 1, sub-page 1
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+
+      // ... and I am in editing mode
+      await enterEditMode(tester);
+
+      // When I change the sub-page title
+      await changeSubPageTitle(tester, to: "New Sub-Page One");
+
+      // ... and exit edit mode
+      await exitEditMode(tester);
+
+      // Then the sub-page title is updated to reflect the new title
+      assertSubPageTitleIs("New Sub-Page One");
     }, semanticsEnabled: false);
   });
 }
