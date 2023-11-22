@@ -304,5 +304,78 @@ void main() {
       await switchTab(tester, to: "Tab 2");
       assertIsOnPage(comment: "this is comment #3");
     }, semanticsEnabled: false);
+
+    testWidgets('Save a page with multiple sub-pages, changes persist',
+        (WidgetTester tester) async {
+      // Given I have opened Test Page 2
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+      await enterEditMode(tester);
+
+      // ... and I have added comments to Sub-page 2
+      await navigateSubPageForward(tester);
+      await addANewComment(
+          tester, "Tab-1 / Sub-page 2 : this comment should be saved");
+
+      // ... and I have added comments to Sub-page 3
+      await navigateSubPageForward(tester);
+      await addANewComment(
+          tester, "Tab-1 / Sub-page 3 : this comment should be saved");
+
+      // ... and I have created a new sub-page
+      await createNewSubPage(tester);
+
+      // ... and changed the title of the new sub-page
+      await changeSubPageTitle(tester, to: "Sub-page Four");
+
+      // ... added comments to Sub-page 4
+      await navigateSubPageForward(tester);
+      await addANewComment(
+          tester, "Tab-1 / Sub-page 4 : this comment should be saved");
+
+      // ... and I have added comments to Tab-2 Sub-Page 1
+      await switchTab(tester, to: "Tab 2");
+      await addANewComment(
+          tester, "Tab-2 / Sub-page 1 : this comment should be saved");
+      await exitEditMode(tester);
+
+      // When I save the page
+      await openMainMenu(tester);
+      await saveParameterPage(tester);
+      await waitForPageToBeSaved(tester);
+
+      // ... and I open another page
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 1");
+
+      // ... and I open Test Page 2 again
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+
+      // Then the entries on Tab 1 sub-page 2 are still there
+      await navigateSubPageForward(tester);
+      assertIsOnPage(
+          comment: "Tab-1 / Sub-page 2 : this comment should be saved");
+      assertIsOnPage(comment: "this is comment #3");
+
+      // ... and the entries on Tab 1 sub-page 3
+      await navigateSubPageForward(tester);
+      assertIsOnPage(comment: "this sub-page has no title");
+      assertIsOnPage(
+          comment: "Tab-1 / Sub-page 3 : this comment should be saved");
+
+      // ... and the new sub-page
+      await navigateSubPageForward(tester);
+      assertSubPageTitleIs("Sub-page Four");
+      assertIsOnPage(
+          comment: "Tab-1 / Sub-page 4 : this comment should be saved");
+
+      // ... and the entries on Tab 2 sub-page 1
+      await switchTab(tester, to: "Tab 2");
+      assertIsOnPage(
+          comment: "Tab-2 / Sub-page 1 : this comment should be saved");
+      assertIsOnPage(comment: "This is Tab 2");
+    });
   });
 }
