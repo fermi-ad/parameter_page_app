@@ -54,7 +54,9 @@ class SubPageNavigationWidget extends StatelessWidget {
   Widget _buildDeleteSubPageButton() {
     return Flexible(
         child: TextButton.icon(
-            onPressed: () => onDeleteSubPage?.call(),
+            key: const Key("subpagenavigation-deletesubpage"),
+            onPressed:
+                _isDeleteButtonEnabled ? () => onDeleteSubPage?.call() : null,
             icon: const Icon(Icons.delete),
             label: const Text("Delete Sub-Page")));
   }
@@ -112,6 +114,7 @@ class SubPageNavigationWidget extends StatelessWidget {
     return Expanded(
         child: TextField(
       controller: _titleTextController,
+      onTapOutside: (event) => onTitleChanged?.call(_titleTextController.text),
       onEditingComplete: () => onTitleChanged?.call(_titleTextController.text),
     ));
   }
@@ -144,6 +147,10 @@ class SubPageNavigationWidget extends StatelessWidget {
     if (index != null && index > 0 && index <= page.subPageDirectory.length) {
       onSelected?.call(index);
     }
+  }
+
+  bool get _isDeleteButtonEnabled {
+    return page.numberOfSubPages > 1;
   }
 
   final TextEditingController _titleTextController;

@@ -375,5 +375,31 @@ void main() {
       // Then the onTitleChange call-back receives the new sub-page title
       expect(newTitle, "New Sub-Page Title");
     });
+
+    testWidgets('Only one sub-page, delete button is disabled',
+        (WidgetTester tester) async {
+      // Given a ParameterPage with one sub-page
+      ParameterPage page = ParameterPage();
+
+      // ... and the page is in edit mode
+      page.enableEditing();
+
+      // When then SubPageNavigationWidget is rendered
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SubPageNavigationWidget(page: page)));
+      await tester.pumpWidget(app);
+
+      // Then the delete button is disabled
+      _assertDeleteSubPage(tester, isEnabled: false);
+    });
   });
+}
+
+void _assertDeleteSubPage(WidgetTester tester, {required bool isEnabled}) {
+  expect(
+      tester
+          .widget<TextButton>(
+              find.byKey(const Key("subpagenavigation-deletesubpage")))
+          .enabled,
+      isEnabled);
 }
