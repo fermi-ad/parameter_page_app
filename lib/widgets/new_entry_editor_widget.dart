@@ -49,26 +49,31 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
   }
 
   List<PageEntry> _extractPageEntriesFrom({required final String textInput}) {
-    List<String> textArr = textInput.split(" ");
-    List<PageEntry> pageEntries = [];
-
     if (_isHardComment(textInput)) {
-      pageEntries.add(CommentEntry(_stripBang(textInput)));
+      return [CommentEntry(_stripBang(textInput))];
     } else {
-      for (String textElement in textArr) {
-        if (_daqWidget.isACNETDRF(textElement) ||
-            _daqWidget.isProcessVariable(textElement)) {
-          pageEntries.add(ParameterEntry(textElement,
-              label: "", key: Key("parameter_row_$textElement")));
-        }
+      final entries = _findAllTheParameterEntries(inside: textInput);
+      if (entries.isEmpty && textInput.length > 1) {
+        return [CommentEntry(textInput)];
+      } else {
+        return entries;
+      }
+    }
+  }
+
+  List<PageEntry> _findAllTheParameterEntries({required String inside}) {
+    List<String> textArr = inside.split(" ");
+    List<PageEntry> ret = [];
+
+    for (String textElement in textArr) {
+      if (_daqWidget.isACNETDRF(textElement) ||
+          _daqWidget.isProcessVariable(textElement)) {
+        ret.add(ParameterEntry(textElement,
+            label: "", key: Key("parameter_row_$textElement")));
       }
     }
 
-    if (pageEntries.isEmpty && textInput.length > 1) {
-      pageEntries.add(CommentEntry(textInput));
-    }
-
-    return pageEntries;
+    return ret;
   }
 
   bool _isHardComment(String val) {
