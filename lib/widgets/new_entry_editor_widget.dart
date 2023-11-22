@@ -44,11 +44,11 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
             _focusNode.requestFocus();
           });
 
-          widget.onSubmitted(_generatePageEntryFrom(textInput: value));
+          widget.onSubmitted(_extractPageEntriesFrom(textInput: value));
         });
   }
 
-  List<PageEntry> _generatePageEntryFrom({required final String textInput}) {
+  List<PageEntry> _extractPageEntriesFrom({required final String textInput}) {
     List<String> textArr = textInput.split(" ");
     List<PageEntry> pageEntries = [];
 
