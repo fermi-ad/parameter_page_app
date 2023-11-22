@@ -267,7 +267,7 @@ class ParameterPage {
   }
 
   String subPageTitleFor({required String tab, required int subPageIndex}) {
-    return "";
+    return _pageData[_findIndex(forTab: tab)].subPages[subPageIndex - 1].title;
   }
 
   void _enforceEditMode() {

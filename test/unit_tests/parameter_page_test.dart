@@ -1296,7 +1296,7 @@ void main() {
       page.subPageTitle = "Tab-1 Sub-2";
       page.createTab();
       page.subPageTitle = "Tab-2 Sub-1";
-      page.createSubPage;
+      page.createSubPage();
       page.subPageTitle = "Tab-2 Sub-2";
 
       // When I call subPageTitleFor(..) for each tab / sub-page combo
