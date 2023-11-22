@@ -114,6 +114,7 @@ class SubPageNavigationWidget extends StatelessWidget {
     return Expanded(
         child: TextField(
       controller: _titleTextController,
+      onTapOutside: (event) => onTitleChanged?.call(_titleTextController.text),
       onEditingComplete: () => onTitleChanged?.call(_titleTextController.text),
     ));
   }
