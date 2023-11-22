@@ -90,8 +90,11 @@ class MockParameterPageService extends ParameterPageService {
           position += 1;
         }
 
-        newSubPages.add(
-            {"id": "$i", "title": "Sub-page ${i + 1}", "entries": newEntries});
+        newSubPages.add({
+          "id": "$i",
+          "title": page.subPageTitleFor(tab: tabTitle, subPageIndex: i + 1),
+          "entries": newEntries
+        });
       }
 
       _testPageEntries[id]!["tabs"]!
