@@ -1283,5 +1283,32 @@ void main() {
       // Then an exception is thrown
       expect(() => page.deleteSubPage(), throwsException);
     });
+
+    test(
+        'subPageTitleFor(tab:, subPageIndex:), returns the title for the correct sub-page',
+        () {
+      // Given a ParameterPage with 2 tabs, each with 2 sub-pages
+      // ... and each sub-page has a title
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.subPageTitle = "Tab-1 Sub-1";
+      page.createSubPage();
+      page.subPageTitle = "Tab-1 Sub-2";
+      page.createTab();
+      page.subPageTitle = "Tab-2 Sub-1";
+      page.createSubPage;
+      page.subPageTitle = "Tab-2 Sub-2";
+
+      // When I call subPageTitleFor(..) for each tab / sub-page combo
+      // Then the appropriate titles are returned
+      expect(
+          page.subPageTitleFor(tab: "Tab 1", subPageIndex: 1), "Tab-1 Sub-1");
+      expect(
+          page.subPageTitleFor(tab: "Tab 2", subPageIndex: 1), "Tab-2 Sub-1");
+      expect(
+          page.subPageTitleFor(tab: "Tab 1", subPageIndex: 2), "Tab-1 Sub-2");
+      expect(
+          page.subPageTitleFor(tab: "Tab 2", subPageIndex: 2), "Tab-2 Sub-2");
+    });
   });
 }

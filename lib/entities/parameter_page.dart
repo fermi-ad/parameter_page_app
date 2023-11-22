@@ -266,6 +266,10 @@ class ParameterPage {
     }
   }
 
+  String subPageTitleFor({required String tab, required int subPageIndex}) {
+    return "";
+  }
+
   void _enforceEditMode() {
     if (!_editing) {
       throw Exception(
