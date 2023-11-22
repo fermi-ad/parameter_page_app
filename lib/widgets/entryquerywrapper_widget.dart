@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:logger/logger.dart';
 import '../gqlconnect.dart';
 import '../services/parameter_page/gql_param/mutations.dart';
 
@@ -9,18 +8,16 @@ class EntryQueryWrapper extends StatefulWidget {
   final Function fetchData;
 
   const EntryQueryWrapper({
-    Key? key,
+    super.key,
     required this.entries,
     required this.fetchData,
-  }) : super(key: key);
+  });
 
   @override
   State<EntryQueryWrapper> createState() => _EntryQueryWrapperState();
 }
 
 class _EntryQueryWrapperState extends State<EntryQueryWrapper> {
-  final Logger logger = Logger();
-
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -69,9 +66,7 @@ class _EntryQueryWrapperState extends State<EntryQueryWrapper> {
     final QueryResult result = await client.value.query(options);
     //final dynamic data = result.data;
 
-    if (result.hasException) {
-      logger.e('GraphQL Error: ${result.exception}');
-    } else {
+    if (!result.hasException) {
       widget.fetchData();
     } //else
   } //delete Title function

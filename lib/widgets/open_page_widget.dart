@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:parameter_page/widgets/fermi_controls_common/error_display_widget.dart';
 import '../services/parameter_page/parameter_page_service.dart';
 import 'open_pages_list_view_widget.dart';
@@ -18,8 +17,6 @@ class OpenPageWidget extends StatefulWidget {
 }
 
 class _OpenPageWidgetState extends State<OpenPageWidget> {
-  final Logger logger = Logger();
-
   bool get isLoading {
     return _titles == null;
   }

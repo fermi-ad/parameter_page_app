@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/widgets/comment_entry_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
+import 'package:parameter_page/widgets/sub_page_navigation_widget.dart';
 
 void assertIsOnPage({required String comment}) {
   expect(
@@ -523,5 +524,55 @@ void assertTabDeleteItem({required bool isVisible}) {
 
 void assertDeleteTabConfirmation({required bool isVisible}) {
   expect(find.byKey(const Key("delete_tab_confirmation")),
+      isVisible ? findsOneWidget : findsNothing);
+}
+
+void assertNumberOfSubPagesIs(int numberOfSubPagesIs) {
+  expect(
+      find.descendant(
+          of: find.byKey(const Key("subpagenavigation-total-subpages")),
+          matching: find.text("$numberOfSubPagesIs")),
+      findsOneWidget);
+}
+
+void assertCurrentSubPageIs(int isSetTo) {
+  final textField = find
+      .byKey(const Key('subpagenavigation-current-index-input'))
+      .evaluate()
+      .first
+      .widget as TextFormField;
+  expect(textField.controller!.text, equals("$isSetTo"));
+}
+
+void assertSubPageTitleIs(String title) {
+  expect(
+      find.descendant(
+          of: find.byKey(const Key("subpagenavigation-subpage-title")),
+          matching: find.text(title)),
+      findsOneWidget);
+}
+
+void assertSubPageDirectory({required List<String> contains}) {
+  for (int i = 0; i != contains.length; i++) {
+    final titleFinder = find.text(contains[i]);
+    expect(titleFinder, findsAtLeastNWidgets(1));
+    expect(
+        find.descendant(
+            of: find.ancestor(of: titleFinder, matching: find.byType(Row)),
+            matching: find.text("${i + 1}:")),
+        findsOneWidget);
+  }
+}
+
+void assertExpandSubPageDirectory({required bool isVisible}) {
+  expect(
+      find.descendant(
+          of: find.byType(SubPageNavigationWidget),
+          matching: find.byIcon(Icons.expand_more)),
+      isVisible ? findsOneWidget : findsNothing);
+}
+
+void assertDeleteSubPageConfirmation({required bool isVisible}) {
+  expect(find.byKey(const Key("delete_subpage_confirmation")),
       isVisible ? findsOneWidget : findsNothing);
 }

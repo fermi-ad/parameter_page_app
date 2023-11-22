@@ -1,8 +1,8 @@
+import 'package:flutter_controls_core/flutter_controls_core.dart';
 import 'package:flutter/widgets.dart';
-import 'package:parameter_page/services/dpm/dpm_service.dart';
 
 class DataAcquisitionWidget extends InheritedWidget {
-  final DpmService service;
+  final ACSysServiceAPI service;
 
   const DataAcquisitionWidget(
       {super.key, required super.child, required this.service});

@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_controls_core/flutter_controls_core.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
-import 'package:parameter_page/services/dpm/dpm_service.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
 import 'package:parameter_page/services/user_device/user_device_service.dart';
 import 'package:parameter_page/widgets/display_settings_button_widget.dart';
@@ -11,6 +11,7 @@ import 'package:parameter_page/widgets/fermi_controls_common/error_display_widge
 import 'package:parameter_page/widgets/main_menu_widget.dart';
 import 'package:parameter_page/widgets/page_title_widget.dart';
 import 'package:parameter_page/widgets/parameter_page_tabbar_widget.dart';
+import 'package:parameter_page/widgets/sub_page_navigation_widget.dart';
 
 import 'data_acquisition_widget.dart';
 import 'display_settings_widget.dart';
@@ -20,12 +21,12 @@ import 'page_widget.dart';
 class ParameterPageScaffoldWidget extends StatefulWidget {
   const ParameterPageScaffoldWidget(
       {super.key,
-      required this.dpmService,
+      required this.acsysService,
       required this.pageService,
       required this.deviceService,
       this.openPageId});
 
-  final DpmService dpmService;
+  final ACSysServiceAPI acsysService;
 
   final ParameterPageService pageService;
 
@@ -80,6 +81,25 @@ class _ParameterPageScaffoldWidgetState
     return _page == null && widget.openPageId == null;
   }
 
+  Widget _buildSubPageNavigation() {
+    return _page == null
+        ? const Text("Nothing to see")
+        : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Expanded(
+              child: SubPageNavigationWidget(
+                  page: _page!,
+                  onTitleChanged: (String to) =>
+                      setState(() => _page!.subPageTitle = to),
+                  onNewSubPage: () => setState(() => _page!.createSubPage()),
+                  onDeleteSubPage: _handleDeleteSubPage,
+                  onForward: () => setState(() => _page!.incrementSubPage()),
+                  onBackward: () => setState(() => _page!.decrementSubPage()),
+                  onSelected: (int index) =>
+                      setState(() => _page!.switchSubPage(to: index))),
+            )
+          ]);
+  }
+
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
         title: PageTitleWidget(
@@ -87,21 +107,28 @@ class _ParameterPageScaffoldWidgetState
             persistenceState: _persistenceState,
             title: _page == null ? "Parameter Page" : _page!.title,
             onTitleUpdate: _handleTitleUpdate),
-        bottom: ParameterPageTabbarWidget(
-            editing: _page?.editing ?? false,
-            tabTitles: _page != null ? _page!.tabTitles : [],
-            index: _page != null ? _page!.currentTabIndex : 0,
-            onDeleteTab: _handleDeleteTab,
-            onCreateNewTab: _handleCreateNewTab,
-            onRenameTab: _handleRenameTab,
-            onTabSwitched: (String tabTitle) => setState(() {
-                  _page!.switchTab(to: tabTitle);
-                })),
+        bottom: PreferredSize(
+            preferredSize: const Size(double.infinity, 100.0),
+            child: Column(
+                children: [_buildTabNavigation(), _buildSubPageNavigation()])),
         actions: [
           DisplaySettingsButtonWidget(
               wide: MediaQuery.of(context).size.width > 600,
               onPressed: () => _navigateToDisplaySettings(context)),
         ]);
+  }
+
+  Widget _buildTabNavigation() {
+    return ParameterPageTabbarWidget(
+        editing: _page?.editing ?? false,
+        tabTitles: _page != null ? _page!.tabTitles : [],
+        index: _page != null ? _page!.currentTabIndex : 0,
+        onDeleteTab: _handleDeleteTab,
+        onCreateNewTab: _handleCreateNewTab,
+        onRenameTab: _handleRenameTab,
+        onTabSwitched: (String tabTitle) => setState(() {
+              _page!.switchTab(to: tabTitle);
+            }));
   }
 
   Widget _buildBody(BuildContext context) {
@@ -122,13 +149,15 @@ class _ParameterPageScaffoldWidgetState
 
   Widget _buildPageWidget() {
     return DataAcquisitionWidget(
-        service: widget.dpmService,
+        service: widget.acsysService,
         child: Center(
-            child: PageWidget(
-                key: _pageKey,
-                page: _page!,
-                onPageModified: _handlePageModified,
-                onToggleEditing: (bool isEditing) => setState(() {}))));
+            child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 20.0, 0, 0),
+                child: PageWidget(
+                    key: _pageKey,
+                    page: _page!,
+                    onPageModified: _handlePageModified,
+                    onToggleEditing: (bool isEditing) => setState(() {})))));
   }
 
   Widget _buildLoadingPage() {
@@ -174,6 +203,22 @@ class _ParameterPageScaffoldWidgetState
                   onChanged: (DisplaySettings newSettings) =>
                       _pageKey.currentState?.updateSettings(newSettings),
                 )));
+  }
+
+  void _handleDeleteSubPage() {
+    if (_page!.numberOfEntries() > 0) {
+      _promptUserToDeleteSubPage(context).then((bool? dialogResponse) {
+        if (!(dialogResponse == null || !dialogResponse)) {
+          _deleteTheSubPage();
+        }
+      });
+    } else {
+      _deleteTheSubPage();
+    }
+  }
+
+  void _deleteTheSubPage() {
+    setState(() => _page!.deleteSubPage());
   }
 
   void _handleRenameTab(String withTitle, String to) {
@@ -337,6 +382,28 @@ class _ParameterPageScaffoldWidgetState
               _errorMessage = error;
               _page = null;
             }));
+  }
+
+  Future<bool?> _promptUserToDeleteSubPage(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        key: const Key("delete_subpage_confirmation"),
+        title: const Text('Delete Sub-Page'),
+        content: const Text(
+            'This sub-page contains at least one entry.  Deleting the sub-page will discard all of it\'s entries.  Do you wish to continue?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Continue'),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<bool?> _promptUserToDeleteTab(BuildContext context) {

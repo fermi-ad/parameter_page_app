@@ -8,13 +8,6 @@ This is the PIP-II Parameter Page web application.
 
 TODO
 
-If more queries are added to the GraphQL schema, you need to generate new files.
-To do this, run:
-
-```
-dart run build_runner build --delete-conflicting-outputs
-```
-
 ## Running
 
 To run the application in Chrome:
@@ -45,7 +38,7 @@ flutter test test/widget_tests
 
 ## Integration tests (UI Tests)
 
-High-level tests that execute through the user inteface.  Requires chromedriver to run.  Tests are organized into a group for each user story.
+High-level tests that execute through the user inteface. Requires chromedriver to run. Tests are organized into a group for each user story.
 
 Get chromedriver from: https://chromedriver.chromium.org/downloads
 
@@ -57,8 +50,8 @@ C:\chromedriver_win32\chromedriver.exe --port=4444
 
 Run tests:
 
-Note: each test file needs to be invoked manually.  Replace display_parameter_page_test.dart with the test group you want to run.
+Note: each test file needs to be invoked manually. Replace display_parameter_page_test.dart with the test group you want to run.
 
-* In browser: `flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/display_parameter_page_test.dart -d chrome`
+-   In browser: `flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/display_parameter_page_test.dart -d chrome`
 
-* Or headless: `flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/display_parameter_page_test -d web-server`
+-   Or headless: `flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/display_parameter_page_test -d web-server`
