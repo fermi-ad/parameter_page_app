@@ -53,5 +53,25 @@ void main() {
           settingValue: "50.00",
           readingValue: "100.0");
     });
+
+    testWidgets('Submit EPICS PV, should appear at the bottom of the page',
+        (tester) async {
+      // Given the test page is loaded and I am in edit mode
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await enterEditMode(tester);
+
+      // When I add a new ACNET parameter...
+      await addANewParameter(tester, 'AN:EPICS:PV');
+      await exitEditMode(tester);
+      await waitForDataToLoadFor(tester, "AN:EPICS:PV");
+
+      // Then the new parameter is added to the page
+      assertParameterIsInRow("AN:EPICS:PV", 10);
+      assertParameterHasDetails("AN:EPICS:PV",
+          description: "device description",
+          settingValue: "50.00",
+          readingValue: "100.0");
+    });
   });
 }

@@ -123,6 +123,7 @@ Future<void> addANewParameter(tester, String parameter) async {
       find.byKey(const Key('new_entry_textfield')), parameter);
   await tester.testTextInput.receiveAction(TextInputAction.done);
   await tester.pumpAndSettle();
+  await tester.pumpAndSettle();
 }
 
 Future<void> moveRowAtIndexNRowsUp(tester, int rowIndex, int nRowsUp) async {
