@@ -112,6 +112,14 @@ class ParameterPage {
     _pageData[_currentTabIndex].subPages[subPageIndex - 1].entries.add(entry);
   }
 
+  void addAll(List<PageEntry> entries) {
+    _enforceEditMode();
+    _pageData[_currentTabIndex]
+        .subPages[subPageIndex - 1]
+        .entries
+        .addAll(entries);
+  }
+
   List<PageEntry> entriesAsList() {
     return _pageData[currentTabIndex].subPages[subPageIndex - 1].entries;
   }

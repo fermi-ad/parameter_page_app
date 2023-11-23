@@ -44,7 +44,7 @@ void main() {
       await navigateToTestPage1(tester);
       await waitForMainPageToLoad(tester);
       await enterEditMode(tester);
-      await addANewComment(tester, "A comment");
+      await addANewEntry(tester, "A comment");
       await exitEditMode(tester);
 
       // When I press new page and confirm that I want to discard my changes
@@ -61,7 +61,7 @@ void main() {
       await navigateToTestPage1(tester);
       await waitForMainPageToLoad(tester);
       await enterEditMode(tester);
-      await addANewComment(tester, "A new comment");
+      await addANewEntry(tester, "A new comment");
       await exitEditMode(tester);
 
       // When I press new page and cancel when prompted to discard changes
@@ -80,7 +80,7 @@ void main() {
       await navigateToTestPage1(tester);
       await waitForMainPageToLoad(tester);
       await enterEditMode(tester);
-      await addANewComment(tester, "A new comment");
+      await addANewEntry(tester, "A new comment");
       await exitEditMode(tester);
 
       // When I press new page
@@ -119,7 +119,7 @@ void main() {
 
       // When I press new page and add some new entries
       await newPage(tester);
-      await addANewParameter(tester, "I:BEAM");
+      await addANewEntry(tester, "I:BEAM");
       await exitEditMode(tester);
 
       // Then the page is empty except for the entries I added
@@ -134,7 +134,7 @@ void main() {
       await navigateToTestPage1(tester);
       await waitForMainPageToLoad(tester);
       await enterEditMode(tester);
-      await addANewParameter(tester, "I:BEAM");
+      await addANewEntry(tester, "I:BEAM");
       await exitEditMode(tester);
       await openMainMenu(tester);
       await saveParameterPage(tester);

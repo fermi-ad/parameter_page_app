@@ -7,7 +7,7 @@ import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 
 void main() {
   group("NewEntryEditorWidget", () {
-    late PageEntry newEntry;
+    late List<PageEntry> newEntries;
 
     late MaterialApp editor;
 
@@ -16,9 +16,9 @@ void main() {
           home: Scaffold(
               body: DataAcquisitionWidget(
                   service: MockDpmService(),
-                  child:
-                      NewEntryEditorWidget(onSubmitted: (PageEntry submitted) {
-                    newEntry = submitted;
+                  child: NewEntryEditorWidget(
+                      onSubmitted: (List<PageEntry> submitted) {
+                    newEntries = submitted;
                   }))));
     });
 
@@ -31,7 +31,7 @@ void main() {
     Future<void> createNewEntryAndExpectParameterEntry(
         tester, String newEntryInputText) async {
       await createNewEntry(tester, newEntryInputText);
-      expect(newEntry, isA<ParameterEntry>());
+      expect(newEntries[0].typeAsString, "Parameter");
     }
 
     testWidgets('Submit comment, get comment entry',
@@ -43,8 +43,8 @@ void main() {
       await createNewEntry(tester, "this is a new comment");
 
       // Then the returned entry should be a comment
-      expect(newEntry, isA<CommentEntry>());
-      expect(newEntry.entryText(), equals("this is a new comment"));
+      expect(newEntries[0].typeAsString, "Comments");
+      expect(newEntries[0].entryText(), equals("this is a new comment"));
     });
 
     testWidgets('Submit a hard comment, get comment with bang stripped',
@@ -56,8 +56,8 @@ void main() {
       await createNewEntry(tester, "!THIS:IS:A:COMMENT");
 
       // Then the returned entry should be a comment
-      expect(newEntry, isA<CommentEntry>());
-      expect(newEntry.entryText(), equals("THIS:IS:A:COMMENT"));
+      expect(newEntries[0].typeAsString, "Comments");
+      expect(newEntries[0].entryText(), equals("THIS:IS:A:COMMENT"));
     });
 
     testWidgets('Submit ACNET device, get ParameterEntry',
