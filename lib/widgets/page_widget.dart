@@ -75,9 +75,9 @@ class PageWidgetState extends State<PageWidget> {
               footer: page.editing
                   ? NewEntryEditorWidget(
                       key: const Key('add-entry-textfield'),
-                      onSubmitted: (PageEntry newEntry) {
+                      onSubmitted: (List<PageEntry> newEntries) {
                         setState(() {
-                          page.add(newEntry);
+                          page.addAll(newEntries);
                         });
                       })
                   : null,

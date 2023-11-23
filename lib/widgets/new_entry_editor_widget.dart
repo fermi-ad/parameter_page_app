@@ -4,7 +4,7 @@ import 'data_acquisition_widget.dart';
 import '../entities/page_entry.dart';
 
 class NewEntryEditorWidget extends StatefulWidget {
-  final Function(PageEntry) onSubmitted;
+  final Function(List<PageEntry>) onSubmitted;
 
   const NewEntryEditorWidget({super.key, required this.onSubmitted});
 
@@ -44,20 +44,36 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
             _focusNode.requestFocus();
           });
 
-          widget.onSubmitted(_generatePageEntryFrom(textInput: value));
+          widget.onSubmitted(_extractPageEntriesFrom(textInput: value));
         });
   }
 
-  PageEntry _generatePageEntryFrom({required final String textInput}) {
-    if (_daqWidget.isACNETDRF(textInput) ||
-        _daqWidget.isProcessVariable(textInput)) {
-      return ParameterEntry(textInput,
-          label: "", key: Key("parameter_row_$textInput"));
-    } else if (_isHardComment(textInput)) {
-      return CommentEntry(_stripBang(textInput));
+  List<PageEntry> _extractPageEntriesFrom({required final String textInput}) {
+    if (_isHardComment(textInput)) {
+      return [CommentEntry(_stripBang(textInput))];
     } else {
-      return CommentEntry(textInput);
+      final entries = _findAllTheParameterEntries(inside: textInput);
+      if (entries.isEmpty && textInput.length > 1) {
+        return [CommentEntry(textInput)];
+      } else {
+        return entries;
+      }
     }
+  }
+
+  List<PageEntry> _findAllTheParameterEntries({required String inside}) {
+    List<String> textArr = inside.split(" ");
+    List<PageEntry> ret = [];
+
+    for (String textElement in textArr) {
+      if (_daqWidget.isACNETDRF(textElement) ||
+          _daqWidget.isProcessVariable(textElement)) {
+        ret.add(ParameterEntry(textElement,
+            label: "", key: Key("parameter_row_$textElement")));
+      }
+    }
+
+    return ret;
   }
 
   bool _isHardComment(String val) {
