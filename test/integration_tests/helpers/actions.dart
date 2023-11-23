@@ -109,6 +109,14 @@ Future<void> deleteRow(tester, {required int index}) async {
   await tester.pumpAndSettle();
 }
 
+Future<void> addANewEntry(tester, String input) async {
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(const Key('new_entry_textfield')));
+  await tester.enterText(find.byKey(const Key('new_entry_textfield')), input);
+  await tester.testTextInput.receiveAction(TextInputAction.done);
+  await tester.pumpAndSettle();
+}
+
 Future<void> addANewComment(tester, String comment) async {
   await tester.pumpAndSettle();
   await tester.tap(find.byKey(const Key('new_entry_textfield')));
