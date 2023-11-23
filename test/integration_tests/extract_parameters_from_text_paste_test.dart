@@ -28,11 +28,12 @@ void main() {
       await startParameterPageApp(tester);
       await createNewParameterPage(tester);
 
-      // When I paste "I:BEAM R:BEAM B:DCCT"
-      await addANewEntry(tester, "I:BEAM R:BEAM B:DCCT");
+      // When I paste "AN:EPICS:PV ANOTHER:EPICS PROCESS:VARIABLE"
+      await addANewEntry(tester, "AN:EPICS:PV ANOTHER:EPICS PROCESS:VARIABLE");
 
       // Then the ACNET devices are added to the page
-      assertParametersAreOnPage(["I:BEAM", "R:BEAM", "B:DCCT"]);
+      assertParametersAreOnPage(
+          ["AN:EPICS:PV", "ANOTHER:EPICS", "PROCESS:VARIABLE"]);
     }, semanticsEnabled: false);
 
     testWidgets(
