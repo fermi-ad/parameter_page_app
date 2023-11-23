@@ -34,7 +34,7 @@ jobs:
           - generate_link_to_parameter_page_test
           - display_tab_test
           - display_sub_page_test
-          - extract_parameters_from_text_paste_test.dart
+          - extract_parameters_from_text_paste_test
 
     steps:
       - name: Checkout code

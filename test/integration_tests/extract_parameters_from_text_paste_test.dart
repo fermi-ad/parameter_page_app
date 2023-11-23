@@ -31,24 +31,60 @@ void main() {
       // When I paste "AN:EPICS:PV ANOTHER:EPICS PROCESS:VARIABLE"
       await addANewEntry(tester, "AN:EPICS:PV ANOTHER:EPICS PROCESS:VARIABLE");
 
-      // Then the ACNET devices are added to the page
+      // Then the PVs are added to the page
       assertParametersAreOnPage(
           ["AN:EPICS:PV", "ANOTHER:EPICS", "PROCESS:VARIABLE"]);
     }, semanticsEnabled: false);
 
     testWidgets(
         'Paste a string with text and devices, entries added and text is discarded',
-        (WidgetTester tester) async {},
-        semanticsEnabled: false);
+        (WidgetTester tester) async {
+      // Given I have created a new page
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+
+      // When I paste "AN:EPICS:PV next to ANOTHER:EPICS PROCESS:VARIABLE with some text at the end."
+      await addANewEntry(tester,
+          "AN:EPICS:PV next to ANOTHER:EPICS PROCESS:VARIABLE with some text at the end.");
+
+      // Then the PVs are added to the page
+      assertParametersAreOnPage(
+          ["AN:EPICS:PV", "ANOTHER:EPICS", "PROCESS:VARIABLE"]);
+
+      // ... but not the text
+      assertNumberOfEntriesOnPageIs(3);
+    }, semanticsEnabled: false);
 
     testWidgets(
         'Paste a string with only text, whole string added as a comment',
-        (WidgetTester tester) async {},
-        semanticsEnabled: false);
+        (WidgetTester tester) async {
+      // Given I have created a new page
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+
+      // When I paste...
+      await addANewEntry(tester, "Just a string of plain text.");
+
+      // Then the PVs are added to the page
+      assertIsOnPage(comment: "Just a string of plain text.");
+    }, semanticsEnabled: false);
 
     testWidgets(
         'Paste a hard comment with ACNET devices and EPICS PVs, whole string added as a comment',
-        (WidgetTester tester) async {},
-        semanticsEnabled: false);
+        (WidgetTester tester) async {
+      // Given I have created a new page
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+
+      // When I paste...
+      await addANewEntry(tester,
+          "!Just a string of plain text with AN:EPICS:PV and A:ACNETDEV.");
+
+      // Then the comment is added by itself
+      assertNumberOfEntriesOnPageIs(1);
+      assertIsOnPage(
+          comment:
+              "Just a string of plain text with AN:EPICS:PV and A:ACNETDEV.");
+    }, semanticsEnabled: false);
   });
 }
