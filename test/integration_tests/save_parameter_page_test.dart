@@ -18,7 +18,7 @@ void main() {
 
       // When I modify the page
       await enterEditMode(tester);
-      await addANewParameter(tester, 'Z:BDCCT');
+      await addANewEntry(tester, 'Z:BDCCT');
       await exitEditMode(tester);
       await waitForDataToLoadFor(tester, "Z:BDCCT");
 
@@ -37,7 +37,7 @@ void main() {
 
       // When I modify the page
       await enterEditMode(tester);
-      await addANewParameter(tester, 'Z:BDCCT');
+      await addANewEntry(tester, 'Z:BDCCT');
       await exitEditMode(tester);
       await waitForDataToLoadFor(tester, "Z:BDCCT");
 
@@ -52,7 +52,7 @@ void main() {
       await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
       await enterEditMode(tester);
-      await addANewParameter(tester, 'Z:BDCCT');
+      await addANewEntry(tester, 'Z:BDCCT');
       await exitEditMode(tester);
       await waitForDataToLoadFor(tester, "Z:BDCCT");
       assertUnsavedChangesIndicator(isVisible: true);
@@ -76,7 +76,7 @@ void main() {
       await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
       await enterEditMode(tester);
-      await addANewComment(tester, "a new comment");
+      await addANewEntry(tester, "a new comment");
       await exitEditMode(tester);
       await openMainMenu(tester);
       await saveParameterPage(tester);
@@ -98,7 +98,7 @@ void main() {
       // Given I've created and saved a new parameter page called 'New Parameter Page'
       await startParameterPageApp(tester);
       await createNewParameterPage(tester);
-      await addANewComment(tester, "this is a new page");
+      await addANewEntry(tester, "this is a new page");
       await exitEditMode(tester);
       await openMainMenu(tester);
       await saveParameterPage(tester);
@@ -166,7 +166,7 @@ void main() {
       await changePageTitle(tester, to: "Test Page 3");
 
       // ... and it contains a comment
-      await addANewComment(tester, "this is a new page");
+      await addANewEntry(tester, "this is a new page");
       await exitEditMode(tester);
 
       // ... and I have saved it
@@ -198,7 +198,7 @@ void main() {
       await changePageTitle(tester, to: "Test Page 3");
 
       // ... and it contains a comment
-      await addANewComment(tester, "this is a new page");
+      await addANewEntry(tester, "this is a new page");
       await exitEditMode(tester);
 
       // ... and the save request will fail
@@ -224,7 +224,7 @@ void main() {
       await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
       await enterEditMode(tester);
-      await addANewComment(tester, "this change will fail");
+      await addANewEntry(tester, "this change will fail");
       await exitEditMode(tester);
 
       // ... and the save request will fail
@@ -279,7 +279,7 @@ void main() {
       await openParameterPage(tester, withTitle: "Test Page 2");
       await enterEditMode(tester);
       await switchTab(tester, to: "Tab 2");
-      await addANewComment(tester, "this is comment #3");
+      await addANewEntry(tester, "this is comment #3");
       await exitEditMode(tester);
 
       // When I save the page
@@ -315,12 +315,12 @@ void main() {
 
       // ... and I have added comments to Sub-page 2
       await navigateSubPageForward(tester);
-      await addANewComment(
+      await addANewEntry(
           tester, "Tab-1 / Sub-page 2 : this comment should be saved");
 
       // ... and I have added comments to Sub-page 3
       await navigateSubPageForward(tester);
-      await addANewComment(
+      await addANewEntry(
           tester, "Tab-1 / Sub-page 3 : this comment should be saved");
 
       // ... and I have created a new sub-page
@@ -331,12 +331,12 @@ void main() {
 
       // ... added comments to Sub-page 4
       await navigateSubPageForward(tester);
-      await addANewComment(
+      await addANewEntry(
           tester, "Tab-1 / Sub-page 4 : this comment should be saved");
 
       // ... and I have added comments to Tab-2 Sub-Page 1
       await switchTab(tester, to: "Tab 2");
-      await addANewComment(
+      await addANewEntry(
           tester, "Tab-2 / Sub-page 1 : this comment should be saved");
       await exitEditMode(tester);
 

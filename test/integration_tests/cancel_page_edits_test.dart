@@ -17,7 +17,7 @@ void main() {
 
       // When I add a new comment and cancel edit mode
       const badComment = "I don't want to see this comment";
-      await addANewComment(tester, badComment);
+      await addANewEntry(tester, badComment);
       await cancelEditMode(tester);
 
       // Then the parameters return to their original positions

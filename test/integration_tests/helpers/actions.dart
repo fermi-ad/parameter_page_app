@@ -117,23 +117,6 @@ Future<void> addANewEntry(tester, String input) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> addANewComment(tester, String comment) async {
-  await tester.pumpAndSettle();
-  await tester.tap(find.byKey(const Key('new_entry_textfield')));
-  await tester.enterText(find.byKey(const Key('new_entry_textfield')), comment);
-  await tester.testTextInput.receiveAction(TextInputAction.done);
-  await tester.pumpAndSettle();
-}
-
-Future<void> addANewParameter(tester, String parameter) async {
-  await tester.pumpAndSettle();
-  await tester.enterText(
-      find.byKey(const Key('new_entry_textfield')), parameter);
-  await tester.testTextInput.receiveAction(TextInputAction.done);
-  await tester.pumpAndSettle();
-  await tester.pumpAndSettle();
-}
-
 Future<void> moveRowAtIndexNRowsUp(tester, int rowIndex, int nRowsUp) async {
   final handlesFinder = find.byIcon(Icons.drag_handle);
 

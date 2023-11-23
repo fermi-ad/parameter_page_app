@@ -27,7 +27,7 @@ void main() {
       await createNewParameterPage(tester);
 
       // When I add a parameter
-      await addANewParameter(tester, 'Z:BDCCT');
+      await addANewEntry(tester, 'Z:BDCCT');
 
       // Then the focus should return to the NewEntryEditor text field
       assertNewEntryEditorHasFocus(tester);
@@ -42,7 +42,7 @@ void main() {
       await enterEditMode(tester);
 
       // When I add a new ACNET parameter...
-      await addANewParameter(tester, 'Z:BDCCT');
+      await addANewEntry(tester, 'Z:BDCCT');
       await exitEditMode(tester);
       await waitForDataToLoadFor(tester, "Z:BDCCT");
 
@@ -62,7 +62,7 @@ void main() {
       await enterEditMode(tester);
 
       // When I add a new ACNET parameter...
-      await addANewParameter(tester, 'AN:EPICS:PV');
+      await addANewEntry(tester, 'AN:EPICS:PV');
       await exitEditMode(tester);
       await waitForDataToLoadFor(tester, "AN:EPICS:PV");
 

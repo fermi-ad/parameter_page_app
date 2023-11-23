@@ -51,21 +51,21 @@ void main() {
       await enterEditMode(tester);
 
       // When I add a new comment to Tab One
-      await addANewComment(tester, "Comment for tab 1");
+      await addANewEntry(tester, "Comment for tab 1");
       await switchTab(tester, to: "Tab Two");
-      await addANewComment(tester, "Comment for tab 2");
+      await addANewEntry(tester, "Comment for tab 2");
       await switchTab(tester, to: "Tab Three");
-      await addANewComment(tester, "Comment for tab 3");
+      await addANewEntry(tester, "Comment for tab 3");
       await switchTab(tester, to: "Tab Four");
-      await addANewComment(tester, "Comment for tab 4");
+      await addANewEntry(tester, "Comment for tab 4");
       await switchTab(tester, to: "Tab Five");
-      await addANewComment(tester, "Comment for tab 5");
+      await addANewEntry(tester, "Comment for tab 5");
       await switchTab(tester, to: "Tab Six");
-      await addANewComment(tester, "Comment for tab 6");
+      await addANewEntry(tester, "Comment for tab 6");
       await switchTab(tester, to: "Tab Seven");
-      await addANewComment(tester, "Comment for tab 7");
+      await addANewEntry(tester, "Comment for tab 7");
       await switchTab(tester, to: "Tab Eight");
-      await addANewComment(tester, "Comment for tab 8");
+      await addANewEntry(tester, "Comment for tab 8");
 
       // ... and I exit edit mode
       await exitEditMode(tester);
@@ -181,7 +181,7 @@ void main() {
 
       // ... and tab 2 has one entry
       await switchTab(tester, to: "Tab 2");
-      await addANewComment(
+      await addANewEntry(
           tester, "user should be prompted before deleting this tab");
 
       // When I attempt to delete tab 2
@@ -200,7 +200,7 @@ void main() {
 
       // ... and tab 2 has one entry
       await switchTab(tester, to: "Tab 2");
-      await addANewComment(
+      await addANewEntry(
           tester, "user should be prompted before deleting this tab");
 
       // When I attempt to delete Tab 2 and answer "Cancel" when prompted
@@ -219,7 +219,7 @@ void main() {
 
       // ... and tab 2 has one entry
       await switchTab(tester, to: "Tab 2");
-      await addANewComment(
+      await addANewEntry(
           tester, "user should be prompted before deleting this tab");
 
       // When I attempt to delete Tab 2 and answer "Cancel" when prompted
