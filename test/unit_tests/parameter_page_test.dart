@@ -1319,5 +1319,14 @@ void main() {
       // Then the number of sub-systems is 1
       expect(page.subSystemTitles.length, 1);
     });
+
+    test('For new ParameterPage, subSystemTitles[0] is Sub-system 1', () {
+      // Given nothing
+      // When I create a new page
+      ParameterPage page = ParameterPage();
+
+      // Then the name of the default sub-system is...
+      expect(page.subSystemTitles[0], "Sub-system 1");
+    });
   });
 }

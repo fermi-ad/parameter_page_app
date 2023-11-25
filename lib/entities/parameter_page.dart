@@ -36,7 +36,7 @@ class ParameterPage {
   }
 
   List<String> get subSystemTitles {
-    return ["Sub-system 1"];
+    return ["Sub-system"];
   }
 
   List<String> get tabTitles {
