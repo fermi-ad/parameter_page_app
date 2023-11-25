@@ -1310,5 +1310,14 @@ void main() {
       expect(
           page.subPageTitleFor(tab: "Tab 2", subPageIndex: 2), "Tab-2 Sub-2");
     });
+
+    test('For new ParameterPage, subSystemTitles.length returns 1', () {
+      // Given nothing
+      // When I create a new page
+      ParameterPage page = ParameterPage();
+
+      // Then the number of sub-systems is 1
+      expect(page.subSystemTitles.length, 1);
+    });
   });
 }
