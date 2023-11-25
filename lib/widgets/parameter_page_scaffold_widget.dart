@@ -87,6 +87,7 @@ class _ParameterPageScaffoldWidgetState
         : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Expanded(
               child: SubPageNavigationWidget(
+                  wide: MediaQuery.of(context).size.width > 600,
                   page: _page!,
                   onTitleChanged: (String to) =>
                       setState(() => _page!.subPageTitle = to),

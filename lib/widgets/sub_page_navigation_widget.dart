@@ -4,6 +4,8 @@ import 'package:parameter_page/entities/parameter_page.dart';
 class SubPageNavigationWidget extends StatelessWidget {
   final ParameterPage page;
 
+  final bool wide;
+
   final Function()? onForward;
 
   final Function()? onBackward;
@@ -24,6 +26,7 @@ class SubPageNavigationWidget extends StatelessWidget {
       this.onNewSubPage,
       this.onDeleteSubPage,
       this.onTitleChanged,
+      required this.wide,
       required this.page})
       : _titleTextController = TextEditingController(text: page.subPageTitle);
 
@@ -31,15 +34,11 @@ class SubPageNavigationWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(children: [
       _buildBackwardsButton(),
-      const SizedBox(width: 5.0),
       _buildCurrentSubPageIndex(),
-      const SizedBox(width: 5.0),
-      const Text("/"),
-      const SizedBox(width: 5.0),
+      const Text(" / "),
       _buildTotalNumberOfSubPages(),
-      const SizedBox(width: 5.0),
       _buildForwardsButton(),
-      const SizedBox(width: 15.0),
+      const SizedBox(width: 10.0),
       _buildSubPageTitle(),
       const SizedBox(width: 5.0),
       Visibility(
@@ -53,29 +52,46 @@ class SubPageNavigationWidget extends StatelessWidget {
 
   Widget _buildDeleteSubPageButton() {
     return Flexible(
-        child: TextButton.icon(
-            key: const Key("subpagenavigation-deletesubpage"),
-            onPressed:
-                _isDeleteButtonEnabled ? () => onDeleteSubPage?.call() : null,
-            icon: const Icon(Icons.delete),
-            label: const Text("Delete Sub-Page")));
+        child: wide
+            ? TextButton.icon(
+                key: const Key("subpagenavigation-deletesubpage"),
+                onPressed: _isDeleteButtonEnabled
+                    ? () => onDeleteSubPage?.call()
+                    : null,
+                icon: const Icon(Icons.delete),
+                label: const Text("Delete Sub-Page"))
+            : IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: _isDeleteButtonEnabled
+                    ? () => onDeleteSubPage?.call()
+                    : null));
   }
 
   Widget _buildNewSubPageButton() {
     return Flexible(
-        child: TextButton.icon(
-            onPressed: () => onNewSubPage?.call(),
-            icon: const Icon(Icons.add),
-            label: const Text("New Sub-Page")));
+        child: wide
+            ? TextButton.icon(
+                onPressed: () => onNewSubPage?.call(),
+                icon: const Icon(Icons.add),
+                label: const Text("New Sub-Page"))
+            : IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: () => onNewSubPage?.call()));
   }
 
   Widget _buildCurrentSubPageIndex() {
     return SizedBox(
-        width: 48.0,
+        width: 36.0,
         child: TextFormField(
           key: const Key('subpagenavigation-current-index-input'),
+          style: const TextStyle(fontSize: 18.0),
+          decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              isCollapsed: true,
+              contentPadding: EdgeInsets.fromLTRB(0, 5, 5, 5)),
           controller: TextEditingController(text: "${page.subPageIndex}"),
           onFieldSubmitted: _handleDirectNavigation,
+          textAlign: TextAlign.right,
         ));
   }
 
@@ -87,13 +103,13 @@ class SubPageNavigationWidget extends StatelessWidget {
 
   Widget _buildBackwardsButton() {
     return IconButton(
-        icon: const Icon(Icons.navigate_before),
+        icon: const Icon(Icons.navigate_before, size: 24.0),
         onPressed: () => onBackward?.call());
   }
 
   Widget _buildForwardsButton() {
     return IconButton(
-      icon: const Icon(Icons.navigate_next),
+      icon: const Icon(Icons.navigate_next, size: 24.0),
       onPressed: () => onForward?.call(),
     );
   }
@@ -112,11 +128,14 @@ class SubPageNavigationWidget extends StatelessWidget {
 
   Widget _buildSubPageTitleTextField() {
     return Expanded(
+        flex: 3,
         child: TextField(
-      controller: _titleTextController,
-      onTapOutside: (event) => onTitleChanged?.call(_titleTextController.text),
-      onEditingComplete: () => onTitleChanged?.call(_titleTextController.text),
-    ));
+          controller: _titleTextController,
+          onTapOutside: (event) =>
+              onTitleChanged?.call(_titleTextController.text),
+          onEditingComplete: () =>
+              onTitleChanged?.call(_titleTextController.text),
+        ));
   }
 
   Widget _buildDirectoryMenuButton() {
