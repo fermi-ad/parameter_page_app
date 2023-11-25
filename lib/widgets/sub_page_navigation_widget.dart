@@ -34,15 +34,11 @@ class SubPageNavigationWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(children: [
       _buildBackwardsButton(),
-      const SizedBox(width: 5.0),
       _buildCurrentSubPageIndex(),
-      const SizedBox(width: 5.0),
-      const Text("/"),
-      const SizedBox(width: 5.0),
+      const Text(" / "),
       _buildTotalNumberOfSubPages(),
-      const SizedBox(width: 5.0),
       _buildForwardsButton(),
-      const SizedBox(width: 15.0),
+      const SizedBox(width: 10.0),
       _buildSubPageTitle(),
       const SizedBox(width: 5.0),
       Visibility(
@@ -85,11 +81,17 @@ class SubPageNavigationWidget extends StatelessWidget {
 
   Widget _buildCurrentSubPageIndex() {
     return SizedBox(
-        width: 48.0,
+        width: 36.0,
         child: TextFormField(
           key: const Key('subpagenavigation-current-index-input'),
+          style: const TextStyle(fontSize: 18.0),
+          decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              isCollapsed: true,
+              contentPadding: EdgeInsets.fromLTRB(0, 5, 0, 5)),
           controller: TextEditingController(text: "${page.subPageIndex}"),
           onFieldSubmitted: _handleDirectNavigation,
+          textAlign: TextAlign.right,
         ));
   }
 
@@ -101,13 +103,13 @@ class SubPageNavigationWidget extends StatelessWidget {
 
   Widget _buildBackwardsButton() {
     return IconButton(
-        icon: const Icon(Icons.navigate_before),
+        icon: const Icon(Icons.navigate_before, size: 24.0),
         onPressed: () => onBackward?.call());
   }
 
   Widget _buildForwardsButton() {
     return IconButton(
-      icon: const Icon(Icons.navigate_next),
+      icon: const Icon(Icons.navigate_next, size: 24.0),
       onPressed: () => onForward?.call(),
     );
   }
