@@ -56,20 +56,31 @@ class SubPageNavigationWidget extends StatelessWidget {
 
   Widget _buildDeleteSubPageButton() {
     return Flexible(
-        child: TextButton.icon(
-            key: const Key("subpagenavigation-deletesubpage"),
-            onPressed:
-                _isDeleteButtonEnabled ? () => onDeleteSubPage?.call() : null,
-            icon: const Icon(Icons.delete),
-            label: const Text("Delete Sub-Page")));
+        child: wide
+            ? TextButton.icon(
+                key: const Key("subpagenavigation-deletesubpage"),
+                onPressed: _isDeleteButtonEnabled
+                    ? () => onDeleteSubPage?.call()
+                    : null,
+                icon: const Icon(Icons.delete),
+                label: const Text("Delete Sub-Page"))
+            : IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: _isDeleteButtonEnabled
+                    ? () => onDeleteSubPage?.call()
+                    : null));
   }
 
   Widget _buildNewSubPageButton() {
     return Flexible(
-        child: TextButton.icon(
-            onPressed: () => onNewSubPage?.call(),
-            icon: const Icon(Icons.add),
-            label: const Text("New Sub-Page")));
+        child: wide
+            ? TextButton.icon(
+                onPressed: () => onNewSubPage?.call(),
+                icon: const Icon(Icons.add),
+                label: const Text("New Sub-Page"))
+            : IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: () => onNewSubPage?.call()));
   }
 
   Widget _buildCurrentSubPageIndex() {
