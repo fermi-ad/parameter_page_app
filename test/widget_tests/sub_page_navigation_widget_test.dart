@@ -21,7 +21,8 @@ void main() {
 
       // When I render the SubPageNavigationWidget
       MaterialApp app = MaterialApp(
-          home: Scaffold(body: SubPageNavigationWidget(page: page)));
+          home:
+              Scaffold(body: SubPageNavigationWidget(wide: true, page: page)));
       await tester.pumpWidget(app);
 
       // Then the current sub-page is 2
@@ -39,7 +40,8 @@ void main() {
 
       // When I render the SubPageNavigationWidget
       MaterialApp app = MaterialApp(
-          home: Scaffold(body: SubPageNavigationWidget(page: page)));
+          home:
+              Scaffold(body: SubPageNavigationWidget(wide: true, page: page)));
       await tester.pumpWidget(app);
 
       // Then the number of sub-pages is 3
@@ -53,7 +55,8 @@ void main() {
 
       // When I render the SubPageNavigationWidget
       MaterialApp app = MaterialApp(
-          home: Scaffold(body: SubPageNavigationWidget(page: page)));
+          home:
+              Scaffold(body: SubPageNavigationWidget(wide: true, page: page)));
       await tester.pumpWidget(app);
 
       // Then the new and delete buttons are not displayed
@@ -73,7 +76,8 @@ void main() {
 
       // When I render the SubPageNavigationWidget
       MaterialApp app = MaterialApp(
-          home: Scaffold(body: SubPageNavigationWidget(page: page)));
+          home:
+              Scaffold(body: SubPageNavigationWidget(wide: true, page: page)));
       await tester.pumpWidget(app);
 
       // Then the title display is "Sub-page 2 Title"
@@ -88,7 +92,9 @@ void main() {
       MaterialApp app = MaterialApp(
           home: Scaffold(
               body: SubPageNavigationWidget(
-                  page: page, onForward: () => onIncrementCalled = true)));
+                  wide: true,
+                  page: page,
+                  onForward: () => onIncrementCalled = true)));
       await tester.pumpWidget(app);
 
       // When I tap the 'increment page' button
@@ -107,7 +113,9 @@ void main() {
       MaterialApp app = MaterialApp(
           home: Scaffold(
               body: SubPageNavigationWidget(
-                  page: page, onBackward: () => onPreviousCalled = true)));
+                  wide: true,
+                  page: page,
+                  onBackward: () => onPreviousCalled = true)));
       await tester.pumpWidget(app);
 
       // When I tap the 'increment page' button
@@ -130,7 +138,8 @@ void main() {
       page.subPageTitle = "Sub-Page Three";
 
       MaterialApp app = MaterialApp(
-          home: Scaffold(body: SubPageNavigationWidget(page: page)));
+          home:
+              Scaffold(body: SubPageNavigationWidget(wide: true, page: page)));
       await tester.pumpWidget(app);
 
       // When I open the sub-page directory
@@ -153,7 +162,8 @@ void main() {
       page.subPageTitle = "Sub-Page Three";
 
       MaterialApp app = MaterialApp(
-          home: Scaffold(body: SubPageNavigationWidget(page: page)));
+          home:
+              Scaffold(body: SubPageNavigationWidget(wide: true, page: page)));
       await tester.pumpWidget(app);
 
       // When I open the sub-page directory
@@ -178,6 +188,7 @@ void main() {
       MaterialApp app = MaterialApp(
           home: Scaffold(
               body: SubPageNavigationWidget(
+                  wide: true,
                   page: page,
                   onSelected: (int index) => selectedIndex = index)));
       await tester.pumpWidget(app);
@@ -205,6 +216,7 @@ void main() {
       MaterialApp app = MaterialApp(
           home: Scaffold(
               body: SubPageNavigationWidget(
+                  wide: true,
                   page: page,
                   onSelected: (int index) => selectedIndex = index)));
       await tester.pumpWidget(app);
@@ -231,6 +243,7 @@ void main() {
       MaterialApp app = MaterialApp(
           home: Scaffold(
               body: SubPageNavigationWidget(
+                  wide: true,
                   page: page,
                   onSelected: (int index) => selectedIndex = index)));
       await tester.pumpWidget(app);
@@ -257,6 +270,7 @@ void main() {
       MaterialApp app = MaterialApp(
           home: Scaffold(
               body: SubPageNavigationWidget(
+                  wide: true,
                   page: page,
                   onSelected: (int index) => selectedIndex = index)));
       await tester.pumpWidget(app);
@@ -275,7 +289,8 @@ void main() {
 
       // When I render the SubPageNavigationWidget
       MaterialApp app = MaterialApp(
-          home: Scaffold(body: SubPageNavigationWidget(page: page)));
+          home:
+              Scaffold(body: SubPageNavigationWidget(wide: true, page: page)));
       await tester.pumpWidget(app);
 
       // Then the sub-page directory is not visible
@@ -295,7 +310,9 @@ void main() {
       MaterialApp app = MaterialApp(
           home: Scaffold(
               body: SubPageNavigationWidget(
-                  page: page, onNewSubPage: () => onNewSubPageCalled = true)));
+                  wide: true,
+                  page: page,
+                  onNewSubPage: () => onNewSubPageCalled = true)));
       await tester.pumpWidget(app);
 
       // When I create a new sub-page
@@ -317,6 +334,7 @@ void main() {
       MaterialApp app = MaterialApp(
           home: Scaffold(
               body: SubPageNavigationWidget(
+                  wide: true,
                   page: page,
                   onDeleteSubPage: () => onDeleteSubPageCalled = true)));
       await tester.pumpWidget(app);
@@ -339,6 +357,7 @@ void main() {
       MaterialApp app = MaterialApp(
           home: Scaffold(
               body: SubPageNavigationWidget(
+        wide: true,
         page: page,
       )));
       await tester.pumpWidget(app);
@@ -364,6 +383,7 @@ void main() {
       MaterialApp app = MaterialApp(
           home: Scaffold(
               body: SubPageNavigationWidget(
+        wide: true,
         onTitleChanged: (String to) => newTitle = to,
         page: page,
       )));
@@ -386,7 +406,8 @@ void main() {
 
       // When then SubPageNavigationWidget is rendered
       MaterialApp app = MaterialApp(
-          home: Scaffold(body: SubPageNavigationWidget(page: page)));
+          home:
+              Scaffold(body: SubPageNavigationWidget(wide: true, page: page)));
       await tester.pumpWidget(app);
 
       // Then the delete button is disabled

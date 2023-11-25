@@ -4,6 +4,8 @@ import 'package:parameter_page/entities/parameter_page.dart';
 class SubPageNavigationWidget extends StatelessWidget {
   final ParameterPage page;
 
+  final bool wide;
+
   final Function()? onForward;
 
   final Function()? onBackward;
@@ -24,6 +26,7 @@ class SubPageNavigationWidget extends StatelessWidget {
       this.onNewSubPage,
       this.onDeleteSubPage,
       this.onTitleChanged,
+      required this.wide,
       required this.page})
       : _titleTextController = TextEditingController(text: page.subPageTitle);
 
