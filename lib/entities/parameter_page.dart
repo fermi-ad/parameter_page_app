@@ -48,7 +48,7 @@ class ParameterPage {
   }
 
   List<String> get subSystemTitles {
-    return ["Sub-system 1"];
+    return _pageData.map((_SubSystem subSystem) => subSystem.title).toList();
   }
 
   List<String> get tabTitles {
