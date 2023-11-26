@@ -1310,5 +1310,99 @@ void main() {
       expect(
           page.subPageTitleFor(tab: "Tab 2", subPageIndex: 2), "Tab-2 Sub-2");
     });
+
+    test('For new ParameterPage, subSystemTitles.length returns 1', () {
+      // Given nothing
+      // When I create a new page
+      ParameterPage page = ParameterPage();
+
+      // Then the number of sub-systems is 1
+      expect(page.subSystemTitles.length, 1);
+    });
+
+    test('For new ParameterPage, subSystemTitles[0] is Sub-system 1', () {
+      // Given nothing
+      // When I create a new page
+      ParameterPage page = ParameterPage();
+
+      // Then the name of the default sub-system is...
+      expect(page.subSystemTitles[0], "Sub-system 1");
+    });
+
+    test('For new ParameterPage, subSystemTitle is Sub-system 1', () {
+      // Given nothing
+      // When I create a new ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // Then the sub-system title is...
+      expect(page.subSystemTitle, 'Sub-system 1');
+    });
+
+    test('createSubSystem(), enforces edit mode', () {
+      // Given a new ParameterPage that is not in edit mode
+      ParameterPage page = ParameterPage();
+
+      // When I createSubSystem()
+      // Then an exception is thrown
+      expect(() => page.createSubSystem(), throwsException);
+    });
+
+    test('createSubSystem(), should make a new Sub-system', () {
+      // Given a new ParameterPage
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I create a new sub-system
+      page.createSubSystem();
+
+      // Then there should be 2 sub-systems
+      expect(page.subSystemTitles.length, 2);
+    });
+
+    test(
+        'createSubSystem(), should create a new sub-system with title Sub-system N',
+        () {
+      // Given a new ParameterPage in edit mode
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I create three new sub-systems
+      page.createSubSystem();
+      page.createSubSystem();
+      page.createSubSystem();
+
+      // Then the new sub-system titles should be...
+      expect(page.subSystemTitles[1], 'Sub-system 2');
+      expect(page.subSystemTitles[2], "Sub-system 3");
+      expect(page.subSystemTitles[3], "Sub-system 4");
+    });
+
+    test(
+        'createSubSystem(title:), should create a new sub-system with the given title',
+        () {
+      // Given a new ParameterPage that is in editing mode
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I createSubSystem(title:)
+      page.createSubSystem(withTitle: "My New Sub-system");
+
+      // Then the new sub-system is titles "My New Sub-system"
+      expect(page.subSystemTitles[1], "My New Sub-system");
+    });
+
+    test(
+        'createSubSystem(), should switch the current sub-system to the new sub-system',
+        () {
+      // Given a new ParameterPage in edit mode
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I createSubSystem()
+      page.createSubSystem();
+
+      // Then the subSystemTitle changes to the new sub-system
+      expect(page.subSystemTitle, "Sub-system 2");
+    });
   });
 }
