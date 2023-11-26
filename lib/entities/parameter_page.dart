@@ -248,6 +248,8 @@ class ParameterPage {
         .entries = [];
   }
 
+  void createSubSystem() {}
+
   void createTab({String? title}) {
     _enforceEditMode();
 

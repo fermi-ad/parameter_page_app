@@ -1328,5 +1328,16 @@ void main() {
       // Then the name of the default sub-system is...
       expect(page.subSystemTitles[0], "Sub-system 1");
     });
+
+    test('createSubSystem(), should make a new Sub-system', () {
+      // Given a new ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // When I create a new sub-system
+      page.createSubSystem();
+
+      // Then there should be 2 sub-systems
+      expect(page.subSystemTitles.length, 2);
+    });
   });
 }
