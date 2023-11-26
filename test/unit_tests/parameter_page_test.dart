@@ -1329,6 +1329,15 @@ void main() {
       expect(page.subSystemTitles[0], "Sub-system 1");
     });
 
+    test('For new ParameterPage, subSystemTitle is Sub-system 1', () {
+      // Given nothing
+      // When I create a new ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // Then the sub-system title is...
+      expect(page.subSystemTitle, 'Sub-system 1');
+    });
+
     test('createSubSystem(), enforces edit mode', () {
       // Given a new ParameterPage that is not in edit mode
       ParameterPage page = ParameterPage();
