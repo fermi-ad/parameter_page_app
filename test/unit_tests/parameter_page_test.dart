@@ -1349,5 +1349,23 @@ void main() {
       // Then there should be 2 sub-systems
       expect(page.subSystemTitles.length, 2);
     });
+
+    test(
+        'createSubSystem(), should create a new sub-system with title Sub-system N',
+        () {
+      // Given a new ParameterPage in edit mode
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I create three new sub-systems
+      page.createSubSystem();
+      page.createSubSystem();
+      page.createSubSystem();
+
+      // Then the new sub-system titles should be...
+      expect(page.subSystemTitles[1], 'Sub-system 2');
+      expect(page.subSystemTitles[2], "Sub-system 3");
+      expect(page.subSystemTitles[3], "Sub-system 4");
+    });
   });
 }
