@@ -257,6 +257,8 @@ class ParameterPage {
 
     final newSubSystemTitle = withTitle ?? _generateNewSubSystemTitle();
     _pageData.add(_SubSystem(title: newSubSystemTitle, tabs: []));
+
+    _currentSubSystemIndex = _pageData.length - 1;
   }
 
   void createTab({String? title}) {
