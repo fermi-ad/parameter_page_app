@@ -248,10 +248,11 @@ class ParameterPage {
         .entries = [];
   }
 
-  void createSubSystem() {
+  void createSubSystem({String? withTitle}) {
     _enforceEditMode();
 
-    _pageData.add(_SubSystem(title: _generateNewSubSystemTitle(), tabs: []));
+    final newSubSystemTitle = withTitle ?? _generateNewSubSystemTitle();
+    _pageData.add(_SubSystem(title: newSubSystemTitle, tabs: []));
   }
 
   void createTab({String? title}) {

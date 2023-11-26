@@ -1367,5 +1367,19 @@ void main() {
       expect(page.subSystemTitles[2], "Sub-system 3");
       expect(page.subSystemTitles[3], "Sub-system 4");
     });
+
+    test(
+        'createSubSystem(title:), should create a new sub-system with the given title',
+        () {
+      // Given a new ParameterPage that is in editing mode
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I createSubSystem(title:)
+      page.createSubSystem(withTitle: "My New Sub-system");
+
+      // Then the new sub-system is titles "My New Sub-system"
+      expect(page.subSystemTitles[1], "My New Sub-system");
+    });
   });
 }
