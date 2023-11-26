@@ -251,7 +251,7 @@ class ParameterPage {
   void createSubSystem() {
     _enforceEditMode();
 
-    _pageData.add(_SubSystem());
+    _pageData.add(_SubSystem(title: _generateNewSubSystemTitle(), tabs: []));
   }
 
   void createTab({String? title}) {
@@ -404,6 +404,10 @@ class ParameterPage {
         ? tabTitles[tabIndex - 1]
         : tabTitles[tabIndex + 1];
     switchTab(to: switchToTab);
+  }
+
+  String _generateNewSubSystemTitle() {
+    return "Sub-system ${subSystemTitles.length + 1}";
   }
 
   String _generateNewTabTitle() {
