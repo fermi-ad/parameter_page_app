@@ -52,7 +52,7 @@ class ParameterPage {
   }
 
   String get subSystemTitle {
-    return "";
+    return _pageData[_currentSubSystemIndex].title;
   }
 
   List<String> get tabTitles {
