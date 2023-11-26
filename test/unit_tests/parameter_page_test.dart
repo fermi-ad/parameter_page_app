@@ -1329,6 +1329,15 @@ void main() {
       expect(page.subSystemTitles[0], "Sub-system 1");
     });
 
+    test('createSubSystem(), enforces edit mode', () {
+      // Given a new ParameterPage that is not in edit mode
+      ParameterPage page = ParameterPage();
+
+      // When I createSubSystem()
+      // Then an exception is thrown
+      expect(() => page.createSubSystem(), throwsException);
+    });
+
     test('createSubSystem(), should make a new Sub-system', () {
       // Given a new ParameterPage
       ParameterPage page = ParameterPage();

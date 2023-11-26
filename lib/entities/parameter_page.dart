@@ -248,7 +248,9 @@ class ParameterPage {
         .entries = [];
   }
 
-  void createSubSystem() {}
+  void createSubSystem() {
+    _pageData.add(_SubSystem());
+  }
 
   void createTab({String? title}) {
     _enforceEditMode();
