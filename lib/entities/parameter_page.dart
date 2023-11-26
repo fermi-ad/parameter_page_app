@@ -249,6 +249,8 @@ class ParameterPage {
   }
 
   void createSubSystem() {
+    _enforceEditMode();
+
     _pageData.add(_SubSystem());
   }
 

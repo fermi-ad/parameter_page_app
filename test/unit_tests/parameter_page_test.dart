@@ -1341,6 +1341,7 @@ void main() {
     test('createSubSystem(), should make a new Sub-system', () {
       // Given a new ParameterPage
       ParameterPage page = ParameterPage();
+      page.enableEditing();
 
       // When I create a new sub-system
       page.createSubSystem();
