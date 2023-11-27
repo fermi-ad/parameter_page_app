@@ -1472,5 +1472,14 @@ void main() {
       expect(page.subSystemTitles[1], "Sub-system Two");
       expect(page.subSystemTitles[2], "Sub-system Three");
     });
+
+    test('set subSystemTitle, enforces edit mode', () {
+      // Given a new ParameterPage that is NOT in edit mode
+      ParameterPage page = ParameterPage();
+
+      // When I set subSystemTitle
+      // Then an exception is thrown
+      expect(() => page.subSystemTitle = "Should Throw", throwsException);
+    });
   });
 }

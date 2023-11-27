@@ -56,6 +56,8 @@ class ParameterPage {
   }
 
   set subSystemTitle(String newTitle) {
+    _enforceEditMode();
+
     _pageData[_currentSubSystemIndex].title = newTitle;
   }
 
