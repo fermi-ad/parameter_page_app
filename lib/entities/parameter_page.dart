@@ -276,6 +276,8 @@ class ParameterPage {
   void deleteSubSystem({required String withTitle}) {
     _enforceEditMode();
 
+    _enforceAtLeastOneSubSystem();
+
     _pageData.removeAt(_findSubSystemIndex(forTitle: withTitle));
   }
 
@@ -395,6 +397,12 @@ class ParameterPage {
     if (!_editing) {
       throw Exception(
           "Can not modify a ParameterPage when edit mode is disabled.");
+    }
+  }
+
+  void _enforceAtLeastOneSubSystem() {
+    if (_pageData.length == 1) {
+      throw Exception("Could not delete the only sub-system on the page");
     }
   }
 

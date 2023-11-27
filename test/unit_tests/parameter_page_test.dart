@@ -1510,5 +1510,18 @@ void main() {
       expect(() => page.deleteSubSystem(withTitle: "Sub-system 2"),
           throwsException);
     });
+
+    test('deleteSubSystem, enforces the at-least-1-sub-system rule', () {
+      // Given a ParameterPage with 1 sub-system
+      ParameterPage page = ParameterPage();
+
+      // ... and I am in editing mode
+      page.enableEditing();
+
+      // When I attempt to deleteSubSystem()
+      // Then an exception is thrown
+      expect(() => page.deleteSubSystem(withTitle: "Sub-system 1"),
+          throwsException);
+    });
   });
 }
