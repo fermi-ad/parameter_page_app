@@ -1424,5 +1424,19 @@ void main() {
       // ... and that tab has 1 sub-page
       expect(page.numberOfSubPages, 1);
     });
+
+    test('switchSubSystem(to:), changes the subSystemTitle', () {
+      // Given a ParameterPage with two sub-systems
+      // ... and I am on Sub-system 2
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubSystem();
+
+      // When I switchSubSystem(to: "Sub-system 1")
+      page.switchSubSystem(to: "Sub-system 1");
+
+      // Then the sub-system title changes
+      expect(page.subSystemTitle, "Sub-system 1");
+    });
   });
 }

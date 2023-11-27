@@ -263,6 +263,8 @@ class ParameterPage {
     _currentSubSystemIndex = _pageData.length - 1;
   }
 
+  void switchSubSystem({required String to}) {}
+
   void createTab({String? title}) {
     _enforceEditMode();
 
