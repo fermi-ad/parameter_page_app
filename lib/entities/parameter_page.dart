@@ -256,7 +256,9 @@ class ParameterPage {
     _enforceEditMode();
 
     final newSubSystemTitle = withTitle ?? _generateNewSubSystemTitle();
-    _pageData.add(_SubSystem(title: newSubSystemTitle, tabs: []));
+    _pageData.add(_SubSystem(title: newSubSystemTitle, tabs: [
+      _Tab(title: "Tab 1", subPages: [_SubPage()])
+    ]));
 
     _currentSubSystemIndex = _pageData.length - 1;
   }
