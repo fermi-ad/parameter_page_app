@@ -55,6 +55,10 @@ class ParameterPage {
     return _pageData[_currentSubSystemIndex].title;
   }
 
+  set subSystemTitle(String newTitle) {
+    _pageData[_currentSubSystemIndex].title = newTitle;
+  }
+
   List<String> get tabTitles {
     return _pageData[_currentSubSystemIndex]
         .tabs

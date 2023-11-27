@@ -1448,5 +1448,29 @@ void main() {
       expect(() => page.switchSubSystem(to: "Invalid Sub-system"),
           throwsException);
     });
+
+    test('set subSystemTitle, change reflected in subSystemTitls list', () {
+      // Given a new ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // ... and I am in edit mode
+      page.enableEditing();
+
+      // ... and there are three sub-systems each with the default title
+      page.createSubSystem();
+      page.createSubSystem();
+
+      // When I set the subSystemTitle for each of the sub-systems
+      page.subSystemTitle = "Sub-system Three";
+      page.switchSubSystem(to: "Sub-system 2");
+      page.subSystemTitle = "Sub-system Two";
+      page.switchSubSystem(to: "Sub-system 1");
+      page.subSystemTitle = "Sub-system One";
+
+      // Then the change is reflected in subSystemTitles
+      expect(page.subSystemTitles[0], "Sub-system One");
+      expect(page.subSystemTitles[1], "Sub-system Two");
+      expect(page.subSystemTitles[2], "Sub-system Three");
+    });
   });
 }
