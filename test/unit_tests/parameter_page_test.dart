@@ -1495,5 +1495,20 @@ void main() {
       expect(page.subSystemTitles.contains("Sub-system 1"), false);
       expect(page.subSystemTitles.length, 1);
     });
+
+    test('deleteSubSystem, enforces edit mode', () {
+      // Given a ParameterPage with two sub-systems
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubSystem();
+
+      // ... and I am not in edit mode
+      page.disableEditing();
+
+      // When I deleteSubSystem
+      // Then an exception is thrown
+      expect(() => page.deleteSubSystem(withTitle: "Sub-system 2"),
+          throwsException);
+    });
   });
 }
