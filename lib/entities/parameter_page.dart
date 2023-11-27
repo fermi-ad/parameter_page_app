@@ -464,24 +464,32 @@ class ParameterPage {
 
   List<_SubSystem> _buildEntriesMapFromQueryResult(
       Map<String, dynamic> queryResult) {
-    List<_SubSystem> ret = [_SubSystem(title: "Sub-system 1", tabs: [])];
-    for (final tabData in queryResult["tabs"]) {
-      List<_SubPage> subPages = [];
+    List<_SubSystem> ret = [];
 
-      for (final subPageData in tabData["sub-pages"]) {
-        final entries = subPageData["entries"];
-        if (entries.length == 0) {
-          subPages.add(_SubPage(title: "", entries: []));
-        } else {
-          subPages.add(_SubPage(
-              title: subPageData["title"] ?? "",
-              entries:
-                  _buildEntriesListFromQueryResult(subPageData["entries"])));
+    for (final subSystemData in queryResult["sub-systems"]) {
+      List<_Tab> tabs = [];
+
+      for (final tabData in subSystemData["tabs"]) {
+        List<_SubPage> subPages = [];
+
+        for (final subPageData in tabData["sub-pages"]) {
+          final entries = subPageData["entries"];
+          if (entries.length == 0) {
+            subPages.add(_SubPage(title: "", entries: []));
+          } else {
+            subPages.add(_SubPage(
+                title: subPageData["title"] ?? "",
+                entries:
+                    _buildEntriesListFromQueryResult(subPageData["entries"])));
+          }
+
+          tabs.add(_Tab(title: tabData["title"], subPages: subPages));
         }
-      }
 
-      ret[0].tabs.add(_Tab(title: tabData["title"], subPages: subPages));
+        ret.add(_SubSystem(title: subSystemData["title"], tabs: tabs));
+      }
     }
+
     return ret;
   }
 

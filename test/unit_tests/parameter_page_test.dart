@@ -181,10 +181,15 @@ void main() {
       final tab3Entries = page.entriesAsList();
       page.switchSubSystem(to: "Sub-system Two");
       final sys2tab1Entries = page.entriesAsList();
+      page.switchSubSystem(to: "Sub-system One");
+      page.switchTab(to: "Tab 1");
 
       // Then the list contains the expected entries
       expect(page.id, equals("99"));
       expect(page.title, equals("New Page"));
+      expect(page.subSystemTitle, "Sub-system One");
+      expect(page.subPageTitle, "Sub-Page One");
+      expect(page.currentTab, "Tab 1");
       expect(entries.length, 3);
       expect(entries[0], isA<CommentEntry>());
       expect(entries[1], isA<CommentEntry>());
