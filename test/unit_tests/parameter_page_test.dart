@@ -81,61 +81,93 @@ void main() {
           id: "99",
           title: "New Page",
           queryResult: {
-            "tabs": [
+            "sub-systems": [
               {
-                "title": "Tab 1",
-                "sub-pages": [
+                "id": "1",
+                "title": "Sub-system One",
+                "tabs": [
                   {
-                    "id": "1",
-                    "title": "Sub-Page One",
-                    "entries": [
+                    "title": "Tab 1",
+                    "sub-pages": [
                       {
-                        "entryid": "4",
-                        "pageid": "3",
-                        "position": "0",
-                        "text": "this is comment #1",
-                        "type": "Comment"
-                      },
-                      {
-                        "entryid": "5",
-                        "pageid": "3",
-                        "position": "1",
-                        "text": "this is comment #2",
-                        "type": "Comment"
-                      },
-                      {
-                        "entryid": "6",
-                        "pageid": "3",
-                        "position": "2",
-                        "text": "I:BEAM",
-                        "type": "Parameter"
+                        "id": "1",
+                        "title": "Sub-Page One",
+                        "entries": [
+                          {
+                            "entryid": "4",
+                            "pageid": "3",
+                            "position": "0",
+                            "text": "this is comment #1",
+                            "type": "Comment"
+                          },
+                          {
+                            "entryid": "5",
+                            "pageid": "3",
+                            "position": "1",
+                            "text": "this is comment #2",
+                            "type": "Comment"
+                          },
+                          {
+                            "entryid": "6",
+                            "pageid": "3",
+                            "position": "2",
+                            "text": "I:BEAM",
+                            "type": "Parameter"
+                          }
+                        ]
                       }
+                    ]
+                  },
+                  {
+                    "title": "Tab 2",
+                    "sub-pages": [
+                      {
+                        "id": "1",
+                        "title": "Sub-Page One",
+                        "entries": [
+                          {
+                            "entryid": "7",
+                            "pageid": "3",
+                            "position": "0",
+                            "text": "R:BEAM",
+                            "type": "Parameter"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "title": "Tab 3",
+                    "sub-pages": [
+                      {"id": "1", "title": "", "entries": []}
                     ]
                   }
                 ]
               },
               {
-                "title": "Tab 2",
-                "sub-pages": [
+                "id": "2",
+                "title": "Sub-system Two",
+                "tabs": [
                   {
-                    "id": "1",
-                    "title": "Sub-Page One",
-                    "entries": [
+                    "id": "200",
+                    "title": "Tab 1",
+                    "sub-pages": [
                       {
-                        "entryid": "7",
-                        "pageid": "3",
-                        "position": "0",
-                        "text": "R:BEAM",
-                        "type": "Parameter"
+                        "id": "1000",
+                        "title": "",
+                        "entries": [
+                          {
+                            "entryid": "77",
+                            "pageid": "3",
+                            "position": "0",
+                            "text":
+                                "Sub-system 2 / Tab 1 / Sub-page 1 / Entry 1",
+                            "type": "Comment"
+                          }
+                        ]
                       }
                     ]
                   }
-                ]
-              },
-              {
-                "title": "Tab 3",
-                "sub-pages": [
-                  {"id": "1", "title": "", "entries": []}
                 ]
               }
             ]
@@ -147,6 +179,8 @@ void main() {
       final tab2Entries = page.entriesAsList();
       page.switchTab(to: "Tab 3");
       final tab3Entries = page.entriesAsList();
+      page.switchSubSystem(to: "Sub-system Two");
+      final sys2tab1Entries = page.entriesAsList();
 
       // Then the list contains the expected entries
       expect(page.id, equals("99"));
@@ -160,6 +194,8 @@ void main() {
       expect(tab2Entries.length, 1);
       expect(tab2Entries[0].entryText(), "R:BEAM");
       expect(tab3Entries.length, 0);
+      expect(sys2tab1Entries[0].entryText(),
+          "Sub-system 2 / Tab 1 / Sub-page 1 / Entry 1");
     });
 
     test(
