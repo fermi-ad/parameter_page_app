@@ -1539,8 +1539,24 @@ void main() {
       // When I delete Sub-system 2
       page.deleteSubSystem(withTitle: "Sub-system 2");
 
-      // The the current sub-system becomes sub-system 3
+      // Then the current sub-system becomes sub-system 3
       expect(page.subSystemTitle, "Sub-system 3");
+    });
+
+    test(
+        'deleteSubSystem() on the last and current sub-system, moves subSystem to previous sub-system',
+        () {
+      // Given a ParameterPage with two sub-systems
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubSystem();
+      expect(page.subSystemTitle, "Sub-system 2");
+
+      // When I delete sub-system 2
+      page.deleteSubSystem(withTitle: "Sub-system 2");
+
+      // Then the current sub-system becomes sub-system 1
+      expect(page.subSystemTitle, "Sub-system 1");
     });
   });
 }
