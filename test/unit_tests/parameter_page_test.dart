@@ -1419,6 +1419,7 @@ void main() {
 
       // ... and sub-system 2 has 1 tab
       expect(page.tabTitles.length, 1);
+      expect(page.tabTitles[0], "Tab 1");
 
       // ... and that tab has 1 sub-page
       expect(page.numberOfSubPages, 1);
