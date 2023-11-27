@@ -263,7 +263,9 @@ class ParameterPage {
     _currentSubSystemIndex = _pageData.length - 1;
   }
 
-  void switchSubSystem({required String to}) {}
+  void switchSubSystem({required String to}) {
+    _currentSubSystemIndex = _findSubSystemIndex(forTitle: to);
+  }
 
   void createTab({String? title}) {
     _enforceEditMode();
@@ -397,6 +399,12 @@ class ParameterPage {
         1) {
       throw Exception("Could not delete the only sub-page on the page");
     }
+  }
+
+  int _findSubSystemIndex({required String forTitle}) {
+    final index = subSystemTitles.indexOf(forTitle);
+
+    return index;
   }
 
   int _findIndex({required String forTab}) {
