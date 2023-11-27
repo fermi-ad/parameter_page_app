@@ -1523,5 +1523,24 @@ void main() {
       expect(() => page.deleteSubSystem(withTitle: "Sub-system 1"),
           throwsException);
     });
+
+    test(
+        'deleteSubSystem() for the current sub-system, moves subSystemIndex to next subSystemIndex',
+        () {
+      // Given a ParameterPage with 3 sub-systems
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubSystem();
+      page.createSubSystem();
+
+      // ... and I am currently on sub-system 2
+      page.switchSubSystem(to: "Sub-system 2");
+
+      // When I delete Sub-system 2
+      page.deleteSubSystem(withTitle: "Sub-system 2");
+
+      // The the current sub-system becomes sub-system 3
+      expect(page.subSystemTitle, "Sub-system 3");
+    });
   });
 }
