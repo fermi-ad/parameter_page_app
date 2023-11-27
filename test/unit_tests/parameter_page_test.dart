@@ -1481,5 +1481,19 @@ void main() {
       // Then an exception is thrown
       expect(() => page.subSystemTitle = "Should Throw", throwsException);
     });
+
+    test('deleteSubSystem, removes the sub-system from subSystemTitles', () {
+      // Given a ParameterPage in edit mode with 2 sub-systems
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubSystem();
+
+      // When I deleteSubSystem("Sub-system 1")
+      page.deleteSubSystem(withTitle: "Sub-system 1");
+
+      // Then "Sub-System 1" is no longer in subSystemTitles
+      expect(page.subSystemTitles.contains("Sub-system 1"), false);
+      expect(page.subSystemTitles.length, 1);
+    });
   });
 }

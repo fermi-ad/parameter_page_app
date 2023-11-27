@@ -273,6 +273,8 @@ class ParameterPage {
     _currentSubSystemIndex = _findSubSystemIndex(forTitle: to);
   }
 
+  void deleteSubSystem({required String withTitle}) {}
+
   void createTab({String? title}) {
     _enforceEditMode();
 
