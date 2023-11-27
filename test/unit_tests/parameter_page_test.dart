@@ -1404,5 +1404,24 @@ void main() {
       // Then the subSystemTitle changes to the new sub-system
       expect(page.subSystemTitle, "Sub-system 2");
     });
+
+    test('createSubSystem(), creates 1 sub-system with 1 tab and 1 sub-page',
+        () {
+      // Given a new ParameterPage in edit mode
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I createSubSystem()
+      page.createSubSystem();
+
+      // Then there are 2 sub-systems
+      expect(page.subSystemTitles.length, 2);
+
+      // ... and sub-system 2 has 1 tab
+      expect(page.tabTitles.length, 1);
+
+      // ... and that tab has 1 sub-page
+      expect(page.numberOfSubPages, 1);
+    });
   });
 }
