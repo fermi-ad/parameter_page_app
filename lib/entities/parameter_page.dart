@@ -413,13 +413,13 @@ class ParameterPage {
   }
 
   int _findTabIndex({required String forTab}) {
-    for (int i = 0; i != _pageData[_currentSubSystemIndex].tabs.length; i++) {
-      if (_pageData[_currentSubSystemIndex].tabs[i].title == forTab) {
-        return i;
-      }
+    final index = tabTitles.indexOf(forTab);
+
+    if (index == -1) {
+      throw Exception("Invalid tab");
     }
 
-    throw Exception("Invalid tab");
+    return index;
   }
 
   void _switchToAdjacentTab() {
