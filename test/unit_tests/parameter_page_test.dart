@@ -1438,5 +1438,15 @@ void main() {
       // Then the sub-system title changes
       expect(page.subSystemTitle, "Sub-system 1");
     });
+
+    test('switchSubSystem(to:) given invalid sub-system title, throws', () {
+      // Given a ParameterPage with 1 sub-system
+      ParameterPage page = ParameterPage();
+
+      // When I attempt to switch to an invalid sub-system
+      // Then an exception is thrown
+      expect(() => page.switchSubSystem(to: "Invalid Sub-system"),
+          throwsException);
+    });
   });
 }
