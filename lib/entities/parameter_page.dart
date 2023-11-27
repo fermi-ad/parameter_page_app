@@ -174,13 +174,13 @@ class ParameterPage {
 
   List<PageEntry> entriesAsListFrom(
       {required String tab, required int subPage}) {
-    final tabIndex = _findIndex(forTab: tab);
+    final tabIndex = _findTabIndex(forTab: tab);
     return _pageData[0].tabs[tabIndex].subPages[subPage - 1].entries;
   }
 
   int numberOfEntries({String? forTab}) {
     int tabIndex = forTab != null
-        ? _findIndex(forTab: forTab)
+        ? _findTabIndex(forTab: forTab)
         : _pageData[_currentSubSystemIndex].currentTabIndex;
 
     return _pageData[_currentSubSystemIndex]
@@ -281,7 +281,7 @@ class ParameterPage {
     _enforceEditMode();
     _enforceAtLeastOneTab();
 
-    final tabIndex = _findIndex(forTab: title);
+    final tabIndex = _findTabIndex(forTab: title);
 
     if (currentTabIndex == tabIndex) {
       _switchToAdjacentTab();
@@ -298,7 +298,7 @@ class ParameterPage {
     _enforceEditMode();
 
     _pageData[_currentSubSystemIndex]
-        .tabs[_findIndex(forTab: withTitle)]
+        .tabs[_findTabIndex(forTab: withTitle)]
         .title = to;
   }
 
@@ -306,12 +306,13 @@ class ParameterPage {
     if (!tabTitles.contains(to)) {
       throw Exception("switchTab failure - tab does not exist");
     }
-    _pageData[_currentSubSystemIndex].currentTabIndex = _findIndex(forTab: to);
+    _pageData[_currentSubSystemIndex].currentTabIndex =
+        _findTabIndex(forTab: to);
   }
 
   int subPageCount({required String forTab}) {
     return _pageData[_currentSubSystemIndex]
-        .tabs[_findIndex(forTab: forTab)]
+        .tabs[_findTabIndex(forTab: forTab)]
         .subPages
         .length;
   }
@@ -373,7 +374,7 @@ class ParameterPage {
 
   String subPageTitleFor({required String tab, required int subPageIndex}) {
     return _pageData[_currentSubSystemIndex]
-        .tabs[_findIndex(forTab: tab)]
+        .tabs[_findTabIndex(forTab: tab)]
         .subPages[subPageIndex - 1]
         .title;
   }
@@ -404,10 +405,14 @@ class ParameterPage {
   int _findSubSystemIndex({required String forTitle}) {
     final index = subSystemTitles.indexOf(forTitle);
 
+    if (index == -1) {
+      throw Exception("Invalid sub-system.");
+    }
+
     return index;
   }
 
-  int _findIndex({required String forTab}) {
+  int _findTabIndex({required String forTab}) {
     for (int i = 0; i != _pageData[_currentSubSystemIndex].tabs.length; i++) {
       if (_pageData[_currentSubSystemIndex].tabs[i].title == forTab) {
         return i;
