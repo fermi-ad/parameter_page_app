@@ -278,6 +278,10 @@ class ParameterPage {
 
     _enforceAtLeastOneSubSystem();
 
+    if (_currentSubSystemIndex == subSystemTitles.length - 1) {
+      _currentSubSystemIndex--;
+    }
+
     _pageData.removeAt(_findSubSystemIndex(forTitle: withTitle));
   }
 
