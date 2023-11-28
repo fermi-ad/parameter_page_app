@@ -112,8 +112,10 @@ class _ParameterPageScaffoldWidgetState
         bottom: PreferredSize(
             preferredSize: const Size(double.infinity, 100.0),
             child: Column(children: [
-              _buildSubSystemNavigation(),
-              _buildTabNavigation(),
+              Row(children: [
+                _buildSubSystemNavigation(),
+                Expanded(child: _buildTabNavigation())
+              ]),
               _buildSubPageNavigation()
             ])),
         actions: [
@@ -124,8 +126,10 @@ class _ParameterPageScaffoldWidgetState
   }
 
   Widget _buildSubSystemNavigation() {
-    return SubSystemNavigationWidget(
-        wide: MediaQuery.of(context).size.width > 600, page: _page!);
+    return _page != null
+        ? SubSystemNavigationWidget(
+            wide: MediaQuery.of(context).size.width > 600, page: _page!)
+        : Container();
   }
 
   Widget _buildTabNavigation() {
