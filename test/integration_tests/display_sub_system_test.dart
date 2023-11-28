@@ -37,5 +37,23 @@ void main() {
       // ... and we are currently on Sub-system 1
       assertCurrentSubSystemIs("Sub-system 1");
     }, semanticsEnabled: false);
+
+    testWidgets('Switch sub-system, contents are updated',
+        (WidgetTester tester) async {
+      // Given I am on Test Page 2 / Sub-system 1
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+      assertIsOnPage(comment: "this is comment #1");
+
+      // When I switch to Sub-system 2
+      await switchSubSystem(tester, to: "Sub-system 2");
+
+      // Then the current sub-system is...
+      assertCurrentSubSystemIs("Sub-system 2");
+
+      // ... and Sub-system 2 / Tab 1 / Sub-page One is displayed
+      assertIsOnPage(comment: "this is Sub-system 2 / Tab 1 / Sub-page One");
+    });
   });
 }

@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/widgets/sub_system_navigation_widget.dart';
 
+import '../integration_tests/helpers/actions.dart';
 import '../integration_tests/helpers/assertions.dart';
 
 void main() {
@@ -42,7 +43,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I open the sub-system directory
-      await _openSubSystemDirectory(tester);
+      await openSubSystemDirectory(tester);
 
       // Then the sub-system directory is displayed
       _assertSubSystemDirectory(
@@ -68,23 +69,12 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I open the sub-system directory and select Sub-system 1
-      await _switchSubSystem(tester, to: "Sub-system 1");
+      await switchSubSystem(tester, to: "Sub-system 1");
 
       // Then the onSelected callback is called with the selected sub-system title
       expect(selectedSubSystemTitle, "Sub-system 1");
     });
   });
-}
-
-Future<void> _switchSubSystem(WidgetTester tester, {required String to}) async {
-  await _openSubSystemDirectory(tester);
-  await tester.tap(find.text(to).last);
-  await tester.pumpAndSettle();
-}
-
-Future<void> _openSubSystemDirectory(WidgetTester tester) async {
-  await tester.tap(find.byKey(const Key("subsystemnavigation")));
-  await tester.pumpAndSettle();
 }
 
 void _assertSubSystemDirectory({required List<String> contains}) {

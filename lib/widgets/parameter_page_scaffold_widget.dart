@@ -130,7 +130,10 @@ class _ParameterPageScaffoldWidgetState
         ? Visibility(
             visible: _page!.subSystemTitles.length > 1,
             child: SubSystemNavigationWidget(
-                wide: MediaQuery.of(context).size.width > 600, page: _page!))
+                wide: MediaQuery.of(context).size.width > 600,
+                page: _page!,
+                onSelected: (String selected) =>
+                    setState(() => _page!.switchSubSystem(to: selected))))
         : Container();
   }
 
