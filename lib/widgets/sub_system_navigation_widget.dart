@@ -13,6 +13,6 @@ class SubSystemNavigationWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         key: const Key("subsystemnavigation"),
-        child: const Text("Sub-system 1"));
+        child: Text(page.subSystemTitle));
   }
 }
