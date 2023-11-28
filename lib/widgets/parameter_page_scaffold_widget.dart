@@ -12,6 +12,7 @@ import 'package:parameter_page/widgets/main_menu_widget.dart';
 import 'package:parameter_page/widgets/page_title_widget.dart';
 import 'package:parameter_page/widgets/parameter_page_tabbar_widget.dart';
 import 'package:parameter_page/widgets/sub_page_navigation_widget.dart';
+import 'package:parameter_page/widgets/sub_system_navigation_widget.dart';
 
 import 'data_acquisition_widget.dart';
 import 'display_settings_widget.dart';
@@ -110,13 +111,25 @@ class _ParameterPageScaffoldWidgetState
             onTitleUpdate: _handleTitleUpdate),
         bottom: PreferredSize(
             preferredSize: const Size(double.infinity, 100.0),
-            child: Column(
-                children: [_buildTabNavigation(), _buildSubPageNavigation()])),
+            child: Column(children: [
+              Row(children: [
+                _buildSubSystemNavigation(),
+                Expanded(child: _buildTabNavigation())
+              ]),
+              _buildSubPageNavigation()
+            ])),
         actions: [
           DisplaySettingsButtonWidget(
               wide: MediaQuery.of(context).size.width > 600,
               onPressed: () => _navigateToDisplaySettings(context)),
         ]);
+  }
+
+  Widget _buildSubSystemNavigation() {
+    return _page != null
+        ? SubSystemNavigationWidget(
+            wide: MediaQuery.of(context).size.width > 600, page: _page!)
+        : Container();
   }
 
   Widget _buildTabNavigation() {
