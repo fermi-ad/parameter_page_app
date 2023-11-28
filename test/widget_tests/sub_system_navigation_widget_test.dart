@@ -28,5 +28,9 @@ void main() {
 }
 
 void _assertCurrentSubSystemIs(String title) {
-  expect(find.text(title), findsOneWidget);
+  expect(
+      find.descendant(
+          of: find.byKey(const Key("subsystemnavigation")),
+          matching: find.text(title)),
+      findsOneWidget);
 }
