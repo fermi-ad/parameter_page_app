@@ -46,7 +46,39 @@ void main() {
       _assertSubSystemDirectory(
           contains: ["Sub-system 1", "Sub-system 2", "Sub-system 3"]);
     });
+
+    testWidgets('Select sub-system from directory, onSelected is called',
+        (WidgetTester tester) async {
+      // Given a ParameterPage with 2 sub-systems
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubSystem();
+
+      // ... and a SubSystemNavigationWidget has been rendered and provided a onSelected call-back
+      String? selectedSubSystemTitle;
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubSystemNavigationWidget(
+                  wide: true,
+                  page: page,
+                  onSelected: (String subSystemTitle) =>
+                      selectedSubSystemTitle = subSystemTitle)));
+      await tester.pumpWidget(app);
+
+      // When I open the sub-system directory and select Sub-system 2
+      await _switchSubSystem(tester, to: "Sub-system 2");
+
+      // Then the onSelected callback is called with the selected sub-system title
+      expect(selectedSubSystemTitle, "Sub-system 2");
+    });
   });
+}
+
+Future<void> _switchSubSystem(WidgetTester tester, {required String to}) async {
+  await _openSubSystemDirectory(tester);
+  await tester.tap(find.descendant(
+      of: find.byKey(const Key("subsystemnavigation")),
+      matching: find.text(to)));
 }
 
 Future<void> _openSubSystemDirectory(WidgetTester tester) async {
