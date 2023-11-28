@@ -35,6 +35,7 @@ jobs:
           - display_tab_test
           - display_sub_page_test
           - extract_parameters_from_text_paste_test
+          - display_sub_system_test
 
     steps:
       - name: Checkout code

@@ -422,3 +422,14 @@ Future<void> changeSubPageTitle(WidgetTester tester,
   await tester.testTextInput.receiveAction(TextInputAction.done);
   await tester.pumpAndSettle();
 }
+
+Future<void> switchSubSystem(WidgetTester tester, {required String to}) async {
+  await openSubSystemDirectory(tester);
+  await tester.tap(find.text(to).last);
+  await tester.pumpAndSettle();
+}
+
+Future<void> openSubSystemDirectory(WidgetTester tester) async {
+  await tester.tap(find.byKey(const Key("subsystemnavigation")));
+  await tester.pumpAndSettle();
+}

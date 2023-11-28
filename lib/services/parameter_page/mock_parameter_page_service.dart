@@ -281,6 +281,29 @@ class MockParameterPageService extends ParameterPageService {
               ]
             }
           ]
+        },
+        {
+          "title": "Sub-system 2",
+          "tabs": [
+            {
+              "title": "Tab 1",
+              "sub-pages": [
+                {
+                  "id": "1",
+                  "title": "Sub-Page One",
+                  "entries": [
+                    {
+                      "entryid": "4",
+                      "pageid": "3",
+                      "position": "0",
+                      "text": "this is Sub-system 2 / Tab 1 / Sub-page One",
+                      "type": "Comment"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ]
     },

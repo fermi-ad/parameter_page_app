@@ -576,3 +576,16 @@ void assertDeleteSubPageConfirmation({required bool isVisible}) {
   expect(find.byKey(const Key("delete_subpage_confirmation")),
       isVisible ? findsOneWidget : findsNothing);
 }
+
+void assertCurrentSubSystemIs(String title) {
+  expect(
+      find.descendant(
+          of: find.byKey(const Key("subsystemnavigation")),
+          matching: find.text(title)),
+      findsAtLeastNWidgets(2));
+}
+
+void assertSubSystemNavigationIsVisible(bool isVisible) {
+  expect(find.byKey(const Key("subsystemnavigation")),
+      isVisible ? findsOneWidget : findsNothing);
+}
