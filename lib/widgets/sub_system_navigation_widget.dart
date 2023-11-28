@@ -14,12 +14,16 @@ class SubSystemNavigationWidget extends StatelessWidget {
     return Container(
         key: const Key("subsystemnavigation"),
         child: DropdownMenu<_SubSystemDirectoryItem>(
-          dropdownMenuEntries: [
-            DropdownMenuEntry<_SubSystemDirectoryItem>(
-                label: page.subSystemTitle,
-                value: _SubSystemDirectoryItem(title: page.subSystemTitle))
-          ],
+          dropdownMenuEntries: _generateMenuEntries(),
         ));
+  }
+
+  List<DropdownMenuEntry<_SubSystemDirectoryItem>> _generateMenuEntries() {
+    return page.subSystemTitles.map((String subSystemTitle) {
+      return DropdownMenuEntry<_SubSystemDirectoryItem>(
+          label: subSystemTitle,
+          value: _SubSystemDirectoryItem(title: subSystemTitle));
+    }).toList();
   }
 }
 
