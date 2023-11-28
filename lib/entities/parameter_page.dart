@@ -55,6 +55,12 @@ class ParameterPage {
     return _pageData[_currentSubSystemIndex].title;
   }
 
+  set subSystemTitle(String newTitle) {
+    _enforceEditMode();
+
+    _pageData[_currentSubSystemIndex].title = newTitle;
+  }
+
   List<String> get tabTitles {
     return _pageData[_currentSubSystemIndex]
         .tabs
@@ -137,7 +143,7 @@ class ParameterPage {
       required Map<String, dynamic> queryResult})
       : _pageData = _initialPageStructure,
         _savedPageData = _initialPageStructure {
-    _pageData = _buildEntriesMapFromQueryResult(queryResult);
+    _pageData = _buildSubSystemsFromQueryResult(queryResult);
     _savedPageData = _deepCopyEntries(_pageData);
 
     _currentSubSystemIndex = 0;
@@ -174,13 +180,13 @@ class ParameterPage {
 
   List<PageEntry> entriesAsListFrom(
       {required String tab, required int subPage}) {
-    final tabIndex = _findIndex(forTab: tab);
+    final tabIndex = _findTabIndex(forTab: tab);
     return _pageData[0].tabs[tabIndex].subPages[subPage - 1].entries;
   }
 
   int numberOfEntries({String? forTab}) {
     int tabIndex = forTab != null
-        ? _findIndex(forTab: forTab)
+        ? _findTabIndex(forTab: forTab)
         : _pageData[_currentSubSystemIndex].currentTabIndex;
 
     return _pageData[_currentSubSystemIndex]
@@ -256,9 +262,27 @@ class ParameterPage {
     _enforceEditMode();
 
     final newSubSystemTitle = withTitle ?? _generateNewSubSystemTitle();
-    _pageData.add(_SubSystem(title: newSubSystemTitle, tabs: []));
+    _pageData.add(_SubSystem(title: newSubSystemTitle, tabs: [
+      _Tab(title: "Tab 1", subPages: [_SubPage()])
+    ]));
 
     _currentSubSystemIndex = _pageData.length - 1;
+  }
+
+  void switchSubSystem({required String to}) {
+    _currentSubSystemIndex = _findSubSystemIndex(forTitle: to);
+  }
+
+  void deleteSubSystem({required String withTitle}) {
+    _enforceEditMode();
+
+    _enforceAtLeastOneSubSystem();
+
+    if (_currentSubSystemIndex == subSystemTitles.length - 1) {
+      _currentSubSystemIndex--;
+    }
+
+    _pageData.removeAt(_findSubSystemIndex(forTitle: withTitle));
   }
 
   void createTab({String? title}) {
@@ -275,7 +299,7 @@ class ParameterPage {
     _enforceEditMode();
     _enforceAtLeastOneTab();
 
-    final tabIndex = _findIndex(forTab: title);
+    final tabIndex = _findTabIndex(forTab: title);
 
     if (currentTabIndex == tabIndex) {
       _switchToAdjacentTab();
@@ -292,7 +316,7 @@ class ParameterPage {
     _enforceEditMode();
 
     _pageData[_currentSubSystemIndex]
-        .tabs[_findIndex(forTab: withTitle)]
+        .tabs[_findTabIndex(forTab: withTitle)]
         .title = to;
   }
 
@@ -300,12 +324,13 @@ class ParameterPage {
     if (!tabTitles.contains(to)) {
       throw Exception("switchTab failure - tab does not exist");
     }
-    _pageData[_currentSubSystemIndex].currentTabIndex = _findIndex(forTab: to);
+    _pageData[_currentSubSystemIndex].currentTabIndex =
+        _findTabIndex(forTab: to);
   }
 
   int subPageCount({required String forTab}) {
     return _pageData[_currentSubSystemIndex]
-        .tabs[_findIndex(forTab: forTab)]
+        .tabs[_findTabIndex(forTab: forTab)]
         .subPages
         .length;
   }
@@ -367,7 +392,7 @@ class ParameterPage {
 
   String subPageTitleFor({required String tab, required int subPageIndex}) {
     return _pageData[_currentSubSystemIndex]
-        .tabs[_findIndex(forTab: tab)]
+        .tabs[_findTabIndex(forTab: tab)]
         .subPages[subPageIndex - 1]
         .title;
   }
@@ -376,6 +401,12 @@ class ParameterPage {
     if (!_editing) {
       throw Exception(
           "Can not modify a ParameterPage when edit mode is disabled.");
+    }
+  }
+
+  void _enforceAtLeastOneSubSystem() {
+    if (_pageData.length == 1) {
+      throw Exception("Could not delete the only sub-system on the page");
     }
   }
 
@@ -395,14 +426,24 @@ class ParameterPage {
     }
   }
 
-  int _findIndex({required String forTab}) {
-    for (int i = 0; i != _pageData[_currentSubSystemIndex].tabs.length; i++) {
-      if (_pageData[_currentSubSystemIndex].tabs[i].title == forTab) {
-        return i;
-      }
+  int _findSubSystemIndex({required String forTitle}) {
+    final index = subSystemTitles.indexOf(forTitle);
+
+    if (index == -1) {
+      throw Exception("Invalid sub-system.");
     }
 
-    throw Exception("Invalid tab");
+    return index;
+  }
+
+  int _findTabIndex({required String forTab}) {
+    final index = tabTitles.indexOf(forTab);
+
+    if (index == -1) {
+      throw Exception("Invalid tab");
+    }
+
+    return index;
   }
 
   void _switchToAdjacentTab() {
@@ -421,26 +462,46 @@ class ParameterPage {
     return "Tab ${tabTitles.length + 1}";
   }
 
-  List<_SubSystem> _buildEntriesMapFromQueryResult(
+  List<_SubSystem> _buildSubSystemsFromQueryResult(
       Map<String, dynamic> queryResult) {
-    List<_SubSystem> ret = [_SubSystem(title: "Sub-system 1", tabs: [])];
-    for (final tabData in queryResult["tabs"]) {
-      List<_SubPage> subPages = [];
+    List<_SubSystem> ret = [];
 
-      for (final subPageData in tabData["sub-pages"]) {
-        final entries = subPageData["entries"];
-        if (entries.length == 0) {
-          subPages.add(_SubPage(title: "", entries: []));
-        } else {
-          subPages.add(_SubPage(
-              title: subPageData["title"] ?? "",
-              entries:
-                  _buildEntriesListFromQueryResult(subPageData["entries"])));
-        }
-      }
-
-      ret[0].tabs.add(_Tab(title: tabData["title"], subPages: subPages));
+    for (final subSystemData in queryResult["sub-systems"]) {
+      ret.add(_SubSystem(
+          title: subSystemData["title"],
+          tabs: _buildTabsFromQueryResult(subSystemData["tabs"])));
     }
+
+    return ret;
+  }
+
+  List<_Tab> _buildTabsFromQueryResult(List<Map<String, dynamic>> tabData) {
+    List<_Tab> ret = [];
+
+    for (final tabData in tabData) {
+      ret.add(_Tab(
+          title: tabData["title"],
+          subPages: _buildSubPagesFromQueryResult(tabData["sub-pages"])));
+    }
+
+    return ret;
+  }
+
+  List<_SubPage> _buildSubPagesFromQueryResult(
+      List<Map<String, dynamic>> subPageData) {
+    List<_SubPage> ret = [];
+
+    for (final subPageData in subPageData) {
+      final entries = subPageData["entries"];
+      if (entries.length == 0) {
+        ret.add(_SubPage(title: "", entries: []));
+      } else {
+        ret.add(_SubPage(
+            title: subPageData["title"] ?? "",
+            entries: _buildEntriesListFromQueryResult(subPageData["entries"])));
+      }
+    }
+
     return ret;
   }
 
