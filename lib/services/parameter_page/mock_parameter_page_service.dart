@@ -70,7 +70,11 @@ class MockParameterPageService extends ParameterPageService {
       return Future.error("Fake savePage failure.");
     }
 
-    _testPageEntries[id] = {"tabs": []};
+    _testPageEntries[id] = {
+      "sub-systems": [
+        {"title": "Sub-system 1", "tabs": <Map<String, dynamic>>[]}
+      ]
+    };
     for (final tabTitle in page.tabTitles) {
       List<Map<String, dynamic>> newSubPages = [];
 
@@ -97,7 +101,7 @@ class MockParameterPageService extends ParameterPageService {
         });
       }
 
-      _testPageEntries[id]!["tabs"]!
+      (_testPageEntries[id]!["sub-systems"]![0]["tabs"]! as List<dynamic>)
           .add({"title": tabTitle, "sub-pages": newSubPages});
     }
 
