@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/widgets/sub_system_navigation_widget.dart';
 
+import '../integration_tests/helpers/assertions.dart';
+
 void main() {
   group("SubSystemNavigationWidget", () {
     testWidgets('Current sub-system indicator, shows the current sub-system',
@@ -22,7 +24,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // Then the current sub-system indicator shows Sub-system 1
-      _assertCurrentSubSystemIs("Sub-system 1");
+      assertCurrentSubSystemIs("Sub-system 1");
     });
 
     testWidgets(
@@ -93,12 +95,4 @@ void _assertSubSystemDirectory({required List<String> contains}) {
             matching: find.text(subSystemTitle)),
         findsAtLeastNWidgets(1));
   }
-}
-
-void _assertCurrentSubSystemIs(String title) {
-  expect(
-      find.descendant(
-          of: find.byKey(const Key("subsystemnavigation")),
-          matching: find.text(title)),
-      findsAtLeastNWidgets(2));
 }
