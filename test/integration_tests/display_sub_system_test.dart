@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
@@ -26,8 +25,4 @@ void main() {
       assertCurrentSubSystemIs("Sub-system 1");
     }, semanticsEnabled: false);
   });
-}
-
-void assertSubSystemNavigationIsVisible(bool bool) {
-  expect(find.byKey(const Key("subsystemnavigation")), findsOneWidget);
 }

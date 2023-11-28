@@ -584,3 +584,7 @@ void assertCurrentSubSystemIs(String title) {
           matching: find.text(title)),
       findsAtLeastNWidgets(2));
 }
+
+void assertSubSystemNavigationIsVisible(bool bool) {
+  expect(find.byKey(const Key("subsystemnavigation")), findsOneWidget);
+}
