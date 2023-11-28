@@ -467,15 +467,21 @@ class ParameterPage {
     List<_SubSystem> ret = [];
 
     for (final subSystemData in queryResult["sub-systems"]) {
-      List<_Tab> tabs = [];
+      ret.add(_SubSystem(
+          title: subSystemData["title"],
+          tabs: _buildTabsFromQueryResult(subSystemData["tabs"])));
+    }
 
-      for (final tabData in subSystemData["tabs"]) {
-        tabs.add(_Tab(
-            title: tabData["title"],
-            subPages: _buildSubPagesFromQueryResult(tabData["sub-pages"])));
-      }
+    return ret;
+  }
 
-      ret.add(_SubSystem(title: subSystemData["title"], tabs: tabs));
+  List<_Tab> _buildTabsFromQueryResult(List<Map<String, dynamic>> tabData) {
+    List<_Tab> ret = [];
+
+    for (final tabData in tabData) {
+      ret.add(_Tab(
+          title: tabData["title"],
+          subPages: _buildSubPagesFromQueryResult(tabData["sub-pages"])));
     }
 
     return ret;
