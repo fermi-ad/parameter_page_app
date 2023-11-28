@@ -11,6 +11,8 @@ class SubSystemNavigationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(key: const Key(""), child: const Text("Sub-system 1"));
+    return Container(
+        key: const Key("subsystemnavigation"),
+        child: const Text("Sub-system 1"));
   }
 }
