@@ -143,7 +143,7 @@ class ParameterPage {
       required Map<String, dynamic> queryResult})
       : _pageData = _initialPageStructure,
         _savedPageData = _initialPageStructure {
-    _pageData = _buildEntriesMapFromQueryResult(queryResult);
+    _pageData = _buildSubSystemsFromQueryResult(queryResult);
     _savedPageData = _deepCopyEntries(_pageData);
 
     _currentSubSystemIndex = 0;
@@ -462,7 +462,7 @@ class ParameterPage {
     return "Tab ${tabTitles.length + 1}";
   }
 
-  List<_SubSystem> _buildEntriesMapFromQueryResult(
+  List<_SubSystem> _buildSubSystemsFromQueryResult(
       Map<String, dynamic> queryResult) {
     List<_SubSystem> ret = [];
 
