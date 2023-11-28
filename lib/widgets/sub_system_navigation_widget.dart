@@ -15,22 +15,22 @@ class SubSystemNavigationWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         key: const Key("subsystemnavigation"),
-        child: DropdownMenu<_SubSystemDirectoryItem>(
-          dropdownMenuEntries: _generateMenuEntries(),
-        ));
+        child: DropdownMenu<String>(
+            initialSelection: page.subSystemTitle,
+            dropdownMenuEntries: _generateMenuEntries(),
+            onSelected: _handleSelected));
   }
 
-  List<DropdownMenuEntry<_SubSystemDirectoryItem>> _generateMenuEntries() {
+  List<DropdownMenuEntry<String>> _generateMenuEntries() {
     return page.subSystemTitles.map((String subSystemTitle) {
-      return DropdownMenuEntry<_SubSystemDirectoryItem>(
-          label: subSystemTitle,
-          value: _SubSystemDirectoryItem(title: subSystemTitle));
+      return DropdownMenuEntry<String>(
+          label: subSystemTitle, value: subSystemTitle);
     }).toList();
   }
-}
 
-class _SubSystemDirectoryItem {
-  final String title;
-
-  const _SubSystemDirectoryItem({required this.title});
+  void _handleSelected(String? selected) {
+    if (selected != null) {
+      onSelected?.call(selected);
+    }
+  }
 }

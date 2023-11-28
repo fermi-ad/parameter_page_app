@@ -65,20 +65,19 @@ void main() {
                       selectedSubSystemTitle = subSystemTitle)));
       await tester.pumpWidget(app);
 
-      // When I open the sub-system directory and select Sub-system 2
-      await _switchSubSystem(tester, to: "Sub-system 2");
+      // When I open the sub-system directory and select Sub-system 1
+      await _switchSubSystem(tester, to: "Sub-system 1");
 
       // Then the onSelected callback is called with the selected sub-system title
-      expect(selectedSubSystemTitle, "Sub-system 2");
+      expect(selectedSubSystemTitle, "Sub-system 1");
     });
   });
 }
 
 Future<void> _switchSubSystem(WidgetTester tester, {required String to}) async {
   await _openSubSystemDirectory(tester);
-  await tester.tap(find.descendant(
-      of: find.byKey(const Key("subsystemnavigation")),
-      matching: find.text(to)));
+  await tester.tap(find.text(to).last);
+  await tester.pumpAndSettle();
 }
 
 Future<void> _openSubSystemDirectory(WidgetTester tester) async {
@@ -92,7 +91,7 @@ void _assertSubSystemDirectory({required List<String> contains}) {
         find.descendant(
             of: find.byKey(const Key("subsystemnavigation")),
             matching: find.text(subSystemTitle)),
-        findsOneWidget);
+        findsAtLeastNWidgets(1));
   }
 }
 
@@ -101,5 +100,5 @@ void _assertCurrentSubSystemIs(String title) {
       find.descendant(
           of: find.byKey(const Key("subsystemnavigation")),
           matching: find.text(title)),
-      findsOneWidget);
+      findsAtLeastNWidgets(2));
 }
