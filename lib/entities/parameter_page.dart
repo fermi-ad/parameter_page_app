@@ -470,23 +470,29 @@ class ParameterPage {
       List<_Tab> tabs = [];
 
       for (final tabData in subSystemData["tabs"]) {
-        List<_SubPage> subPages = [];
+        tabs.add(_Tab(
+            title: tabData["title"],
+            subPages: _buildSubPagesFromQueryResult(tabData["sub-pages"])));
+      }
 
-        for (final subPageData in tabData["sub-pages"]) {
-          final entries = subPageData["entries"];
-          if (entries.length == 0) {
-            subPages.add(_SubPage(title: "", entries: []));
-          } else {
-            subPages.add(_SubPage(
-                title: subPageData["title"] ?? "",
-                entries:
-                    _buildEntriesListFromQueryResult(subPageData["entries"])));
-          }
+      ret.add(_SubSystem(title: subSystemData["title"], tabs: tabs));
+    }
 
-          tabs.add(_Tab(title: tabData["title"], subPages: subPages));
-        }
+    return ret;
+  }
 
-        ret.add(_SubSystem(title: subSystemData["title"], tabs: tabs));
+  List<_SubPage> _buildSubPagesFromQueryResult(
+      List<Map<String, dynamic>> subPageData) {
+    List<_SubPage> ret = [];
+
+    for (final subPageData in subPageData) {
+      final entries = subPageData["entries"];
+      if (entries.length == 0) {
+        ret.add(_SubPage(title: "", entries: []));
+      } else {
+        ret.add(_SubPage(
+            title: subPageData["title"] ?? "",
+            entries: _buildEntriesListFromQueryResult(subPageData["entries"])));
       }
     }
 

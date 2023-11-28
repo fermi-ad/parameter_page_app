@@ -208,20 +208,25 @@ void main() {
         () {
       // Given a queryResult which contains one tab named "AAA"
       final queryResult = {
-        "tabs": [
+        "sub-systems": [
           {
-            "title": "AAA",
-            "sub-pages": [
+            "title": "Sub-system 1",
+            "tabs": [
               {
-                "id": "1",
-                "title": "",
-                "entries": [
+                "title": "AAA",
+                "sub-pages": [
                   {
-                    "entryid": "4",
-                    "pageid": "3",
-                    "position": "0",
-                    "text": "this is comment #1",
-                    "type": "Comment"
+                    "id": "1",
+                    "title": "",
+                    "entries": [
+                      {
+                        "entryid": "4",
+                        "pageid": "3",
+                        "position": "0",
+                        "text": "this is comment #1",
+                        "type": "Comment"
+                      }
+                    ]
                   }
                 ]
               }
