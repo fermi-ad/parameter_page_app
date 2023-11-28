@@ -13,6 +13,18 @@ class SubSystemNavigationWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         key: const Key("subsystemnavigation"),
-        child: Text(page.subSystemTitle));
+        child: DropdownMenu<_SubSystemDirectoryItem>(
+          dropdownMenuEntries: [
+            DropdownMenuEntry<_SubSystemDirectoryItem>(
+                label: page.subSystemTitle,
+                value: _SubSystemDirectoryItem(title: page.subSystemTitle))
+          ],
+        ));
   }
+}
+
+class _SubSystemDirectoryItem {
+  final String title;
+
+  const _SubSystemDirectoryItem({required this.title});
 }
