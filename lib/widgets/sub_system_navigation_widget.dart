@@ -15,10 +15,16 @@ class SubSystemNavigationWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         key: const Key("subsystemnavigation"),
-        child: DropdownMenu<String>(
-            initialSelection: page.subSystemTitle,
-            dropdownMenuEntries: _generateMenuEntries(),
-            onSelected: _handleSelected));
+        child: Padding(
+            padding: const EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
+            child: DropdownMenu<String>(
+                inputDecorationTheme: const InputDecorationTheme(
+                    contentPadding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
+                    border: OutlineInputBorder()),
+                textStyle: const TextStyle(fontSize: 18.0),
+                initialSelection: page.subSystemTitle,
+                dropdownMenuEntries: _generateMenuEntries(),
+                onSelected: _handleSelected)));
   }
 
   List<DropdownMenuEntry<String>> _generateMenuEntries() {
