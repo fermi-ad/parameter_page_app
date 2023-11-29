@@ -61,11 +61,12 @@ void main() {
       String? selectedSubSystemTitle;
       MaterialApp app = MaterialApp(
           home: Scaffold(
-              body: SubSystemNavigationWidget(
-                  wide: true,
-                  page: page,
-                  onSelected: (String subSystemTitle) =>
-                      selectedSubSystemTitle = subSystemTitle)));
+              body: Center(
+                  child: SubSystemNavigationWidget(
+                      wide: true,
+                      page: page,
+                      onSelected: (String subSystemTitle) =>
+                          selectedSubSystemTitle = subSystemTitle))));
       await tester.pumpWidget(app);
 
       // When I open the sub-system directory and select Sub-system 1
@@ -74,7 +75,56 @@ void main() {
       // Then the onSelected callback is called with the selected sub-system title
       expect(selectedSubSystemTitle, "Sub-system 1");
     });
+
+    testWidgets('Not in edit mode, actions menu button is hidden',
+        (WidgetTester tester) async {
+      // Given a ParameterPage that's not in edit mode
+      ParameterPage page = ParameterPage();
+
+      // When I render the SubSystemNavigationWidget
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubSystemNavigationWidget(wide: true, page: page)));
+      await tester.pumpWidget(app);
+
+      // Then the actions button is hidden
+      _assertSubSystemActionsButton(isVisible: false);
+    });
+
+    testWidgets('In edit mode, actions menu button is displayed',
+        (WidgetTester tester) async {
+      // Given a ParameterPage that's in edit mode
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I render the SubSystemNavigationWidget
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubSystemNavigationWidget(wide: true, page: page)));
+      await tester.pumpWidget(app);
+
+      // Then the actions button is displayed
+      _assertSubSystemActionsButton(isVisible: true);
+    });
   });
+}
+
+void _assertSubSystemActionsButton({required bool isVisible}) {
+  expect(
+      find.descendant(
+          of: find.byKey(const Key("subsystemnavigation")),
+          matching: find.byIcon(Icons.add)),
+      isVisible ? findsOneWidget : findsNothing);
+  expect(
+      find.descendant(
+          of: find.byKey(const Key("subsystemnavigation")),
+          matching: find.byIcon(Icons.delete)),
+      isVisible ? findsOneWidget : findsNothing);
+  expect(
+      find.descendant(
+          of: find.byKey(const Key("subsystemnavigation")),
+          matching: find.byIcon(Icons.edit)),
+      isVisible ? findsOneWidget : findsNothing);
 }
 
 void _assertSubSystemDirectory({required List<String> contains}) {

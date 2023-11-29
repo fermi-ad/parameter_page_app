@@ -128,7 +128,7 @@ class _ParameterPageScaffoldWidgetState
   Widget _buildSubSystemNavigation() {
     return _page != null
         ? Visibility(
-            visible: _page!.subSystemTitles.length > 1,
+            visible: _page!.editing || _page!.subSystemTitles.length > 1,
             child: SubSystemNavigationWidget(
                 wide: MediaQuery.of(context).size.width > 600,
                 page: _page!,

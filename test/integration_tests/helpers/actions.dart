@@ -430,6 +430,8 @@ Future<void> switchSubSystem(WidgetTester tester, {required String to}) async {
 }
 
 Future<void> openSubSystemDirectory(WidgetTester tester) async {
-  await tester.tap(find.byKey(const Key("subsystemnavigation")));
+  await tester.tap(find.descendant(
+      of: find.byKey(const Key("subsystemnavigation")),
+      matching: find.byIcon(Icons.arrow_drop_down).first));
   await tester.pumpAndSettle();
 }
