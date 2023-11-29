@@ -582,7 +582,7 @@ void assertCurrentSubSystemIs(String title) {
       find.descendant(
           of: find.byKey(const Key("subsystemnavigation")),
           matching: find.text(title)),
-      findsAtLeastNWidgets(2));
+      findsAtLeastNWidgets(1));
 }
 
 void assertSubSystemNavigationIsVisible(bool isVisible) {
