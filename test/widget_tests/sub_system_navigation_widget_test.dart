@@ -106,7 +106,37 @@ void main() {
       // Then the actions button is displayed
       _assertSubSystemActionsButton(isVisible: true);
     });
+
+    testWidgets('Tap add sub-system, onNewSubSystem called',
+        (WidgetTester tester) async {
+      // Given a ParameterPage in edit mode
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // ... and a SubSystemNavigationWidget has been rendered with a call-back registered for onNewSubSystem
+      bool onNewSubSystemCalled = false;
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubSystemNavigationWidget(
+                  wide: true,
+                  page: page,
+                  onNewSubSystem: () => onNewSubSystemCalled = true)));
+      await tester.pumpWidget(app);
+
+      // When I tap the new button
+      await _newSubSystem(tester);
+
+      // Then the onNewSubSystem call-back is invoked
+      expect(onNewSubSystemCalled, true);
+    });
   });
+}
+
+Future<void> _newSubSystem(WidgetTester tester) async {
+  await tester.tap(find.descendant(
+      of: find.byKey(const Key("subsystemnavigation")),
+      matching: find.byIcon(Icons.add)));
+  await tester.pumpAndSettle();
 }
 
 void _assertSubSystemActionsButton({required bool isVisible}) {

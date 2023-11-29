@@ -8,8 +8,14 @@ class SubSystemNavigationWidget extends StatelessWidget {
 
   final Function(String selectedSubSystemTitle)? onSelected;
 
+  final Function()? onNewSubSystem;
+
   const SubSystemNavigationWidget(
-      {super.key, required this.page, required this.wide, this.onSelected});
+      {super.key,
+      required this.page,
+      required this.wide,
+      this.onSelected,
+      this.onNewSubSystem});
 
   @override
   Widget build(BuildContext context) {
