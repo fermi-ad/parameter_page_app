@@ -124,19 +124,12 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I tap the new button
-      await _newSubSystem(tester);
+      await newSubSystem(tester);
 
       // Then the onNewSubSystem call-back is invoked
       expect(onNewSubSystemCalled, true);
     });
   });
-}
-
-Future<void> _newSubSystem(WidgetTester tester) async {
-  await tester.tap(find.descendant(
-      of: find.byKey(const Key("subsystemnavigation")),
-      matching: find.byIcon(Icons.add)));
-  await tester.pumpAndSettle();
 }
 
 void _assertSubSystemActionsButton({required bool isVisible}) {
