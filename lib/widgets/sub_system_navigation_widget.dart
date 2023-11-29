@@ -17,15 +17,15 @@ class SubSystemNavigationWidget extends StatelessWidget {
       Padding(
           padding: const EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
           child: _buildDropdownMenu()),
-      Visibility(visible: page.editing, child: Icon(Icons.more_vert))
+      Visibility(visible: page.editing, child: const Icon(Icons.more_vert))
     ]);
   }
 
   DropdownMenu<String> _buildDropdownMenu() {
     return DropdownMenu<String>(
         inputDecorationTheme: const InputDecorationTheme(
-            contentPadding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
-            border: OutlineInputBorder()),
+          contentPadding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
+        ),
         textStyle: const TextStyle(fontSize: 18.0),
         initialSelection: page.subSystemTitle,
         dropdownMenuEntries: _generateMenuEntries(),
