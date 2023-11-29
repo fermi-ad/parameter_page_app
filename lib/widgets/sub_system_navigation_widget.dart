@@ -22,8 +22,11 @@ class SubSystemNavigationWidget extends StatelessWidget {
   }
 
   Widget _buildEditModeToolbar() {
-    return const Row(
-        children: [Icon(Icons.add), Icon(Icons.delete), Icon(Icons.edit)]);
+    return Row(children: [
+      IconButton(icon: const Icon(Icons.add), onPressed: () {}),
+      IconButton(icon: const Icon(Icons.delete), onPressed: () {}),
+      IconButton(icon: const Icon(Icons.edit), onPressed: () {})
+    ]);
   }
 
   DropdownMenu<String> _buildDropdownMenu() {

@@ -8,17 +8,35 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Display Sub-system', () {
-    testWidgets('Open Test Page 1, sub-page navigation should hidden',
+    testWidgets(
+        'Open page with 1 sub-system, sub-system navigation should hidden',
         (WidgetTester tester) async {
       // Given the parameter page is started
       await startParameterPageApp(tester);
 
-      // When I open Test Page 2
+      // When I open Test Page 1
       await navigateToOpenPage(tester);
       await openParameterPage(tester, withTitle: "Test Page 1");
 
       // Then the sub-system navigation is hidden
       assertSubSystemNavigationIsVisible(false);
+    }, semanticsEnabled: false);
+
+    testWidgets(
+        'Edit page with 1 sub-system, sub-system navigation should displayed',
+        (WidgetTester tester) async {
+      // Given the parameter page is started
+      await startParameterPageApp(tester);
+
+      // ... and I have opened a page with 1 sub-system
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 1");
+
+      // When I edit the page
+      await enterEditMode(tester);
+
+      // Then the sub-system navigation is shown
+      assertSubSystemNavigationIsVisible(true);
     }, semanticsEnabled: false);
 
     testWidgets(
