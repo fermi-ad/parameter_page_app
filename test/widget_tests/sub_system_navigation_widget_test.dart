@@ -74,7 +74,36 @@ void main() {
       // Then the onSelected callback is called with the selected sub-system title
       expect(selectedSubSystemTitle, "Sub-system 1");
     });
+
+    testWidgets('Not in edit mode, actions menu button is hidden',
+        (WidgetTester tester) async {
+      // Given a ParameterPage that's not in edit mode
+      ParameterPage page = ParameterPage();
+
+      // When I render the SubSystemNavigationWidget
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubSystemNavigationWidget(wide: true, page: page)));
+      await tester.pumpWidget(app);
+
+      // Then the actions button is hidden
+      _assertSubSystemActionsButton(isVisible: false);
+    });
+
+    testWidgets('In edit mode, actions menu button is displayed',
+        (WidgetTester tester) async {
+      // Then the actions button is displayed
+      _assertSubSystemActionsButton(isVisible: true);
+    });
   });
+}
+
+void _assertSubSystemActionsButton({required bool isVisible}) {
+  expect(
+      find.descendant(
+          of: find.byKey(const Key("subsystemnavigation")),
+          matching: find.byIcon(Icons.more_vert)),
+      isVisible ? findsOneWidget : findsNothing);
 }
 
 void _assertSubSystemDirectory({required List<String> contains}) {
