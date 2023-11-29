@@ -92,6 +92,16 @@ void main() {
 
     testWidgets('In edit mode, actions menu button is displayed',
         (WidgetTester tester) async {
+      // Given a ParameterPage that's in edit mode
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I render the SubSystemNavigationWidget
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubSystemNavigationWidget(wide: true, page: page)));
+      await tester.pumpWidget(app);
+
       // Then the actions button is displayed
       _assertSubSystemActionsButton(isVisible: true);
     });
