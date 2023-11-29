@@ -16,8 +16,7 @@ class SubSystemNavigationWidget extends StatelessWidget {
     return Row(key: const Key("subsystemnavigation"), children: [
       Padding(
           padding: const EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
-          child: _buildDropdownMenu()),
-      Visibility(visible: page.editing, child: const Icon(Icons.more_vert))
+          child: _buildDropdownMenu())
     ]);
   }
 

@@ -61,11 +61,12 @@ void main() {
       String? selectedSubSystemTitle;
       MaterialApp app = MaterialApp(
           home: Scaffold(
-              body: SubSystemNavigationWidget(
-                  wide: true,
-                  page: page,
-                  onSelected: (String subSystemTitle) =>
-                      selectedSubSystemTitle = subSystemTitle)));
+              body: Center(
+                  child: SubSystemNavigationWidget(
+                      wide: true,
+                      page: page,
+                      onSelected: (String subSystemTitle) =>
+                          selectedSubSystemTitle = subSystemTitle))));
       await tester.pumpWidget(app);
 
       // When I open the sub-system directory and select Sub-system 1
@@ -112,7 +113,17 @@ void _assertSubSystemActionsButton({required bool isVisible}) {
   expect(
       find.descendant(
           of: find.byKey(const Key("subsystemnavigation")),
-          matching: find.byIcon(Icons.more_vert)),
+          matching: find.byIcon(Icons.add)),
+      isVisible ? findsOneWidget : findsNothing);
+  expect(
+      find.descendant(
+          of: find.byKey(const Key("subsystemnavigation")),
+          matching: find.byIcon(Icons.delete)),
+      isVisible ? findsOneWidget : findsNothing);
+  expect(
+      find.descendant(
+          of: find.byKey(const Key("subsystemnavigation")),
+          matching: find.byIcon(Icons.edit)),
       isVisible ? findsOneWidget : findsNothing);
 }
 
