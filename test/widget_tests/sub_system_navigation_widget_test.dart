@@ -163,12 +163,12 @@ Future<void> _changeSubSystemTitle(WidgetTester tester,
       matching: find.byIcon(Icons.edit)));
   await tester.pumpAndSettle();
 
+  final dialogFinder = find.byKey(const Key("rename-subsystem-dialog"));
   await tester.enterText(
-      find.descendant(
-          of: find.byKey(const Key('subsystemnavigation-change-title-popup')),
-          matching: find.byType(TextField)),
-      to);
+      find.descendant(of: dialogFinder, matching: find.byType(TextField)), to);
   await tester.testTextInput.receiveAction(TextInputAction.done);
+  await tester
+      .tap(find.descendant(of: dialogFinder, matching: find.text("OK")));
   await tester.pumpAndSettle();
 }
 

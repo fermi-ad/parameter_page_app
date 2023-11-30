@@ -26,16 +26,18 @@ class SubSystemNavigationWidget extends StatelessWidget {
       Padding(
           padding: const EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
           child: _buildDropdownMenu()),
-      Visibility(visible: page.editing, child: _buildEditModeToolbar())
+      Visibility(visible: page.editing, child: _buildEditModeToolbar(context))
     ]);
   }
 
-  Widget _buildEditModeToolbar() {
+  Widget _buildEditModeToolbar(BuildContext context) {
     return Row(children: [
       IconButton(
           icon: const Icon(Icons.add), onPressed: () => onNewSubSystem?.call()),
       IconButton(icon: const Icon(Icons.delete), onPressed: () {}),
-      IconButton(icon: const Icon(Icons.edit), onPressed: () {})
+      IconButton(
+          icon: const Icon(Icons.edit),
+          onPressed: () => _handleTitleChange(context))
     ]);
   }
 
@@ -61,5 +63,33 @@ class SubSystemNavigationWidget extends StatelessWidget {
     if (selected != null) {
       onSelected?.call(selected);
     }
+  }
+
+  void _handleTitleChange(BuildContext context) {
+    final controller = TextEditingController();
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            key: const Key("rename-subsystem-dialog"),
+            title: const Text('Rename Sub-system'),
+            content: TextField(controller: controller),
+            actions: <Widget>[
+              MaterialButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              MaterialButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  onTitleChanged?.call(controller.text);
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
   }
 }
