@@ -66,7 +66,7 @@ class SubSystemNavigationWidget extends StatelessWidget {
   }
 
   void _handleTitleChange(BuildContext context) {
-    final controller = TextEditingController();
+    final controller = TextEditingController(text: page.subSystemTitle);
     showDialog(
         context: context,
         builder: (context) {
