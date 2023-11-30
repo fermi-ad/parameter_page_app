@@ -153,6 +153,34 @@ void main() {
       // Then the onTitleChanged call-back is invoked and passed the new sub-system title
       expect(newTitle, "New sub-system title");
     });
+
+    testWidgets(
+        'Rename sub-system dialog, displays the current sub-system title in the TextField',
+        (WidgetTester tester) async {
+      // Given a ParameterPage in edit mode
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // ... and a SubSystemNavigationWidget has been rendered
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubSystemNavigationWidget(wide: true, page: page)));
+      await tester.pumpWidget(app);
+
+      // When I open the rename dialog
+      await tester.tap(find.descendant(
+          of: find.byKey(const Key("subsystemnavigation")),
+          matching: find.byIcon(Icons.edit)));
+      await tester.pumpAndSettle();
+
+      // Then the TextField contains the existing sub-system title
+      final textFieldContents = (tester.firstWidget(find.descendant(
+              of: find.byKey(const Key("rename-subsystem-dialog")),
+              matching: find.byType(TextField))) as TextField)
+          .controller!
+          .text;
+      expect(textFieldContents, "Sub-system 1");
+    });
   });
 }
 
