@@ -72,6 +72,44 @@ void main() {
 
       // ... and Sub-system 2 / Tab 1 / Sub-page One is displayed
       assertIsOnPage(comment: "this is Sub-system 2 / Tab 1 / Sub-page One");
-    });
+    }, semanticsEnabled: false);
+
+    testWidgets('Add sub-system, taken to new sub-system',
+        (WidgetTester tester) async {
+      // Given I am on a page with 1 sub-system
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 1");
+
+      // ... and I am in edit mode
+      await enterEditMode(tester);
+
+      // When I tap the new sub-system button
+      await newSubSystem(tester);
+
+      // Then the current sub-system is
+      assertCurrentSubSystemIs("Sub-system 2");
+
+      // ... and the entry list is blank
+      assertNumberOfEntriesOnPageIs(0);
+    }, semanticsEnabled: false);
+
+    testWidgets('Rename sub-system, changes are reflected in display mode',
+        (WidgetTester tester) async {
+      // Given I am editing a page
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+      await enterEditMode(tester);
+
+      // When I change the sub-system title to...
+      await changeSubSystemTitle(tester, to: "New Sub-system Title");
+
+      // ... and exit edit mode
+      await exitEditMode(tester);
+
+      // Then the new sub-system title is displayed
+      assertCurrentSubSystemIs("New Sub-system Title");
+    }, semanticsEnabled: false);
   });
 }
