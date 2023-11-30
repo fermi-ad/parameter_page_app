@@ -129,7 +129,47 @@ void main() {
       // Then the onNewSubSystem call-back is invoked
       expect(onNewSubSystemCalled, true);
     });
+
+    testWidgets(
+        'Rename sub-system, onTitleChanged called with new sub-system title',
+        (WidgetTester tester) async {
+      // Given a ParameterPage in edit mode
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // ... and a SubSystemNavigationWidget has been rendered with a call-back registered for onTitleChanged
+      String? newTitle;
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubSystemNavigationWidget(
+                  wide: true,
+                  page: page,
+                  onTitleChanged: (String title) => newTitle = title)));
+      await tester.pumpWidget(app);
+
+      // When I edit the sub-system title
+      await _changeSubSystemTitle(tester, to: "New sub-system title");
+
+      // Then the onTitleChanged call-back is invoked and passed the new sub-system title
+      expect(newTitle, "New sub-system title");
+    });
   });
+}
+
+Future<void> _changeSubSystemTitle(WidgetTester tester,
+    {required String to}) async {
+  await tester.tap(find.descendant(
+      of: find.byKey(const Key("subsystemnavigation")),
+      matching: find.byIcon(Icons.edit)));
+  await tester.pumpAndSettle();
+
+  await tester.enterText(
+      find.descendant(
+          of: find.byKey(const Key('subsystemnavigation-change-title-popup')),
+          matching: find.byType(TextField)),
+      to);
+  await tester.testTextInput.receiveAction(TextInputAction.done);
+  await tester.pumpAndSettle();
 }
 
 void _assertSubSystemActionsButton({required bool isVisible}) {
