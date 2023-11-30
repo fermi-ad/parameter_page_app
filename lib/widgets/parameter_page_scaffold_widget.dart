@@ -132,6 +132,8 @@ class _ParameterPageScaffoldWidgetState
             child: SubSystemNavigationWidget(
                 wide: MediaQuery.of(context).size.width > 600,
                 page: _page!,
+                onTitleChanged: (String newTitle) =>
+                    setState(() => _page!.subSystemTitle = newTitle),
                 onNewSubSystem: () => setState(() => _page!.createSubSystem()),
                 onSelected: (String selected) =>
                     setState(() => _page!.switchSubSystem(to: selected))))
