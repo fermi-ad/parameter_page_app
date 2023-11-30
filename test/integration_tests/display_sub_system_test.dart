@@ -93,5 +93,23 @@ void main() {
       // ... and the entry list is blank
       assertNumberOfEntriesOnPageIs(0);
     }, semanticsEnabled: false);
+
+    testWidgets('Rename sub-system, changes are reflected in display mode',
+        (WidgetTester tester) async {
+      // Given I am editing a page
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+      await enterEditMode(tester);
+
+      // When I change the sub-system title to...
+      await changeSubSystemTitle(tester, to: "New Sub-system Title");
+
+      // ... and exit edit mode
+      await exitEditMode(tester);
+
+      // Then the new sub-system title is displayed
+      assertCurrentSubSystemIs("New Sub-system Title");
+    }, semanticsEnabled: false);
   });
 }

@@ -148,28 +148,12 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I edit the sub-system title
-      await _changeSubSystemTitle(tester, to: "New sub-system title");
+      await changeSubSystemTitle(tester, to: "New sub-system title");
 
       // Then the onTitleChanged call-back is invoked and passed the new sub-system title
       expect(newTitle, "New sub-system title");
     });
   });
-}
-
-Future<void> _changeSubSystemTitle(WidgetTester tester,
-    {required String to}) async {
-  await tester.tap(find.descendant(
-      of: find.byKey(const Key("subsystemnavigation")),
-      matching: find.byIcon(Icons.edit)));
-  await tester.pumpAndSettle();
-
-  final dialogFinder = find.byKey(const Key("rename-subsystem-dialog"));
-  await tester.enterText(
-      find.descendant(of: dialogFinder, matching: find.byType(TextField)), to);
-  await tester.testTextInput.receiveAction(TextInputAction.done);
-  await tester
-      .tap(find.descendant(of: dialogFinder, matching: find.text("OK")));
-  await tester.pumpAndSettle();
 }
 
 void _assertSubSystemActionsButton({required bool isVisible}) {
