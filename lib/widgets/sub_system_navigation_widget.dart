@@ -12,13 +12,16 @@ class SubSystemNavigationWidget extends StatelessWidget {
 
   final Function(String)? onTitleChanged;
 
+  final Function()? onDelete;
+
   const SubSystemNavigationWidget(
       {super.key,
       required this.page,
       required this.wide,
       this.onSelected,
       this.onNewSubSystem,
-      this.onTitleChanged});
+      this.onTitleChanged,
+      this.onDelete});
 
   @override
   Widget build(BuildContext context) {

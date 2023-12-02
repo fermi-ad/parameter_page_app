@@ -181,7 +181,38 @@ void main() {
           .text;
       expect(textFieldContents, "Sub-system 1");
     });
+
+    testWidgets('Delete an empty sub-system, invokes the onDelete call-back',
+        (WidgetTester tester) async {
+      // Given a ParameterPage with two sub-systems that have no entries
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubSystem();
+
+      // ... and a SubSystemNavigationWidget with an onDelete call-back has been rendered
+      bool onDeleteCalled = false;
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubSystemNavigationWidget(
+                  wide: true,
+                  page: page,
+                  onDelete: () => onDeleteCalled = true)));
+      await tester.pumpWidget(app);
+
+      // When I tap the delete button
+      await _deleteSubSystem(tester);
+
+      // Then the onDelete call-back is invoked
+      expect(onDeleteCalled, true);
+    });
   });
+}
+
+Future<void> _deleteSubSystem(WidgetTester tester) async {
+  await tester.tap(find.descendant(
+      of: find.byKey(const Key("subsystemnavigation")),
+      matching: find.byIcon(Icons.delete)));
+  await tester.pumpAndSettle();
 }
 
 void _assertSubSystemActionsButton({required bool isVisible}) {
