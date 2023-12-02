@@ -582,10 +582,20 @@ void assertCurrentSubSystemIs(String title) {
       find.descendant(
           of: find.byKey(const Key("subsystemnavigation")),
           matching: find.text(title)),
-      findsAtLeastNWidgets(1));
+      findsAtLeastNWidgets(2));
 }
 
 void assertSubSystemNavigationIsVisible(bool isVisible) {
   expect(find.byKey(const Key("subsystemnavigation")),
       isVisible ? findsOneWidget : findsNothing);
+}
+
+void assertSubSystemDirectory({required List<String> contains}) {
+  for (final subSystemTitle in contains) {
+    expect(
+        find.descendant(
+            of: find.byKey(const Key("subsystemnavigation")),
+            matching: find.text(subSystemTitle)),
+        findsAtLeastNWidgets(1));
+  }
 }

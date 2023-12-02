@@ -46,7 +46,7 @@ void main() {
       await openSubSystemDirectory(tester);
 
       // Then the sub-system directory is displayed
-      _assertSubSystemDirectory(
+      assertSubSystemDirectory(
           contains: ["Sub-system 1", "Sub-system 2", "Sub-system 3"]);
     });
 
@@ -200,19 +200,12 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I tap the delete button
-      await _deleteSubSystem(tester);
+      await deleteSubSystem(tester);
 
       // Then the onDelete call-back is invoked
       expect(onDeleteCalled, true);
     });
   });
-}
-
-Future<void> _deleteSubSystem(WidgetTester tester) async {
-  await tester.tap(find.descendant(
-      of: find.byKey(const Key("subsystemnavigation")),
-      matching: find.byIcon(Icons.delete)));
-  await tester.pumpAndSettle();
 }
 
 void _assertSubSystemActionsButton({required bool isVisible}) {
@@ -231,14 +224,4 @@ void _assertSubSystemActionsButton({required bool isVisible}) {
           of: find.byKey(const Key("subsystemnavigation")),
           matching: find.byIcon(Icons.edit)),
       isVisible ? findsOneWidget : findsNothing);
-}
-
-void _assertSubSystemDirectory({required List<String> contains}) {
-  for (final subSystemTitle in contains) {
-    expect(
-        find.descendant(
-            of: find.byKey(const Key("subsystemnavigation")),
-            matching: find.text(subSystemTitle)),
-        findsAtLeastNWidgets(1));
-  }
 }

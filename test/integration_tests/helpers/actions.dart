@@ -458,3 +458,10 @@ Future<void> changeSubSystemTitle(WidgetTester tester,
       .tap(find.descendant(of: dialogFinder, matching: find.text("OK")));
   await tester.pumpAndSettle();
 }
+
+Future<void> deleteSubSystem(WidgetTester tester) async {
+  await tester.tap(find.descendant(
+      of: find.byKey(const Key("subsystemnavigation")),
+      matching: find.byIcon(Icons.delete)));
+  await tester.pumpAndSettle();
+}
