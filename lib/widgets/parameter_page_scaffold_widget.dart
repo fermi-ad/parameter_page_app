@@ -132,6 +132,8 @@ class _ParameterPageScaffoldWidgetState
             child: SubSystemNavigationWidget(
                 wide: MediaQuery.of(context).size.width > 600,
                 page: _page!,
+                onDelete: () => setState(() =>
+                    _page!.deleteSubSystem(withTitle: _page!.subSystemTitle)),
                 onTitleChanged: (String newTitle) =>
                     setState(() => _page!.subSystemTitle = newTitle),
                 onNewSubSystem: () => setState(() => _page!.createSubSystem()),
