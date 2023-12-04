@@ -185,7 +185,16 @@ class ParameterPage {
   }
 
   int numberOfEntriesForSubSystem(String subSystem) {
-    return 0;
+    int totalEntries = 0;
+
+    for (final tab
+        in _pageData[_findSubSystemIndex(forTitle: subSystem)].tabs) {
+      for (final subPage in tab.subPages) {
+        totalEntries += subPage.entries.length;
+      }
+    }
+
+    return totalEntries;
   }
 
   int numberOfEntries({String? forTab}) {
