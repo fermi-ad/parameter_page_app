@@ -159,12 +159,18 @@ class _ParameterPageScaffoldWidgetState
             }));
   }
 
-  Widget _buildError(String detailMessage) {
-    return ErrorDisplayWidget(
-        key: const Key("parameter_page_error"),
-        errorMessage:
-            "The request to load the parameter page failed, please try again.",
-        detailMessage: detailMessage);
+  Widget _buildLoadingPage() {
+    return const Row(children: [
+      Spacer(),
+      Column(key: Key("opening_page_progress_indicator"), children: [
+        Spacer(),
+        CircularProgressIndicator(),
+        SizedBox(height: 16),
+        Text("Loading..."),
+        Spacer()
+      ]),
+      Spacer()
+    ]);
   }
 
   Widget _buildPageWidget() {
@@ -180,18 +186,12 @@ class _ParameterPageScaffoldWidgetState
                     onToggleEditing: (bool isEditing) => setState(() {})))));
   }
 
-  Widget _buildLoadingPage() {
-    return const Row(children: [
-      Spacer(),
-      Column(key: Key("opening_page_progress_indicator"), children: [
-        Spacer(),
-        CircularProgressIndicator(),
-        SizedBox(height: 16),
-        Text("Loading..."),
-        Spacer()
-      ]),
-      Spacer()
-    ]);
+  Widget _buildError(String detailMessage) {
+    return ErrorDisplayWidget(
+        key: const Key("parameter_page_error"),
+        errorMessage:
+            "The request to load the parameter page failed, please try again.",
+        detailMessage: detailMessage);
   }
 
   bool _saveMenuShouldBeEnabled() {
