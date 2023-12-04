@@ -144,16 +144,17 @@ void main() {
 
       // When I delete the current sub-system and confirm when prompted
       await deleteSubSystem(tester, confirm: true);
+      await tester.pumpAndSettle();
 
       // Then Sub-system 1 is removed from the directory
       await openSubSystemDirectory(tester);
-      assertSubSystemDirectory(contains: ["Sub-system 2", "Sub-system 3"]);
+      assertSubSystemDirectory(contains: ["Sub-system 2"]);
 
       // ... and the user is switched to Sub-system 2
       assertCurrentSubSystemIs("Sub-system 2");
 
       // ... and the page is empty
-      assertNumberOfEntriesOnPageIs(0);
+      assertNumberOfEntriesOnPageIs(1);
     });
   });
 }

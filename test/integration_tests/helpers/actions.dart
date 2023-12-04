@@ -467,13 +467,15 @@ Future<void> deleteSubSystem(WidgetTester tester, {bool? confirm}) async {
 
   if (confirm == true) {
     await tester.tap(find.descendant(
-        of: find.byKey(const Key("subsystemnavigation-confirm-delete-dialog")),
+        of: find.byKey(const Key("subsystem-confirm-delete-dialog")),
         matching: find.text('Continue')));
     await tester.pumpAndSettle();
   } else if (confirm == false) {
     await tester.tap(find.descendant(
-        of: find.byKey(const Key("subsystemnavigation-confirm-delete-dialog")),
+        of: find.byKey(const Key("subsystem-confirm-delete-dialog")),
         matching: find.text('Cancel')));
     await tester.pumpAndSettle();
   }
+
+  await tester.pumpAndSettle();
 }

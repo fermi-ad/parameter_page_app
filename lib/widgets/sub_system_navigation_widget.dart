@@ -47,6 +47,7 @@ class SubSystemNavigationWidget extends StatelessWidget {
 
   DropdownMenu<String> _buildDropdownMenu() {
     return DropdownMenu<String>(
+        key: const Key("subsystemnavigation-menu"),
         inputDecorationTheme: const InputDecorationTheme(
           contentPadding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
         ),

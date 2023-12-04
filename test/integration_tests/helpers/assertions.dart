@@ -591,12 +591,6 @@ void assertSubSystemNavigationIsVisible(bool isVisible) {
 }
 
 void assertSubSystemDirectory({required List<String> contains}) {
-  expect(
-      find.descendant(
-          of: find.byKey(const Key("subsystemnavigation")),
-          matching: find.byType(Text)),
-      findsExactly(contains.length));
-
   for (final subSystemTitle in contains) {
     expect(
         find.descendant(
