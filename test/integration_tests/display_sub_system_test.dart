@@ -132,5 +132,28 @@ void main() {
       // ... and the user is switched to Sub-system 2
       assertCurrentSubSystemIs("Sub-system 2");
     }, semanticsEnabled: false);
+
+    testWidgets(
+        'Delete a populated sub-system, sub-system is removed after confirmation',
+        (WidgetTester tester) async {
+      // Given I am editing a page with 2 sub-systems, the first of which has a sub-page with entries
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+      await enterEditMode(tester);
+
+      // When I delete the current sub-system and confirm when prompted
+      await deleteSubSystem(tester, confirm: true);
+
+      // Then Sub-system 1 is removed from the directory
+      await openSubSystemDirectory(tester);
+      assertSubSystemDirectory(contains: ["Sub-system 2", "Sub-system 3"]);
+
+      // ... and the user is switched to Sub-system 2
+      assertCurrentSubSystemIs("Sub-system 2");
+
+      // ... and the page is empty
+      assertNumberOfEntriesOnPageIs(0);
+    });
   });
 }

@@ -459,9 +459,21 @@ Future<void> changeSubSystemTitle(WidgetTester tester,
   await tester.pumpAndSettle();
 }
 
-Future<void> deleteSubSystem(WidgetTester tester) async {
+Future<void> deleteSubSystem(WidgetTester tester, {bool? confirm}) async {
   await tester.tap(find.descendant(
       of: find.byKey(const Key("subsystemnavigation")),
       matching: find.byIcon(Icons.delete)));
   await tester.pumpAndSettle();
+
+  if (confirm == true) {
+    await tester.tap(find.descendant(
+        of: find.byKey(const Key("subsystemnavigation-confirm-delete-dialog")),
+        matching: find.text('OK')));
+    await tester.pumpAndSettle();
+  } else if (confirm == false) {
+    await tester.tap(find.descendant(
+        of: find.byKey(const Key("subsystemnavigation-confirm-delete-dialog")),
+        matching: find.text('Cancel')));
+    await tester.pumpAndSettle();
+  }
 }
