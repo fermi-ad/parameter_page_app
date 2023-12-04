@@ -110,6 +110,22 @@ class _ParameterPageScaffoldWidgetState
             : _buildPageWidget();
   }
 
+  Widget _buildSubSystemNavigation() {
+    return _page != null
+        ? Visibility(
+            visible: _page!.editing || _page!.subSystemTitles.length > 1,
+            child: SubSystemNavigationWidget(
+                wide: MediaQuery.of(context).size.width > 600,
+                page: _page!,
+                onDelete: _handleDeleteSubSystem,
+                onTitleChanged: (String newTitle) =>
+                    setState(() => _page!.subSystemTitle = newTitle),
+                onNewSubSystem: () => setState(() => _page!.createSubSystem()),
+                onSelected: (String selected) =>
+                    setState(() => _page!.switchSubSystem(to: selected))))
+        : Container();
+  }
+
   Widget _buildSubPageNavigation() {
     return _page == null
         ? const Text("Nothing to see")
@@ -128,22 +144,6 @@ class _ParameterPageScaffoldWidgetState
                       setState(() => _page!.switchSubPage(to: index))),
             )
           ]);
-  }
-
-  Widget _buildSubSystemNavigation() {
-    return _page != null
-        ? Visibility(
-            visible: _page!.editing || _page!.subSystemTitles.length > 1,
-            child: SubSystemNavigationWidget(
-                wide: MediaQuery.of(context).size.width > 600,
-                page: _page!,
-                onDelete: _handleDeleteSubSystem,
-                onTitleChanged: (String newTitle) =>
-                    setState(() => _page!.subSystemTitle = newTitle),
-                onNewSubSystem: () => setState(() => _page!.createSubSystem()),
-                onSelected: (String selected) =>
-                    setState(() => _page!.switchSubSystem(to: selected))))
-        : Container();
   }
 
   Widget _buildTabNavigation() {
