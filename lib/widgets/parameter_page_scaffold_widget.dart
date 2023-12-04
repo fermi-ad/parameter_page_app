@@ -194,26 +194,6 @@ class _ParameterPageScaffoldWidgetState
         detailMessage: detailMessage);
   }
 
-  bool _saveMenuShouldBeEnabled() {
-    return _persistenceState == PagePersistenceState.unsaved ||
-        _persistenceState == PagePersistenceState.unsavedError;
-  }
-
-  void _navigateToDisplaySettings(BuildContext context) {
-    final initialSettings = _pageKey.currentState != null
-        ? _pageKey.currentState!.settings
-        : DisplaySettings();
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => DisplaySettingsWidget(
-                  initialSettings: initialSettings,
-                  key: const Key("display_settings_route"),
-                  onChanged: (DisplaySettings newSettings) =>
-                      _pageKey.currentState?.updateSettings(newSettings),
-                )));
-  }
-
   void _handleDeleteSubSystem() {
     if (_page!.numberOfEntriesForSubSystem(_page!.subSystemTitle) > 0) {
       _promptUserToDeleteSubSystem(context).then((bool? dialogResponse) {
@@ -226,10 +206,6 @@ class _ParameterPageScaffoldWidgetState
     }
   }
 
-  void _deleteTheSubSystem() {
-    setState(() => _page!.deleteSubSystem(withTitle: _page!.subSystemTitle));
-  }
-
   void _handleDeleteSubPage() {
     if (_page!.numberOfEntries() > 0) {
       _promptUserToDeleteSubPage(context).then((bool? dialogResponse) {
@@ -240,10 +216,6 @@ class _ParameterPageScaffoldWidgetState
     } else {
       _deleteTheSubPage();
     }
-  }
-
-  void _deleteTheSubPage() {
-    setState(() => _page!.deleteSubPage());
   }
 
   void _handleRenameTab(String withTitle, String to) {
@@ -262,12 +234,6 @@ class _ParameterPageScaffoldWidgetState
     } else {
       _deleteTheTab(withTitle);
     }
-  }
-
-  void _deleteTheTab(String withTitle) {
-    setState(() {
-      _page!.deleteTab(title: withTitle);
-    });
   }
 
   void _handleCreateNewTab() {
@@ -324,6 +290,49 @@ class _ParameterPageScaffoldWidgetState
   void _handlePageModified() {
     setState(() {
       _updatePersistenceState();
+    });
+  }
+
+  Future<void> _handleSaveError(error, stackTrace) async {
+    setState(() {
+      _persistenceState = PagePersistenceState.unsavedError;
+    });
+
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text("Save failed - $error")));
+  }
+
+  bool _saveMenuShouldBeEnabled() {
+    return _persistenceState == PagePersistenceState.unsaved ||
+        _persistenceState == PagePersistenceState.unsavedError;
+  }
+
+  void _navigateToDisplaySettings(BuildContext context) {
+    final initialSettings = _pageKey.currentState != null
+        ? _pageKey.currentState!.settings
+        : DisplaySettings();
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => DisplaySettingsWidget(
+                  initialSettings: initialSettings,
+                  key: const Key("display_settings_route"),
+                  onChanged: (DisplaySettings newSettings) =>
+                      _pageKey.currentState?.updateSettings(newSettings),
+                )));
+  }
+
+  void _deleteTheSubSystem() {
+    setState(() => _page!.deleteSubSystem(withTitle: _page!.subSystemTitle));
+  }
+
+  void _deleteTheSubPage() {
+    setState(() => _page!.deleteSubPage());
+  }
+
+  void _deleteTheTab(String withTitle) {
+    setState(() {
+      _page!.deleteTab(title: withTitle);
     });
   }
 
@@ -386,15 +395,6 @@ class _ParameterPageScaffoldWidgetState
               onSuccess.call();
             })
         .onError(_handleSaveError);
-  }
-
-  Future<void> _handleSaveError(error, stackTrace) async {
-    setState(() {
-      _persistenceState = PagePersistenceState.unsavedError;
-    });
-
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text("Save failed - $error")));
   }
 
   _loadPage({required String pageId}) {
