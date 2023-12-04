@@ -184,6 +184,10 @@ class ParameterPage {
     return _pageData[0].tabs[tabIndex].subPages[subPage - 1].entries;
   }
 
+  int numberOfEntriesForSubSystem(String subSystem) {
+    return 0;
+  }
+
   int numberOfEntries({String? forTab}) {
     int tabIndex = forTab != null
         ? _findTabIndex(forTab: forTab)

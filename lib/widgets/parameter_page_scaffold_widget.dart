@@ -132,8 +132,7 @@ class _ParameterPageScaffoldWidgetState
             child: SubSystemNavigationWidget(
                 wide: MediaQuery.of(context).size.width > 600,
                 page: _page!,
-                onDelete: () => setState(() =>
-                    _page!.deleteSubSystem(withTitle: _page!.subSystemTitle)),
+                onDelete: _handleDeleteSubSystem,
                 onTitleChanged: (String newTitle) =>
                     setState(() => _page!.subSystemTitle = newTitle),
                 onNewSubSystem: () => setState(() => _page!.createSubSystem()),
@@ -227,6 +226,22 @@ class _ParameterPageScaffoldWidgetState
                   onChanged: (DisplaySettings newSettings) =>
                       _pageKey.currentState?.updateSettings(newSettings),
                 )));
+  }
+
+  void _handleDeleteSubSystem() {
+    if (_page!.numberOfEntriesForSubSystem(_page!.subSystemTitle) > 0) {
+      _promptUserToDeleteSubSystem(context).then((bool? dialogResponse) {
+        if (!(dialogResponse == null || !dialogResponse)) {
+          _deleteTheSubSystem();
+        }
+      });
+    } else {
+      _deleteTheSubSystem();
+    }
+  }
+
+  void _deleteTheSubSystem() {
+    setState(() => _page!.deleteSubSystem(withTitle: _page!.subSystemTitle));
   }
 
   void _handleDeleteSubPage() {
@@ -438,6 +453,28 @@ class _ParameterPageScaffoldWidgetState
         title: const Text('Delete Tab'),
         content: const Text(
             'This tab contains at least one entry.  Deleting the tab will discard all of it\'s entries.  Do you wish to continue?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Continue'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<bool?> _promptUserToDeleteSubSystem(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        key: const Key("subsystem-confirm-delete-dialog"),
+        title: const Text('Delete Sub-system'),
+        content: const Text(
+            'This sub-system contains at least one entry.  Deleting the sub-system will discard all of it\'s tabs, sub-pages and their entries.  Do you wish to continue?'),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context, false),
