@@ -302,11 +302,6 @@ class _ParameterPageScaffoldWidgetState
         .showSnackBar(SnackBar(content: Text("Save failed - $error")));
   }
 
-  bool _saveMenuShouldBeEnabled() {
-    return _persistenceState == PagePersistenceState.unsaved ||
-        _persistenceState == PagePersistenceState.unsavedError;
-  }
-
   void _navigateToDisplaySettings(BuildContext context) {
     final initialSettings = _pageKey.currentState != null
         ? _pageKey.currentState!.settings
@@ -494,6 +489,11 @@ class _ParameterPageScaffoldWidgetState
         ],
       ),
     );
+  }
+
+  bool _saveMenuShouldBeEnabled() {
+    return _persistenceState == PagePersistenceState.unsaved ||
+        _persistenceState == PagePersistenceState.unsavedError;
   }
 
   bool _pageHasNotBeenLoadedYet() {
