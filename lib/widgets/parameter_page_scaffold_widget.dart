@@ -68,26 +68,6 @@ class _ParameterPageScaffoldWidgetState
         body: _buildBody(context));
   }
 
-  Widget _buildSubPageNavigation() {
-    return _page == null
-        ? const Text("Nothing to see")
-        : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Expanded(
-              child: SubPageNavigationWidget(
-                  wide: MediaQuery.of(context).size.width > 600,
-                  page: _page!,
-                  onTitleChanged: (String to) =>
-                      setState(() => _page!.subPageTitle = to),
-                  onNewSubPage: () => setState(() => _page!.createSubPage()),
-                  onDeleteSubPage: _handleDeleteSubPage,
-                  onForward: () => setState(() => _page!.incrementSubPage()),
-                  onBackward: () => setState(() => _page!.decrementSubPage()),
-                  onSelected: (int index) =>
-                      setState(() => _page!.switchSubPage(to: index))),
-            )
-          ]);
-  }
-
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
         title: PageTitleWidget(
@@ -109,6 +89,45 @@ class _ParameterPageScaffoldWidgetState
               wide: MediaQuery.of(context).size.width > 600,
               onPressed: () => _navigateToDisplaySettings(context)),
         ]);
+  }
+
+  Widget _buildDrawer(BuildContext context) {
+    return MainMenuWidget(
+      onNewPage: _handleNewPage,
+      onOpenPage: (BuildContext context) => context.go("/open"),
+      onSave: _handleSavePage,
+      saveEnabled: _saveMenuShouldBeEnabled(),
+      onCopyLink: _handleCopyLink,
+      copyLinkEnabled: _page?.id != null,
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    return _errorMessage != null
+        ? _buildError(_errorMessage!)
+        : _page == null
+            ? _buildLoadingPage()
+            : _buildPageWidget();
+  }
+
+  Widget _buildSubPageNavigation() {
+    return _page == null
+        ? const Text("Nothing to see")
+        : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Expanded(
+              child: SubPageNavigationWidget(
+                  wide: MediaQuery.of(context).size.width > 600,
+                  page: _page!,
+                  onTitleChanged: (String to) =>
+                      setState(() => _page!.subPageTitle = to),
+                  onNewSubPage: () => setState(() => _page!.createSubPage()),
+                  onDeleteSubPage: _handleDeleteSubPage,
+                  onForward: () => setState(() => _page!.incrementSubPage()),
+                  onBackward: () => setState(() => _page!.decrementSubPage()),
+                  onSelected: (int index) =>
+                      setState(() => _page!.switchSubPage(to: index))),
+            )
+          ]);
   }
 
   Widget _buildSubSystemNavigation() {
@@ -138,14 +157,6 @@ class _ParameterPageScaffoldWidgetState
         onTabSwitched: (String tabTitle) => setState(() {
               _page!.switchTab(to: tabTitle);
             }));
-  }
-
-  Widget _buildBody(BuildContext context) {
-    return _errorMessage != null
-        ? _buildError(_errorMessage!)
-        : _page == null
-            ? _buildLoadingPage()
-            : _buildPageWidget();
   }
 
   Widget _buildError(String detailMessage) {
@@ -181,17 +192,6 @@ class _ParameterPageScaffoldWidgetState
       ]),
       Spacer()
     ]);
-  }
-
-  Widget _buildDrawer(BuildContext context) {
-    return MainMenuWidget(
-      onNewPage: _handleNewPage,
-      onOpenPage: (BuildContext context) => context.go("/open"),
-      onSave: _handleSavePage,
-      saveEnabled: _saveMenuShouldBeEnabled(),
-      onCopyLink: _handleCopyLink,
-      copyLinkEnabled: _page?.id != null,
-    );
   }
 
   bool _saveMenuShouldBeEnabled() {
