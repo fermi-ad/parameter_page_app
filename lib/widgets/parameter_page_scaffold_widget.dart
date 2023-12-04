@@ -68,20 +68,6 @@ class _ParameterPageScaffoldWidgetState
         body: _buildBody(context));
   }
 
-  bool _pageHasNotBeenLoadedYet() {
-    return _page == null && widget.openPageId != null;
-  }
-
-  bool _aDifferentPageShouldBeLoaded() {
-    return _page != null &&
-        widget.openPageId != null &&
-        widget.openPageId != _page!.id;
-  }
-
-  bool _aNewPageShouldBeStarted() {
-    return _page == null && widget.openPageId == null;
-  }
-
   Widget _buildSubPageNavigation() {
     return _page == null
         ? const Text("Nothing to see")
@@ -508,6 +494,20 @@ class _ParameterPageScaffoldWidgetState
         ],
       ),
     );
+  }
+
+  bool _pageHasNotBeenLoadedYet() {
+    return _page == null && widget.openPageId != null;
+  }
+
+  bool _aDifferentPageShouldBeLoaded() {
+    return _page != null &&
+        widget.openPageId != null &&
+        widget.openPageId != _page!.id;
+  }
+
+  bool _aNewPageShouldBeStarted() {
+    return _page == null && widget.openPageId == null;
   }
 
   String? _errorMessage;
