@@ -605,3 +605,8 @@ void assertSubSystemDirectory({required List<String> contains}) {
         findsAtLeastNWidgets(1));
   }
 }
+
+void assertSubSystemDeleteDialog({required bool isVisible}) {
+  expect(find.byKey(const Key("subsystem-confirm-delete-dialog")),
+      isVisible ? findsOneWidget : findsNothing);
+}

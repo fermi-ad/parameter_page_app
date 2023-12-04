@@ -206,36 +206,7 @@ void main() {
       // Then the onDelete call-back is invoked
       expect(onDeleteCalled, true);
     });
-
-    testWidgets(
-        'Delete a populated sub-system, user is prompted for confirmation',
-        (WidgetTester tester) async {
-      // Given a ParameterPage with two sub-systems
-      ParameterPage page = ParameterPage();
-      page.enableEditing();
-      page.createSubSystem();
-
-      // ... and Sub-system 2 has entries on it
-      page.add(CommentEntry("this sub-system has one entry"));
-
-      // ... and a SubSystemNavigationWidget has been rendered
-      MaterialApp app = MaterialApp(
-          home: Scaffold(
-              body: SubSystemNavigationWidget(wide: true, page: page)));
-      await tester.pumpWidget(app);
-
-      // When I tap the delete button
-      await deleteSubSystem(tester);
-
-      // Then the delete confirmation dialog is displayed
-      _assertSubSystemDeleteDialog(isVisible: true);
-    });
   });
-}
-
-void _assertSubSystemDeleteDialog({required bool isVisible}) {
-  expect(find.byKey(const Key("subsystemnavigation-confirm-delete-dialog")),
-      isVisible ? findsOneWidget : findsNothing);
 }
 
 void _assertSubSystemActionsButton({required bool isVisible}) {
