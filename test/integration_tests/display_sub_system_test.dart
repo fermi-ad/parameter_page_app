@@ -111,5 +111,72 @@ void main() {
       // Then the new sub-system title is displayed
       assertCurrentSubSystemIs("New Sub-system Title");
     }, semanticsEnabled: false);
+
+    testWidgets(
+        'Delete empty sub-system, sub-system is removed without needing confirmation',
+        (WidgetTester tester) async {
+      // Given I am editing a page with three sub-systems
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+      await enterEditMode(tester);
+      await newSubSystem(tester);
+
+      // When I delete the current sub-system
+      await deleteSubSystem(tester);
+
+      // Then Sub-system 3 is removed from the directory
+      await openSubSystemDirectory(tester);
+      assertSubSystemDirectory(contains: ["Sub-system 1", "Sub-system 2"]);
+
+      // ... and the user is switched to Sub-system 2
+      assertCurrentSubSystemIs("Sub-system 2");
+    }, semanticsEnabled: false);
+
+    testWidgets(
+        'Delete a populated sub-system, sub-system is removed after confirmation',
+        (WidgetTester tester) async {
+      // Given I am editing a page with 2 sub-systems, the first of which has a sub-page with entries
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+      await enterEditMode(tester);
+
+      // When I delete the current sub-system and confirm when prompted
+      await deleteSubSystem(tester, confirm: true);
+      await tester.pumpAndSettle();
+
+      // Then Sub-system 1 is removed from the directory
+      await openSubSystemDirectory(tester);
+      assertSubSystemDirectory(contains: ["Sub-system 2"]);
+
+      // ... and the user is switched to Sub-system 2
+      assertCurrentSubSystemIs("Sub-system 2");
+
+      // ... and that page has 1 entry
+      assertNumberOfEntriesOnPageIs(1);
+    });
+    testWidgets('Cancel sub-system delete, sub-system is not removed',
+        (WidgetTester tester) async {
+      // Given I am editing a page with 2 sub-systems, the first of which has a sub-page with entries
+      await startParameterPageApp(tester);
+      await navigateToOpenPage(tester);
+      await openParameterPage(tester, withTitle: "Test Page 2");
+      await enterEditMode(tester);
+
+      // When I delete the current sub-system but cancel when prompted
+      await deleteSubSystem(tester, confirm: false);
+      await tester.pumpAndSettle();
+
+      // Then Sub-system 1 is still in the directory
+      await openSubSystemDirectory(tester);
+      assertSubSystemDirectory(contains: ["Sub-system 1", "Sub-system 2"]);
+
+      // ... and the user is still viewing sub-system 1
+      assertCurrentSubSystemIs("Sub-system 1");
+
+      // ... and that page has 4 entries
+      assertNumberOfEntriesOnPageIs(4);
+    });
   });
 }

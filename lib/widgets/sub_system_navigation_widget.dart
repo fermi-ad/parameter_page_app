@@ -12,13 +12,16 @@ class SubSystemNavigationWidget extends StatelessWidget {
 
   final Function(String)? onTitleChanged;
 
+  final Function()? onDelete;
+
   const SubSystemNavigationWidget(
       {super.key,
       required this.page,
       required this.wide,
       this.onSelected,
       this.onNewSubSystem,
-      this.onTitleChanged});
+      this.onTitleChanged,
+      this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +37,8 @@ class SubSystemNavigationWidget extends StatelessWidget {
     return Row(children: [
       IconButton(
           icon: const Icon(Icons.add), onPressed: () => onNewSubSystem?.call()),
-      IconButton(icon: const Icon(Icons.delete), onPressed: () {}),
+      IconButton(
+          icon: const Icon(Icons.delete), onPressed: () => onDelete?.call()),
       IconButton(
           icon: const Icon(Icons.edit),
           onPressed: () => _handleTitleChange(context))
@@ -43,6 +47,7 @@ class SubSystemNavigationWidget extends StatelessWidget {
 
   DropdownMenu<String> _buildDropdownMenu() {
     return DropdownMenu<String>(
+        key: const Key("subsystemnavigation-menu"),
         inputDecorationTheme: const InputDecorationTheme(
           contentPadding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
         ),

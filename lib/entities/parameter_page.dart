@@ -184,6 +184,19 @@ class ParameterPage {
     return _pageData[0].tabs[tabIndex].subPages[subPage - 1].entries;
   }
 
+  int numberOfEntriesForSubSystem(String subSystem) {
+    int totalEntries = 0;
+
+    for (final tab
+        in _pageData[_findSubSystemIndex(forTitle: subSystem)].tabs) {
+      for (final subPage in tab.subPages) {
+        totalEntries += subPage.entries.length;
+      }
+    }
+
+    return totalEntries;
+  }
+
   int numberOfEntries({String? forTab}) {
     int tabIndex = forTab != null
         ? _findTabIndex(forTab: forTab)
@@ -263,7 +276,7 @@ class ParameterPage {
 
     final newSubSystemTitle = withTitle ?? _generateNewSubSystemTitle();
     _pageData.add(_SubSystem(title: newSubSystemTitle, tabs: [
-      _Tab(title: "Tab 1", subPages: [_SubPage()])
+      _Tab(title: "Tab 1", subPages: [_SubPage(entries: [])])
     ]));
 
     _currentSubSystemIndex = _pageData.length - 1;

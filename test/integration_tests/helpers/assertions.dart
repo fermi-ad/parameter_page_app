@@ -589,3 +589,18 @@ void assertSubSystemNavigationIsVisible(bool isVisible) {
   expect(find.byKey(const Key("subsystemnavigation")),
       isVisible ? findsOneWidget : findsNothing);
 }
+
+void assertSubSystemDirectory({required List<String> contains}) {
+  for (final subSystemTitle in contains) {
+    expect(
+        find.descendant(
+            of: find.byKey(const Key("subsystemnavigation")),
+            matching: find.text(subSystemTitle)),
+        findsAtLeastNWidgets(1));
+  }
+}
+
+void assertSubSystemDeleteDialog({required bool isVisible}) {
+  expect(find.byKey(const Key("subsystem-confirm-delete-dialog")),
+      isVisible ? findsOneWidget : findsNothing);
+}

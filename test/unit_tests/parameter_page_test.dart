@@ -1604,5 +1604,54 @@ void main() {
       // Then the current sub-system becomes sub-system 1
       expect(page.subSystemTitle, "Sub-system 1");
     });
+
+    test('Add entry to new sub-system, works as expect', () {
+      // Given a ParameterPage with a new sub-system
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubSystem();
+
+      // When I add an entry to the new sub-system
+      page.add(CommentEntry("sub-system 2 / tab 1 / sub-page 1 / entry 1"));
+
+      // Then the entry is on the new sub-system / tab / sub-page
+      final entries = page.entriesAsList();
+      expect(entries.length, 1);
+      expect(entries[0].entryText(),
+          "sub-system 2 / tab 1 / sub-page 1 / entry 1");
+    });
+
+    test(
+        'numberOfEntriesForSubSystem(..), returns the total number of entries for the given sub-system',
+        () {
+      // Given I am editing a Parameter page with 2 sub-systems
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubSystem();
+
+      // ... and the first tab of sub-system 2 has 2 sub-pages
+      page.createSubPage();
+
+      // ... and the sub-system has 2 tabs
+      page.createTab();
+
+      // When I leave Sub-system 1 blank
+      // ... and add an entry to Sub-system 2 / Tab 2
+      page.add(CommentEntry("entry 1"));
+
+      // ... and add an entry to Sub-system 2 / Tab 1 / Sub-page 2
+      page.switchTab(to: "Tab 1");
+      page.add(CommentEntry("entry 2"));
+
+      // ... and add an entry to Sub-system 2 / Tab 1 / Sub-page 1
+      page.decrementSubPage();
+      page.add(CommentEntry("entry 3"));
+
+      // Then the number of entries for sub-system 1 is...
+      expect(page.numberOfEntriesForSubSystem('Sub-system 1'), 0);
+
+      // ... and the number of entries for sub-system 2 is...
+      expect(page.numberOfEntriesForSubSystem('Sub-system 2'), 3);
+    });
   });
 }

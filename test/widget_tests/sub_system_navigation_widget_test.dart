@@ -46,7 +46,7 @@ void main() {
       await openSubSystemDirectory(tester);
 
       // Then the sub-system directory is displayed
-      _assertSubSystemDirectory(
+      assertSubSystemDirectory(
           contains: ["Sub-system 1", "Sub-system 2", "Sub-system 3"]);
     });
 
@@ -181,6 +181,30 @@ void main() {
           .text;
       expect(textFieldContents, "Sub-system 1");
     });
+
+    testWidgets('Delete an empty sub-system, invokes the onDelete call-back',
+        (WidgetTester tester) async {
+      // Given a ParameterPage with two sub-systems that have no entries
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubSystem();
+
+      // ... and a SubSystemNavigationWidget with an onDelete call-back has been rendered
+      bool onDeleteCalled = false;
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SubSystemNavigationWidget(
+                  wide: true,
+                  page: page,
+                  onDelete: () => onDeleteCalled = true)));
+      await tester.pumpWidget(app);
+
+      // When I tap the delete button
+      await deleteSubSystem(tester);
+
+      // Then the onDelete call-back is invoked
+      expect(onDeleteCalled, true);
+    });
   });
 }
 
@@ -200,14 +224,4 @@ void _assertSubSystemActionsButton({required bool isVisible}) {
           of: find.byKey(const Key("subsystemnavigation")),
           matching: find.byIcon(Icons.edit)),
       isVisible ? findsOneWidget : findsNothing);
-}
-
-void _assertSubSystemDirectory({required List<String> contains}) {
-  for (final subSystemTitle in contains) {
-    expect(
-        find.descendant(
-            of: find.byKey(const Key("subsystemnavigation")),
-            matching: find.text(subSystemTitle)),
-        findsAtLeastNWidgets(1));
-  }
 }
