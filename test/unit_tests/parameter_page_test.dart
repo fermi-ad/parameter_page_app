@@ -1604,5 +1604,21 @@ void main() {
       // Then the current sub-system becomes sub-system 1
       expect(page.subSystemTitle, "Sub-system 1");
     });
+
+    test('Add entry to new sub-system, works as expect', () {
+      // Given a ParameterPage with a new sub-system
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubSystem();
+
+      // When I add an entry to the new sub-system
+      page.add(CommentEntry("sub-system 2 / tab 1 / sub-page 1 / entry 1"));
+
+      // Then the entry is on the new sub-system / tab / sub-page
+      final entries = page.entriesAsList();
+      expect(entries.length, 1);
+      expect(entries[0].entryText(),
+          "sub-system 2 / tab 1 / sub-page 1 / entry 1");
+    });
   });
 }
