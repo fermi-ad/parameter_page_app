@@ -81,61 +81,93 @@ void main() {
           id: "99",
           title: "New Page",
           queryResult: {
-            "tabs": [
+            "sub-systems": [
               {
-                "title": "Tab 1",
-                "sub-pages": [
+                "id": "1",
+                "title": "Sub-system One",
+                "tabs": [
                   {
-                    "id": "1",
-                    "title": "Sub-Page One",
-                    "entries": [
+                    "title": "Tab 1",
+                    "sub-pages": [
                       {
-                        "entryid": "4",
-                        "pageid": "3",
-                        "position": "0",
-                        "text": "this is comment #1",
-                        "type": "Comment"
-                      },
-                      {
-                        "entryid": "5",
-                        "pageid": "3",
-                        "position": "1",
-                        "text": "this is comment #2",
-                        "type": "Comment"
-                      },
-                      {
-                        "entryid": "6",
-                        "pageid": "3",
-                        "position": "2",
-                        "text": "I:BEAM",
-                        "type": "Parameter"
+                        "id": "1",
+                        "title": "Sub-Page One",
+                        "entries": [
+                          {
+                            "entryid": "4",
+                            "pageid": "3",
+                            "position": "0",
+                            "text": "this is comment #1",
+                            "type": "Comment"
+                          },
+                          {
+                            "entryid": "5",
+                            "pageid": "3",
+                            "position": "1",
+                            "text": "this is comment #2",
+                            "type": "Comment"
+                          },
+                          {
+                            "entryid": "6",
+                            "pageid": "3",
+                            "position": "2",
+                            "text": "I:BEAM",
+                            "type": "Parameter"
+                          }
+                        ]
                       }
+                    ]
+                  },
+                  {
+                    "title": "Tab 2",
+                    "sub-pages": [
+                      {
+                        "id": "1",
+                        "title": "Sub-Page One",
+                        "entries": [
+                          {
+                            "entryid": "7",
+                            "pageid": "3",
+                            "position": "0",
+                            "text": "R:BEAM",
+                            "type": "Parameter"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "title": "Tab 3",
+                    "sub-pages": [
+                      {"id": "1", "title": "", "entries": []}
                     ]
                   }
                 ]
               },
               {
-                "title": "Tab 2",
-                "sub-pages": [
+                "id": "2",
+                "title": "Sub-system Two",
+                "tabs": [
                   {
-                    "id": "1",
-                    "title": "Sub-Page One",
-                    "entries": [
+                    "id": "200",
+                    "title": "Tab 1",
+                    "sub-pages": [
                       {
-                        "entryid": "7",
-                        "pageid": "3",
-                        "position": "0",
-                        "text": "R:BEAM",
-                        "type": "Parameter"
+                        "id": "1000",
+                        "title": "",
+                        "entries": [
+                          {
+                            "entryid": "77",
+                            "pageid": "3",
+                            "position": "0",
+                            "text":
+                                "Sub-system 2 / Tab 1 / Sub-page 1 / Entry 1",
+                            "type": "Comment"
+                          }
+                        ]
                       }
                     ]
                   }
-                ]
-              },
-              {
-                "title": "Tab 3",
-                "sub-pages": [
-                  {"id": "1", "title": "", "entries": []}
                 ]
               }
             ]
@@ -147,10 +179,17 @@ void main() {
       final tab2Entries = page.entriesAsList();
       page.switchTab(to: "Tab 3");
       final tab3Entries = page.entriesAsList();
+      page.switchSubSystem(to: "Sub-system Two");
+      final sys2tab1Entries = page.entriesAsList();
+      page.switchSubSystem(to: "Sub-system One");
+      page.switchTab(to: "Tab 1");
 
       // Then the list contains the expected entries
       expect(page.id, equals("99"));
       expect(page.title, equals("New Page"));
+      expect(page.subSystemTitle, "Sub-system One");
+      expect(page.subPageTitle, "Sub-Page One");
+      expect(page.currentTab, "Tab 1");
       expect(entries.length, 3);
       expect(entries[0], isA<CommentEntry>());
       expect(entries[1], isA<CommentEntry>());
@@ -160,6 +199,8 @@ void main() {
       expect(tab2Entries.length, 1);
       expect(tab2Entries[0].entryText(), "R:BEAM");
       expect(tab3Entries.length, 0);
+      expect(sys2tab1Entries[0].entryText(),
+          "Sub-system 2 / Tab 1 / Sub-page 1 / Entry 1");
     });
 
     test(
@@ -167,20 +208,25 @@ void main() {
         () {
       // Given a queryResult which contains one tab named "AAA"
       final queryResult = {
-        "tabs": [
+        "sub-systems": [
           {
-            "title": "AAA",
-            "sub-pages": [
+            "title": "Sub-system 1",
+            "tabs": [
               {
-                "id": "1",
-                "title": "",
-                "entries": [
+                "title": "AAA",
+                "sub-pages": [
                   {
-                    "entryid": "4",
-                    "pageid": "3",
-                    "position": "0",
-                    "text": "this is comment #1",
-                    "type": "Comment"
+                    "id": "1",
+                    "title": "",
+                    "entries": [
+                      {
+                        "entryid": "4",
+                        "pageid": "3",
+                        "position": "0",
+                        "text": "this is comment #1",
+                        "type": "Comment"
+                      }
+                    ]
                   }
                 ]
               }
@@ -1309,6 +1355,303 @@ void main() {
           page.subPageTitleFor(tab: "Tab 1", subPageIndex: 2), "Tab-1 Sub-2");
       expect(
           page.subPageTitleFor(tab: "Tab 2", subPageIndex: 2), "Tab-2 Sub-2");
+    });
+
+    test('For new ParameterPage, subSystemTitles.length returns 1', () {
+      // Given nothing
+      // When I create a new page
+      ParameterPage page = ParameterPage();
+
+      // Then the number of sub-systems is 1
+      expect(page.subSystemTitles.length, 1);
+    });
+
+    test('For new ParameterPage, subSystemTitles[0] is Sub-system 1', () {
+      // Given nothing
+      // When I create a new page
+      ParameterPage page = ParameterPage();
+
+      // Then the name of the default sub-system is...
+      expect(page.subSystemTitles[0], "Sub-system 1");
+    });
+
+    test('For new ParameterPage, subSystemTitle is Sub-system 1', () {
+      // Given nothing
+      // When I create a new ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // Then the sub-system title is...
+      expect(page.subSystemTitle, 'Sub-system 1');
+    });
+
+    test('createSubSystem(), enforces edit mode', () {
+      // Given a new ParameterPage that is not in edit mode
+      ParameterPage page = ParameterPage();
+
+      // When I createSubSystem()
+      // Then an exception is thrown
+      expect(() => page.createSubSystem(), throwsException);
+    });
+
+    test('createSubSystem(), should make a new Sub-system', () {
+      // Given a new ParameterPage
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I create a new sub-system
+      page.createSubSystem();
+
+      // Then there should be 2 sub-systems
+      expect(page.subSystemTitles.length, 2);
+    });
+
+    test(
+        'createSubSystem(), should create a new sub-system with title Sub-system N',
+        () {
+      // Given a new ParameterPage in edit mode
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I create three new sub-systems
+      page.createSubSystem();
+      page.createSubSystem();
+      page.createSubSystem();
+
+      // Then the new sub-system titles should be...
+      expect(page.subSystemTitles[1], 'Sub-system 2');
+      expect(page.subSystemTitles[2], "Sub-system 3");
+      expect(page.subSystemTitles[3], "Sub-system 4");
+    });
+
+    test(
+        'createSubSystem(title:), should create a new sub-system with the given title',
+        () {
+      // Given a new ParameterPage that is in editing mode
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I createSubSystem(title:)
+      page.createSubSystem(withTitle: "My New Sub-system");
+
+      // Then the new sub-system is titles "My New Sub-system"
+      expect(page.subSystemTitles[1], "My New Sub-system");
+    });
+
+    test(
+        'createSubSystem(), should switch the current sub-system to the new sub-system',
+        () {
+      // Given a new ParameterPage in edit mode
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I createSubSystem()
+      page.createSubSystem();
+
+      // Then the subSystemTitle changes to the new sub-system
+      expect(page.subSystemTitle, "Sub-system 2");
+    });
+
+    test('createSubSystem(), creates 1 sub-system with 1 tab and 1 sub-page',
+        () {
+      // Given a new ParameterPage in edit mode
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+
+      // When I createSubSystem()
+      page.createSubSystem();
+
+      // Then there are 2 sub-systems
+      expect(page.subSystemTitles.length, 2);
+
+      // ... and sub-system 2 has 1 tab
+      expect(page.tabTitles.length, 1);
+      expect(page.tabTitles[0], "Tab 1");
+
+      // ... and that tab has 1 sub-page
+      expect(page.numberOfSubPages, 1);
+    });
+
+    test('switchSubSystem(to:), changes the subSystemTitle', () {
+      // Given a ParameterPage with two sub-systems
+      // ... and I am on Sub-system 2
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubSystem();
+
+      // When I switchSubSystem(to: "Sub-system 1")
+      page.switchSubSystem(to: "Sub-system 1");
+
+      // Then the sub-system title changes
+      expect(page.subSystemTitle, "Sub-system 1");
+    });
+
+    test('switchSubSystem(to:) given invalid sub-system title, throws', () {
+      // Given a ParameterPage with 1 sub-system
+      ParameterPage page = ParameterPage();
+
+      // When I attempt to switch to an invalid sub-system
+      // Then an exception is thrown
+      expect(() => page.switchSubSystem(to: "Invalid Sub-system"),
+          throwsException);
+    });
+
+    test('set subSystemTitle, change reflected in subSystemTitls list', () {
+      // Given a new ParameterPage
+      ParameterPage page = ParameterPage();
+
+      // ... and I am in edit mode
+      page.enableEditing();
+
+      // ... and there are three sub-systems each with the default title
+      page.createSubSystem();
+      page.createSubSystem();
+
+      // When I set the subSystemTitle for each of the sub-systems
+      page.subSystemTitle = "Sub-system Three";
+      page.switchSubSystem(to: "Sub-system 2");
+      page.subSystemTitle = "Sub-system Two";
+      page.switchSubSystem(to: "Sub-system 1");
+      page.subSystemTitle = "Sub-system One";
+
+      // Then the change is reflected in subSystemTitles
+      expect(page.subSystemTitles[0], "Sub-system One");
+      expect(page.subSystemTitles[1], "Sub-system Two");
+      expect(page.subSystemTitles[2], "Sub-system Three");
+    });
+
+    test('set subSystemTitle, enforces edit mode', () {
+      // Given a new ParameterPage that is NOT in edit mode
+      ParameterPage page = ParameterPage();
+
+      // When I set subSystemTitle
+      // Then an exception is thrown
+      expect(() => page.subSystemTitle = "Should Throw", throwsException);
+    });
+
+    test('deleteSubSystem, removes the sub-system from subSystemTitles', () {
+      // Given a ParameterPage in edit mode with 2 sub-systems
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubSystem();
+
+      // When I deleteSubSystem("Sub-system 1")
+      page.deleteSubSystem(withTitle: "Sub-system 1");
+
+      // Then "Sub-System 1" is no longer in subSystemTitles
+      expect(page.subSystemTitles.contains("Sub-system 1"), false);
+      expect(page.subSystemTitles.length, 1);
+    });
+
+    test('deleteSubSystem, enforces edit mode', () {
+      // Given a ParameterPage with two sub-systems
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubSystem();
+
+      // ... and I am not in edit mode
+      page.disableEditing();
+
+      // When I deleteSubSystem
+      // Then an exception is thrown
+      expect(() => page.deleteSubSystem(withTitle: "Sub-system 2"),
+          throwsException);
+    });
+
+    test('deleteSubSystem, enforces the at-least-1-sub-system rule', () {
+      // Given a ParameterPage with 1 sub-system
+      ParameterPage page = ParameterPage();
+
+      // ... and I am in editing mode
+      page.enableEditing();
+
+      // When I attempt to deleteSubSystem()
+      // Then an exception is thrown
+      expect(() => page.deleteSubSystem(withTitle: "Sub-system 1"),
+          throwsException);
+    });
+
+    test(
+        'deleteSubSystem() for the current sub-system, moves subSystemIndex to next subSystemIndex',
+        () {
+      // Given a ParameterPage with 3 sub-systems
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubSystem();
+      page.createSubSystem();
+
+      // ... and I am currently on sub-system 2
+      page.switchSubSystem(to: "Sub-system 2");
+
+      // When I delete Sub-system 2
+      page.deleteSubSystem(withTitle: "Sub-system 2");
+
+      // Then the current sub-system becomes sub-system 3
+      expect(page.subSystemTitle, "Sub-system 3");
+    });
+
+    test(
+        'deleteSubSystem() on the last and current sub-system, moves subSystem to previous sub-system',
+        () {
+      // Given a ParameterPage with two sub-systems
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubSystem();
+      expect(page.subSystemTitle, "Sub-system 2");
+
+      // When I delete sub-system 2
+      page.deleteSubSystem(withTitle: "Sub-system 2");
+
+      // Then the current sub-system becomes sub-system 1
+      expect(page.subSystemTitle, "Sub-system 1");
+    });
+
+    test('Add entry to new sub-system, works as expect', () {
+      // Given a ParameterPage with a new sub-system
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubSystem();
+
+      // When I add an entry to the new sub-system
+      page.add(CommentEntry("sub-system 2 / tab 1 / sub-page 1 / entry 1"));
+
+      // Then the entry is on the new sub-system / tab / sub-page
+      final entries = page.entriesAsList();
+      expect(entries.length, 1);
+      expect(entries[0].entryText(),
+          "sub-system 2 / tab 1 / sub-page 1 / entry 1");
+    });
+
+    test(
+        'numberOfEntriesForSubSystem(..), returns the total number of entries for the given sub-system',
+        () {
+      // Given I am editing a Parameter page with 2 sub-systems
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.createSubSystem();
+
+      // ... and the first tab of sub-system 2 has 2 sub-pages
+      page.createSubPage();
+
+      // ... and the sub-system has 2 tabs
+      page.createTab();
+
+      // When I leave Sub-system 1 blank
+      // ... and add an entry to Sub-system 2 / Tab 2
+      page.add(CommentEntry("entry 1"));
+
+      // ... and add an entry to Sub-system 2 / Tab 1 / Sub-page 2
+      page.switchTab(to: "Tab 1");
+      page.add(CommentEntry("entry 2"));
+
+      // ... and add an entry to Sub-system 2 / Tab 1 / Sub-page 1
+      page.decrementSubPage();
+      page.add(CommentEntry("entry 3"));
+
+      // Then the number of entries for sub-system 1 is...
+      expect(page.numberOfEntriesForSubSystem('Sub-system 1'), 0);
+
+      // ... and the number of entries for sub-system 2 is...
+      expect(page.numberOfEntriesForSubSystem('Sub-system 2'), 3);
     });
   });
 }

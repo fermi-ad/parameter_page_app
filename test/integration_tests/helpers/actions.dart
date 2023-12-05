@@ -422,3 +422,60 @@ Future<void> changeSubPageTitle(WidgetTester tester,
   await tester.testTextInput.receiveAction(TextInputAction.done);
   await tester.pumpAndSettle();
 }
+
+Future<void> switchSubSystem(WidgetTester tester, {required String to}) async {
+  await openSubSystemDirectory(tester);
+  await tester.tap(find.text(to).last);
+  await tester.pumpAndSettle();
+}
+
+Future<void> openSubSystemDirectory(WidgetTester tester) async {
+  await tester.tap(find.descendant(
+      of: find.byKey(const Key("subsystemnavigation")),
+      matching: find.byIcon(Icons.arrow_drop_down).first));
+  await tester.pumpAndSettle();
+}
+
+Future<void> newSubSystem(WidgetTester tester) async {
+  await tester.tap(find.descendant(
+      of: find.byKey(const Key("subsystemnavigation")),
+      matching: find.byIcon(Icons.add)));
+  await tester.pumpAndSettle();
+}
+
+Future<void> changeSubSystemTitle(WidgetTester tester,
+    {required String to}) async {
+  await tester.tap(find.descendant(
+      of: find.byKey(const Key("subsystemnavigation")),
+      matching: find.byIcon(Icons.edit)));
+  await tester.pumpAndSettle();
+
+  final dialogFinder = find.byKey(const Key("rename-subsystem-dialog"));
+  await tester.enterText(
+      find.descendant(of: dialogFinder, matching: find.byType(TextField)), to);
+  await tester.testTextInput.receiveAction(TextInputAction.done);
+  await tester
+      .tap(find.descendant(of: dialogFinder, matching: find.text("OK")));
+  await tester.pumpAndSettle();
+}
+
+Future<void> deleteSubSystem(WidgetTester tester, {bool? confirm}) async {
+  await tester.tap(find.descendant(
+      of: find.byKey(const Key("subsystemnavigation")),
+      matching: find.byIcon(Icons.delete)));
+  await tester.pumpAndSettle();
+
+  if (confirm == true) {
+    await tester.tap(find.descendant(
+        of: find.byKey(const Key("subsystem-confirm-delete-dialog")),
+        matching: find.text('Continue')));
+    await tester.pumpAndSettle();
+  } else if (confirm == false) {
+    await tester.tap(find.descendant(
+        of: find.byKey(const Key("subsystem-confirm-delete-dialog")),
+        matching: find.text('Cancel')));
+    await tester.pumpAndSettle();
+  }
+
+  await tester.pumpAndSettle();
+}

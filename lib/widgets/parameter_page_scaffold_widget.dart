@@ -12,6 +12,7 @@ import 'package:parameter_page/widgets/main_menu_widget.dart';
 import 'package:parameter_page/widgets/page_title_widget.dart';
 import 'package:parameter_page/widgets/parameter_page_tabbar_widget.dart';
 import 'package:parameter_page/widgets/sub_page_navigation_widget.dart';
+import 'package:parameter_page/widgets/sub_system_navigation_widget.dart';
 
 import 'data_acquisition_widget.dart';
 import 'display_settings_widget.dart';
@@ -67,18 +68,62 @@ class _ParameterPageScaffoldWidgetState
         body: _buildBody(context));
   }
 
-  bool _pageHasNotBeenLoadedYet() {
-    return _page == null && widget.openPageId != null;
+  AppBar _buildAppBar(BuildContext context) {
+    return AppBar(
+        title: PageTitleWidget(
+            editing: _page?.editing ?? false,
+            persistenceState: _persistenceState,
+            title: _page == null ? "Parameter Page" : _page!.title,
+            onTitleUpdate: _handleTitleUpdate),
+        bottom: PreferredSize(
+            preferredSize: const Size(double.infinity, 100.0),
+            child: Column(children: [
+              Row(children: [
+                _buildSubSystemNavigation(),
+                Expanded(child: _buildTabNavigation())
+              ]),
+              _buildSubPageNavigation()
+            ])),
+        actions: [
+          DisplaySettingsButtonWidget(
+              wide: MediaQuery.of(context).size.width > 600,
+              onPressed: () => _navigateToDisplaySettings(context)),
+        ]);
   }
 
-  bool _aDifferentPageShouldBeLoaded() {
-    return _page != null &&
-        widget.openPageId != null &&
-        widget.openPageId != _page!.id;
+  Widget _buildDrawer(BuildContext context) {
+    return MainMenuWidget(
+      onNewPage: _handleNewPage,
+      onOpenPage: (BuildContext context) => context.go("/open"),
+      onSave: _handleSavePage,
+      saveEnabled: _saveMenuShouldBeEnabled(),
+      onCopyLink: _handleCopyLink,
+      copyLinkEnabled: _page?.id != null,
+    );
   }
 
-  bool _aNewPageShouldBeStarted() {
-    return _page == null && widget.openPageId == null;
+  Widget _buildBody(BuildContext context) {
+    return _errorMessage != null
+        ? _buildError(_errorMessage!)
+        : _page == null
+            ? _buildLoadingPage()
+            : _buildPageWidget();
+  }
+
+  Widget _buildSubSystemNavigation() {
+    return _page != null
+        ? Visibility(
+            visible: _page!.editing || _page!.subSystemTitles.length > 1,
+            child: SubSystemNavigationWidget(
+                wide: MediaQuery.of(context).size.width > 600,
+                page: _page!,
+                onDelete: _handleDeleteSubSystem,
+                onTitleChanged: (String newTitle) =>
+                    setState(() => _page!.subSystemTitle = newTitle),
+                onNewSubSystem: () => setState(() => _page!.createSubSystem()),
+                onSelected: (String selected) =>
+                    setState(() => _page!.switchSubSystem(to: selected))))
+        : Container();
   }
 
   Widget _buildSubPageNavigation() {
@@ -87,6 +132,7 @@ class _ParameterPageScaffoldWidgetState
         : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Expanded(
               child: SubPageNavigationWidget(
+                  wide: MediaQuery.of(context).size.width > 600,
                   page: _page!,
                   onTitleChanged: (String to) =>
                       setState(() => _page!.subPageTitle = to),
@@ -100,24 +146,6 @@ class _ParameterPageScaffoldWidgetState
           ]);
   }
 
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-        title: PageTitleWidget(
-            editing: _page?.editing ?? false,
-            persistenceState: _persistenceState,
-            title: _page == null ? "Parameter Page" : _page!.title,
-            onTitleUpdate: _handleTitleUpdate),
-        bottom: PreferredSize(
-            preferredSize: const Size(double.infinity, 100.0),
-            child: Column(
-                children: [_buildTabNavigation(), _buildSubPageNavigation()])),
-        actions: [
-          DisplaySettingsButtonWidget(
-              wide: MediaQuery.of(context).size.width > 600,
-              onPressed: () => _navigateToDisplaySettings(context)),
-        ]);
-  }
-
   Widget _buildTabNavigation() {
     return ParameterPageTabbarWidget(
         editing: _page?.editing ?? false,
@@ -129,35 +157,6 @@ class _ParameterPageScaffoldWidgetState
         onTabSwitched: (String tabTitle) => setState(() {
               _page!.switchTab(to: tabTitle);
             }));
-  }
-
-  Widget _buildBody(BuildContext context) {
-    return _errorMessage != null
-        ? _buildError(_errorMessage!)
-        : _page == null
-            ? _buildLoadingPage()
-            : _buildPageWidget();
-  }
-
-  Widget _buildError(String detailMessage) {
-    return ErrorDisplayWidget(
-        key: const Key("parameter_page_error"),
-        errorMessage:
-            "The request to load the parameter page failed, please try again.",
-        detailMessage: detailMessage);
-  }
-
-  Widget _buildPageWidget() {
-    return DataAcquisitionWidget(
-        service: widget.acsysService,
-        child: Center(
-            child: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 20.0, 0, 0),
-                child: PageWidget(
-                    key: _pageKey,
-                    page: _page!,
-                    onPageModified: _handlePageModified,
-                    onToggleEditing: (bool isEditing) => setState(() {})))));
   }
 
   Widget _buildLoadingPage() {
@@ -174,35 +173,37 @@ class _ParameterPageScaffoldWidgetState
     ]);
   }
 
-  Widget _buildDrawer(BuildContext context) {
-    return MainMenuWidget(
-      onNewPage: _handleNewPage,
-      onOpenPage: (BuildContext context) => context.go("/open"),
-      onSave: _handleSavePage,
-      saveEnabled: _saveMenuShouldBeEnabled(),
-      onCopyLink: _handleCopyLink,
-      copyLinkEnabled: _page?.id != null,
-    );
+  Widget _buildPageWidget() {
+    return DataAcquisitionWidget(
+        service: widget.acsysService,
+        child: Center(
+            child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 20.0, 0, 0),
+                child: PageWidget(
+                    key: _pageKey,
+                    page: _page!,
+                    onPageModified: _handlePageModified,
+                    onToggleEditing: (bool isEditing) => setState(() {})))));
   }
 
-  bool _saveMenuShouldBeEnabled() {
-    return _persistenceState == PagePersistenceState.unsaved ||
-        _persistenceState == PagePersistenceState.unsavedError;
+  Widget _buildError(String detailMessage) {
+    return ErrorDisplayWidget(
+        key: const Key("parameter_page_error"),
+        errorMessage:
+            "The request to load the parameter page failed, please try again.",
+        detailMessage: detailMessage);
   }
 
-  void _navigateToDisplaySettings(BuildContext context) {
-    final initialSettings = _pageKey.currentState != null
-        ? _pageKey.currentState!.settings
-        : DisplaySettings();
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => DisplaySettingsWidget(
-                  initialSettings: initialSettings,
-                  key: const Key("display_settings_route"),
-                  onChanged: (DisplaySettings newSettings) =>
-                      _pageKey.currentState?.updateSettings(newSettings),
-                )));
+  void _handleDeleteSubSystem() {
+    if (_page!.numberOfEntriesForSubSystem(_page!.subSystemTitle) > 0) {
+      _promptUserToDeleteSubSystem(context).then((bool? dialogResponse) {
+        if (!(dialogResponse == null || !dialogResponse)) {
+          _deleteTheSubSystem();
+        }
+      });
+    } else {
+      _deleteTheSubSystem();
+    }
   }
 
   void _handleDeleteSubPage() {
@@ -215,10 +216,6 @@ class _ParameterPageScaffoldWidgetState
     } else {
       _deleteTheSubPage();
     }
-  }
-
-  void _deleteTheSubPage() {
-    setState(() => _page!.deleteSubPage());
   }
 
   void _handleRenameTab(String withTitle, String to) {
@@ -237,12 +234,6 @@ class _ParameterPageScaffoldWidgetState
     } else {
       _deleteTheTab(withTitle);
     }
-  }
-
-  void _deleteTheTab(String withTitle) {
-    setState(() {
-      _page!.deleteTab(title: withTitle);
-    });
   }
 
   void _handleCreateNewTab() {
@@ -299,6 +290,44 @@ class _ParameterPageScaffoldWidgetState
   void _handlePageModified() {
     setState(() {
       _updatePersistenceState();
+    });
+  }
+
+  Future<void> _handleSaveError(error, stackTrace) async {
+    setState(() {
+      _persistenceState = PagePersistenceState.unsavedError;
+    });
+
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text("Save failed - $error")));
+  }
+
+  void _navigateToDisplaySettings(BuildContext context) {
+    final initialSettings = _pageKey.currentState != null
+        ? _pageKey.currentState!.settings
+        : DisplaySettings();
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => DisplaySettingsWidget(
+                  initialSettings: initialSettings,
+                  key: const Key("display_settings_route"),
+                  onChanged: (DisplaySettings newSettings) =>
+                      _pageKey.currentState?.updateSettings(newSettings),
+                )));
+  }
+
+  void _deleteTheSubSystem() {
+    setState(() => _page!.deleteSubSystem(withTitle: _page!.subSystemTitle));
+  }
+
+  void _deleteTheSubPage() {
+    setState(() => _page!.deleteSubPage());
+  }
+
+  void _deleteTheTab(String withTitle) {
+    setState(() {
+      _page!.deleteTab(title: withTitle);
     });
   }
 
@@ -363,15 +392,6 @@ class _ParameterPageScaffoldWidgetState
         .onError(_handleSaveError);
   }
 
-  Future<void> _handleSaveError(error, stackTrace) async {
-    setState(() {
-      _persistenceState = PagePersistenceState.unsavedError;
-    });
-
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text("Save failed - $error")));
-  }
-
   _loadPage({required String pageId}) {
     widget.pageService
         .fetchPage(id: pageId)
@@ -428,6 +448,28 @@ class _ParameterPageScaffoldWidgetState
     );
   }
 
+  Future<bool?> _promptUserToDeleteSubSystem(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        key: const Key("subsystem-confirm-delete-dialog"),
+        title: const Text('Delete Sub-system'),
+        content: const Text(
+            'This sub-system contains at least one entry.  Deleting the sub-system will discard all of it\'s tabs, sub-pages and their entries.  Do you wish to continue?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Continue'),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<bool?> _promptUserToDiscardChanges(BuildContext context) {
     return showDialog<bool>(
       context: context,
@@ -447,6 +489,25 @@ class _ParameterPageScaffoldWidgetState
         ],
       ),
     );
+  }
+
+  bool _saveMenuShouldBeEnabled() {
+    return _persistenceState == PagePersistenceState.unsaved ||
+        _persistenceState == PagePersistenceState.unsavedError;
+  }
+
+  bool _pageHasNotBeenLoadedYet() {
+    return _page == null && widget.openPageId != null;
+  }
+
+  bool _aDifferentPageShouldBeLoaded() {
+    return _page != null &&
+        widget.openPageId != null &&
+        widget.openPageId != _page!.id;
+  }
+
+  bool _aNewPageShouldBeStarted() {
+    return _page == null && widget.openPageId == null;
   }
 
   String? _errorMessage;

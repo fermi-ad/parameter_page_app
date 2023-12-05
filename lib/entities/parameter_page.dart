@@ -1,6 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:parameter_page/entities/page_entry.dart';
 
+class _SubSystem {
+  String title;
+
+  List<_Tab> tabs;
+
+  int currentTabIndex = 0;
+
+  _SubSystem({this.title = "Sub-system n", this.tabs = const <_Tab>[]});
+}
+
 class _Tab {
   String title;
 
@@ -19,8 +29,10 @@ class _SubPage {
   _SubPage({this.title = "", this.entries = const <PageEntry>[]});
 }
 
-List<_Tab> _initialPageStructure = [
-  _Tab(title: "Tab 1", subPages: [_SubPage(title: "", entries: [])])
+List<_SubSystem> _initialPageStructure = [
+  _SubSystem(title: "Sub-system 1", tabs: [
+    _Tab(title: "Tab 1", subPages: [_SubPage(title: "", entries: [])])
+  ])
 ];
 
 class ParameterPage {
@@ -35,37 +47,67 @@ class ParameterPage {
     return _title;
   }
 
+  List<String> get subSystemTitles {
+    return _pageData.map((_SubSystem subSystem) => subSystem.title).toList();
+  }
+
+  String get subSystemTitle {
+    return _pageData[_currentSubSystemIndex].title;
+  }
+
+  set subSystemTitle(String newTitle) {
+    _enforceEditMode();
+
+    _pageData[_currentSubSystemIndex].title = newTitle;
+  }
+
   List<String> get tabTitles {
-    return _pageData.map((_Tab tab) => tab.title).toList();
+    return _pageData[_currentSubSystemIndex]
+        .tabs
+        .map((_Tab tab) => tab.title)
+        .toList();
   }
 
   String get currentTab {
-    return _pageData[_currentTabIndex].title;
+    return _pageData[_currentSubSystemIndex].tabs[currentTabIndex].title;
   }
 
   int get currentTabIndex {
-    return _currentTabIndex;
+    return _pageData[_currentSubSystemIndex].currentTabIndex;
   }
 
   int get subPageIndex {
-    return _pageData[_currentTabIndex].currentSubPage + 1;
+    return _pageData[_currentSubSystemIndex]
+            .tabs[currentTabIndex]
+            .currentSubPage +
+        1;
   }
 
   int get numberOfSubPages {
-    return _pageData[_currentTabIndex].subPages.length;
+    return _pageData[_currentSubSystemIndex]
+        .tabs[currentTabIndex]
+        .subPages
+        .length;
   }
 
   String get subPageTitle {
-    return _pageData[_currentTabIndex].subPages[subPageIndex - 1].title;
+    return _pageData[_currentSubSystemIndex]
+        .tabs[currentTabIndex]
+        .subPages[subPageIndex - 1]
+        .title;
   }
 
   set subPageTitle(String newTitle) {
     _enforceEditMode();
-    _pageData[_currentTabIndex].subPages[subPageIndex - 1].title = newTitle;
+    _pageData[_currentSubSystemIndex]
+        .tabs[currentTabIndex]
+        .subPages[subPageIndex - 1]
+        .title = newTitle;
   }
 
   List<String> get subPageDirectory {
-    return _pageData[_currentTabIndex]
+    return _pageData[_currentSubSystemIndex]
+        .tabs[currentTabIndex]
         .subPages
         .map((_SubPage subPage) => subPage.title)
         .toList();
@@ -81,13 +123,17 @@ class ParameterPage {
 
   ParameterPage([List<PageEntry>? entries])
       : _pageData = [
-          _Tab(title: "Tab 1", subPages: [
-            _SubPage(title: "", entries: List<PageEntry>.from(entries ?? []))
+          _SubSystem(title: "Sub-system 1", tabs: [
+            _Tab(title: "Tab 1", subPages: [
+              _SubPage(title: "", entries: List<PageEntry>.from(entries ?? []))
+            ])
           ])
         ],
         _savedPageData = [
-          _Tab(title: "Tab 1", subPages: [
-            _SubPage(title: "", entries: List<PageEntry>.from(entries ?? []))
+          _SubSystem(title: "Sub-system 1", tabs: [
+            _Tab(title: "Tab 1", subPages: [
+              _SubPage(title: "", entries: List<PageEntry>.from(entries ?? []))
+            ])
           ])
         ];
 
@@ -97,10 +143,10 @@ class ParameterPage {
       required Map<String, dynamic> queryResult})
       : _pageData = _initialPageStructure,
         _savedPageData = _initialPageStructure {
-    _pageData = _buildEntriesMapFromQueryResult(queryResult);
+    _pageData = _buildSubSystemsFromQueryResult(queryResult);
     _savedPageData = _deepCopyEntries(_pageData);
 
-    _currentTabIndex = 0;
+    _currentSubSystemIndex = 0;
 
     _title = title;
     _savedTitle = title;
@@ -109,32 +155,58 @@ class ParameterPage {
   void add(PageEntry entry) {
     _enforceEditMode();
 
-    _pageData[_currentTabIndex].subPages[subPageIndex - 1].entries.add(entry);
+    _pageData[_currentSubSystemIndex]
+        .tabs[currentTabIndex]
+        .subPages[subPageIndex - 1]
+        .entries
+        .add(entry);
   }
 
   void addAll(List<PageEntry> entries) {
     _enforceEditMode();
-    _pageData[_currentTabIndex]
+    _pageData[_currentSubSystemIndex]
+        .tabs[currentTabIndex]
         .subPages[subPageIndex - 1]
         .entries
         .addAll(entries);
   }
 
   List<PageEntry> entriesAsList() {
-    return _pageData[currentTabIndex].subPages[subPageIndex - 1].entries;
+    return _pageData[_currentSubSystemIndex]
+        .tabs[currentTabIndex]
+        .subPages[subPageIndex - 1]
+        .entries;
   }
 
   List<PageEntry> entriesAsListFrom(
       {required String tab, required int subPage}) {
-    final tabIndex = _findIndex(forTab: tab);
-    return _pageData[tabIndex].subPages[subPage - 1].entries;
+    final tabIndex = _findTabIndex(forTab: tab);
+    return _pageData[0].tabs[tabIndex].subPages[subPage - 1].entries;
+  }
+
+  int numberOfEntriesForSubSystem(String subSystem) {
+    int totalEntries = 0;
+
+    for (final tab
+        in _pageData[_findSubSystemIndex(forTitle: subSystem)].tabs) {
+      for (final subPage in tab.subPages) {
+        totalEntries += subPage.entries.length;
+      }
+    }
+
+    return totalEntries;
   }
 
   int numberOfEntries({String? forTab}) {
-    int tabIndex =
-        forTab != null ? _findIndex(forTab: forTab) : _currentTabIndex;
+    int tabIndex = forTab != null
+        ? _findTabIndex(forTab: forTab)
+        : _pageData[_currentSubSystemIndex].currentTabIndex;
 
-    return _pageData[tabIndex].subPages[subPageIndex - 1].entries.length;
+    return _pageData[_currentSubSystemIndex]
+        .tabs[tabIndex]
+        .subPages[subPageIndex - 1]
+        .entries
+        .length;
   }
 
   void enableEditing() {
@@ -168,11 +240,13 @@ class ParameterPage {
     if (atIndex < toIndex) {
       toIndex -= 1;
     }
-    final PageEntry entry = _pageData[_currentTabIndex]
+    final PageEntry entry = _pageData[_currentSubSystemIndex]
+        .tabs[currentTabIndex]
         .subPages[subPageIndex - 1]
         .entries
         .removeAt(atIndex);
-    _pageData[_currentTabIndex]
+    _pageData[_currentSubSystemIndex]
+        .tabs[currentTabIndex]
         .subPages[subPageIndex - 1]
         .entries
         .insert(toIndex, entry);
@@ -181,20 +255,54 @@ class ParameterPage {
   void removeEntry({required int at}) {
     _enforceEditMode();
 
-    _pageData[_currentTabIndex].subPages[subPageIndex - 1].entries.removeAt(at);
+    _pageData[_currentSubSystemIndex]
+        .tabs[currentTabIndex]
+        .subPages[subPageIndex - 1]
+        .entries
+        .removeAt(at);
   }
 
   void clearAll() {
     _enforceEditMode();
 
-    _pageData[_currentTabIndex].subPages[subPageIndex - 1].entries = [];
+    _pageData[_currentSubSystemIndex]
+        .tabs[currentTabIndex]
+        .subPages[subPageIndex - 1]
+        .entries = [];
+  }
+
+  void createSubSystem({String? withTitle}) {
+    _enforceEditMode();
+
+    final newSubSystemTitle = withTitle ?? _generateNewSubSystemTitle();
+    _pageData.add(_SubSystem(title: newSubSystemTitle, tabs: [
+      _Tab(title: "Tab 1", subPages: [_SubPage(entries: [])])
+    ]));
+
+    _currentSubSystemIndex = _pageData.length - 1;
+  }
+
+  void switchSubSystem({required String to}) {
+    _currentSubSystemIndex = _findSubSystemIndex(forTitle: to);
+  }
+
+  void deleteSubSystem({required String withTitle}) {
+    _enforceEditMode();
+
+    _enforceAtLeastOneSubSystem();
+
+    if (_currentSubSystemIndex == subSystemTitles.length - 1) {
+      _currentSubSystemIndex--;
+    }
+
+    _pageData.removeAt(_findSubSystemIndex(forTitle: withTitle));
   }
 
   void createTab({String? title}) {
     _enforceEditMode();
 
     final newTabTitle = title ?? _generateNewTabTitle();
-    _pageData.add(
+    _pageData[_currentSubSystemIndex].tabs.add(
         _Tab(title: newTabTitle, subPages: [_SubPage(title: "", entries: [])]));
 
     switchTab(to: newTabTitle);
@@ -204,34 +312,40 @@ class ParameterPage {
     _enforceEditMode();
     _enforceAtLeastOneTab();
 
-    final tabIndex = _findIndex(forTab: title);
+    final tabIndex = _findTabIndex(forTab: title);
 
     if (currentTabIndex == tabIndex) {
       _switchToAdjacentTab();
     }
 
-    _pageData.removeAt(tabIndex);
+    _pageData[_currentSubSystemIndex].tabs.removeAt(tabIndex);
 
-    if (_currentTabIndex > tabIndex) {
-      _currentTabIndex--;
+    if (_pageData[_currentSubSystemIndex].currentTabIndex > tabIndex) {
+      _pageData[_currentSubSystemIndex].currentTabIndex--;
     }
   }
 
   void renameTab({required String withTitle, required String to}) {
     _enforceEditMode();
 
-    _pageData[_findIndex(forTab: withTitle)].title = to;
+    _pageData[_currentSubSystemIndex]
+        .tabs[_findTabIndex(forTab: withTitle)]
+        .title = to;
   }
 
   void switchTab({required String to}) {
     if (!tabTitles.contains(to)) {
       throw Exception("switchTab failure - tab does not exist");
     }
-    _currentTabIndex = _findIndex(forTab: to);
+    _pageData[_currentSubSystemIndex].currentTabIndex =
+        _findTabIndex(forTab: to);
   }
 
   int subPageCount({required String forTab}) {
-    return _pageData[_findIndex(forTab: forTab)].subPages.length;
+    return _pageData[_currentSubSystemIndex]
+        .tabs[_findTabIndex(forTab: forTab)]
+        .subPages
+        .length;
   }
 
   void incrementSubPage() {
@@ -250,16 +364,24 @@ class ParameterPage {
     if (to < 1 || to > numberOfSubPages) {
       throw Exception('Attempt to switch to an invalid sub-page');
     }
-    _pageData[_currentTabIndex].currentSubPage = to - 1;
+    _pageData[_currentSubSystemIndex].tabs[currentTabIndex].currentSubPage =
+        to - 1;
   }
 
   void createSubPage() {
     _enforceEditMode();
 
-    _pageData[currentTabIndex].subPages.add(_SubPage(title: "", entries: []));
+    _pageData[_currentSubSystemIndex]
+        .tabs[currentTabIndex]
+        .subPages
+        .add(_SubPage(title: "", entries: []));
 
-    _pageData[currentTabIndex].currentSubPage =
-        _pageData[currentTabIndex].subPages.length - 1;
+    _pageData[_currentSubSystemIndex].tabs[currentTabIndex].currentSubPage =
+        _pageData[_currentSubSystemIndex]
+                .tabs[currentTabIndex]
+                .subPages
+                .length -
+            1;
   }
 
   void deleteSubPage() {
@@ -267,15 +389,25 @@ class ParameterPage {
 
     _enforceAtLeastOneSubPage();
 
-    _pageData[currentTabIndex].subPages.removeAt(subPageIndex - 1);
+    _pageData[_currentSubSystemIndex]
+        .tabs[currentTabIndex]
+        .subPages
+        .removeAt(subPageIndex - 1);
 
-    if (subPageIndex - 1 == _pageData[currentTabIndex].subPages.length) {
+    if (subPageIndex - 1 ==
+        _pageData[_currentSubSystemIndex]
+            .tabs[currentTabIndex]
+            .subPages
+            .length) {
       decrementSubPage();
     }
   }
 
   String subPageTitleFor({required String tab, required int subPageIndex}) {
-    return _pageData[_findIndex(forTab: tab)].subPages[subPageIndex - 1].title;
+    return _pageData[_currentSubSystemIndex]
+        .tabs[_findTabIndex(forTab: tab)]
+        .subPages[subPageIndex - 1]
+        .title;
   }
 
   void _enforceEditMode() {
@@ -285,26 +417,46 @@ class ParameterPage {
     }
   }
 
-  void _enforceAtLeastOneTab() {
+  void _enforceAtLeastOneSubSystem() {
     if (_pageData.length == 1) {
+      throw Exception("Could not delete the only sub-system on the page");
+    }
+  }
+
+  void _enforceAtLeastOneTab() {
+    if (_pageData[_currentSubSystemIndex].tabs.length == 1) {
       throw Exception("Could not delete the only tab on the page");
     }
   }
 
   void _enforceAtLeastOneSubPage() {
-    if (_pageData[currentTabIndex].subPages.length == 1) {
+    if (_pageData[_currentSubSystemIndex]
+            .tabs[currentTabIndex]
+            .subPages
+            .length ==
+        1) {
       throw Exception("Could not delete the only sub-page on the page");
     }
   }
 
-  int _findIndex({required String forTab}) {
-    for (int i = 0; i != _pageData.length; i++) {
-      if (_pageData[i].title == forTab) {
-        return i;
-      }
+  int _findSubSystemIndex({required String forTitle}) {
+    final index = subSystemTitles.indexOf(forTitle);
+
+    if (index == -1) {
+      throw Exception("Invalid sub-system.");
     }
 
-    throw Exception("Invalid tab");
+    return index;
+  }
+
+  int _findTabIndex({required String forTab}) {
+    final index = tabTitles.indexOf(forTab);
+
+    if (index == -1) {
+      throw Exception("Invalid tab");
+    }
+
+    return index;
   }
 
   void _switchToAdjacentTab() {
@@ -315,29 +467,54 @@ class ParameterPage {
     switchTab(to: switchToTab);
   }
 
+  String _generateNewSubSystemTitle() {
+    return "Sub-system ${subSystemTitles.length + 1}";
+  }
+
   String _generateNewTabTitle() {
     return "Tab ${tabTitles.length + 1}";
   }
 
-  List<_Tab> _buildEntriesMapFromQueryResult(Map<String, dynamic> queryResult) {
-    List<_Tab> ret = [];
-    for (final tabData in queryResult["tabs"]) {
-      List<_SubPage> subPages = [];
+  List<_SubSystem> _buildSubSystemsFromQueryResult(
+      Map<String, dynamic> queryResult) {
+    List<_SubSystem> ret = [];
 
-      for (final subPageData in tabData["sub-pages"]) {
-        final entries = subPageData["entries"];
-        if (entries.length == 0) {
-          subPages.add(_SubPage(title: "", entries: []));
-        } else {
-          subPages.add(_SubPage(
-              title: subPageData["title"] ?? "",
-              entries:
-                  _buildEntriesListFromQueryResult(subPageData["entries"])));
-        }
-      }
-
-      ret.add(_Tab(title: tabData["title"], subPages: subPages));
+    for (final subSystemData in queryResult["sub-systems"]) {
+      ret.add(_SubSystem(
+          title: subSystemData["title"],
+          tabs: _buildTabsFromQueryResult(subSystemData["tabs"])));
     }
+
+    return ret;
+  }
+
+  List<_Tab> _buildTabsFromQueryResult(List<Map<String, dynamic>> tabData) {
+    List<_Tab> ret = [];
+
+    for (final tabData in tabData) {
+      ret.add(_Tab(
+          title: tabData["title"],
+          subPages: _buildSubPagesFromQueryResult(tabData["sub-pages"])));
+    }
+
+    return ret;
+  }
+
+  List<_SubPage> _buildSubPagesFromQueryResult(
+      List<Map<String, dynamic>> subPageData) {
+    List<_SubPage> ret = [];
+
+    for (final subPageData in subPageData) {
+      final entries = subPageData["entries"];
+      if (entries.length == 0) {
+        ret.add(_SubPage(title: "", entries: []));
+      } else {
+        ret.add(_SubPage(
+            title: subPageData["title"] ?? "",
+            entries: _buildEntriesListFromQueryResult(subPageData["entries"])));
+      }
+    }
+
     return ret;
   }
 
@@ -351,21 +528,25 @@ class ParameterPage {
     return ret;
   }
 
-  List<_Tab> _deepCopyEntries(List<_Tab> from) {
-    List<_Tab> ret = [];
-    for (_Tab fromTab in from) {
-      _Tab toTab = _Tab(title: fromTab.title, subPages: []);
-      for (int i = 0; i != fromTab.subPages.length; i++) {
-        toTab.subPages.add(_SubPage(
-            title: fromTab.subPages[i].title,
-            entries: List<PageEntry>.from(fromTab.subPages[i].entries)));
+  List<_SubSystem> _deepCopyEntries(List<_SubSystem> from) {
+    List<_SubSystem> ret = [];
+    for (_SubSystem fromSubSystem in from) {
+      _SubSystem toSubSystem = _SubSystem(title: fromSubSystem.title, tabs: []);
+      for (_Tab fromTab in fromSubSystem.tabs) {
+        _Tab toTab = _Tab(title: fromTab.title, subPages: []);
+        for (int i = 0; i != fromTab.subPages.length; i++) {
+          toTab.subPages.add(_SubPage(
+              title: fromTab.subPages[i].title,
+              entries: List<PageEntry>.from(fromTab.subPages[i].entries)));
+        }
+        toSubSystem.tabs.add(toTab);
       }
-      ret.add(toTab);
+      ret.add(toSubSystem);
     }
     return ret;
   }
 
-  bool _entriesEqual(List<_Tab> compareTo) {
+  bool _entriesEqual(List<_SubSystem> compareTo) {
     if (_pageData.length != compareTo.length) {
       return false;
     }
@@ -375,17 +556,29 @@ class ParameterPage {
         return false;
       }
 
-      if (_pageData[i].subPages.length != compareTo[i].subPages.length) {
+      if (_pageData[i].tabs.length != compareTo[i].tabs.length) {
         return false;
       }
 
-      for (int j = 0; j != _pageData[i].subPages.length; j++) {
-        if (_pageData[i].subPages[j].title != compareTo[i].subPages[j].title) {
+      for (int j = 0; j != _pageData[i].tabs.length; j++) {
+        if (_pageData[i].tabs[j].title != compareTo[i].tabs[j].title) {
           return false;
         }
-        if (!listEquals(_pageData[i].subPages[j].entries,
-            compareTo[i].subPages[j].entries)) {
+
+        if (_pageData[i].tabs[j].subPages.length !=
+            compareTo[i].tabs[j].subPages.length) {
           return false;
+        }
+
+        for (int k = 0; k != _pageData[i].tabs[j].subPages.length; k++) {
+          if (_pageData[i].tabs[j].subPages[k].title !=
+              compareTo[i].tabs[j].subPages[k].title) {
+            return false;
+          }
+          if (!listEquals(_pageData[i].tabs[j].subPages[k].entries,
+              compareTo[i].tabs[j].subPages[k].entries)) {
+            return false;
+          }
         }
       }
     }
@@ -410,11 +603,11 @@ class ParameterPage {
     }
   }
 
-  List<_Tab> _pageData = _initialPageStructure;
+  List<_SubSystem> _pageData = _initialPageStructure;
 
-  List<_Tab> _undoPageData = _initialPageStructure;
+  List<_SubSystem> _undoPageData = _initialPageStructure;
 
-  List<_Tab> _savedPageData = _initialPageStructure;
+  List<_SubSystem> _savedPageData = _initialPageStructure;
 
   String _title = "New Parameter Page";
 
@@ -422,7 +615,7 @@ class ParameterPage {
 
   String _savedTitle = "New Parameter Page";
 
-  int _currentTabIndex = 0;
+  int _currentSubSystemIndex = 0;
 
   bool _editing = false;
 }
