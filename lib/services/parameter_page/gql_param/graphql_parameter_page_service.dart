@@ -1,5 +1,4 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:parameter_page/entities/page_entry.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/parameter_page/gql_param/mutations.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
@@ -73,6 +72,7 @@ class GraphQLParameterPageService extends ParameterPageService {
       {required String id,
       required ParameterPage page,
       required Function() onSuccess}) async {
+    /*
     try {
       await _deleteOldEntries(page);
     } catch (e) {
@@ -91,8 +91,11 @@ class GraphQLParameterPageService extends ParameterPageService {
     } else {
       onSuccess.call();
     }
+    */
+    return Future.error("savePage not implemented");
   }
 
+/*
   Future<void> _deleteOldEntries(ParameterPage page) async {
     var list = _generateDeleteEntryList(from: page);
     if (list.isEmpty) {
@@ -135,7 +138,7 @@ class GraphQLParameterPageService extends ParameterPageService {
             })
         .toList();
   }
-
+*/
   @override
   Future<String> renamePage(
       {required String id, required String newTitle}) async {

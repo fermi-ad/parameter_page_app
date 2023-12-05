@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
-import '../gqlconnect.dart';
-import '../services/parameter_page/gql_param/mutations.dart';
 
 class EntryQueryWrapper extends StatefulWidget {
   final List<dynamic> entries;
@@ -56,6 +53,7 @@ class _EntryQueryWrapperState extends State<EntryQueryWrapper> {
   }
 
   Future<void> _deleteEntry(String entryid) async {
+    /*
     final QueryOptions options = QueryOptions(
       document: gql(deletepageentry),
       variables: <String, dynamic>{
@@ -69,5 +67,6 @@ class _EntryQueryWrapperState extends State<EntryQueryWrapper> {
     if (!result.hasException) {
       widget.fetchData();
     } //else
+    */
   } //delete Title function
 }
