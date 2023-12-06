@@ -243,7 +243,7 @@ packages:
     description:
       path: "."
       ref: "v0.1.x"
-      resolved-ref: "22e9e97649a9ecb2c52452ddebc82e6d420c0bda"
+      resolved-ref: b045d6c7238499ea4a33f160e13d0e487d7f1f62
       url: "https://github.com/fermi-ad/flutter-controls-core.git"
     source: git
     version: "0.1.2"
