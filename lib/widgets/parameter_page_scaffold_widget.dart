@@ -76,13 +76,15 @@ class _ParameterPageScaffoldWidgetState
             title: _page == null ? "Parameter Page" : _page!.title,
             onTitleUpdate: _handleTitleUpdate),
         bottom: PreferredSize(
-            preferredSize: const Size(double.infinity, 100.0),
+            preferredSize: _calculateBottomAppBarSize(),
             child: Column(children: [
               Row(children: [
                 _buildSubSystemNavigation(),
                 Expanded(child: _buildTabNavigation())
               ]),
-              _buildSubPageNavigation()
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                  child: _buildSubPageNavigation())
             ])),
         actions: [
           DisplaySettingsButtonWidget(
@@ -113,7 +115,7 @@ class _ParameterPageScaffoldWidgetState
   Widget _buildSubSystemNavigation() {
     return _page != null
         ? Visibility(
-            visible: _page!.editing || _page!.subSystemTitles.length > 1,
+            visible: _showSubSystemNavigation(),
             child: SubSystemNavigationWidget(
                 wide: MediaQuery.of(context).size.width > 600,
                 page: _page!,
@@ -178,7 +180,7 @@ class _ParameterPageScaffoldWidgetState
         service: widget.acsysService,
         child: Center(
             child: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 20.0, 0, 0),
+                padding: const EdgeInsets.fromLTRB(16, 32, 16, 0),
                 child: PageWidget(
                     key: _pageKey,
                     page: _page!,
@@ -490,6 +492,20 @@ class _ParameterPageScaffoldWidgetState
       ),
     );
   }
+
+  _calculateBottomAppBarSize() {
+    return Size(double.infinity,
+        (_showSubSystemNavigation() || _showTabNavigation()) ? 106 : 58.0);
+  }
+
+  bool _showSubSystemNavigation() =>
+      _page != null && (_page!.editing || _page!.subSystemTitles.length > 1);
+
+  bool _showTabNavigation() =>
+      _page != null &&
+      (_page!.editing == true ||
+          _page!.tabTitles.length > 1 ||
+          (_page!.tabTitles.length == 1 && _page!.tabTitles[0] != "Tab 1"));
 
   bool _saveMenuShouldBeEnabled() {
     return _persistenceState == PagePersistenceState.unsaved ||
