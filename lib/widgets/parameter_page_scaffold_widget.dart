@@ -76,7 +76,11 @@ class _ParameterPageScaffoldWidgetState
             title: _page == null ? "Parameter Page" : _page!.title,
             onTitleUpdate: _handleTitleUpdate),
         bottom: PreferredSize(
-            preferredSize: const Size(double.infinity, 100.0),
+            preferredSize: Size(
+                double.infinity,
+                (_showSubSystemNavigation() || _showTabNavigation())
+                    ? 96
+                    : 48.0),
             child: Column(children: [
               Row(children: [
                 _buildSubSystemNavigation(),
@@ -113,7 +117,7 @@ class _ParameterPageScaffoldWidgetState
   Widget _buildSubSystemNavigation() {
     return _page != null
         ? Visibility(
-            visible: _page!.editing || _page!.subSystemTitles.length > 1,
+            visible: _showSubSystemNavigation(),
             child: SubSystemNavigationWidget(
                 wide: MediaQuery.of(context).size.width > 600,
                 page: _page!,
@@ -490,6 +494,15 @@ class _ParameterPageScaffoldWidgetState
       ),
     );
   }
+
+  bool _showSubSystemNavigation() =>
+      _page != null && (_page!.editing || _page!.subSystemTitles.length > 1);
+
+  bool _showTabNavigation() =>
+      _page != null &&
+      (_page!.editing == true ||
+          _page!.tabTitles.length > 1 ||
+          (_page!.tabTitles.length == 1 && _page!.tabTitles[0] != "Tab 1"));
 
   bool _saveMenuShouldBeEnabled() {
     return _persistenceState == PagePersistenceState.unsaved ||
