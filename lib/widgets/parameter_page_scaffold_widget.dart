@@ -82,7 +82,9 @@ class _ParameterPageScaffoldWidgetState
                 _buildSubSystemNavigation(),
                 Expanded(child: _buildTabNavigation())
               ]),
-              _buildSubPageNavigation()
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                  child: _buildSubPageNavigation())
             ])),
         actions: [
           DisplaySettingsButtonWidget(
@@ -493,7 +495,7 @@ class _ParameterPageScaffoldWidgetState
 
   _calculateBottomAppBarSize() {
     return Size(double.infinity,
-        (_showSubSystemNavigation() || _showTabNavigation()) ? 96 : 48.0);
+        (_showSubSystemNavigation() || _showTabNavigation()) ? 106 : 58.0);
   }
 
   bool _showSubSystemNavigation() =>
