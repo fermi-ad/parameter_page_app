@@ -76,11 +76,7 @@ class _ParameterPageScaffoldWidgetState
             title: _page == null ? "Parameter Page" : _page!.title,
             onTitleUpdate: _handleTitleUpdate),
         bottom: PreferredSize(
-            preferredSize: Size(
-                double.infinity,
-                (_showSubSystemNavigation() || _showTabNavigation())
-                    ? 96
-                    : 48.0),
+            preferredSize: _calculateBottomAppBarSize(),
             child: Column(children: [
               Row(children: [
                 _buildSubSystemNavigation(),
@@ -493,6 +489,11 @@ class _ParameterPageScaffoldWidgetState
         ],
       ),
     );
+  }
+
+  _calculateBottomAppBarSize() {
+    return Size(double.infinity,
+        (_showSubSystemNavigation() || _showTabNavigation()) ? 96 : 48.0);
   }
 
   bool _showSubSystemNavigation() =>
