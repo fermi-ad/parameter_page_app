@@ -180,7 +180,7 @@ class _ParameterPageScaffoldWidgetState
         service: widget.acsysService,
         child: Center(
             child: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 20.0, 0, 0),
+                padding: const EdgeInsets.fromLTRB(16, 32, 16, 0),
                 child: PageWidget(
                     key: _pageKey,
                     page: _page!,
