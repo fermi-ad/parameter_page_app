@@ -191,9 +191,9 @@ class GraphQLParameterPageService extends ParameterPageService {
           "The request to fetch a parameter page returned an exception.  Please refer to the developer console for more detail.");
     } else {
       return ParameterPage.fromQueryResult(
-          id: result.data?['onePage']['pageid'],
-          title: result.data?['onePage']['title'],
-          queryResult: result.data?['onePage']['entries']);
+          id: result.data?['onePageTree']['pageid'],
+          title: result.data?['onePageTree']['title'],
+          queryResult: result.data?['onePageTree']);
     }
   }
 }
