@@ -33,14 +33,20 @@ class SubPageNavigationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(children: [
+      _buildNavigationControls(),
+      const SizedBox(width: 10.0),
+      _buildDropDownMenu(),
+      Visibility(visible: page.editing, child: _buildEditTools())
+    ]);
+  }
+
+  Widget _buildNavigationControls() {
+    return Row(children: [
       _buildBackwardsButton(),
       _buildCurrentSubPageIndex(),
       const Text(" / "),
       _buildTotalNumberOfSubPages(),
       _buildForwardsButton(),
-      const SizedBox(width: 10.0),
-      _buildDropDownMenu(),
-      Visibility(visible: page.editing, child: _buildEditTools())
     ]);
   }
 
