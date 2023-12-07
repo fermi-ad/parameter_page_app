@@ -71,7 +71,7 @@ class MockParameterPageService extends ParameterPageService {
     }
 
     _testPageEntries[id] = {
-      "sub-systems": [
+      "sub_systems": [
         {"title": "Sub-system 1", "tabs": <Map<String, dynamic>>[]}
       ]
     };
@@ -101,8 +101,8 @@ class MockParameterPageService extends ParameterPageService {
         });
       }
 
-      (_testPageEntries[id]!["sub-systems"]![0]["tabs"]! as List<dynamic>)
-          .add({"title": tabTitle, "sub-pages": newSubPages});
+      (_testPageEntries[id]!["sub_systems"]![0]["tabs"]! as List<dynamic>)
+          .add({"title": tabTitle, "sub_pages": newSubPages});
     }
 
     Timer(const Duration(seconds: 1), () => onSuccess.call());
@@ -153,13 +153,13 @@ class MockParameterPageService extends ParameterPageService {
 
   final _testPageEntries = {
     "1": {
-      "sub-systems": [
+      "sub_systems": [
         {
           "title": "Sub-system 1",
           "tabs": [
             {
               "title": "Tab 1",
-              "sub-pages": [
+              "sub_pages": [
                 {
                   "id": "1",
                   "title:": "",
@@ -194,13 +194,13 @@ class MockParameterPageService extends ParameterPageService {
       ]
     },
     "3": {
-      "sub-systems": [
+      "sub_systems": [
         {
           "title": "Sub-system 1",
           "tabs": [
             {
               "title": "Tab 1",
-              "sub-pages": [
+              "sub_pages": [
                 {
                   "id": "1",
                   "title": "Sub-Page One",
@@ -264,7 +264,7 @@ class MockParameterPageService extends ParameterPageService {
             },
             {
               "title": "Tab 2",
-              "sub-pages": [
+              "sub_pages": [
                 {
                   "id": "1",
                   "title": "",
@@ -287,7 +287,7 @@ class MockParameterPageService extends ParameterPageService {
           "tabs": [
             {
               "title": "Tab 1",
-              "sub-pages": [
+              "sub_pages": [
                 {
                   "id": "1",
                   "title": "Sub-Page One",
@@ -308,13 +308,13 @@ class MockParameterPageService extends ParameterPageService {
       ]
     },
     "4": {
-      "sub-systems": [
+      "sub_systems": [
         {
           "title": "Sub-system 1",
           "tabs": [
             {
               "title": "Tab 1",
-              "sub-pages": [
+              "sub_pages": [
                 {
                   "id": "1",
                   "title": "",
@@ -398,13 +398,13 @@ class MockParameterPageService extends ParameterPageService {
       ]
     },
     "5": {
-      "sub-systems": [
+      "sub_systems": [
         {
           "title": "Sub-system 1",
           "tabs": [
             {
               "title": "Tab One",
-              "sub-pages": [
+              "sub_pages": [
                 {
                   "id": "1",
                   "title": "",
@@ -422,43 +422,43 @@ class MockParameterPageService extends ParameterPageService {
             },
             {
               "title": "Tab Two",
-              "sub-pages": [
+              "sub_pages": [
                 {"id": "1", "title": "", "entries": []}
               ]
             },
             {
               "title": "Tab Three",
-              "sub-pages": [
+              "sub_pages": [
                 {"id": "1", "title": "", "entries": []}
               ]
             },
             {
               "title": "Tab Four",
-              "sub-pages": [
+              "sub_pages": [
                 {"id": "1", "title": "", "entries": []}
               ]
             },
             {
               "title": "Tab Five",
-              "sub-pages": [
+              "sub_pages": [
                 {"id": "1", "title": "", "entries": []}
               ]
             },
             {
               "title": "Tab Six",
-              "sub-pages": [
+              "sub_pages": [
                 {"id": "1", "title": "", "entries": []}
               ]
             },
             {
               "title": "Tab Seven",
-              "sub-pages": [
+              "sub_pages": [
                 {"id": "1", "title": "", "entries": []}
               ]
             },
             {
               "title": "Tab Eight",
-              "sub-pages": [
+              "sub_pages": [
                 {"id": "1", "title": "", "entries": []}
               ]
             },
