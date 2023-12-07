@@ -178,7 +178,7 @@ class GraphQLParameterPageService extends ParameterPageService {
   @override
   Future<ParameterPage> fetchPage({required String id}) async {
     final QueryOptions options = QueryOptions(
-      document: gql(query_onepagetree),
+      document: gql(queryOnePageTree),
       variables: <String, dynamic>{'pageid': id},
       fetchPolicy: FetchPolicy.noCache,
     );

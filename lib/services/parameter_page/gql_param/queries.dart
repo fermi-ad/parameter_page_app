@@ -18,7 +18,7 @@ const queryAllPageTitles = r"""
 /// output: one complete tree structures and values of one parameter page,
 ///        including tree title, sub-systems, tabs, sub-pages and entries
 ///*********************************************************************
-const query_onepagetree = r"""
+const queryOnePageTree = r"""
             query getOnePageTree($pageid: ID!) {
               onePageTree(pageid: $pageid) {
                 pageid
