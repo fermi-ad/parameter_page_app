@@ -40,39 +40,40 @@ class SubPageNavigationWidget extends StatelessWidget {
       _buildForwardsButton(),
       const SizedBox(width: 10.0),
       _buildDropDownMenu(),
-      Visibility(visible: page.editing, child: _buildNewSubPageButton()),
+      Visibility(visible: page.editing, child: _buildEditTools())
+    ]);
+  }
+
+  Widget _buildEditTools() {
+    return Row(children: [
+      _buildNewSubPageButton(),
       const SizedBox(width: 5.0),
-      Visibility(visible: page.editing, child: _buildDeleteSubPageButton())
+      _buildDeleteSubPageButton()
     ]);
   }
 
   Widget _buildDeleteSubPageButton() {
-    return Flexible(
-        child: wide
-            ? TextButton.icon(
-                key: const Key("subpagenavigation-deletesubpage"),
-                onPressed: _isDeleteButtonEnabled
-                    ? () => onDeleteSubPage?.call()
-                    : null,
-                icon: const Icon(Icons.delete),
-                label: const Text("Delete Sub-Page"))
-            : IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: _isDeleteButtonEnabled
-                    ? () => onDeleteSubPage?.call()
-                    : null));
+    return wide
+        ? TextButton.icon(
+            key: const Key("subpagenavigation-deletesubpage"),
+            onPressed:
+                _isDeleteButtonEnabled ? () => onDeleteSubPage?.call() : null,
+            icon: const Icon(Icons.delete),
+            label: const Text("Delete Sub-Page"))
+        : IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed:
+                _isDeleteButtonEnabled ? () => onDeleteSubPage?.call() : null);
   }
 
   Widget _buildNewSubPageButton() {
-    return Flexible(
-        child: wide
-            ? TextButton.icon(
-                onPressed: () => onNewSubPage?.call(),
-                icon: const Icon(Icons.add),
-                label: const Text("New Sub-Page"))
-            : IconButton(
-                icon: const Icon(Icons.add),
-                onPressed: () => onNewSubPage?.call()));
+    return wide
+        ? TextButton.icon(
+            onPressed: () => onNewSubPage?.call(),
+            icon: const Icon(Icons.add),
+            label: const Text("New Sub-Page"))
+        : IconButton(
+            icon: const Icon(Icons.add), onPressed: () => onNewSubPage?.call());
   }
 
   Widget _buildCurrentSubPageIndex() {
@@ -112,7 +113,8 @@ class SubPageNavigationWidget extends StatelessWidget {
 
   Widget _buildDropDownMenu() {
     return Row(children: [
-      Container(
+      SizedBox(
+          width: 300,
           key: const Key("subpagenavigation-subpage-title"),
           child: page.editing
               ? _buildSubPageTitleTextField()
@@ -129,15 +131,11 @@ class SubPageNavigationWidget extends StatelessWidget {
   }
 
   Widget _buildSubPageTitleTextField() {
-    return Expanded(
-        flex: 3,
-        child: TextField(
-          controller: _titleTextController,
-          onTapOutside: (event) =>
-              onTitleChanged?.call(_titleTextController.text),
-          onEditingComplete: () =>
-              onTitleChanged?.call(_titleTextController.text),
-        ));
+    return TextField(
+      controller: _titleTextController,
+      onTapOutside: (event) => onTitleChanged?.call(_titleTextController.text),
+      onEditingComplete: () => onTitleChanged?.call(_titleTextController.text),
+    );
   }
 
   Widget _buildDirectoryMenuButton() {
