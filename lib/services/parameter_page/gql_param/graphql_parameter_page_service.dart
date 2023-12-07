@@ -25,7 +25,7 @@ class GraphQLParameterPageService extends ParameterPageService {
           "The request to fetch a list of parameter pages returned an exception.  Please refer to the developer console for more detail.");
     } else {
       List<dynamic> titles = [];
-      titles = result.data?['allTitles'];
+      titles = result.data?['allPageTitles'];
       onSuccess.call(titles);
     }
   }

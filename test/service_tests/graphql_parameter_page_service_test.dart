@@ -17,8 +17,8 @@ void main() {
               throw Exception("fetchPages failure: $message"),
           onSuccess: (List<dynamic> titles) => pageTitles = titles);
 
-      // Then at least 1 title has been returned
-      expect(pageTitles.length, greaterThan(0));
+      // Then at least 2 titles have been returned
+      expect(pageTitles.length, greaterThan(1));
     });
   });
 }
