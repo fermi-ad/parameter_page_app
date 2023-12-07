@@ -36,7 +36,7 @@ class SubPageNavigationWidget extends StatelessWidget {
       _buildNavigationControls(),
       Padding(
           padding: const EdgeInsets.fromLTRB(10.0, 0, 0, 0),
-          child: _buildDropDownMenu()),
+          child: _buildSubPageDirectory()),
       Visibility(visible: page.editing, child: _buildEditTools())
     ]);
   }
@@ -123,7 +123,7 @@ class SubPageNavigationWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildDropDownMenu() {
+  Widget _buildSubPageDirectory() {
     return Row(children: [
       Container(
           key: const Key("subpagenavigation-subpage-title"),
