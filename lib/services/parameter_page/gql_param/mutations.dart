@@ -68,7 +68,7 @@ const addDefaultPageTree = r"""
 /// output: transaction return code and message.
 ///          (return code, 1: succeed, -1: failed)
 ///**********************************************************************
-const merge_entries = r"""
+const mergeEntries = r"""
           mutation mergeEntries($mrgEntries: [PageEntryUpdInput]!) {
             mergePageEntries(mrgEntries: $mrgEntries) {
               code
