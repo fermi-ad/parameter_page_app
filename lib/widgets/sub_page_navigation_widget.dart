@@ -69,6 +69,7 @@ class SubPageNavigationWidget extends StatelessWidget {
             icon: const Icon(Icons.delete),
             label: const Text("Delete Sub-Page"))
         : IconButton(
+            key: const Key("subpagenavigation-deletesubpage"),
             icon: const Icon(Icons.delete),
             onPressed:
                 _isDeleteButtonEnabled ? () => onDeleteSubPage?.call() : null);
@@ -77,11 +78,14 @@ class SubPageNavigationWidget extends StatelessWidget {
   Widget _buildNewSubPageButton() {
     return wide
         ? TextButton.icon(
+            key: const Key("subpagenavigation-newsubpage"),
             onPressed: () => onNewSubPage?.call(),
             icon: const Icon(Icons.add),
             label: const Text("New Sub-Page"))
         : IconButton(
-            icon: const Icon(Icons.add), onPressed: () => onNewSubPage?.call());
+            key: const Key("subpagenavigation-newsubpage"),
+            icon: const Icon(Icons.add),
+            onPressed: () => onNewSubPage?.call());
   }
 
   Widget _buildCurrentSubPageIndex() {
@@ -121,11 +125,10 @@ class SubPageNavigationWidget extends StatelessWidget {
 
   Widget _buildDropDownMenu() {
     return Row(children: [
-      SizedBox(
-          width: 300,
+      Container(
           key: const Key("subpagenavigation-subpage-title"),
           child: page.editing
-              ? _buildSubPageTitleTextField()
+              ? SizedBox(width: 200, child: _buildSubPageTitleTextField())
               : _buildSubPageTitleDisplay()),
       const SizedBox(width: 5.0),
       Visibility(
