@@ -1,8 +1,8 @@
-/******************************************************* 
- name: query_allpagetitles
- input: none
- output: all the parameter page titles in system
-********************************************************/
+///******************************************************* 
+/// name: query_allpagetitles
+/// input: none
+/// output: all the parameter page titles in system
+///********************************************************
 const query_allpagetitles = r"""
             query getAllPageTitles{
               allPageTitles {
@@ -14,12 +14,12 @@ const query_allpagetitles = r"""
 
 
 
-/******************************************************************** 
- name: query_onepagetree
- input: pageid (int)
- output: one complete tree structures and values of one parameter page,
-        including tree title, sub-systems, tabs, sub-pages and entries
-**********************************************************************/
+///******************************************************************** 
+/// name: query_onepagetree
+/// input: pageid (int)
+/// output: one complete tree structures and values of one parameter page,
+///        including tree title, sub-systems, tabs, sub-pages and entries
+///*********************************************************************
 const query_onepagetree = r"""
             query getOnePageTree($pageid: ID!) {
               onePageTree(pageid: $pageid) {
