@@ -1,0 +1,67 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:parameter_page/entities/parameter_page.dart';
+import 'package:parameter_page/services/parameter_page/gql_param/graphql_parameter_page_service.dart';
+import 'package:test/test.dart';
+
+void main() {
+  group('fetchPages', () {
+    test("fetchPages, returns a non-empty list of parameter page titles",
+        () async {
+      // Given a GraphQLParameterPageService
+      await dotenv.load(fileName: ".env");
+      final service = GraphQLParameterPageService();
+
+      // When I request a list of parameter pages
+      List<dynamic> pageTitles = [];
+      await service.fetchPages(
+          onFailure: (String message) =>
+              throw Exception("fetchPages failure: $message"),
+          onSuccess: (List<dynamic> titles) => pageTitles = titles);
+
+      // Then at least 2 titles have been returned
+      expect(pageTitles.length, greaterThan(1));
+    });
+  });
+
+  group('fetchPage', () {
+    test("fetchPage, returns the correct page structure", () async {
+      // Given a GraphQLParameterPageService
+      await dotenv.load(fileName: ".env");
+      final service = GraphQLParameterPageService();
+
+      // When I fetch a test page
+      ParameterPage page = await service.fetchPage(id: "1");
+
+      // Then the page title is...
+      expect(page.title, "East Booster Towers");
+
+      // ... and the page has 2 sub-systems
+      expect(page.subSystemTitles.length, 2);
+      expect(page.subSystemTitles[0], "P1 Line M1");
+      expect(page.subSystemTitles[1], "P2 Line M2");
+
+      // ... and the first sub-system has 3 tabs
+      expect(page.tabTitles.length, 3);
+      expect(page.tabTitles[0], "P1 tab #1");
+      expect(page.tabTitles[1], "P2 tab #1");
+      expect(page.tabTitles[2], "new dev tab");
+
+      // ... and the first tab has 3 sub-pages
+      expect(page.subPageDirectory.length, 3);
+      expect(page.subPageDirectory[0], "P1 subpage #1");
+      expect(page.subPageDirectory[1], "P2 subpage #1");
+      expect(page.subPageDirectory[2], "3");
+
+      // ... and Tab 2 has 2 sub-pages
+      page.switchTab(to: "P2 tab #1");
+      expect(page.subPageDirectory.length, 2);
+      expect(page.subPageDirectory[0], "");
+      expect(page.subPageDirectory[1], "");
+
+      // ... and Tab 3 has 1 sub-page
+      page.switchTab(to: "new dev tab");
+      expect(page.subPageDirectory.length, 1);
+      expect(page.subPageDirectory[0], "");
+    });
+  });
+}
