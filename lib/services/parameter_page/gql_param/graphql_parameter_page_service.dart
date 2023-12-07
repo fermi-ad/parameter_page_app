@@ -12,7 +12,7 @@ class GraphQLParameterPageService extends ParameterPageService {
       {required Function(String) onFailure,
       required Function(List<dynamic>) onSuccess}) async {
     final QueryOptions options = QueryOptions(
-      document: gql(titlequery),
+      document: gql(query_allpagetitles),
       fetchPolicy: FetchPolicy.noCache,
     );
 
@@ -30,7 +30,7 @@ class GraphQLParameterPageService extends ParameterPageService {
   @override
   Future<String> createPage({required String withTitle}) async {
     final QueryOptions options = QueryOptions(
-      document: gql(newParamPageDefTree),
+      document: gql(add_defaultpagetree),
       variables: <String, dynamic>{
         'title': withTitle,
       },
@@ -50,6 +50,7 @@ class GraphQLParameterPageService extends ParameterPageService {
       {required String withPageId,
       required Function(String errorMessage) onFailure,
       required Function() onSuccess}) async {
+        /*
     final QueryOptions options = QueryOptions(
       document: gql(deletepagetitle),
       variables: <String, dynamic>{
@@ -65,6 +66,8 @@ class GraphQLParameterPageService extends ParameterPageService {
     } else {
       onSuccess.call();
     } //else
+    */
+    return Future.error("deletePage not implemented");
   }
 
   @override
@@ -142,6 +145,7 @@ class GraphQLParameterPageService extends ParameterPageService {
   @override
   Future<String> renamePage(
       {required String id, required String newTitle}) async {
+        /*
     final QueryOptions options = QueryOptions(
       document: gql(updatepagetitle),
       variables: <String, dynamic>{'pageid': id, 'title': newTitle},
@@ -154,12 +158,14 @@ class GraphQLParameterPageService extends ParameterPageService {
     } else {
       return newTitle;
     }
+    */
+     return Future.error("renamePage not implemented");
   }
 
   @override
   Future<ParameterPage> fetchPage({required String id}) async {
     final QueryOptions options = QueryOptions(
-      document: gql(pagequery),
+      document: gql(query_onepagetree),
       variables: <String, dynamic>{'pageid': id},
       fetchPolicy: FetchPolicy.noCache,
     );
