@@ -93,11 +93,11 @@ class SubPageNavigationWidget extends StatelessWidget {
         width: 36.0,
         child: TextFormField(
           key: const Key('subpagenavigation-current-index-input'),
-          style: const TextStyle(fontSize: 18.0),
+          style: const TextStyle(fontSize: 14.0),
           decoration: const InputDecoration(
               border: OutlineInputBorder(),
               isCollapsed: true,
-              contentPadding: EdgeInsets.fromLTRB(0, 5, 5, 5)),
+              contentPadding: EdgeInsets.fromLTRB(0, 5, 0, 6)),
           controller: TextEditingController(text: "${page.subPageIndex}"),
           onFieldSubmitted: _handleDirectNavigation,
           textAlign: TextAlign.right,
