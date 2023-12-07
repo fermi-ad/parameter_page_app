@@ -88,7 +88,7 @@ const mergeEntries = r"""
 /// output: transaction return code and message.
 ///          (return code, 1: succeed, -1: failed)
 ///**********************************************************************
-const delete_entries = r"""
+const deleteEntries = r"""
           mutation deleteEntries($delEntries: [EntryIdInput]!) {
             deletePageEntries(delEntries: $delEntries) {
               code
