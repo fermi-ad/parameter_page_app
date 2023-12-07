@@ -1,9 +1,9 @@
-///******************************************************* 
+///*******************************************************
 /// name: query_allpagetitles
 /// input: none
 /// output: all the parameter page titles in system
 ///********************************************************
-const query_allpagetitles = r"""
+const queryAllPageTitles = r"""
             query getAllPageTitles{
               allPageTitles {
                 pageid
@@ -12,9 +12,7 @@ const query_allpagetitles = r"""
             }
           """;
 
-
-
-///******************************************************************** 
+///********************************************************************
 /// name: query_onepagetree
 /// input: pageid (int)
 /// output: one complete tree structures and values of one parameter page,
@@ -49,4 +47,3 @@ const query_onepagetree = r"""
               }
             }
           """;
-

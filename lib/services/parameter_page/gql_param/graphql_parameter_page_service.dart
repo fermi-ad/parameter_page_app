@@ -13,7 +13,7 @@ class GraphQLParameterPageService extends ParameterPageService {
       {required Function(String) onFailure,
       required Function(List<dynamic>) onSuccess}) async {
     final QueryOptions options = QueryOptions(
-      document: gql(query_allpagetitles),
+      document: gql(queryAllPageTitles),
       fetchPolicy: FetchPolicy.noCache,
     );
 
