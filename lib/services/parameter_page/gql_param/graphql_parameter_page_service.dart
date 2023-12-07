@@ -1,6 +1,5 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:logger/logger.dart';
-import 'package:parameter_page/entities/page_entry.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/parameter_page/gql_param/mutations.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
@@ -56,7 +55,7 @@ class GraphQLParameterPageService extends ParameterPageService {
       {required String withPageId,
       required Function(String errorMessage) onFailure,
       required Function() onSuccess}) async {
-        /*
+    /*
     final QueryOptions options = QueryOptions(
       document: gql(deletepagetitle),
       variables: <String, dynamic>{
@@ -157,7 +156,7 @@ class GraphQLParameterPageService extends ParameterPageService {
   @override
   Future<String> renamePage(
       {required String id, required String newTitle}) async {
-        /*
+    /*
     final QueryOptions options = QueryOptions(
       document: gql(updatepagetitle),
       variables: <String, dynamic>{'pageid': id, 'title': newTitle},
@@ -173,7 +172,7 @@ class GraphQLParameterPageService extends ParameterPageService {
       return newTitle;
     }
     */
-     return Future.error("renamePage not implemented");
+    return Future.error("renamePage not implemented");
   }
 
   @override
