@@ -39,11 +39,7 @@ class SubPageNavigationWidget extends StatelessWidget {
       _buildTotalNumberOfSubPages(),
       _buildForwardsButton(),
       const SizedBox(width: 10.0),
-      _buildSubPageTitle(),
-      const SizedBox(width: 5.0),
-      Visibility(
-          visible: page.numberOfSubPages > 1,
-          child: _buildDirectoryMenuButton()),
+      _buildDropDownMenu(),
       Visibility(visible: page.editing, child: _buildNewSubPageButton()),
       const SizedBox(width: 5.0),
       Visibility(visible: page.editing, child: _buildDeleteSubPageButton())
@@ -114,12 +110,18 @@ class SubPageNavigationWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildSubPageTitle() {
-    return Container(
-        key: const Key("subpagenavigation-subpage-title"),
-        child: page.editing
-            ? _buildSubPageTitleTextField()
-            : _buildSubPageTitleDisplay());
+  Widget _buildDropDownMenu() {
+    return Row(children: [
+      Container(
+          key: const Key("subpagenavigation-subpage-title"),
+          child: page.editing
+              ? _buildSubPageTitleTextField()
+              : _buildSubPageTitleDisplay()),
+      const SizedBox(width: 5.0),
+      Visibility(
+          visible: page.numberOfSubPages > 1,
+          child: _buildDirectoryMenuButton())
+    ]);
   }
 
   Widget _buildSubPageTitleDisplay() {
