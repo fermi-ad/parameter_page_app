@@ -33,7 +33,7 @@ class GraphQLParameterPageService extends ParameterPageService {
   @override
   Future<String> createPage({required String withTitle}) async {
     final QueryOptions options = QueryOptions(
-      document: gql(add_defaultpagetree),
+      document: gql(addDefaultPageTree),
       variables: <String, dynamic>{
         'title': withTitle,
       },
