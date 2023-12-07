@@ -34,8 +34,9 @@ class SubPageNavigationWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(children: [
       _buildNavigationControls(),
-      const SizedBox(width: 10.0),
-      _buildDropDownMenu(),
+      Padding(
+          padding: const EdgeInsets.fromLTRB(10.0, 0, 0, 0),
+          child: _buildDropDownMenu()),
       Visibility(visible: page.editing, child: _buildEditTools())
     ]);
   }
@@ -53,8 +54,9 @@ class SubPageNavigationWidget extends StatelessWidget {
   Widget _buildEditTools() {
     return Row(children: [
       _buildNewSubPageButton(),
-      const SizedBox(width: 5.0),
-      _buildDeleteSubPageButton()
+      Padding(
+          padding: const EdgeInsets.fromLTRB(5.0, 0, 0, 0),
+          child: _buildDeleteSubPageButton())
     ]);
   }
 
