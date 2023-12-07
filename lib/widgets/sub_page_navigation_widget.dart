@@ -33,50 +33,59 @@ class SubPageNavigationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(children: [
+      _buildNavigationControls(),
+      Padding(
+          padding: const EdgeInsets.fromLTRB(10.0, 0, 0, 0),
+          child: _buildSubPageDirectory()),
+      Visibility(visible: page.editing, child: _buildEditTools())
+    ]);
+  }
+
+  Widget _buildNavigationControls() {
+    return Row(children: [
       _buildBackwardsButton(),
       _buildCurrentSubPageIndex(),
       const Text(" / "),
       _buildTotalNumberOfSubPages(),
       _buildForwardsButton(),
-      const SizedBox(width: 10.0),
-      _buildSubPageTitle(),
-      const SizedBox(width: 5.0),
-      Visibility(
-          visible: page.numberOfSubPages > 1,
-          child: _buildDirectoryMenuButton()),
-      Visibility(visible: page.editing, child: _buildNewSubPageButton()),
-      const SizedBox(width: 5.0),
-      Visibility(visible: page.editing, child: _buildDeleteSubPageButton())
+    ]);
+  }
+
+  Widget _buildEditTools() {
+    return Row(children: [
+      _buildNewSubPageButton(),
+      Padding(
+          padding: const EdgeInsets.fromLTRB(5.0, 0, 0, 0),
+          child: _buildDeleteSubPageButton())
     ]);
   }
 
   Widget _buildDeleteSubPageButton() {
-    return Flexible(
-        child: wide
-            ? TextButton.icon(
-                key: const Key("subpagenavigation-deletesubpage"),
-                onPressed: _isDeleteButtonEnabled
-                    ? () => onDeleteSubPage?.call()
-                    : null,
-                icon: const Icon(Icons.delete),
-                label: const Text("Delete Sub-Page"))
-            : IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: _isDeleteButtonEnabled
-                    ? () => onDeleteSubPage?.call()
-                    : null));
+    return wide
+        ? TextButton.icon(
+            key: const Key("subpagenavigation-deletesubpage"),
+            onPressed:
+                _isDeleteButtonEnabled ? () => onDeleteSubPage?.call() : null,
+            icon: const Icon(Icons.delete),
+            label: const Text("Delete Sub-Page"))
+        : IconButton(
+            key: const Key("subpagenavigation-deletesubpage"),
+            icon: const Icon(Icons.delete),
+            onPressed:
+                _isDeleteButtonEnabled ? () => onDeleteSubPage?.call() : null);
   }
 
   Widget _buildNewSubPageButton() {
-    return Flexible(
-        child: wide
-            ? TextButton.icon(
-                onPressed: () => onNewSubPage?.call(),
-                icon: const Icon(Icons.add),
-                label: const Text("New Sub-Page"))
-            : IconButton(
-                icon: const Icon(Icons.add),
-                onPressed: () => onNewSubPage?.call()));
+    return wide
+        ? TextButton.icon(
+            key: const Key("subpagenavigation-newsubpage"),
+            onPressed: () => onNewSubPage?.call(),
+            icon: const Icon(Icons.add),
+            label: const Text("New Sub-Page"))
+        : IconButton(
+            key: const Key("subpagenavigation-newsubpage"),
+            icon: const Icon(Icons.add),
+            onPressed: () => onNewSubPage?.call());
   }
 
   Widget _buildCurrentSubPageIndex() {
@@ -84,11 +93,11 @@ class SubPageNavigationWidget extends StatelessWidget {
         width: 36.0,
         child: TextFormField(
           key: const Key('subpagenavigation-current-index-input'),
-          style: const TextStyle(fontSize: 18.0),
+          style: const TextStyle(fontSize: 14.0),
           decoration: const InputDecoration(
               border: OutlineInputBorder(),
               isCollapsed: true,
-              contentPadding: EdgeInsets.fromLTRB(0, 5, 5, 5)),
+              contentPadding: EdgeInsets.fromLTRB(0, 5, 0, 6)),
           controller: TextEditingController(text: "${page.subPageIndex}"),
           onFieldSubmitted: _handleDirectNavigation,
           textAlign: TextAlign.right,
@@ -114,12 +123,18 @@ class SubPageNavigationWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildSubPageTitle() {
-    return Container(
-        key: const Key("subpagenavigation-subpage-title"),
-        child: page.editing
-            ? _buildSubPageTitleTextField()
-            : _buildSubPageTitleDisplay());
+  Widget _buildSubPageDirectory() {
+    return Row(children: [
+      Container(
+          key: const Key("subpagenavigation-subpage-title"),
+          child: page.editing
+              ? SizedBox(width: 200, child: _buildSubPageTitleTextField())
+              : _buildSubPageTitleDisplay()),
+      const SizedBox(width: 5.0),
+      Visibility(
+          visible: page.numberOfSubPages > 1,
+          child: _buildDirectoryMenuButton())
+    ]);
   }
 
   Widget _buildSubPageTitleDisplay() {
@@ -127,15 +142,11 @@ class SubPageNavigationWidget extends StatelessWidget {
   }
 
   Widget _buildSubPageTitleTextField() {
-    return Expanded(
-        flex: 3,
-        child: TextField(
-          controller: _titleTextController,
-          onTapOutside: (event) =>
-              onTitleChanged?.call(_titleTextController.text),
-          onEditingComplete: () =>
-              onTitleChanged?.call(_titleTextController.text),
-        ));
+    return TextField(
+      controller: _titleTextController,
+      onTapOutside: (event) => onTitleChanged?.call(_titleTextController.text),
+      onEditingComplete: () => onTitleChanged?.call(_titleTextController.text),
+    );
   }
 
   Widget _buildDirectoryMenuButton() {

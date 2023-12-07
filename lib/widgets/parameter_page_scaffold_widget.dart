@@ -83,7 +83,7 @@ class _ParameterPageScaffoldWidgetState
                 Expanded(child: _buildTabNavigation())
               ]),
               Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
                   child: _buildSubPageNavigation())
             ])),
         actions: [
