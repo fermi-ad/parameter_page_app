@@ -84,5 +84,36 @@ void main() {
 
       // Clean-up
     });
+
+    test(
+        'createPage(withTitle:), creates a blank page with the default structure',
+        () async {
+      // Given I have used GraphQLParameterPageService to create a new persistent parameter page
+      await dotenv.load(fileName: ".env");
+      final service = GraphQLParameterPageService();
+      final newPageId =
+          await service.createPage(withTitle: "createPage structure test 3");
+
+      // When I read the page back
+      ParameterPage readBackPage = await service.fetchPage(id: newPageId);
+
+      // Then the title matches what we requested
+      expect(readBackPage.title, "createPage structure test 3");
+
+      // ... and the page has 1 sub-system
+      expect(readBackPage.subSystemTitles.length, 1);
+      expect(readBackPage.subSystemTitle, "Subsys 1");
+      // expect(readBackPage.subSystemTitle, "Sub-system 1");
+
+      // ... and the sub-system has 1 tab
+      expect(readBackPage.tabTitles.length, 1);
+      expect(readBackPage.tabTitles[0], "Tab 1");
+
+      // ... and the tab has 1 sub-page
+      expect(readBackPage.numberOfSubPages, 1);
+      expect(readBackPage.subPageTitle, "");
+
+      // Clean-up
+    });
   });
 }
