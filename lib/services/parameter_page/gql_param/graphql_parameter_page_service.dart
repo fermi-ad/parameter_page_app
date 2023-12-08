@@ -9,9 +9,7 @@ import 'queries.dart';
 
 class GraphQLParameterPageService extends ParameterPageService {
   @override
-  Future<void> fetchPages(
-      {required Function(String) onFailure,
-      required Function(List<dynamic>) onSuccess}) async {
+  Future<List<dynamic>> fetchPages() async {
     final QueryOptions options = QueryOptions(
       document: gql(queryAllPageTitles),
       fetchPolicy: FetchPolicy.noCache,
@@ -21,12 +19,12 @@ class GraphQLParameterPageService extends ParameterPageService {
 
     if (result.hasException) {
       Logger().e(result.exception);
-      onFailure.call(
+      return Future.error(
           "The request to fetch a list of parameter pages returned an exception.  Please refer to the developer console for more detail.");
     } else {
       List<dynamic> titles = [];
       titles = result.data?['allPageTitles'];
-      onSuccess.call(titles);
+      return titles;
     }
   }
 
@@ -46,7 +44,7 @@ class GraphQLParameterPageService extends ParameterPageService {
       return Future.error(
           "The request to create a parameter page returned an exception.  Please refer to the developer console for more detail.");
     } else {
-      return result.data?['addTitle']['pageid'];
+      return result.data?['newParamPage']['pageid'];
     } //else
   }
 
