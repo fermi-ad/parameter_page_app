@@ -46,7 +46,7 @@ class GraphQLParameterPageService extends ParameterPageService {
       return Future.error(
           "The request to create a parameter page returned an exception.  Please refer to the developer console for more detail.");
     } else {
-      return result.data?['addTitle']['pageid'];
+      return result.data?['newParamPage']['pageid'];
     } //else
   }
 

@@ -64,4 +64,29 @@ void main() {
       expect(page.subPageDirectory[0], "");
     });
   });
+
+  group('createPage', () {
+    test(
+        "createPage(withTitle:), returns a page ID and the new titles shows up in the directory",
+        () async {
+      // Given a GraphQLParameterPageService
+      await dotenv.load(fileName: ".env");
+      final service = GraphQLParameterPageService();
+
+      // When I create a new page
+      final newPageId =
+          await service.createPage(withTitle: "createPage test 1");
+
+      // Then I receive a page ID
+      expect(newPageId, isNotNull);
+
+      // ... and the new title shows up in the directory
+      List<String> newTitles = <String>[];
+      await service.fetchPages(
+          onFailure: (message) => newTitles = [],
+          onSuccess: (List<dynamic> titles) => newTitles =
+              titles.map((element) => element['title'] as String).toList());
+      expect(newTitles, contains("createPage test 1"));
+    });
+  });
 }
