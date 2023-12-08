@@ -16,14 +16,14 @@ class MockParameterPageService extends ParameterPageService {
   bool renamePageShouldFail = false;
 
   @override
-  Future<void> fetchPages(
-      {required Function(String errorMessage) onFailure,
-      required Function(List pageTitles) onSuccess}) async {
-    Timer(
-        const Duration(seconds: 1),
-        fetchPagesShouldFail
-            ? () => onFailure.call("Fake fetchPages error message.")
-            : () => onSuccess.call(_testPages));
+  Future<List<dynamic>> fetchPages() async {
+    return Future<List<dynamic>>.delayed(const Duration(seconds: 1), () {
+      if (fetchPagesShouldFail) {
+        throw Exception("Fake fetchPages error message.");
+      } else {
+        return _testPages;
+      }
+    });
   }
 
   @override

@@ -12,11 +12,7 @@ void main() {
       final service = GraphQLParameterPageService();
 
       // When I request a list of parameter pages
-      List<dynamic> pageTitles = [];
-      await service.fetchPages(
-          onFailure: (String message) =>
-              throw Exception("fetchPages failure: $message"),
-          onSuccess: (List<dynamic> titles) => pageTitles = titles);
+      List<dynamic> pageTitles = await service.fetchPages();
 
       // Then at least 2 titles have been returned
       expect(pageTitles.length, greaterThan(1));
@@ -81,12 +77,12 @@ void main() {
       expect(newPageId, isNotNull);
 
       // ... and the new title shows up in the directory
-      List<String> newTitles = <String>[];
-      await service.fetchPages(
-          onFailure: (message) => newTitles = [],
-          onSuccess: (List<dynamic> titles) => newTitles =
-              titles.map((element) => element['title'] as String).toList());
+      List<String> newTitles = await service.fetchPages().then(
+          (List<dynamic> pages) =>
+              pages.map((page) => page['title'] as String).toList());
       expect(newTitles, contains("createPage test 1"));
+
+      // Clean-up
     });
   });
 }
