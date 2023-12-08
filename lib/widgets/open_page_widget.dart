@@ -118,9 +118,9 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
         _titles = newTitles;
         _errorMessage = null;
       });
-    }).catchError((errorMessage) {
+    }).catchError((error) {
       setState(() {
-        _errorMessage = errorMessage;
+        _errorMessage = error.toString();
       });
     });
   }
