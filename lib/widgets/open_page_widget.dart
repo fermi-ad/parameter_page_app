@@ -113,14 +113,14 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
       _errorMessage = null;
     });
 
-    widget.service.fetchPages(onFailure: (String errorMessage) {
-      setState(() {
-        _errorMessage = errorMessage;
-      });
-    }, onSuccess: (List<dynamic> newTitles) {
+    await widget.service.fetchPages().then((List<dynamic> newTitles) {
       setState(() {
         _titles = newTitles;
         _errorMessage = null;
+      });
+    }).catchError((error) {
+      setState(() {
+        _errorMessage = error.toString();
       });
     });
   }

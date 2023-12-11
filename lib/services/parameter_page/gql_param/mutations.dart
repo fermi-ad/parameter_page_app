@@ -1,12 +1,11 @@
-
-///******************************************************************** 
+///********************************************************************
 /// name: add_defaultpagetree
 /// input: parameter page title (string)
 /// output: one complete tree structures of single default branche and values
-///         of one parameter page, including tree title, one sub-system, 
+///         of one parameter page, including tree title, one sub-system,
 ///         one tab, one sub-page, no user entries.
 ///**********************************************************************
-const add_defaultpagetree = r"""
+const addDefaultPageTree = r"""
              mutation newDefaultPageTree($title: String!) {
                 newParamPage(title: $title) {
                   pageid
@@ -29,7 +28,6 @@ const add_defaultpagetree = r"""
                 }
               }
           """;
-
 
 ///******************************************************************** 
 /// name: add_subsysBranch
@@ -112,12 +110,11 @@ const add_subpage = r"""
             }
 """;
 
-
-///******************************************************************** 
+///********************************************************************
 /// name: merge_entries
 ///      (use to merge(insert, update or mix of both) those new/updated entries only,
 ///      IF transaction deletion is included, run delete_entries first)
-/// input: list of entries(one or more) to merge, format of 
+/// input: list of entries(one or more) to merge, format of
 ///        [
 ///            {
 ///              tabpageid, -- same subpage id for all entries in one list
@@ -149,10 +146,10 @@ const add_subpage = r"""
 ///              "type_new": "Comments"
 ///            }
 ///          ]
-/// output: transaction return code and message. 
+/// output: transaction return code and message.
 ///          (return code, 1: succeed, -1: failed)
 ///**********************************************************************
-const merge_entries =  r"""
+const mergeEntries = r"""
           mutation mergeEntries($mrgEntries: [PageEntryUpdInput]!) {
             mergePageEntries(mrgEntries: $mrgEntries) {
               code
@@ -161,8 +158,7 @@ const merge_entries =  r"""
           }
       """;
 
-
-///******************************************************************** 
+///********************************************************************
 /// name: delete_entries
 /// input: list of entry Ids(one or more), format of [{tabpageid, position},{...}]
 ///        e.g.
@@ -170,10 +166,10 @@ const merge_entries =  r"""
 ///            {"tabpageid": "21", "position": 33},
 ///            {"tabpageid": "21", "position": 43}
 ///          ]
-/// output: transaction return code and message. 
+/// output: transaction return code and message.
 ///          (return code, 1: succeed, -1: failed)
 ///**********************************************************************
-const delete_entries =  r"""
+const deleteEntries = r"""
           mutation deleteEntries($delEntries: [EntryIdInput]!) {
             deletePageEntries(delEntries: $delEntries) {
               code
@@ -181,7 +177,6 @@ const delete_entries =  r"""
             }
           }
 """;
-
 
 ///******************************************************************** 
 /// name: update_subjectTitles
@@ -214,7 +209,6 @@ const update_subjectTitles = r"""
             }
 
 """;
-
 
 ///******************************************************************** 
 /// name: delete_subjects

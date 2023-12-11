@@ -81,14 +81,14 @@ void main() {
           id: "99",
           title: "New Page",
           queryResult: {
-            "sub-systems": [
+            "sub_systems": [
               {
                 "id": "1",
                 "title": "Sub-system One",
                 "tabs": [
                   {
                     "title": "Tab 1",
-                    "sub-pages": [
+                    "sub_pages": [
                       {
                         "id": "1",
                         "title": "Sub-Page One",
@@ -120,7 +120,7 @@ void main() {
                   },
                   {
                     "title": "Tab 2",
-                    "sub-pages": [
+                    "sub_pages": [
                       {
                         "id": "1",
                         "title": "Sub-Page One",
@@ -138,7 +138,7 @@ void main() {
                   },
                   {
                     "title": "Tab 3",
-                    "sub-pages": [
+                    "sub_pages": [
                       {"id": "1", "title": "", "entries": []}
                     ]
                   }
@@ -151,7 +151,7 @@ void main() {
                   {
                     "id": "200",
                     "title": "Tab 1",
-                    "sub-pages": [
+                    "sub_pages": [
                       {
                         "id": "1000",
                         "title": "",
@@ -208,13 +208,13 @@ void main() {
         () {
       // Given a queryResult which contains one tab named "AAA"
       final queryResult = {
-        "sub-systems": [
+        "sub_systems": [
           {
             "title": "Sub-system 1",
             "tabs": [
               {
                 "title": "AAA",
-                "sub-pages": [
+                "sub_pages": [
                   {
                     "id": "1",
                     "title": "",

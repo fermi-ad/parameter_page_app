@@ -398,12 +398,12 @@ Future<void> navigateSubPageUsingDirectory(WidgetTester tester,
 }
 
 Future<void> createNewSubPage(WidgetTester tester) async {
-  await tester.tap(find.text("New Sub-Page"));
+  await tester.tap(find.byKey(const Key("subpagenavigation-newsubpage")));
   await tester.pumpAndSettle();
 }
 
 Future<void> deleteSubPage(WidgetTester tester, {bool? confirm}) async {
-  await tester.tap(find.text('Delete Sub-Page'));
+  await tester.tap(find.byKey(const Key("subpagenavigation-deletesubpage")));
   await tester.pumpAndSettle();
 
   if (confirm != null) {

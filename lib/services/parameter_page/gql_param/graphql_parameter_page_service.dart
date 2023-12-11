@@ -1,4 +1,5 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:logger/logger.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/parameter_page/gql_param/mutations.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
@@ -8,29 +9,29 @@ import 'queries.dart';
 
 class GraphQLParameterPageService extends ParameterPageService {
   @override
-  Future<void> fetchPages(
-      {required Function(String) onFailure,
-      required Function(List<dynamic>) onSuccess}) async {
+  Future<List<dynamic>> fetchPages() async {
     final QueryOptions options = QueryOptions(
-      document: gql(query_allpagetitles),
+      document: gql(queryAllPageTitles),
       fetchPolicy: FetchPolicy.noCache,
     );
 
     final QueryResult result = await client.value.query(options);
 
     if (result.hasException) {
-      onFailure.call("GraphQL error: ${result.exception}");
+      Logger().e(result.exception);
+      return Future.error(
+          "The request to fetch a list of parameter pages returned an exception.  Please refer to the developer console for more detail.");
     } else {
       List<dynamic> titles = [];
-      titles = result.data?['allTitles'];
-      onSuccess.call(titles);
+      titles = result.data?['allPageTitles'];
+      return titles;
     }
   }
 
   @override
   Future<String> createPage({required String withTitle}) async {
     final QueryOptions options = QueryOptions(
-      document: gql(add_defaultpagetree),
+      document: gql(addDefaultPageTree),
       variables: <String, dynamic>{
         'title': withTitle,
       },
@@ -39,9 +40,11 @@ class GraphQLParameterPageService extends ParameterPageService {
     final QueryResult result = await client.value.query(options);
 
     if (result.hasException) {
-      return Future.error("GraphQL Error: ${result.exception}");
+      Logger().e(result.exception);
+      return Future.error(
+          "The request to create a parameter page returned an exception.  Please refer to the developer console for more detail.");
     } else {
-      return result.data?['addTitle']['pageid'];
+      return result.data?['newParamPage']['pageid'];
     } //else
   }
 
@@ -50,7 +53,7 @@ class GraphQLParameterPageService extends ParameterPageService {
       {required String withPageId,
       required Function(String errorMessage) onFailure,
       required Function() onSuccess}) async {
-        /*
+    /*
     final QueryOptions options = QueryOptions(
       document: gql(deletepagetitle),
       variables: <String, dynamic>{
@@ -62,7 +65,9 @@ class GraphQLParameterPageService extends ParameterPageService {
     //final dynamic data = result.data;
 
     if (result.hasException) {
-      onFailure.call("GraphQL Error: ${result.exception}");
+      Logger().e(result.exception);
+      onFailure.call(
+          "The request to delete a parameter page returned an exception.  Please refer to the developer console for more detail.");
     } else {
       onSuccess.call();
     } //else
@@ -90,7 +95,9 @@ class GraphQLParameterPageService extends ParameterPageService {
     final QueryResult result = await client.value.query(options);
 
     if (result.hasException) {
-      return Future.error("GraphQL exception - ${result.exception}.");
+      Logger().e(result.exception);
+      return Future.error(
+          "The request to add entries to a parameter page returned an exception.  Please refer to the developer console for more detail.");
     } else {
       onSuccess.call();
     }
@@ -113,7 +120,9 @@ class GraphQLParameterPageService extends ParameterPageService {
     final QueryResult result = await client.value.query(options);
 
     if (result.hasException) {
-      return Future.error("GraphQL exception - ${result.exception}.");
+      Logger().e(result.exception);
+      return Future.error(
+          "The request to delete old page entries returned an exception.  Please refer to the developer console for more detail.");
     }
   }
 
@@ -145,7 +154,7 @@ class GraphQLParameterPageService extends ParameterPageService {
   @override
   Future<String> renamePage(
       {required String id, required String newTitle}) async {
-        /*
+    /*
     final QueryOptions options = QueryOptions(
       document: gql(updatepagetitle),
       variables: <String, dynamic>{'pageid': id, 'title': newTitle},
@@ -154,18 +163,20 @@ class GraphQLParameterPageService extends ParameterPageService {
     final QueryResult result = await client.value.query(options);
 
     if (result.hasException) {
-      return Future.error("GraphQL exception - ${result.exception}.");
+      Logger().e(result.exception);
+      return Future.error(
+          "The request to rename a parameter page returned an exception.  Please refer to the developer console for more detail.");
     } else {
       return newTitle;
     }
     */
-     return Future.error("renamePage not implemented");
+    return Future.error("renamePage not implemented");
   }
 
   @override
   Future<ParameterPage> fetchPage({required String id}) async {
     final QueryOptions options = QueryOptions(
-      document: gql(query_onepagetree),
+      document: gql(queryOnePageTree),
       variables: <String, dynamic>{'pageid': id},
       fetchPolicy: FetchPolicy.noCache,
     );
@@ -173,12 +184,14 @@ class GraphQLParameterPageService extends ParameterPageService {
     final QueryResult result = await client.value.query(options);
 
     if (result.hasException) {
-      return Future.error("GraphQL Error: ${result.exception}");
+      Logger().e(result.exception);
+      return Future.error(
+          "The request to fetch a parameter page returned an exception.  Please refer to the developer console for more detail.");
     } else {
       return ParameterPage.fromQueryResult(
-          id: result.data?['onePage']['pageid'],
-          title: result.data?['onePage']['title'],
-          queryResult: result.data?['onePage']['entries']);
+          id: result.data?['onePageTree']['pageid'],
+          title: result.data?['onePageTree']['title'],
+          queryResult: result.data?['onePageTree']);
     }
   }
 }

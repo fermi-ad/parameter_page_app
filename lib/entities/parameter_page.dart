@@ -479,7 +479,7 @@ class ParameterPage {
       Map<String, dynamic> queryResult) {
     List<_SubSystem> ret = [];
 
-    for (final subSystemData in queryResult["sub-systems"]) {
+    for (final subSystemData in queryResult["sub_systems"]) {
       ret.add(_SubSystem(
           title: subSystemData["title"],
           tabs: _buildTabsFromQueryResult(subSystemData["tabs"])));
@@ -488,20 +488,19 @@ class ParameterPage {
     return ret;
   }
 
-  List<_Tab> _buildTabsFromQueryResult(List<Map<String, dynamic>> tabData) {
+  List<_Tab> _buildTabsFromQueryResult(List<dynamic> tabData) {
     List<_Tab> ret = [];
 
     for (final tabData in tabData) {
       ret.add(_Tab(
           title: tabData["title"],
-          subPages: _buildSubPagesFromQueryResult(tabData["sub-pages"])));
+          subPages: _buildSubPagesFromQueryResult(tabData["sub_pages"])));
     }
 
     return ret;
   }
 
-  List<_SubPage> _buildSubPagesFromQueryResult(
-      List<Map<String, dynamic>> subPageData) {
+  List<_SubPage> _buildSubPagesFromQueryResult(List<dynamic> subPageData) {
     List<_SubPage> ret = [];
 
     for (final subPageData in subPageData) {
@@ -518,8 +517,7 @@ class ParameterPage {
     return ret;
   }
 
-  List<PageEntry> _buildEntriesListFromQueryResult(
-      List<Map<String, dynamic>> queryResult) {
+  List<PageEntry> _buildEntriesListFromQueryResult(List<dynamic> queryResult) {
     List<PageEntry> ret = [];
     for (final entryData in queryResult) {
       ret.add(_hydratePageEntry(from: entryData));
