@@ -132,7 +132,7 @@ void main() {
 
       // When I save the new page
       final newPageId = await service.createPage(withTitle: page.title);
-      await service.savePage(id: newPageId, page: page, onSuccess: () {});
+      await service.savePage(id: newPageId, page: page);
 
       // ... and read it back
       ParameterPage readBackPage = await service.fetchPage(id: newPageId);
@@ -155,14 +155,14 @@ void main() {
       // ... and a new ParameterPage with entries on the default sub-page
       ParameterPage page = ParameterPage();
       page.enableEditing();
-      page.title = "Update Persisted Page Test 4";
+      page.title = "Update Persisted Page Test 10";
       page.add(CommentEntry("test entry #1"));
       page.add(CommentEntry("test entry #2"));
       page.add(CommentEntry("test entry #3"));
 
       // ... that has already been persisted
       final pageId = await service.createPage(withTitle: page.title);
-      await service.savePage(id: pageId, page: page, onSuccess: () {});
+      await service.savePage(id: pageId, page: page);
 
       // ... and I have made changes to the page
       page.removeEntry(at: 2);
@@ -172,7 +172,7 @@ void main() {
       page.add(CommentEntry("should only have 2 comments now"));
 
       // When I save the page
-      await service.savePage(id: pageId, page: page, onSuccess: () {});
+      await service.savePage(id: pageId, page: page);
 
       // ... and read it back
       ParameterPage readBackPage = await service.fetchPage(id: pageId);

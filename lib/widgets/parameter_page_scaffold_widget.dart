@@ -384,14 +384,12 @@ class _ParameterPageScaffoldWidgetState
       required ParameterPage page,
       required Function onSuccess}) async {
     widget.pageService
-        .savePage(
-            id: pageId,
-            page: page,
-            onSuccess: () {
-              page.commit();
-              onSuccess.call();
-            })
-        .onError(_handleSaveError);
+        .savePage(id: pageId, page: page)
+        .onError(_handleSaveError)
+        .then((_) {
+      page.commit();
+      onSuccess.call();
+    });
   }
 
   _loadPage({required String pageId}) {

@@ -77,9 +77,7 @@ class GraphQLParameterPageService extends ParameterPageService {
 
   @override
   Future<void> savePage(
-      {required String id,
-      required ParameterPage page,
-      required Function() onSuccess}) async {
+      {required String id, required ParameterPage page}) async {
     String subPageId;
     try {
       final persistedPageStructure = await _fetchPageStructure(forPageId: id);
@@ -118,7 +116,6 @@ class GraphQLParameterPageService extends ParameterPageService {
         return Future.error(
             "The request to add entries to a parameter page returned an exception.  Please refer to the developer console for more detail.");
       }
-      onSuccess.call();
     }
   }
 
