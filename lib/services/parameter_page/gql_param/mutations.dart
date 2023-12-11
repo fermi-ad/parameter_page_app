@@ -29,19 +29,19 @@ const addDefaultPageTree = r"""
               }
           """;
 
-///******************************************************************** 
+///********************************************************************
 /// name: add_subsysBranch
 /// input: subsys title, seqnum, parent_ParampageId
-///       e.g. 
+///       e.g.
 ///            {
 ///              "title": "M3 Line",
 ///              "seqnum": 3,
 ///              "subsysid": 226
 ///            }
-/// output: one new subsys with subsysId, title, seqnum and its default tab 
-///         and subpage. 
+/// output: one new subsys with subsysId, title, seqnum and its default tab
+///         and subpage.
 ///**********************************************************************
-const add_subsysBranch = r"""
+const addSubSysBranch = r"""
            mutation newSubsysBranch($title: String!, $seqnum: Int!, $pageid: ID!) {
               newSubsysBranch(title: $title, seqnum: $seqnum, pageid: $pageid) {
                 subsysid
@@ -61,19 +61,18 @@ const add_subsysBranch = r"""
             }
 """;
 
-
-///******************************************************************** 
+///********************************************************************
 /// name: add_tabBranch
 /// input: tab title, seqnum, parent_subsysId,
-///       e.g. 
+///       e.g.
 ///            {
 ///              "title": "some tab",
 ///              "seqnum": 2,
 ///              "subsysid": 12
 ///            }
-/// output: one new tab with tabId, title, seqnum and its default subpage 
+/// output: one new tab with tabId, title, seqnum and its default subpage
 ///**********************************************************************
-const add_tabBranch = r"""
+const addTabBranch = r"""
           mutation newTabBranch($title: String!, $seqnum: Int!, $subsysid: ID!) {
               newSubsysTabBranch(title: $title, seqnum: $seqnum, subsysid: $subsysid) {
                 subsystabid
@@ -88,19 +87,18 @@ const add_tabBranch = r"""
             }
 """;
 
-
-///******************************************************************** 
+///********************************************************************
 /// name: add_subpage
-/// input: subpage title, seqnum, parent_tabId 
-///       e.g. 
+/// input: subpage title, seqnum, parent_tabId
+///       e.g.
 ///            {
 ///                "title": "subpage2",
 ///                "seqnum": 2,
 ///                "subsystabid": 42
 ///              }
-/// output: one new subpage with subpageId, title, seqnum 
+/// output: one new subpage with subpageId, title, seqnum
 ///**********************************************************************
-const add_subpage = r"""
+const addSubPage = r"""
          mutation newTabPage($title: String, $seqnum: Int!, $subsystabid: ID!) {
               newTabPage(title: $title, seqnum: $seqnum, subsystabid: $subsystabid) {
                 tabpageid
@@ -178,17 +176,17 @@ const deleteEntries = r"""
           }
 """;
 
-///******************************************************************** 
+///********************************************************************
 /// name: update_subjectTitles
-/// input: list of titles(one or more) of same subject type, format of 
+/// input: list of titles(one or more) of same subject type, format of
 ///       {subjecttype, [{subjectId1, title1},{...}]}
-///       e.g. 
+///       e.g.
 ///         {
 ///            "subjType": "tab",
 ///             "subjTitles": [
 ///                {
 ///                  "subjectid": 7,
-///                  "title": "new tab 1",                 
+///                  "title": "new tab 1",
 ///                },
 ///                {
 ///                  "subjectid": 26,
@@ -197,10 +195,10 @@ const deleteEntries = r"""
 ///              ]
 ///            }
 ///         acceptable subject types: parampage, subsys, tab, subpage
-/// output: transaction return code and message. 
+/// output: transaction return code and message.
 ///          (return code, 1: succeed, -1: failed)
 ///**********************************************************************
-const update_subjectTitles = r"""
+const updateSubjectTitles = r"""
             mutation updateSubjTtitle($subjType: SubjectType!, $subjTitles: [SubjectTitle]!) {
               updateSubjectTitles(subj_type: $subjType, subj_titles: $subjTitles) {
                 code
@@ -210,20 +208,20 @@ const update_subjectTitles = r"""
 
 """;
 
-///******************************************************************** 
+///********************************************************************
 /// name: delete_subjects
-/// input: list of Ids(one or more) of same subject type, format of 
+/// input: list of Ids(one or more) of same subject type, format of
 ///       {subjecttype, [Id1, Id2,...]}
-///       e.g. 
-///         {  
+///       e.g.
+///         {
 ///           "subjType": "subpage",
 ///            "subjIds": [48,49]
 ///          }
 ///         acceptable subject types: parampage, subsys, tab, subpage
-/// output: transaction return code and message. 
+/// output: transaction return code and message.
 ///          (return code, 1: succeed, -1: failed)
 ///**********************************************************************
-const delete_subjects = r"""
+const deleteSubjects = r"""
             mutation deleteSubjects($subjType: SubjectType!, $subjIds: [ID]!) {
                 deleteSubjects(subj_type: $subjType, subj_Ids: $subjIds) {
                   code
@@ -231,4 +229,3 @@ const delete_subjects = r"""
                 }
               }
 """;
-
