@@ -163,19 +163,6 @@ class GraphQLParameterPageService extends ParameterPageService {
     }
   }
 
-/*
-  List<Map<String, dynamic>> _generateDeleteEntryList(
-      {required ParameterPage from}) {
-    List<Map<String, dynamic>> ret = [];
-    for (PageEntry entry in from.entriesAsList()) {
-      if (entry.id != null) {
-        ret.add({"entryid": entry.id});
-      }
-    }
-    return ret;
-  }
-*/
-
   List<Map<String, dynamic>> _generateEntryMergeList(
       {required String subPageId, required ParameterPage from}) {
     int n = 0;
