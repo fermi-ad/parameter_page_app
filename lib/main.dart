@@ -44,6 +44,7 @@ void main() async {
   mockDPMService!.enablePeriodSettingStream();
 
   mockParameterPageService = MockParameterPageService();
+  mockParameterPageService!.savePageShouldFail = true;
 
   mockUserDeviceService = MockUserDeviceService();
 

@@ -295,7 +295,7 @@ class _ParameterPageScaffoldWidgetState
     });
   }
 
-  Future<void> _handleSaveError(error, stackTrace) async {
+  FutureOr<Null> _handleSaveError(error, stackTrace) async {
     setState(() {
       _persistenceState = PagePersistenceState.unsavedError;
     });
@@ -383,13 +383,10 @@ class _ParameterPageScaffoldWidgetState
       {required String pageId,
       required ParameterPage page,
       required Function onSuccess}) async {
-    widget.pageService
-        .savePage(id: pageId, page: page)
-        .onError(_handleSaveError)
-        .then((_) {
+    widget.pageService.savePage(id: pageId, page: page).then((_) {
       page.commit();
       onSuccess.call();
-    });
+    }).onError(_handleSaveError);
   }
 
   _loadPage({required String pageId}) {
