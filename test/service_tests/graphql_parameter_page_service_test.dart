@@ -183,5 +183,51 @@ void main() {
       expect(entries[0].entryText(), "the saved page");
       expect(entries[1].entryText(), "should only have 2 comments now");
     });
+
+    test(
+        'savePage(..) a new ParameterPage with multiple sub-pages, persists the changes properly',
+        () async {
+      // Given a GraphQLParameterPageService
+      await dotenv.load(fileName: ".env");
+      final service = GraphQLParameterPageService();
+
+      // ... and a new ParameterPage with three sub-pages each populated with entries
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.title = "Save Multiple Sub-pages Test 2";
+      page.add(CommentEntry("test entry on sub-page 1"));
+      page.createSubPage();
+      page.add(CommentEntry("test entry on sub-page 2"));
+      page.add(CommentEntry("test entry #2 on sub-page 2"));
+      page.createSubPage();
+      page.add(CommentEntry("test entry on sub-page 3"));
+      page.add(CommentEntry("test entry #2 on sub-page 3"));
+      page.add(CommentEntry("test entry #2 on sub-page 3"));
+
+      // When I save the page
+      final pageId = await service.createPage(withTitle: page.title);
+      await service.savePage(id: pageId, page: page);
+
+      // ... and read it back
+      ParameterPage readBackPage = await service.fetchPage(id: pageId);
+
+      // Then the read-back page has the persisted changes
+      List<PageEntry> entries = readBackPage.entriesAsList();
+      expect(entries.length, 1);
+      expect(entries[0].entryText(), "test entry on sub-page 1");
+
+      page.incrementSubPage();
+      entries = readBackPage.entriesAsList();
+      expect(entries.length, 2);
+      expect(entries[0].entryText(), "test entry on sub-page 2");
+      expect(entries[1].entryText(), "test entry #2 on sub-page 2");
+
+      page.incrementSubPage();
+      entries = readBackPage.entriesAsList();
+      expect(entries.length, 3);
+      expect(entries[0].entryText(), "test entry on sub-page 3");
+      expect(entries[1].entryText(), "test entry #2 on sub-page 3");
+      expect(entries[2].entryText(), "test entry #3 on sub-page 3");
+    });
   });
 }
