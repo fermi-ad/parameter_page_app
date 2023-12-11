@@ -2,7 +2,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:parameter_page/entities/page_entry.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/parameter_page/gql_param/graphql_parameter_page_service.dart';
-import 'package:parameter_page/services/parameter_page/mock_parameter_page_service.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -128,7 +127,7 @@ void main() {
       // ... and a new ParameterPage with entries on the default sub-page
       ParameterPage page = ParameterPage();
       page.enableEditing();
-      page.title = "Save Page Test 1";
+      page.title = "Save Page Test 2";
       page.add(CommentEntry("test entry #1"));
 
       // When I save the new page

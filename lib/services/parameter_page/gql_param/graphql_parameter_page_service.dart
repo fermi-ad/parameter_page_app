@@ -80,16 +80,21 @@ class GraphQLParameterPageService extends ParameterPageService {
       {required String id,
       required ParameterPage page,
       required Function() onSuccess}) async {
-    /*
+/*
     try {
       await _deleteOldEntries(page);
     } catch (e) {
       return Future.error("savePage failure");
     }
+*/
+
+    final subPageId = await _fetchSubPageId(forPageId: id);
 
     final QueryOptions options = QueryOptions(
-      document: gql(addentrylist),
-      variables: {'newEntryList': _generateEntryList(pageId: id, from: page)},
+      document: gql(mergeEntries),
+      variables: {
+        'mrgEntries': _generateEntryMergeList(subPageId: subPageId, from: page)
+      },
     );
 
     final QueryResult result = await client.value.query(options);
@@ -99,10 +104,33 @@ class GraphQLParameterPageService extends ParameterPageService {
       return Future.error(
           "The request to add entries to a parameter page returned an exception.  Please refer to the developer console for more detail.");
     } else {
+      if (result.data?['code'] == -1) {
+        Logger().e(
+            "mrgEntries returned with a failure, message: ${result.data?["message"]}");
+        return Future.error(
+            "The request to add entries to a parameter page returned an exception.  Please refer to the developer console for more detail.");
+      }
       onSuccess.call();
     }
-    */
-    return Future.error("savePage not implemented");
+  }
+
+  Future<String> _fetchSubPageId({required String forPageId}) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(queryOnePageTree),
+      variables: <String, dynamic>{'pageid': forPageId},
+      fetchPolicy: FetchPolicy.noCache,
+    );
+
+    final QueryResult result = await client.value.query(options);
+
+    if (result.hasException) {
+      Logger().e(result.exception);
+      return Future.error(
+          "The request to fetch a parameter page returned an exception.  Please refer to the developer console for more detail.");
+    } else {
+      return result.data?['onePageTree']['sub_systems'][0]['tabs'][0]
+          ['sub_pages'][0]['tabpageid'];
+    }
   }
 
 /*
@@ -136,21 +164,22 @@ class GraphQLParameterPageService extends ParameterPageService {
     }
     return ret;
   }
+*/
 
-  List<Map<String, dynamic>> _generateEntryList(
-      {required String pageId, required ParameterPage from}) {
+  List<Map<String, dynamic>> _generateEntryMergeList(
+      {required String subPageId, required ParameterPage from}) {
     int n = 0;
     return from
         .entriesAsList()
         .map((entry) => {
-              'pageid': pageId,
+              'tabpageid': subPageId,
               'position': n += 1,
-              'text': entry.entryText(),
-              'type': entry.typeAsString
+              'text_new': entry.entryText(),
+              'type_new': entry.typeAsString
             })
         .toList();
   }
-*/
+
   @override
   Future<String> renamePage(
       {required String id, required String newTitle}) async {
