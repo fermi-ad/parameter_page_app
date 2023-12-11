@@ -87,6 +87,7 @@ class GraphQLParameterPageService extends ParameterPageService {
           inPageStructure: persistedPageStructure,
           withPage: page);
     } catch (e) {
+      Logger().e(e.toString());
       return Future.error("savePage failure");
     }
   }
@@ -95,18 +96,34 @@ class GraphQLParameterPageService extends ParameterPageService {
       {required String forPageId,
       required Map<String, dynamic> inPageStructure,
       required ParameterPage withPage}) async {
-    final subPageId = inPageStructure['sub_systems'][0]['tabs'][0]['sub_pages']
-        [0]['tabpageid'];
+    final persistedSubPages =
+        inPageStructure['sub_systems'][0]['tabs'][0]['sub_pages'];
 
-    List<int> deleteFromPositions = [];
-    for (final entry in inPageStructure['sub_systems'][0]['tabs'][0]
-        ['sub_pages'][0]['entries']) {
-      deleteFromPositions.add(entry['position']);
+    for (int subPageIndex = 0;
+        subPageIndex != withPage.subPageCount(forTab: "Tab 1");
+        subPageIndex++) {
+      if (subPageIndex >= persistedSubPages.length) {
+        throw Exception("not supported: create a sub-page");
+      }
+
+      final subPage = persistedSubPages[subPageIndex];
+
+      final subPageId = subPage['tabpageid'];
+
+      List<int> deleteFromPositions = [];
+      for (final entry in subPage['entries']) {
+        deleteFromPositions.add(entry['position']);
+      }
+      await _deleteEntries(
+          fromSubPage: subPageId, atPositions: deleteFromPositions);
+
+      await _saveEntries(
+          id: subPageId,
+          newEntries: withPage.entriesAsListFrom(
+              tab: "Tab 1", subPage: subPageIndex + 1));
+
+      subPageIndex++;
     }
-    await _deleteEntries(
-        fromSubPage: subPageId, atPositions: deleteFromPositions);
-
-    await _saveEntries(id: subPageId, newEntries: withPage.entriesAsList());
   }
 
   Future<void> _saveEntries(
