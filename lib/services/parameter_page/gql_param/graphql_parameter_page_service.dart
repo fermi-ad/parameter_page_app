@@ -80,15 +80,23 @@ class GraphQLParameterPageService extends ParameterPageService {
       {required String id,
       required ParameterPage page,
       required Function() onSuccess}) async {
-/*
+    String subPageId;
     try {
-      await _deleteOldEntries(page);
+      final persistedPageStructure = await _fetchPageStructure(forPageId: id);
+
+      subPageId = persistedPageStructure['sub_systems'][0]['tabs'][0]
+          ['sub_pages'][0]['tabpageid'];
+
+      List<int> deleteFromPositions = [];
+      for (final entry in persistedPageStructure['sub_systems'][0]['tabs'][0]
+          ['sub_pages'][0]['entries']) {
+        deleteFromPositions.add(entry['position']);
+      }
+      await _deleteEntries(
+          fromSubPage: subPageId, atPositions: deleteFromPositions);
     } catch (e) {
       return Future.error("savePage failure");
     }
-*/
-
-    final subPageId = await _fetchSubPageId(forPageId: id);
 
     final QueryOptions options = QueryOptions(
       document: gql(mergeEntries),
@@ -114,7 +122,33 @@ class GraphQLParameterPageService extends ParameterPageService {
     }
   }
 
-  Future<String> _fetchSubPageId({required String forPageId}) async {
+  Future<void> _deleteEntries(
+      {required String fromSubPage, required List<int> atPositions}) async {
+    if (atPositions.isEmpty) {
+      return;
+    }
+
+    final QueryOptions options = QueryOptions(
+      document: gql(deleteEntries),
+      variables: {
+        'delEntries': atPositions
+            .map((int position) =>
+                {"tabpageid": fromSubPage, "position": position})
+            .toList()
+      },
+    );
+
+    final QueryResult result = await client.value.query(options);
+
+    if (result.hasException) {
+      Logger().e(result.exception);
+      return Future.error(
+          "The request to delete old page entries returned an exception.  Please refer to the developer console for more detail.");
+    }
+  }
+
+  Future<Map<String, dynamic>> _fetchPageStructure(
+      {required String forPageId}) async {
     final QueryOptions options = QueryOptions(
       document: gql(queryOnePageTree),
       variables: <String, dynamic>{'pageid': forPageId},
@@ -128,32 +162,11 @@ class GraphQLParameterPageService extends ParameterPageService {
       return Future.error(
           "The request to fetch a parameter page returned an exception.  Please refer to the developer console for more detail.");
     } else {
-      return result.data?['onePageTree']['sub_systems'][0]['tabs'][0]
-          ['sub_pages'][0]['tabpageid'];
+      return result.data?['onePageTree'];
     }
   }
 
 /*
-  Future<void> _deleteOldEntries(ParameterPage page) async {
-    var list = _generateDeleteEntryList(from: page);
-    if (list.isEmpty) {
-      return;
-    }
-
-    final QueryOptions options = QueryOptions(
-      document: gql(deleteentrylist),
-      variables: {'delEntryList': list},
-    );
-
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      Logger().e(result.exception);
-      return Future.error(
-          "The request to delete old page entries returned an exception.  Please refer to the developer console for more detail.");
-    }
-  }
-
   List<Map<String, dynamic>> _generateDeleteEntryList(
       {required ParameterPage from}) {
     List<Map<String, dynamic>> ret = [];
