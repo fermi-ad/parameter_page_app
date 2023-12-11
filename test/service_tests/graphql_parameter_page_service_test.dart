@@ -144,5 +144,44 @@ void main() {
 
       // Clean-up
     });
+
+    test(
+        'savePage(..) an existing ParameterPage with a single sub-page, persists the changes properly',
+        () async {
+      // Given a GraphQLParameterPageService
+      await dotenv.load(fileName: ".env");
+      final service = GraphQLParameterPageService();
+
+      // ... and a new ParameterPage with entries on the default sub-page
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.title = "Update Persisted Page Test 3";
+      page.add(CommentEntry("test entry #1"));
+      page.add(CommentEntry("test entry #2"));
+      page.add(CommentEntry("test entry #3"));
+
+      // ... that has already been persisted
+      final pageId = await service.createPage(withTitle: page.title);
+      await service.savePage(id: pageId, page: page, onSuccess: () {});
+
+      // ... and I have made changes to the page
+      page.removeEntry(at: 2);
+      page.removeEntry(at: 1);
+      page.removeEntry(at: 0);
+      page.add(CommentEntry("the saved page"));
+      page.add(CommentEntry("should only have 2 comments now"));
+
+      // When I save the page
+      await service.savePage(id: pageId, page: page, onSuccess: () {});
+
+      // ... and read it back
+      ParameterPage readBackPage = await service.fetchPage(id: pageId);
+
+      // Then the read-back page has the persisted changes
+      final entries = readBackPage.entriesAsList();
+      expect(entries.length, 2);
+      expect(entries[0].entryText(), "the saved page");
+      expect(entries[1].entryText(), "should only have 2 comments now");
+    });
   });
 }
