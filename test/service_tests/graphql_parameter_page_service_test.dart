@@ -127,7 +127,7 @@ void main() {
       // ... and a new ParameterPage with entries on the default sub-page
       ParameterPage page = ParameterPage();
       page.enableEditing();
-      page.title = "Save Page Test 2";
+      page.title = "Save Page Test 3";
       page.add(CommentEntry("test entry #1"));
 
       // When I save the new page
@@ -155,7 +155,7 @@ void main() {
       // ... and a new ParameterPage with entries on the default sub-page
       ParameterPage page = ParameterPage();
       page.enableEditing();
-      page.title = "Update Persisted Page Test 10";
+      page.title = "Update Persisted Page Test 16";
       page.add(CommentEntry("test entry #1"));
       page.add(CommentEntry("test entry #2"));
       page.add(CommentEntry("test entry #3"));

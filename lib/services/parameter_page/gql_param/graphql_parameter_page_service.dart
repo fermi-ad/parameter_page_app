@@ -1,5 +1,6 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:logger/logger.dart';
+import 'package:parameter_page/entities/page_entry.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/parameter_page/gql_param/mutations.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
@@ -78,29 +79,42 @@ class GraphQLParameterPageService extends ParameterPageService {
   @override
   Future<void> savePage(
       {required String id, required ParameterPage page}) async {
-    String subPageId;
     try {
       final persistedPageStructure = await _fetchPageStructure(forPageId: id);
 
-      subPageId = persistedPageStructure['sub_systems'][0]['tabs'][0]
-          ['sub_pages'][0]['tabpageid'];
-
-      List<int> deleteFromPositions = [];
-      for (final entry in persistedPageStructure['sub_systems'][0]['tabs'][0]
-          ['sub_pages'][0]['entries']) {
-        deleteFromPositions.add(entry['position']);
-      }
-      await _deleteEntries(
-          fromSubPage: subPageId, atPositions: deleteFromPositions);
+      await _updateEachSubPage(
+          forPageId: id,
+          inPageStructure: persistedPageStructure,
+          withPage: page);
     } catch (e) {
       return Future.error("savePage failure");
     }
+  }
 
+  Future<void> _updateEachSubPage(
+      {required String forPageId,
+      required Map<String, dynamic> inPageStructure,
+      required ParameterPage withPage}) async {
+    final subPageId = inPageStructure['sub_systems'][0]['tabs'][0]['sub_pages']
+        [0]['tabpageid'];
+
+    List<int> deleteFromPositions = [];
+    for (final entry in inPageStructure['sub_systems'][0]['tabs'][0]
+        ['sub_pages'][0]['entries']) {
+      deleteFromPositions.add(entry['position']);
+    }
+    await _deleteEntries(
+        fromSubPage: subPageId, atPositions: deleteFromPositions);
+
+    await _saveEntries(id: subPageId, newEntries: withPage.entriesAsList());
+  }
+
+  Future<void> _saveEntries(
+      {required String id, required List<PageEntry> newEntries}) async {
+    final mergeList = _generateEntryMergeList(subPageId: id, from: newEntries);
     final QueryOptions options = QueryOptions(
       document: gql(mergeEntries),
-      variables: {
-        'mrgEntries': _generateEntryMergeList(subPageId: subPageId, from: page)
-      },
+      variables: {'mrgEntries': mergeList},
     );
 
     final QueryResult result = await client.value.query(options);
@@ -164,10 +178,9 @@ class GraphQLParameterPageService extends ParameterPageService {
   }
 
   List<Map<String, dynamic>> _generateEntryMergeList(
-      {required String subPageId, required ParameterPage from}) {
+      {required String subPageId, required List<PageEntry> from}) {
     int n = 0;
     return from
-        .entriesAsList()
         .map((entry) => {
               'tabpageid': subPageId,
               'position': n += 1,
