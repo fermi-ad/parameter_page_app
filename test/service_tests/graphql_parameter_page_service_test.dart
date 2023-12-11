@@ -1,6 +1,8 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:parameter_page/entities/page_entry.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/parameter_page/gql_param/graphql_parameter_page_service.dart';
+import 'package:parameter_page/services/parameter_page/mock_parameter_page_service.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -112,6 +114,34 @@ void main() {
       // ... and the tab has 1 sub-page
       expect(readBackPage.numberOfSubPages, 1);
       expect(readBackPage.subPageTitle, "");
+
+      // Clean-up
+    });
+
+    test(
+        'savePage(..) a new ParameterPage with a single sub-page, persists the page properly',
+        () async {
+      // Given a GraphQLParameterPageService
+      await dotenv.load(fileName: ".env");
+      final service = GraphQLParameterPageService();
+
+      // ... and a new ParameterPage with entries on the default sub-page
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.title = "Save Page Test 1";
+      page.add(CommentEntry("test entry #1"));
+
+      // When I save the new page
+      final newPageId = await service.createPage(withTitle: page.title);
+      await service.savePage(id: newPageId, page: page, onSuccess: () {});
+
+      // ... and read it back
+      ParameterPage readBackPage = await service.fetchPage(id: newPageId);
+
+      // Then the read-back page has the same entries that were persisted
+      final entries = readBackPage.entriesAsList();
+      expect(entries.length, 1);
+      expect(entries[0].entryText(), "test entry #1");
 
       // Clean-up
     });
