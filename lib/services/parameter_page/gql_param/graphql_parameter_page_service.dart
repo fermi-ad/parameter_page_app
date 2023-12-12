@@ -104,6 +104,28 @@ class GraphQLParameterPageService extends ParameterPageService {
     }
   }
 
+  @override
+  Future<String> renamePage(
+      {required String id, required String newTitle}) async {
+    /*
+    final QueryOptions options = QueryOptions(
+      document: gql(updatepagetitle),
+      variables: <String, dynamic>{'pageid': id, 'title': newTitle},
+    );
+
+    final QueryResult result = await client.value.query(options);
+
+    if (result.hasException) {
+      Logger().e(result.exception);
+      return Future.error(
+          "The request to rename a parameter page returned an exception.  Please refer to the developer console for more detail.");
+    } else {
+      return newTitle;
+    }
+    */
+    return Future.error("renamePage not implemented");
+  }
+
   Future<void> _updateEachSubPage(
       {required String forPageId,
       required Map<String, dynamic> inPageStructure,
@@ -243,27 +265,5 @@ class GraphQLParameterPageService extends ParameterPageService {
               'type_new': entry.typeAsString
             })
         .toList();
-  }
-
-  @override
-  Future<String> renamePage(
-      {required String id, required String newTitle}) async {
-    /*
-    final QueryOptions options = QueryOptions(
-      document: gql(updatepagetitle),
-      variables: <String, dynamic>{'pageid': id, 'title': newTitle},
-    );
-
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      Logger().e(result.exception);
-      return Future.error(
-          "The request to rename a parameter page returned an exception.  Please refer to the developer console for more detail.");
-    } else {
-      return newTitle;
-    }
-    */
-    return Future.error("renamePage not implemented");
   }
 }
