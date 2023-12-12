@@ -194,15 +194,18 @@ void main() {
       // ... and a new ParameterPage with three sub-pages each populated with entries
       ParameterPage page = ParameterPage();
       page.enableEditing();
-      page.title = "Save Multiple Sub-pages Test 33";
+      page.title = "Save Multiple Sub-pages Test 34";
       page.add(CommentEntry("test entry on sub-page 1"));
+      page.subPageTitle = "Sub Page One";
       page.createSubPage();
       page.add(CommentEntry("test entry on sub-page 2"));
       page.add(CommentEntry("test entry #2 on sub-page 2"));
+      page.subPageTitle = "Sub Page Two";
       page.createSubPage();
       page.add(CommentEntry("test entry on sub-page 3"));
       page.add(CommentEntry("test entry #2 on sub-page 3"));
       page.add(CommentEntry("test entry #3 on sub-page 3"));
+      page.subPageTitle = "Sub Page Three";
 
       // When I save the page
       final pageId = await service.createPage(withTitle: page.title);
@@ -217,6 +220,7 @@ void main() {
       expect(readBackPage.subPageIndex, 1);
       expect(entries.length, 1);
       expect(entries[0].entryText(), "test entry on sub-page 1");
+      expect(readBackPage.subPageTitle, "Sub Page One");
 
       readBackPage.incrementSubPage();
       entries = readBackPage.entriesAsList();
@@ -224,6 +228,7 @@ void main() {
       expect(entries.length, 2);
       expect(entries[0].entryText(), "test entry on sub-page 2");
       expect(entries[1].entryText(), "test entry #2 on sub-page 2");
+      expect(readBackPage.subPageTitle, "Sub Page Two");
 
       readBackPage.incrementSubPage();
       entries = readBackPage.entriesAsList();
@@ -232,6 +237,7 @@ void main() {
       expect(entries[0].entryText(), "test entry on sub-page 3");
       expect(entries[1].entryText(), "test entry #2 on sub-page 3");
       expect(entries[2].entryText(), "test entry #3 on sub-page 3");
+      expect(readBackPage.subPageTitle, "Sub Page Three");
     });
   });
 }
