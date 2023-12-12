@@ -95,9 +95,7 @@ class GraphQLParameterPageService extends ParameterPageService {
       final persistedPageStructure = await _fetchPageStructure(forPageId: id);
 
       await _updateEachSubPage(
-          forPageId: id,
-          inPageStructure: persistedPageStructure,
-          withPage: page);
+          inPageStructure: persistedPageStructure, withPage: page);
     } catch (e) {
       Logger().e(e.toString());
       return Future.error("savePage failure");
@@ -127,8 +125,7 @@ class GraphQLParameterPageService extends ParameterPageService {
   }
 
   Future<void> _updateEachSubPage(
-      {required String forPageId,
-      required Map<String, dynamic> inPageStructure,
+      {required Map<String, dynamic> inPageStructure,
       required ParameterPage withPage}) async {
     final persistedSubPages =
         inPageStructure['sub_systems'][0]['tabs'][0]['sub_pages'];
