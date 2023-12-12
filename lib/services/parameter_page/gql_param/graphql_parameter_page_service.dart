@@ -31,24 +31,14 @@ class GraphQLParameterPageService extends ParameterPageService {
 
   @override
   Future<ParameterPage> fetchPage({required String id}) async {
-    final QueryOptions options = QueryOptions(
-      document: gql(queryOnePageTree),
-      variables: <String, dynamic>{'pageid': id},
-      fetchPolicy: FetchPolicy.noCache,
-    );
-
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      Logger().e(result.exception);
-      return Future.error(
-          "The request to fetch a parameter page returned an exception.  Please refer to the developer console for more detail.");
-    } else {
+    return _fetchPageStructure(forPageId: id).catchError((error) {
+      return error;
+    }).then((pageStructure) {
       return ParameterPage.fromQueryResult(
-          id: result.data?['onePageTree']['pageid'],
-          title: result.data?['onePageTree']['title'],
-          queryResult: result.data?['onePageTree']);
-    }
+          id: pageStructure['pageid'],
+          title: pageStructure['title'],
+          queryResult: pageStructure);
+    });
   }
 
   @override
