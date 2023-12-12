@@ -30,6 +30,28 @@ class GraphQLParameterPageService extends ParameterPageService {
   }
 
   @override
+  Future<ParameterPage> fetchPage({required String id}) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(queryOnePageTree),
+      variables: <String, dynamic>{'pageid': id},
+      fetchPolicy: FetchPolicy.noCache,
+    );
+
+    final QueryResult result = await client.value.query(options);
+
+    if (result.hasException) {
+      Logger().e(result.exception);
+      return Future.error(
+          "The request to fetch a parameter page returned an exception.  Please refer to the developer console for more detail.");
+    } else {
+      return ParameterPage.fromQueryResult(
+          id: result.data?['onePageTree']['pageid'],
+          title: result.data?['onePageTree']['title'],
+          queryResult: result.data?['onePageTree']);
+    }
+  }
+
+  @override
   Future<String> createPage({required String withTitle}) async {
     final QueryOptions options = QueryOptions(
       document: gql(addDefaultPageTree),
@@ -110,6 +132,7 @@ class GraphQLParameterPageService extends ParameterPageService {
             atIndex: subPageIndex);
       } else {
         subPageId = persistedSubPages[subPageIndex]['tabpageid'];
+
         _deleteAllEntries(
             fromSubPageId: subPageId,
             entries: persistedSubPages[subPageIndex]['entries']);
@@ -252,27 +275,5 @@ class GraphQLParameterPageService extends ParameterPageService {
     }
     */
     return Future.error("renamePage not implemented");
-  }
-
-  @override
-  Future<ParameterPage> fetchPage({required String id}) async {
-    final QueryOptions options = QueryOptions(
-      document: gql(queryOnePageTree),
-      variables: <String, dynamic>{'pageid': id},
-      fetchPolicy: FetchPolicy.noCache,
-    );
-
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      Logger().e(result.exception);
-      return Future.error(
-          "The request to fetch a parameter page returned an exception.  Please refer to the developer console for more detail.");
-    } else {
-      return ParameterPage.fromQueryResult(
-          id: result.data?['onePageTree']['pageid'],
-          title: result.data?['onePageTree']['title'],
-          queryResult: result.data?['onePageTree']);
-    }
   }
 }
