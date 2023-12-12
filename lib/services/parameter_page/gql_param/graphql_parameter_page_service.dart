@@ -154,6 +154,43 @@ class GraphQLParameterPageService extends ParameterPageService {
           id: subPageId,
           newEntries: withPage.entriesAsListFrom(
               tab: "Tab 1", subPage: subPageIndex + 1));
+
+      final subPageTitle =
+          withPage.subPageTitleFor(tab: forTab, subPageIndex: subPageIndex + 1);
+      final subPageTitleShouldBeUpdated =
+          subPageIndex >= persistedSubPages.length ||
+              subPageTitle != persistedSubPages[subPageIndex]['title'];
+      if (subPageTitleShouldBeUpdated) {
+        await _renameSubPage(id: subPageId, newTitle: subPageTitle);
+      }
+    }
+  }
+
+  Future<void> _renameSubPage(
+      {required String id, required String newTitle}) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(updateSubjectTitles),
+      variables: {
+        'subjType': "subpage",
+        'subjTitles': [
+          {'subjectid': id, 'title': newTitle}
+        ]
+      },
+    );
+
+    final QueryResult result = await client.value.query(options);
+
+    if (result.hasException) {
+      Logger().e(result.exception);
+      return Future.error(
+          "The request to rename the sub-page returned an exception.  Please refer to the developer console for more detail.");
+    } else {
+      if (result.data?['code'] == -1) {
+        Logger().e(
+            "updateSubjectTitles returned with a failure, message: ${result.data?["message"]}");
+        return Future.error(
+            "The request to rename the sub-page returned an exception.  Please refer to the developer console for more detail.");
+      }
     }
   }
 
