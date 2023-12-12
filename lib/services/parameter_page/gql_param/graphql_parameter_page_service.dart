@@ -102,27 +102,47 @@ class GraphQLParameterPageService extends ParameterPageService {
     for (int subPageIndex = 0;
         subPageIndex != withPage.subPageCount(forTab: "Tab 1");
         subPageIndex++) {
+      String subPageId;
+
       if (subPageIndex >= persistedSubPages.length) {
-        throw Exception("not supported: create a sub-page");
+        subPageId = await _createANewSubPage(
+            onTab: inPageStructure['sub_systems'][0]['tabs'][0]['subsystabid'],
+            atIndex: subPageIndex);
+      } else {
+        final subPage = persistedSubPages[subPageIndex];
+
+        subPageId = subPage['tabpageid'];
+
+        List<int> deleteFromPositions = [];
+        for (final entry in subPage['entries']) {
+          deleteFromPositions.add(entry['position']);
+        }
+        await _deleteEntries(
+            fromSubPage: subPageId, atPositions: deleteFromPositions);
       }
-
-      final subPage = persistedSubPages[subPageIndex];
-
-      final subPageId = subPage['tabpageid'];
-
-      List<int> deleteFromPositions = [];
-      for (final entry in subPage['entries']) {
-        deleteFromPositions.add(entry['position']);
-      }
-      await _deleteEntries(
-          fromSubPage: subPageId, atPositions: deleteFromPositions);
 
       await _saveEntries(
           id: subPageId,
           newEntries: withPage.entriesAsListFrom(
               tab: "Tab 1", subPage: subPageIndex + 1));
+    }
+  }
 
-      subPageIndex++;
+  Future<String> _createANewSubPage(
+      {required String onTab, required int atIndex}) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(addSubPage),
+      variables: {'title': "", "seqnum": atIndex + 1, "subsystabid": onTab},
+    );
+
+    final QueryResult result = await client.value.query(options);
+
+    if (result.hasException) {
+      Logger().e(result.exception);
+      return Future.error(
+          "The request to add entries to a parameter page returned an exception.  Please refer to the developer console for more detail.");
+    } else {
+      return result.data!['newTabPage']['tabpageid'];
     }
   }
 

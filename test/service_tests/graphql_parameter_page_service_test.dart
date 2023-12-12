@@ -194,7 +194,7 @@ void main() {
       // ... and a new ParameterPage with three sub-pages each populated with entries
       ParameterPage page = ParameterPage();
       page.enableEditing();
-      page.title = "Save Multiple Sub-pages Test 7";
+      page.title = "Save Multiple Sub-pages Test 26";
       page.add(CommentEntry("test entry on sub-page 1"));
       page.createSubPage();
       page.add(CommentEntry("test entry on sub-page 2"));
@@ -202,7 +202,7 @@ void main() {
       page.createSubPage();
       page.add(CommentEntry("test entry on sub-page 3"));
       page.add(CommentEntry("test entry #2 on sub-page 3"));
-      page.add(CommentEntry("test entry #2 on sub-page 3"));
+      page.add(CommentEntry("test entry #3 on sub-page 3"));
 
       // When I save the page
       final pageId = await service.createPage(withTitle: page.title);
@@ -213,17 +213,21 @@ void main() {
 
       // Then the read-back page has the persisted changes
       List<PageEntry> entries = readBackPage.entriesAsList();
+      expect(readBackPage.subPageCount(forTab: "Tab 1"), 3);
+      expect(readBackPage.subPageIndex, 1);
       expect(entries.length, 1);
       expect(entries[0].entryText(), "test entry on sub-page 1");
 
-      page.incrementSubPage();
+      readBackPage.incrementSubPage();
       entries = readBackPage.entriesAsList();
+      expect(readBackPage.subPageIndex, 2);
       expect(entries.length, 2);
       expect(entries[0].entryText(), "test entry on sub-page 2");
       expect(entries[1].entryText(), "test entry #2 on sub-page 2");
 
-      page.incrementSubPage();
+      readBackPage.incrementSubPage();
       entries = readBackPage.entriesAsList();
+      expect(readBackPage.subPageIndex, 3);
       expect(entries.length, 3);
       expect(entries[0].entryText(), "test entry on sub-page 3");
       expect(entries[1].entryText(), "test entry #2 on sub-page 3");
