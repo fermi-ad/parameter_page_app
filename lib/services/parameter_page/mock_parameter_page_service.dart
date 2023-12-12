@@ -63,9 +63,7 @@ class MockParameterPageService extends ParameterPageService {
 
   @override
   Future<void> savePage(
-      {required String id,
-      required ParameterPage page,
-      required Function() onSuccess}) async {
+      {required String id, required ParameterPage page}) async {
     if (savePageShouldFail) {
       return Future.error("Fake savePage failure.");
     }
@@ -105,7 +103,7 @@ class MockParameterPageService extends ParameterPageService {
           .add({"title": tabTitle, "sub_pages": newSubPages});
     }
 
-    Timer(const Duration(seconds: 1), () => onSuccess.call());
+    return Future<void>.delayed(const Duration(seconds: 1), () {});
   }
 
   @override

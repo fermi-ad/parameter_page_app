@@ -1,5 +1,6 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:logger/logger.dart';
+import 'package:parameter_page/entities/page_entry.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/parameter_page/gql_param/mutations.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
@@ -26,6 +27,18 @@ class GraphQLParameterPageService extends ParameterPageService {
       titles = result.data?['allPageTitles'];
       return titles;
     }
+  }
+
+  @override
+  Future<ParameterPage> fetchPage({required String id}) async {
+    return _fetchPageStructure(forPageId: id).catchError((error) {
+      return error;
+    }).then((pageStructure) {
+      return ParameterPage.fromQueryResult(
+          id: pageStructure['pageid'],
+          title: pageStructure['title'],
+          queryResult: pageStructure);
+    });
   }
 
   @override
@@ -77,80 +90,23 @@ class GraphQLParameterPageService extends ParameterPageService {
 
   @override
   Future<void> savePage(
-      {required String id,
-      required ParameterPage page,
-      required Function() onSuccess}) async {
-    /*
+      {required String id, required ParameterPage page}) async {
     try {
-      await _deleteOldEntries(page);
+      final persistedPageStructure = await _fetchPageStructure(forPageId: id);
+
+      await _updateEachSubPage(
+          persistedTabId: persistedPageStructure['sub_systems'][0]['tabs'][0]
+              ['subsystabid'],
+          persistedSubPages: persistedPageStructure['sub_systems'][0]['tabs'][0]
+              ['sub_pages'],
+          withPage: page,
+          forTab: "Tab 1");
     } catch (e) {
+      Logger().e(e.toString());
       return Future.error("savePage failure");
     }
-
-    final QueryOptions options = QueryOptions(
-      document: gql(addentrylist),
-      variables: {'newEntryList': _generateEntryList(pageId: id, from: page)},
-    );
-
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      Logger().e(result.exception);
-      return Future.error(
-          "The request to add entries to a parameter page returned an exception.  Please refer to the developer console for more detail.");
-    } else {
-      onSuccess.call();
-    }
-    */
-    return Future.error("savePage not implemented");
   }
 
-/*
-  Future<void> _deleteOldEntries(ParameterPage page) async {
-    var list = _generateDeleteEntryList(from: page);
-    if (list.isEmpty) {
-      return;
-    }
-
-    final QueryOptions options = QueryOptions(
-      document: gql(deleteentrylist),
-      variables: {'delEntryList': list},
-    );
-
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      Logger().e(result.exception);
-      return Future.error(
-          "The request to delete old page entries returned an exception.  Please refer to the developer console for more detail.");
-    }
-  }
-
-  List<Map<String, dynamic>> _generateDeleteEntryList(
-      {required ParameterPage from}) {
-    List<Map<String, dynamic>> ret = [];
-    for (PageEntry entry in from.entriesAsList()) {
-      if (entry.id != null) {
-        ret.add({"entryid": entry.id});
-      }
-    }
-    return ret;
-  }
-
-  List<Map<String, dynamic>> _generateEntryList(
-      {required String pageId, required ParameterPage from}) {
-    int n = 0;
-    return from
-        .entriesAsList()
-        .map((entry) => {
-              'pageid': pageId,
-              'position': n += 1,
-              'text': entry.entryText(),
-              'type': entry.typeAsString
-            })
-        .toList();
-  }
-*/
   @override
   Future<String> renamePage(
       {required String id, required String newTitle}) async {
@@ -173,11 +129,154 @@ class GraphQLParameterPageService extends ParameterPageService {
     return Future.error("renamePage not implemented");
   }
 
-  @override
-  Future<ParameterPage> fetchPage({required String id}) async {
+  Future<void> _updateEachSubPage(
+      {required String persistedTabId,
+      required List<dynamic> persistedSubPages,
+      required ParameterPage withPage,
+      required String forTab}) async {
+    for (int subPageIndex = 0;
+        subPageIndex != withPage.subPageCount(forTab: forTab);
+        subPageIndex++) {
+      String subPageId;
+
+      if (subPageIndex >= persistedSubPages.length) {
+        subPageId = await _createANewSubPage(
+            onTab: persistedTabId, atIndex: subPageIndex);
+      } else {
+        subPageId = persistedSubPages[subPageIndex]['tabpageid'];
+
+        _deleteAllEntries(
+            fromSubPageId: subPageId,
+            entries: persistedSubPages[subPageIndex]['entries']);
+      }
+
+      await _saveEntries(
+          id: subPageId,
+          newEntries: withPage.entriesAsListFrom(
+              tab: "Tab 1", subPage: subPageIndex + 1));
+
+      final subPageTitle =
+          withPage.subPageTitleFor(tab: forTab, subPageIndex: subPageIndex + 1);
+      final subPageTitleShouldBeUpdated =
+          subPageIndex >= persistedSubPages.length ||
+              subPageTitle != persistedSubPages[subPageIndex]['title'];
+      if (subPageTitleShouldBeUpdated) {
+        await _renameSubPage(id: subPageId, newTitle: subPageTitle);
+      }
+    }
+  }
+
+  Future<void> _renameSubPage(
+      {required String id, required String newTitle}) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(updateSubjectTitles),
+      variables: {
+        'subjType': "subpage",
+        'subjTitles': [
+          {'subjectid': id, 'title': newTitle}
+        ]
+      },
+    );
+
+    final QueryResult result = await client.value.query(options);
+
+    if (result.hasException) {
+      Logger().e(result.exception);
+      return Future.error(
+          "The request to rename the sub-page returned an exception.  Please refer to the developer console for more detail.");
+    } else {
+      if (result.data?['code'] == -1) {
+        Logger().e(
+            "updateSubjectTitles returned with a failure, message: ${result.data?["message"]}");
+        return Future.error(
+            "The request to rename the sub-page returned an exception.  Please refer to the developer console for more detail.");
+      }
+    }
+  }
+
+  Future _deleteAllEntries(
+      {required String fromSubPageId, required List<dynamic> entries}) async {
+    List<int> deleteFromPositions = [];
+    for (final entry in entries) {
+      deleteFromPositions.add(entry['position']);
+    }
+
+    await _deleteEntries(
+        fromSubPage: fromSubPageId, atPositions: deleteFromPositions);
+  }
+
+  Future<String> _createANewSubPage(
+      {required String onTab, required int atIndex}) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(addSubPage),
+      variables: {'title': "", "seqnum": atIndex + 1, "subsystabid": onTab},
+    );
+
+    final QueryResult result = await client.value.query(options);
+
+    if (result.hasException) {
+      Logger().e(result.exception);
+      return Future.error(
+          "The request to add entries to a parameter page returned an exception.  Please refer to the developer console for more detail.");
+    } else {
+      return result.data!['newTabPage']['tabpageid'];
+    }
+  }
+
+  Future<void> _saveEntries(
+      {required String id, required List<PageEntry> newEntries}) async {
+    final mergeList = _generateEntryMergeList(subPageId: id, from: newEntries);
+    final QueryOptions options = QueryOptions(
+      document: gql(mergeEntries),
+      variables: {'mrgEntries': mergeList},
+    );
+
+    final QueryResult result = await client.value.query(options);
+
+    if (result.hasException) {
+      Logger().e(result.exception);
+      return Future.error(
+          "The request to add entries to a parameter page returned an exception.  Please refer to the developer console for more detail.");
+    } else {
+      if (result.data?['code'] == -1) {
+        Logger().e(
+            "mrgEntries returned with a failure, message: ${result.data?["message"]}");
+        return Future.error(
+            "The request to add entries to a parameter page returned an exception.  Please refer to the developer console for more detail.");
+      }
+    }
+  }
+
+  Future<void> _deleteEntries(
+      {required String fromSubPage, required List<int> atPositions}) async {
+    if (atPositions.isEmpty) {
+      return;
+    }
+
+    final QueryOptions options = QueryOptions(
+      document: gql(deleteEntries),
+      variables: {
+        'delEntries': atPositions
+            .map((int position) =>
+                {"tabpageid": fromSubPage, "position": position})
+            .toList()
+      },
+    );
+
+    final QueryResult result = await client.value.query(options);
+
+    if (result.hasException) {
+      Logger().e(result.exception);
+      return Future.error(
+          "The request to delete old page entries returned an exception.  Please refer to the developer console for more detail.");
+    }
+  }
+
+  Future<Map<String, dynamic>> _fetchPageStructure(
+      {required String forPageId}) async {
     final QueryOptions options = QueryOptions(
       document: gql(queryOnePageTree),
-      variables: <String, dynamic>{'pageid': id},
+      variables: <String, dynamic>{'pageid': forPageId},
       fetchPolicy: FetchPolicy.noCache,
     );
 
@@ -188,10 +287,20 @@ class GraphQLParameterPageService extends ParameterPageService {
       return Future.error(
           "The request to fetch a parameter page returned an exception.  Please refer to the developer console for more detail.");
     } else {
-      return ParameterPage.fromQueryResult(
-          id: result.data?['onePageTree']['pageid'],
-          title: result.data?['onePageTree']['title'],
-          queryResult: result.data?['onePageTree']);
+      return result.data?['onePageTree'];
     }
+  }
+
+  List<Map<String, dynamic>> _generateEntryMergeList(
+      {required String subPageId, required List<PageEntry> from}) {
+    int n = 0;
+    return from
+        .map((entry) => {
+              'tabpageid': subPageId,
+              'position': n += 1,
+              'text_new': entry.entryText(),
+              'type_new': entry.typeAsString
+            })
+        .toList();
   }
 }
