@@ -109,16 +109,10 @@ class GraphQLParameterPageService extends ParameterPageService {
             onTab: inPageStructure['sub_systems'][0]['tabs'][0]['subsystabid'],
             atIndex: subPageIndex);
       } else {
-        final subPage = persistedSubPages[subPageIndex];
-
-        subPageId = subPage['tabpageid'];
-
-        List<int> deleteFromPositions = [];
-        for (final entry in subPage['entries']) {
-          deleteFromPositions.add(entry['position']);
-        }
-        await _deleteEntries(
-            fromSubPage: subPageId, atPositions: deleteFromPositions);
+        subPageId = persistedSubPages[subPageIndex]['tabpageid'];
+        _deleteAllEntries(
+            fromSubPageId: subPageId,
+            entries: persistedSubPages[subPageIndex]['entries']);
       }
 
       await _saveEntries(
@@ -126,6 +120,17 @@ class GraphQLParameterPageService extends ParameterPageService {
           newEntries: withPage.entriesAsListFrom(
               tab: "Tab 1", subPage: subPageIndex + 1));
     }
+  }
+
+  Future _deleteAllEntries(
+      {required String fromSubPageId, required List<dynamic> entries}) async {
+    List<int> deleteFromPositions = [];
+    for (final entry in entries) {
+      deleteFromPositions.add(entry['position']);
+    }
+
+    await _deleteEntries(
+        fromSubPage: fromSubPageId, atPositions: deleteFromPositions);
   }
 
   Future<String> _createANewSubPage(

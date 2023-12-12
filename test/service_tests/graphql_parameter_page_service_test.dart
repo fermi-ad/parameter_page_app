@@ -194,7 +194,7 @@ void main() {
       // ... and a new ParameterPage with three sub-pages each populated with entries
       ParameterPage page = ParameterPage();
       page.enableEditing();
-      page.title = "Save Multiple Sub-pages Test 26";
+      page.title = "Save Multiple Sub-pages Test 28";
       page.add(CommentEntry("test entry on sub-page 1"));
       page.createSubPage();
       page.add(CommentEntry("test entry on sub-page 2"));
