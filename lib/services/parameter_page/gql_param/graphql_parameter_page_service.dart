@@ -69,7 +69,7 @@ class GraphQLParameterPageService extends ParameterPageService {
     final QueryOptions options = QueryOptions(
       document: gql(deleteSubjects),
       variables: <String, dynamic>{
-        'subj_type': 'parampage',
+        'subjType': 'parampage',
         'subjIds': [withPageId],
       },
     );

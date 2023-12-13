@@ -6,40 +6,6 @@ import 'package:parameter_page/services/parameter_page/parameter_page_service.da
 import 'package:test/test.dart';
 
 void main() {
-  Future<List<String>> findTestPageIds(
-      {required ParameterPageService using}) async {
-    final allPages = await using.fetchPages();
-
-    List<String> ret = [];
-    for (final page in allPages) {
-      final String pageTitle = page['title'] as String;
-      if (pageTitle.contains('***SERVICE TEST***')) {
-        ret.add(page['pageid']!);
-      }
-    }
-
-    return ret;
-  }
-
-  Future<void> deletePages(
-      {required ParameterPageService using,
-      required List<String> pageIds}) async {
-    for (final id in pageIds) {
-      await using.deletePage(
-          withPageId: id, onFailure: (error) {}, onSuccess: () {});
-    }
-  }
-
-  tearDownAll(() async {
-    await dotenv.load(fileName: ".env");
-    final service = GraphQLParameterPageService();
-
-    final pageIdsToDelete = await findTestPageIds(using: service);
-    if (pageIdsToDelete.isNotEmpty) {
-      await deletePages(using: service, pageIds: pageIdsToDelete);
-    }
-  });
-
   group('fetchPages', () {
     test("fetchPages, returns a non-empty list of parameter page titles",
         () async {
@@ -98,6 +64,9 @@ void main() {
   });
 
   group('createPage', () {
+    setUpAll(() => _deleteAllTestPages());
+    tearDownAll(() => _deleteAllTestPages());
+
     test(
         "createPage(withTitle:), returns a page ID and the new titles shows up in the directory",
         () async {
@@ -107,7 +76,7 @@ void main() {
 
       // When I create a new page
       final newPageId = await service.createPage(
-          withTitle: "***SERVICE TEST*** createPage test ");
+          withTitle: "***SERVICE TEST*** createPage test 7");
 
       // Then I receive a page ID
       expect(newPageId, isNotNull);
@@ -128,7 +97,7 @@ void main() {
       await dotenv.load(fileName: ".env");
       final service = GraphQLParameterPageService();
       final newPageId = await service.createPage(
-          withTitle: "***SERVICE TEST***  createPage structure test");
+          withTitle: "***SERVICE TEST***  createPage structure test 2");
 
       // When I read the page back
       ParameterPage readBackPage = await service.fetchPage(id: newPageId);
@@ -162,7 +131,7 @@ void main() {
       // ... and a new ParameterPage with entries on the default sub-page
       ParameterPage page = ParameterPage();
       page.enableEditing();
-      page.title = "***SERVICE TEST*** Save Page Test";
+      page.title = "***SERVICE TEST*** Save Page Test 2";
       page.add(CommentEntry("test entry #1"));
 
       // When I save the new page
@@ -190,7 +159,7 @@ void main() {
       // ... and a new ParameterPage with entries on the default sub-page
       ParameterPage page = ParameterPage();
       page.enableEditing();
-      page.title = "***SERVICE TEST*** Update Persisted Page Test";
+      page.title = "***SERVICE TEST*** Update Persisted Page Test 2";
       page.add(CommentEntry("test entry #1"));
       page.add(CommentEntry("test entry #2"));
       page.add(CommentEntry("test entry #3"));
@@ -229,7 +198,7 @@ void main() {
       // ... and a new ParameterPage with three sub-pages each populated with entries
       ParameterPage page = ParameterPage();
       page.enableEditing();
-      page.title = "***SERVICE TEST*** Save Multiple Sub-pages Test";
+      page.title = "***SERVICE TEST*** Save Multiple Sub-pages Test 2";
       page.add(CommentEntry("test entry on sub-page 1"));
       page.subPageTitle = "Sub Page One";
       page.createSubPage();
@@ -275,4 +244,38 @@ void main() {
       expect(readBackPage.subPageTitle, "Sub Page Three");
     });
   });
+}
+
+Future<void> _deleteAllTestPages() async {
+  await dotenv.load(fileName: ".env");
+  final service = GraphQLParameterPageService();
+
+  final pageIdsToDelete = await _findTestPageIds(using: service);
+  if (pageIdsToDelete.isNotEmpty) {
+    await _deletePages(using: service, pageIds: pageIdsToDelete);
+  }
+}
+
+Future<List<String>> _findTestPageIds(
+    {required ParameterPageService using}) async {
+  final allPages = await using.fetchPages();
+
+  List<String> ret = [];
+  for (final page in allPages) {
+    final String pageTitle = page['title'] as String;
+    if (pageTitle.contains('***SERVICE TEST***')) {
+      ret.add(page['pageid']!);
+    }
+  }
+
+  return ret;
+}
+
+Future<void> _deletePages(
+    {required ParameterPageService using,
+    required List<String> pageIds}) async {
+  for (final id in pageIds) {
+    await using.deletePage(
+        withPageId: id, onFailure: (error) {}, onSuccess: () {});
+  }
 }
