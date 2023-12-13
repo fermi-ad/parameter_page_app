@@ -2,9 +2,44 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:parameter_page/entities/page_entry.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/parameter_page/gql_param/graphql_parameter_page_service.dart';
+import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
 import 'package:test/test.dart';
 
 void main() {
+  Future<List<String>> findTestPageIds(
+      {required ParameterPageService using}) async {
+    final allPages = await using.fetchPages();
+
+    List<String> ret = [];
+    for (final page in allPages) {
+      final String pageTitle = page['title'] as String;
+      if (pageTitle.contains('***SERVICE TEST***')) {
+        ret.add(page['pageid']!);
+      }
+    }
+
+    return ret;
+  }
+
+  Future<void> deletePages(
+      {required ParameterPageService using,
+      required List<String> pageIds}) async {
+    for (final id in pageIds) {
+      await using.deletePage(
+          withPageId: id, onFailure: (error) {}, onSuccess: () {});
+    }
+  }
+
+  tearDownAll(() async {
+    await dotenv.load(fileName: ".env");
+    final service = GraphQLParameterPageService();
+
+    final pageIdsToDelete = await findTestPageIds(using: service);
+    if (pageIdsToDelete.isNotEmpty) {
+      await deletePages(using: service, pageIds: pageIdsToDelete);
+    }
+  });
+
   group('fetchPages', () {
     test("fetchPages, returns a non-empty list of parameter page titles",
         () async {
@@ -71,8 +106,8 @@ void main() {
       final service = GraphQLParameterPageService();
 
       // When I create a new page
-      final newPageId =
-          await service.createPage(withTitle: "createPage test 1");
+      final newPageId = await service.createPage(
+          withTitle: "***SERVICE TEST*** createPage test ");
 
       // Then I receive a page ID
       expect(newPageId, isNotNull);
@@ -92,8 +127,8 @@ void main() {
       // Given I have used GraphQLParameterPageService to create a new persistent parameter page
       await dotenv.load(fileName: ".env");
       final service = GraphQLParameterPageService();
-      final newPageId =
-          await service.createPage(withTitle: "createPage structure test 3");
+      final newPageId = await service.createPage(
+          withTitle: "***SERVICE TEST***  createPage structure test");
 
       // When I read the page back
       ParameterPage readBackPage = await service.fetchPage(id: newPageId);
@@ -127,7 +162,7 @@ void main() {
       // ... and a new ParameterPage with entries on the default sub-page
       ParameterPage page = ParameterPage();
       page.enableEditing();
-      page.title = "Save Page Test 3";
+      page.title = "***SERVICE TEST*** Save Page Test";
       page.add(CommentEntry("test entry #1"));
 
       // When I save the new page
@@ -155,7 +190,7 @@ void main() {
       // ... and a new ParameterPage with entries on the default sub-page
       ParameterPage page = ParameterPage();
       page.enableEditing();
-      page.title = "Update Persisted Page Test 16";
+      page.title = "***SERVICE TEST*** Update Persisted Page Test";
       page.add(CommentEntry("test entry #1"));
       page.add(CommentEntry("test entry #2"));
       page.add(CommentEntry("test entry #3"));
@@ -194,7 +229,7 @@ void main() {
       // ... and a new ParameterPage with three sub-pages each populated with entries
       ParameterPage page = ParameterPage();
       page.enableEditing();
-      page.title = "Save Multiple Sub-pages Test 39";
+      page.title = "***SERVICE TEST*** Save Multiple Sub-pages Test";
       page.add(CommentEntry("test entry on sub-page 1"));
       page.subPageTitle = "Sub Page One";
       page.createSubPage();
