@@ -76,7 +76,7 @@ void main() {
 
       // When I create a new page
       final newPageId = await service.createPage(
-          withTitle: "***SERVICE TEST*** createPage test 8");
+          withTitle: "***SERVICE TEST*** createPage test");
 
       // Then I receive a page ID
       expect(newPageId, isNotNull);
@@ -242,6 +242,71 @@ void main() {
       expect(entries[0].entryText(), "test entry on sub-page 3");
       expect(entries[1].entryText(), "test entry #2 on sub-page 3");
       expect(entries[2].entryText(), "test entry #3 on sub-page 3");
+      expect(readBackPage.subPageTitle, "Sub Page Three");
+    });
+
+    test(
+        'savePage(..) an existing ParameterPage with multiple sub-pages, persists the changes properly',
+        () async {
+      // Given a GraphQLParameterPageService
+      await dotenv.load(fileName: ".env");
+      final service = GraphQLParameterPageService();
+
+      // ... and a new ParameterPage with three sub-pages each populated with entries
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.title =
+          "***SERVICE TEST*** Save Existing Page w/ Multiple Sub-pages Test";
+      page.add(CommentEntry("original test entry on sub-page 1"));
+      page.subPageTitle = "Sub Page One";
+      page.createSubPage();
+      page.add(CommentEntry("original test entry on sub-page 2"));
+      page.add(CommentEntry("original test entry #2 on sub-page 2"));
+      page.subPageTitle = "Sub Page Two";
+      page.createSubPage();
+      page.add(CommentEntry("original test entry on sub-page 3"));
+      page.add(CommentEntry("original test entry #2 on sub-page 3"));
+      page.add(CommentEntry("original test entry #3 on sub-page 3"));
+      page.subPageTitle = "Sub Page Three";
+
+      // ... and the page has been persisted already
+      final pageId = await service.createPage(withTitle: page.title);
+      await service.savePage(id: pageId, page: page);
+
+      // When I make changes to the page
+      page.switchSubPage(to: 1);
+      page.subPageTitle = "First Sub-page";
+      page.removeEntry(at: 0);
+      page.add(CommentEntry("new test entry on first sub-page"));
+      page.add(CommentEntry("additional test entry on first sub-page"));
+      page.switchSubPage(to: 2);
+      page.deleteSubPage();
+      page.switchSubPage(to: 2);
+      page.add(CommentEntry("fourth test entry on sub-page 3"));
+
+      // ... and save them
+      await service.savePage(id: pageId, page: page);
+
+      // ... and read the page back
+      ParameterPage readBackPage = await service.fetchPage(id: pageId);
+
+      // Then the read-back page has the persisted changes
+      List<PageEntry> entries = readBackPage.entriesAsList();
+      expect(readBackPage.subPageCount(forTab: "Tab 1"), 2);
+      expect(readBackPage.subPageIndex, 1);
+      expect(entries.length, 2);
+      expect(entries[0].entryText(), "new test entry on first sub-page");
+      expect(entries[1].entryText(), "additional test entry on first sub-page");
+      expect(readBackPage.subPageTitle, "First Sub-page");
+
+      readBackPage.incrementSubPage();
+      entries = readBackPage.entriesAsList();
+      expect(readBackPage.subPageIndex, 2);
+      expect(entries.length, 4);
+      expect(entries[0].entryText(), "test entry on sub-page 3");
+      expect(entries[1].entryText(), "test entry #2 on sub-page 3");
+      expect(entries[2].entryText(), "test entry #3 on sub-page 3");
+      expect(entries[3].entryText(), "fourth test entry on sub-page 3");
       expect(readBackPage.subPageTitle, "Sub Page Three");
     });
   });
