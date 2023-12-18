@@ -76,7 +76,7 @@ void main() {
 
       // When I create a new page
       final newPageId = await service.createPage(
-          withTitle: "***SERVICE TEST*** createPage test 7");
+          withTitle: "***SERVICE TEST*** createPage test 8");
 
       // Then I receive a page ID
       expect(newPageId, isNotNull);
@@ -97,13 +97,14 @@ void main() {
       await dotenv.load(fileName: ".env");
       final service = GraphQLParameterPageService();
       final newPageId = await service.createPage(
-          withTitle: "***SERVICE TEST***  createPage structure test 2");
+          withTitle: "***SERVICE TEST*** createPage structure test 3");
 
       // When I read the page back
       ParameterPage readBackPage = await service.fetchPage(id: newPageId);
 
       // Then the title matches what we requested
-      expect(readBackPage.title, "createPage structure test 3");
+      expect(
+          readBackPage.title, "***SERVICE TEST*** createPage structure test 3");
 
       // ... and the page has 1 sub-system
       expect(readBackPage.subSystemTitles.length, 1);
@@ -131,7 +132,7 @@ void main() {
       // ... and a new ParameterPage with entries on the default sub-page
       ParameterPage page = ParameterPage();
       page.enableEditing();
-      page.title = "***SERVICE TEST*** Save Page Test 2";
+      page.title = "***SERVICE TEST*** Save Page Test 3";
       page.add(CommentEntry("test entry #1"));
 
       // When I save the new page
@@ -159,7 +160,7 @@ void main() {
       // ... and a new ParameterPage with entries on the default sub-page
       ParameterPage page = ParameterPage();
       page.enableEditing();
-      page.title = "***SERVICE TEST*** Update Persisted Page Test 2";
+      page.title = "***SERVICE TEST*** Update Persisted Page Test 3";
       page.add(CommentEntry("test entry #1"));
       page.add(CommentEntry("test entry #2"));
       page.add(CommentEntry("test entry #3"));
@@ -198,7 +199,7 @@ void main() {
       // ... and a new ParameterPage with three sub-pages each populated with entries
       ParameterPage page = ParameterPage();
       page.enableEditing();
-      page.title = "***SERVICE TEST*** Save Multiple Sub-pages Test 2";
+      page.title = "***SERVICE TEST*** Save Multiple Sub-pages Test 3";
       page.add(CommentEntry("test entry on sub-page 1"));
       page.subPageTitle = "Sub Page One";
       page.createSubPage();

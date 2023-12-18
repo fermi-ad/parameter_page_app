@@ -57,6 +57,9 @@ class MockDpmService implements ACSysServiceAPI {
                   max: "82.00"),
               basicStatus: const DeviceInfoBasicStatus(
                   onOffProperty: BasicStatusProperty(
+                      invert: false,
+                      maskVal: 1,
+                      matchVal: 1,
                       character0: ".",
                       color0: StatusColor.green,
                       character1: "*",
@@ -87,21 +90,33 @@ class MockDpmService implements ACSysServiceAPI {
                   max: "82.00"),
               basicStatus: const DeviceInfoBasicStatus(
                   onOffProperty: BasicStatusProperty(
+                      invert: false,
+                      maskVal: 1,
+                      matchVal: 1,
                       character0: ".",
                       color0: StatusColor.green,
                       character1: "*",
                       color1: StatusColor.red),
                   readyTrippedProperty: BasicStatusProperty(
+                      invert: false,
+                      maskVal: 1,
+                      matchVal: 1,
                       character0: ".",
                       color0: StatusColor.green,
                       character1: "T",
                       color1: StatusColor.red),
                   remoteLocalProperty: BasicStatusProperty(
+                      invert: false,
+                      maskVal: 1,
+                      matchVal: 1,
                       character0: ".",
                       color0: StatusColor.blue,
                       character1: "L",
                       color1: StatusColor.blue),
                   positiveNegativeProperty: BasicStatusProperty(
+                      invert: false,
+                      maskVal: 1,
+                      matchVal: 1,
                       character0: "*",
                       color0: StatusColor.blue,
                       character1: "T",

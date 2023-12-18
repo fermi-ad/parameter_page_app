@@ -67,10 +67,9 @@ class GraphQLParameterPageService extends ParameterPageService {
       required Function(String errorMessage) onFailure,
       required Function() onSuccess}) async {
     final QueryOptions options = QueryOptions(
-      document: gql(deleteSubjects),
+      document: gql(removeTree),
       variables: <String, dynamic>{
-        'subjType': 'parampage',
-        'subjIds': [withPageId],
+        'treeid': withPageId,
       },
     );
 
