@@ -229,3 +229,9 @@ const deleteSubjects = r"""
                 }
               }
 """;
+
+const removeTree = r"""
+            mutation removeTree($treeid: ID!) {
+              removeTree(treeid: $treeid)
+            }
+""";

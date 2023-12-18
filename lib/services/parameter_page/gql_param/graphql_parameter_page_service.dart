@@ -66,16 +66,14 @@ class GraphQLParameterPageService extends ParameterPageService {
       {required String withPageId,
       required Function(String errorMessage) onFailure,
       required Function() onSuccess}) async {
-    /*
     final QueryOptions options = QueryOptions(
-      document: gql(deletepagetitle),
+      document: gql(removeTree),
       variables: <String, dynamic>{
-        'pageid': withPageId,
+        'treeid': withPageId,
       },
     );
 
     final QueryResult result = await client.value.query(options);
-    //final dynamic data = result.data;
 
     if (result.hasException) {
       Logger().e(result.exception);
@@ -84,8 +82,6 @@ class GraphQLParameterPageService extends ParameterPageService {
     } else {
       onSuccess.call();
     } //else
-    */
-    return Future.error("deletePage not implemented");
   }
 
   @override
