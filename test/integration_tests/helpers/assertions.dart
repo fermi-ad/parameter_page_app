@@ -608,7 +608,7 @@ void assertSubSystemDeleteDialog({required bool isVisible}) {
 void assertSettings({required bool areEnabled}) {
   final widgetFinder = find.byKey(const Key("settings-permission"));
 
-  final disabledTextFinder = find.text("Disabled");
+  final disabledTextFinder = find.text("Settings Disabled");
 
   final disabledIndicatorFinder =
       find.byKey(const Key("settings-permission-indicator-disabled"));
