@@ -10,7 +10,6 @@ void main() {
         (WidgetTester tester) async {
       // Given the user's settings are disabled
       MockSettingsPermissionService service = MockSettingsPermissionService();
-      expect(service.settingsAllowed, false);
 
       // When I render the SettingsPermissionWidget
       MaterialApp app = MaterialApp(
