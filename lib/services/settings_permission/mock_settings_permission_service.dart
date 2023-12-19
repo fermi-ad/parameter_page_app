@@ -3,8 +3,12 @@ import 'package:parameter_page/services/settings_permission/settings_permission_
 class MockSettingsPermissionService implements SettingsPermissionService {
   @override
   bool get settingsAllowed {
-    return false;
+    return _mockSettingsPermission;
   }
 
-  void enableMockSettings() {}
+  void enableMockSettings() {
+    _mockSettingsPermission = true;
+  }
+
+  bool _mockSettingsPermission = false;
 }
