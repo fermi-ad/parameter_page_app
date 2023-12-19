@@ -604,3 +604,18 @@ void assertSubSystemDeleteDialog({required bool isVisible}) {
   expect(find.byKey(const Key("subsystem-confirm-delete-dialog")),
       isVisible ? findsOneWidget : findsNothing);
 }
+
+void assertSettings({required bool areEnabled}) {
+  final widgetFinder = find.byKey(const Key("settings-permission"));
+
+  final disabledTextFinder = find.text("Disabled");
+
+  final disabledIndicatorFinder =
+      find.byKey(const Key("settings-permission-indicator-disabled"));
+
+  expect(find.descendant(of: widgetFinder, matching: disabledTextFinder),
+      areEnabled ? findsNothing : findsOneWidget);
+
+  expect(find.descendant(of: widgetFinder, matching: disabledIndicatorFinder),
+      areEnabled ? findsNothing : findsOneWidget);
+}

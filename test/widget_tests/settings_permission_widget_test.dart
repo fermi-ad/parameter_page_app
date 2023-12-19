@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/services/settings_permission/mock_settings_permission_service.dart';
 import 'package:parameter_page/widgets/settings_permission_widget.dart';
 
+import '../integration_tests/helpers/assertions.dart';
+
 void main() {
   group("SettingsPermissionWidget", () {
     testWidgets(
@@ -17,22 +19,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // Then the widget is showing that settings are disabled
-      _assertSettings(areEnabled: false);
+      assertSettings(areEnabled: false);
     });
   });
-}
-
-void _assertSettings({required bool areEnabled}) {
-  final widgetFinder = find.byKey(const Key("settings-permission"));
-
-  final disabledTextFinder = find.text("Disabled");
-
-  final disabledIndicatorFinder =
-      find.byKey(const Key("settings-permission-indicator-disabled"));
-
-  expect(find.descendant(of: widgetFinder, matching: disabledTextFinder),
-      areEnabled ? findsNothing : findsOneWidget);
-
-  expect(find.descendant(of: widgetFinder, matching: disabledIndicatorFinder),
-      areEnabled ? findsNothing : findsOneWidget);
 }
