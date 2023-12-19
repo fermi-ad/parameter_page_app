@@ -18,7 +18,10 @@ class SettingsPermissionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(key: const Key("settings-permission"));
+    return const Row(key: Key("settings-permission"), children: [
+      Text("Disabled"),
+      Icon(key: Key("settings-permission-indicator-disabled"), Icons.circle)
+    ]);
   }
 }
 
