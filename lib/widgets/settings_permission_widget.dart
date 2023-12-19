@@ -11,7 +11,7 @@ class SettingsPermissionWidget extends StatelessWidget {
     final settingsAreAllowed = service.settingsAllowed;
 
     return Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 10.0),
         child: Row(key: const Key("settings-permission"), children: [
           settingsAreAllowed
               ? const Icon(
