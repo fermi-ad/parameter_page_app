@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:parameter_page/services/settings_permission/mock_settings_permission_service.dart';
 import 'package:parameter_page/services/settings_permission/settings_permission_service.dart';
-
-class MockSettingsPermissionService implements SettingsPermissionService {
-  @override
-  bool get settingsAllowed {
-    return false;
-  }
-}
 
 class SettingsPermissionWidget extends StatelessWidget {
   const SettingsPermissionWidget(
