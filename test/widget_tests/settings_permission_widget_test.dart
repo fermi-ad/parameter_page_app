@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-abstract class SettingsPermissionService {
-  bool get settingsAllowed;
-}
+import 'package:parameter_page/services/settings_permission/settings_permission_service.dart';
 
 class MockSettingsPermissionService implements SettingsPermissionService {
   @override
