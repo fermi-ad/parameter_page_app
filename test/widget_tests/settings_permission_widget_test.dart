@@ -21,5 +21,21 @@ void main() {
       // Then the widget is showing that settings are disabled
       assertSettings(areEnabled: false);
     });
+
+    testWidgets(
+        'Settings are enabled, indicator shows that settings are enabled',
+        (WidgetTester tester) async {
+      // Given the user's settings are already enabled
+      MockSettingsPermissionService service = MockSettingsPermissionService();
+      service.enableMockSettings();
+
+      // When I render the SettingsPermissionWidget
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SettingsPermissionWidget(service: service)));
+      await tester.pumpWidget(app);
+
+      // Then the widget is showing that settings are enabled
+      assertSettings(areEnabled: true);
+    });
   });
 }

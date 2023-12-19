@@ -5,4 +5,6 @@ class MockSettingsPermissionService implements SettingsPermissionService {
   bool get settingsAllowed {
     return false;
   }
+
+  void enableMockSettings() {}
 }
