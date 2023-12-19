@@ -1,13 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:parameter_page/services/settings_permission/settings_permission_service.dart';
 
-class SettingsPermissionWidget extends StatelessWidget {
+class SettingsPermissionWidget extends StatefulWidget {
   final SettingsPermissionService service;
 
-  SettingsPermissionWidget({super.key, required this.service})
-      : _permissionState = service.settingsAllowed
-            ? _SettingPermissionState.enabled
-            : _SettingPermissionState.disabled;
+  const SettingsPermissionWidget({super.key, required this.service});
+
+  @override
+  State<SettingsPermissionWidget> createState() {
+    return _SettingPermissionState();
+  }
+}
+
+class _SettingPermissionState extends State<SettingsPermissionWidget> {
+  @override
+  void initState() {
+    _permissionState = widget.service.settingsAllowed
+        ? _SettingPermissionStatus.enabled
+        : _SettingPermissionStatus.disabled;
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,17 +41,17 @@ class SettingsPermissionWidget extends StatelessWidget {
     Color color;
     String keyName;
     switch (_permissionState) {
-      case _SettingPermissionState.disabled:
+      case _SettingPermissionStatus.disabled:
         color = Colors.red;
         keyName = "disabled";
         break;
 
-      case _SettingPermissionState.enabled:
+      case _SettingPermissionStatus.enabled:
         color = Colors.green;
         keyName = "enabled";
         break;
 
-      case _SettingPermissionState.pending:
+      case _SettingPermissionStatus.pending:
         color = Colors.white;
         keyName = "pending";
         break;
@@ -53,11 +66,11 @@ class SettingsPermissionWidget extends StatelessWidget {
 
   Widget _buildStatusText() {
     switch (_permissionState) {
-      case _SettingPermissionState.disabled:
+      case _SettingPermissionStatus.disabled:
         return const Text("Settings disabled");
-      case _SettingPermissionState.pending:
+      case _SettingPermissionStatus.pending:
         return const Text("Requesting settings permission...");
-      case _SettingPermissionState.enabled:
+      case _SettingPermissionStatus.enabled:
         return const Text("Settings allowed");
     }
   }
@@ -65,6 +78,9 @@ class SettingsPermissionWidget extends StatelessWidget {
   Widget _buildPopupMenuButton() {
     return PopupMenuButton<String>(
         icon: const Icon(Icons.expand_more),
+        onSelected: (String value) {
+          setState(() => _permissionState = _SettingPermissionStatus.pending);
+        },
         itemBuilder: (BuildContext context) => [
               const PopupMenuItem<String>(
                   value: "10 Minutes", child: Text("10 Minutes")),
@@ -73,7 +89,7 @@ class SettingsPermissionWidget extends StatelessWidget {
             ]);
   }
 
-  final _SettingPermissionState _permissionState;
+  _SettingPermissionStatus _permissionState = _SettingPermissionStatus.disabled;
 }
 
-enum _SettingPermissionState { disabled, pending, enabled }
+enum _SettingPermissionStatus { disabled, pending, enabled }
