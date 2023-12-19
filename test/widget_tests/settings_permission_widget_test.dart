@@ -19,7 +19,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // Then the widget is showing that settings are disabled
-      assertSettings(areEnabled: false);
+      assertSettings(areAllowed: false);
     });
 
     testWidgets(
@@ -35,7 +35,38 @@ void main() {
       await tester.pumpWidget(app);
 
       // Then the widget is showing that settings are enabled
-      assertSettings(areEnabled: true);
+      assertSettings(areAllowed: true);
+    });
+
+    testWidgets('Request settings for 10 mins, pending status is displayed',
+        (WidgetTester tester) async {
+      // Given the user's settings are disabled
+      MockSettingsPermissionService service = MockSettingsPermissionService();
+
+      // ... and the SettingsPermissionWidget has been rendered
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SettingsPermissionWidget(service: service)));
+      await tester.pumpWidget(app);
+
+      // When I request settings for ten minutes;
+      await requestSettingsPermission(
+          forDuration: SettingsRequestDuration.tenMinutes);
+
+      // Then the request pending status is shown
+      assertSettingsRequestIsPending();
     });
   });
+}
+
+Future<void> requestSettingsPermission(
+    {required SettingsRequestDuration forDuration}) async {}
+
+enum SettingsRequestDuration { tenMinutes }
+
+void assertSettingsRequestIsPending() {
+  expect(
+      find.descendant(
+          of: find.byKey(const Key("settings-permission")),
+          matching: find.text("Requesting settings permission...")),
+      findsOneWidget);
 }

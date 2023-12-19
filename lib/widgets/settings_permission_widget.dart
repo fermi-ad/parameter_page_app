@@ -27,8 +27,8 @@ class SettingsPermissionWidget extends StatelessWidget {
           Padding(
               padding: const EdgeInsets.fromLTRB(10.0, 0, 0, 0),
               child: settingsAreAllowed
-                  ? const Text("Settings Enabled")
-                  : const Text("Settings Disabled")),
+                  ? const Text("Settings allowed")
+                  : const Text("Settings disabled")),
           Padding(
               padding: const EdgeInsets.fromLTRB(10.0, 0, 0, 0),
               child: PopupMenuButton<String>(

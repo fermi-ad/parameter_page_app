@@ -15,7 +15,7 @@ void main() {
       await navigateToTestPage1(tester);
 
       // Then the settings are disabled
-      assertSettings(areEnabled: false);
+      assertSettings(areAllowed: false);
     }, semanticsEnabled: false);
   });
 }
