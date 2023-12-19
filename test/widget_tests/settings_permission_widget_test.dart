@@ -49,7 +49,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // When I request settings for ten minutes;
-      await requestSettingsPermission(
+      await requestSettingsPermission(tester,
           forDuration: SettingsRequestDuration.tenMinutes);
 
       // Then the request pending status is shown
@@ -58,10 +58,30 @@ void main() {
   });
 }
 
-Future<void> requestSettingsPermission(
-    {required SettingsRequestDuration forDuration}) async {}
+Future<void> requestSettingsPermission(WidgetTester tester,
+    {required SettingsRequestDuration forDuration}) async {
+  final widgetFinder = find.byKey(const Key("settings-permission"));
 
-enum SettingsRequestDuration { tenMinutes }
+  await tester.tap(find.descendant(
+      of: widgetFinder, matching: find.byIcon(Icons.expand_more)));
+  await tester.pumpAndSettle();
+
+  switch (forDuration) {
+    case SettingsRequestDuration.tenMinutes:
+      await tester.tap(find.text("10 Minutes"));
+      break;
+
+    case SettingsRequestDuration.oneHour:
+      await tester.tap(find.text("1 Hour"));
+      break;
+
+    case SettingsRequestDuration.eightHours:
+      await tester.tap(find.text("8 Hours"));
+  }
+  await tester.pumpAndSettle();
+}
+
+enum SettingsRequestDuration { tenMinutes, oneHour, eightHours }
 
 void assertSettingsRequestIsPending() {
   expect(
