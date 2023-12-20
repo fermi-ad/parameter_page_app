@@ -6,6 +6,12 @@ class MockSettingsPermissionService implements SettingsPermissionService {
     return _mockSettingsPermission;
   }
 
+  @override
+  Future<bool> requestSettingsPermission(
+      {required SettingsRequestDuration forDuration}) async {
+    return true;
+  }
+
   void enableMockSettings() {
     _mockSettingsPermission = true;
   }
