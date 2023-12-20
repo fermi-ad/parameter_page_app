@@ -78,15 +78,17 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
   Widget _buildPopupMenuButton() {
     return PopupMenuButton<String>(
         icon: const Icon(Icons.expand_more),
-        onSelected: (String value) {
-          setState(() => _permissionState = _SettingPermissionStatus.pending);
-        },
+        onSelected: _handleRequestSettingsPermission,
         itemBuilder: (BuildContext context) => [
               const PopupMenuItem<String>(
                   value: "10 Minutes", child: Text("10 Minutes")),
               const PopupMenuItem<String>(
                   value: "1 Hour", child: Text("1 Hour"))
             ]);
+  }
+
+  void _handleRequestSettingsPermission(String duration) {
+    setState(() => _permissionState = _SettingPermissionStatus.pending);
   }
 
   _SettingPermissionStatus _permissionState = _SettingPermissionStatus.disabled;
