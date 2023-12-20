@@ -8,10 +8,16 @@ class MockSettingsPermissionService implements SettingsPermissionService {
 
   bool mockDenySettingsPermissionRequests = false;
 
+  bool mockFailSettingsPermissionRequests = false;
+
   @override
   Future<bool> requestSettingsPermission(
       {required SettingsRequestDuration forDuration}) async {
     return Future<bool>.delayed(const Duration(seconds: 1), () {
+      if (mockFailSettingsPermissionRequests) {
+        return Future.error("Fake settings permission request failure.");
+      }
+
       return !mockDenySettingsPermissionRequests;
     });
   }

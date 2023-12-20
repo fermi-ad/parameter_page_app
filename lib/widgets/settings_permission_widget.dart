@@ -88,17 +88,24 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
   }
 
   void _handleRequestSettingsPermission(String duration) async {
-    setState(() => _permissionState = _SettingPermissionStatus.pending);
+    setState(() {
+      _previousState = _permissionState;
+      _permissionState = _SettingPermissionStatus.pending;
+    });
 
     await widget.service
         .requestSettingsPermission(
             forDuration: SettingsRequestDuration.tenMinutes)
         .then((bool requestGranted) {
       setState(() => _permissionState = _SettingPermissionStatus.enabled);
+    }).onError((error, stackTrace) {
+      setState(() => _permissionState = _previousState);
     });
   }
 
   _SettingPermissionStatus _permissionState = _SettingPermissionStatus.disabled;
+
+  _SettingPermissionStatus _previousState = _SettingPermissionStatus.disabled;
 }
 
 enum _SettingPermissionStatus { disabled, pending, enabled }

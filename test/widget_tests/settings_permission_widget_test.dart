@@ -105,6 +105,30 @@ void main() {
       // Then the widget indicates that settings are approved
       assertSettings(areAllowed: true);
     });
+
+    testWidgets('Request for settings fails, previous status is displayed',
+        (WidgetTester tester) async {
+      // Given the user's settings are disabled
+      MockSettingsPermissionService service = MockSettingsPermissionService();
+
+      // ... and the SettingsPermissionWidget has been rendered
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SettingsPermissionWidget(service: service)));
+      await tester.pumpWidget(app);
+
+      // ... and for whatever reason the request will fail
+      service.mockFailSettingsPermissionRequests = true;
+
+      // When I request settings for ten minutes
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.tenMinutes);
+
+      // ... and wait for the status to be returned
+      await waitForSettingsPermissionRequest(tester);
+
+      // Then the widget indicates that settings are still disabled
+      assertSettings(areAllowed: false);
+    });
   });
 }
 
