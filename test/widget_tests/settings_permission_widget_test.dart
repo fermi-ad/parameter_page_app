@@ -135,7 +135,30 @@ void main() {
               "Request failed - Fake settings permission request failure."),
           findsOneWidget);
     });
+
+    testWidgets('Settings are enabled, Disable is an option in pop-up menu',
+        (WidgetTester tester) async {
+      // Given the user's settings are enabled
+      MockSettingsPermissionService service = MockSettingsPermissionService();
+      service.enableMockSettings();
+
+      // ... and the SettingsPermissionWidget has been rendered
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SettingsPermissionWidget(service: service)));
+      await tester.pumpWidget(app);
+
+      // When I open the settings permission menu
+      await openSettingsPermissionMenu(tester);
+
+      // Then 'Disable settings' is an option in the pop-up menu
+      assertDisableSettingsMenuEntry(isVisible: true);
+    });
   });
+}
+
+void assertDisableSettingsMenuEntry({required bool isVisible}) {
+  expect(
+      find.text("Disable settings"), isVisible ? findsOneWidget : findsNothing);
 }
 
 Future<void> waitForSettingsPermissionRequest(WidgetTester tester) async {
@@ -144,11 +167,7 @@ Future<void> waitForSettingsPermissionRequest(WidgetTester tester) async {
 
 Future<void> requestSettingsPermission(WidgetTester tester,
     {required SettingsRequestDuration forDuration}) async {
-  final widgetFinder = find.byKey(const Key("settings-permission"));
-
-  await tester.tap(find.descendant(
-      of: widgetFinder, matching: find.byIcon(Icons.expand_more)));
-  await tester.pumpAndSettle();
+  await openSettingsPermissionMenu(tester);
 
   switch (forDuration) {
     case SettingsRequestDuration.tenMinutes:
@@ -163,6 +182,14 @@ Future<void> requestSettingsPermission(WidgetTester tester,
       await tester.tap(find.text("8 Hours"));
   }
   await tester.pump();
+}
+
+Future<void> openSettingsPermissionMenu(WidgetTester tester) async {
+  final widgetFinder = find.byKey(const Key("settings-permission"));
+
+  await tester.tap(find.descendant(
+      of: widgetFinder, matching: find.byIcon(Icons.expand_more)));
+  await tester.pumpAndSettle();
 }
 
 void assertSettingsRequestIsPending() {
