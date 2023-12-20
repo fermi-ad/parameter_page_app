@@ -12,6 +12,24 @@ Future<void> startParameterPageApp(WidgetTester tester) async {
   await pumpUntilFound(tester, find.text("Welcome!"));
 }
 
+Future<void> pumpUntilGone(
+  WidgetTester tester,
+  Finder finder, {
+  Duration timeout = const Duration(seconds: 3),
+}) async {
+  bool timerDone = false;
+  final timer = Timer(timeout, () => timerDone = true);
+  while (timerDone != true) {
+    await tester.pumpAndSettle();
+
+    final found = tester.any(finder);
+    if (!found) {
+      timerDone = true;
+    }
+  }
+  timer.cancel();
+}
+
 Future<void> pumpUntilFound(
   WidgetTester tester,
   Finder finder, {
@@ -20,7 +38,7 @@ Future<void> pumpUntilFound(
   bool timerDone = false;
   final timer = Timer(timeout, () => timerDone = true);
   while (timerDone != true) {
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     final found = tester.any(finder);
     if (found) {
@@ -386,7 +404,9 @@ Future<void> navigateDirectlyToSubpage(WidgetTester tester,
 }
 
 Future<void> openSubPageDirectory(WidgetTester tester) async {
-  await tester.tap(find.byIcon(Icons.expand_more));
+  final parentWidgetFinder = find.byKey(const Key("subpagenavigation"));
+  await tester.tap(find.descendant(
+      of: parentWidgetFinder, matching: find.byIcon(Icons.expand_more)));
   await tester.pumpAndSettle();
 }
 

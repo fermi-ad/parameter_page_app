@@ -5,12 +5,15 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_controls_core/flutter_controls_core.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
+import 'package:parameter_page/services/settings_permission/mock_settings_permission_service.dart';
+import 'package:parameter_page/services/settings_permission/settings_permission_service.dart';
 import 'package:parameter_page/services/user_device/user_device_service.dart';
 import 'package:parameter_page/widgets/display_settings_button_widget.dart';
 import 'package:parameter_page/widgets/fermi_controls_common/error_display_widget.dart';
 import 'package:parameter_page/widgets/main_menu_widget.dart';
 import 'package:parameter_page/widgets/page_title_widget.dart';
 import 'package:parameter_page/widgets/parameter_page_tabbar_widget.dart';
+import 'package:parameter_page/widgets/settings_permission_widget.dart';
 import 'package:parameter_page/widgets/sub_page_navigation_widget.dart';
 import 'package:parameter_page/widgets/sub_system_navigation_widget.dart';
 
@@ -65,7 +68,12 @@ class _ParameterPageScaffoldWidgetState
         key: _scaffoldKey,
         appBar: _buildAppBar(context),
         drawer: _buildDrawer(context),
-        body: _buildBody(context));
+        body: _buildBody(context),
+        bottomNavigationBar: _buildBottomNavigationBar());
+  }
+
+  Widget _buildBottomNavigationBar() {
+    return SettingsPermissionWidget(service: _settingsPermissionService);
   }
 
   AppBar _buildAppBar(BuildContext context) {
@@ -526,4 +534,7 @@ class _ParameterPageScaffoldWidgetState
   ParameterPage? _page;
 
   PagePersistenceState _persistenceState = PagePersistenceState.clean;
+
+  final SettingsPermissionService _settingsPermissionService =
+      MockSettingsPermissionService();
 }
