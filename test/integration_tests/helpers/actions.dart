@@ -386,7 +386,9 @@ Future<void> navigateDirectlyToSubpage(WidgetTester tester,
 }
 
 Future<void> openSubPageDirectory(WidgetTester tester) async {
-  await tester.tap(find.byIcon(Icons.expand_more));
+  final parentWidgetFinder = find.byKey(const Key("subpagenavigation"));
+  await tester.tap(find.descendant(
+      of: parentWidgetFinder, matching: find.byIcon(Icons.expand_more)));
   await tester.pumpAndSettle();
 }
 
