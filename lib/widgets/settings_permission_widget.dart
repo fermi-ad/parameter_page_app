@@ -83,12 +83,23 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
     return PopupMenuButton<String>(
         icon: const Icon(Icons.expand_more),
         onSelected: _handleRequestSettingsPermission,
-        itemBuilder: (BuildContext context) => [
-              const PopupMenuItem<String>(
-                  value: "10 Minutes", child: Text("10 Minutes")),
-              const PopupMenuItem<String>(
-                  value: "1 Hour", child: Text("1 Hour"))
-            ]);
+        itemBuilder: (BuildContext context) {
+          List<PopupMenuItem<String>> ret = [
+            const PopupMenuItem<String>(
+                value: "10 Minutes", child: Text("10 Minutes")),
+            const PopupMenuItem<String>(value: "1 Hour", child: Text("1 Hour"))
+          ];
+
+          if (widget.service.settingsAllowed) {
+            ret.insert(
+                0,
+                const PopupMenuItem<String>(
+                    value: "Disable settings",
+                    child: Text("Disable settings")));
+          }
+
+          return ret;
+        });
   }
 
   void _handleRequestSettingsPermission(String duration) async {
