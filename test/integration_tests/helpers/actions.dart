@@ -12,6 +12,24 @@ Future<void> startParameterPageApp(WidgetTester tester) async {
   await pumpUntilFound(tester, find.text("Hello!"));
 }
 
+Future<void> pumpUntilGone(
+  WidgetTester tester,
+  Finder finder, {
+  Duration timeout = const Duration(seconds: 3),
+}) async {
+  bool timerDone = false;
+  final timer = Timer(timeout, () => timerDone = true);
+  while (timerDone != true) {
+    await tester.pumpAndSettle();
+
+    final found = tester.any(finder);
+    if (!found) {
+      timerDone = true;
+    }
+  }
+  timer.cancel();
+}
+
 Future<void> pumpUntilFound(
   WidgetTester tester,
   Finder finder, {
@@ -20,7 +38,7 @@ Future<void> pumpUntilFound(
   bool timerDone = false;
   final timer = Timer(timeout, () => timerDone = true);
   while (timerDone != true) {
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     final found = tester.any(finder);
     if (found) {

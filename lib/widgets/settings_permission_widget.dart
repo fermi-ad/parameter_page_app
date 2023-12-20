@@ -69,7 +69,7 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
       case _SettingPermissionStatus.disabled:
         return const Text("Settings disabled");
       case _SettingPermissionStatus.pending:
-        return const Text("Requesting settings permission...");
+        return const Text("Request pending...");
       case _SettingPermissionStatus.enabled:
         return const Text("Settings allowed");
     }

@@ -6,10 +6,14 @@ class MockSettingsPermissionService implements SettingsPermissionService {
     return _mockSettingsPermission;
   }
 
+  bool mockDenySettingsPermissionRequests = false;
+
   @override
   Future<bool> requestSettingsPermission(
       {required SettingsRequestDuration forDuration}) async {
-    return true;
+    return Future<bool>.delayed(const Duration(seconds: 1), () {
+      return !mockDenySettingsPermissionRequests;
+    });
   }
 
   void enableMockSettings() {

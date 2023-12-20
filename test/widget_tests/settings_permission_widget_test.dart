@@ -56,6 +56,9 @@ void main() {
 
       // Then the request pending status is shown
       assertSettingsRequestIsPending();
+
+      // Clean-up
+      await waitForSettingsPermissionRequest(tester);
     });
 
     testWidgets('Request for settings is approved, enable status is displayed',
@@ -73,7 +76,31 @@ void main() {
           forDuration: SettingsRequestDuration.tenMinutes);
 
       // ... and wait for the status to be returned
-      await waitForSettingsPermissionToBeEnabled(tester);
+      await waitForSettingsPermissionRequest(tester);
+
+      // Then the widget indicates that settings are approved
+      assertSettings(areAllowed: true);
+    });
+
+    testWidgets('Request for settings is denied, disabled status is displayed',
+        (WidgetTester tester) async {
+      // Given the user's settings are disabled
+      MockSettingsPermissionService service = MockSettingsPermissionService();
+
+      // ... and the SettingsPermissionWidget has been rendered
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SettingsPermissionWidget(service: service)));
+      await tester.pumpWidget(app);
+
+      // ... and for whatever reason we are not allowed to do settings
+      service.mockDenySettingsPermissionRequests = true;
+
+      // When I request settings for ten minutes
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.tenMinutes);
+
+      // ... and wait for the status to be returned
+      await waitForSettingsPermissionRequest(tester);
 
       // Then the widget indicates that settings are approved
       assertSettings(areAllowed: true);
@@ -81,8 +108,8 @@ void main() {
   });
 }
 
-Future<void> waitForSettingsPermissionToBeEnabled(WidgetTester tester) async {
-  await pumpUntilFound(tester, find.text("Settings allowed"));
+Future<void> waitForSettingsPermissionRequest(WidgetTester tester) async {
+  await pumpUntilGone(tester, find.text("Request pending..."));
 }
 
 Future<void> requestSettingsPermission(WidgetTester tester,
@@ -112,6 +139,6 @@ void assertSettingsRequestIsPending() {
   expect(
       find.descendant(
           of: find.byKey(const Key("settings-permission")),
-          matching: find.text("Requesting settings permission...")),
+          matching: find.text("Request pending...")),
       findsOneWidget);
 }
