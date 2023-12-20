@@ -162,13 +162,9 @@ Future<void> requestSettingsPermission(WidgetTester tester,
     case SettingsRequestDuration.eightHours:
       await tester.tap(find.text("8 Hours"));
   }
-  await tester.pumpAndSettle();
+  await tester.pump();
 }
 
 void assertSettingsRequestIsPending() {
-  expect(
-      find.descendant(
-          of: find.byKey(const Key("settings-permission")),
-          matching: find.text("Request pending...")),
-      findsOneWidget);
+  expect(find.text("Request pending..."), findsOneWidget);
 }

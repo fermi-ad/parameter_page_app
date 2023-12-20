@@ -38,23 +38,27 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
   }
 
   Widget _buildIndicator() {
+    if (_permissionState == _SettingPermissionStatus.pending) {
+      return _buildPendingIndicator();
+    } else {
+      return _buildEnableDisableIndicator();
+    }
+  }
+
+  Widget _buildPendingIndicator() {
+    return const SizedBox(
+        width: 16.0, height: 16.0, child: CircularProgressIndicator());
+  }
+
+  Widget _buildEnableDisableIndicator() {
     Color color;
     String keyName;
-    switch (_permissionState) {
-      case _SettingPermissionStatus.disabled:
-        color = Colors.red;
-        keyName = "disabled";
-        break;
-
-      case _SettingPermissionStatus.enabled:
-        color = Colors.green;
-        keyName = "enabled";
-        break;
-
-      case _SettingPermissionStatus.pending:
-        color = Colors.white;
-        keyName = "pending";
-        break;
+    if (_permissionState == _SettingPermissionStatus.disabled) {
+      color = Colors.red;
+      keyName = "disabled";
+    } else {
+      color = Colors.green;
+      keyName = "enabled";
     }
 
     return Icon(
