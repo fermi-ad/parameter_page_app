@@ -82,7 +82,13 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
   Widget _buildPopupMenuButton() {
     return PopupMenuButton<String>(
         icon: const Icon(Icons.expand_more),
-        onSelected: _handleRequestSettingsPermission,
+        onSelected: (String selection) {
+          if (selection == "Disable settings") {
+            _handleRequestSettingsBeDisabled();
+          } else {
+            _handleRequestSettingsPermission(selection);
+          }
+        },
         itemBuilder: (BuildContext context) {
           List<PopupMenuItem<String>> ret = [
             const PopupMenuItem<String>(
@@ -103,10 +109,7 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
   }
 
   void _handleRequestSettingsPermission(String duration) async {
-    setState(() {
-      _previousState = _permissionState;
-      _permissionState = _SettingPermissionStatus.pending;
-    });
+    _goToPendingStatus();
 
     await widget.service
         .requestSettingsPermission(
@@ -117,6 +120,29 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Request failed - $error")));
       setState(() => _permissionState = _previousState);
+    });
+  }
+
+  void _handleRequestSettingsBeDisabled() async {
+    _goToPendingStatus();
+
+    await widget.service
+        .requestSettingsBeDisabled()
+        .then((bool requestGranted) {
+      setState(() => _permissionState = requestGranted
+          ? _SettingPermissionStatus.disabled
+          : _SettingPermissionStatus.enabled);
+    }).onError((error, stackTrace) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Request failed - $error")));
+      setState(() => _permissionState = _previousState);
+    });
+  }
+
+  void _goToPendingStatus() {
+    setState(() {
+      _previousState = _permissionState;
+      _permissionState = _SettingPermissionStatus.pending;
     });
   }
 
