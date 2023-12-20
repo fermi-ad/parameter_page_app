@@ -128,6 +128,10 @@ void main() {
 
       // Then the widget indicates that settings are still disabled
       assertSettings(areAllowed: false);
+
+      // ... and the error message is displayed
+      expect(find.text("Fake settings permission request failure."),
+          findsOneWidget);
     });
   });
 }
