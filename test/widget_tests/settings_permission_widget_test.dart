@@ -153,6 +153,48 @@ void main() {
       // Then 'Disable settings' is an option in the pop-up menu
       assertDisableSettingsMenuEntry(isVisible: true);
     });
+
+    testWidgets('Disable settings, status goes to pending first',
+        (WidgetTester tester) async {
+      // Given the user's settings are enabled
+      MockSettingsPermissionService service = MockSettingsPermissionService();
+      service.enableMockSettings();
+
+      // ... and the SettingsPermissionWidget has been rendered
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SettingsPermissionWidget(service: service)));
+      await tester.pumpWidget(app);
+
+      // When I request settings for ten minutes;
+      await requestSettingsPermissionBeDisabled(tester);
+
+      // Then the request pending status is shown
+      assertSettingsRequestIsPending();
+
+      // Clean-up
+      await waitForSettingsPermissionRequest(tester);
+    });
+
+    testWidgets('Disable settings, status goes to pending and then disabled',
+        (WidgetTester tester) async {
+      // Given the user's settings are enabled
+      MockSettingsPermissionService service = MockSettingsPermissionService();
+      service.enableMockSettings();
+
+      // ... and the SettingsPermissionWidget has been rendered
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SettingsPermissionWidget(service: service)));
+      await tester.pumpWidget(app);
+
+      // When I request settings for ten minutes;
+      await requestSettingsPermissionBeDisabled(tester);
+
+      // ... and wait for the request to finish
+      await waitForSettingsPermissionRequest(tester);
+
+      // Then the settings are disabled
+      assertSettings(areAllowed: false);
+    });
   });
 }
 
@@ -163,6 +205,12 @@ void assertDisableSettingsMenuEntry({required bool isVisible}) {
 
 Future<void> waitForSettingsPermissionRequest(WidgetTester tester) async {
   await pumpUntilGone(tester, find.text("Request pending..."));
+}
+
+Future<void> requestSettingsPermissionBeDisabled(WidgetTester tester) async {
+  await openSettingsPermissionMenu(tester);
+  await tester.tap(find.text("Disable settings"));
+  await tester.pump();
 }
 
 Future<void> requestSettingsPermission(WidgetTester tester,

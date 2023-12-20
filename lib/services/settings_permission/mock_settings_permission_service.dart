@@ -18,7 +18,13 @@ class MockSettingsPermissionService implements SettingsPermissionService {
         return Future.error("Fake settings permission request failure.");
       }
 
-      return !mockDenySettingsPermissionRequests;
+      if (mockDenySettingsPermissionRequests) {
+        return false;
+      }
+
+      _mockSettingsPermission = true;
+
+      return true;
     });
   }
 
