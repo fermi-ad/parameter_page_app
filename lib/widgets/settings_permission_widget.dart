@@ -99,6 +99,8 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
         .then((bool requestGranted) {
       setState(() => _permissionState = _SettingPermissionStatus.enabled);
     }).onError((error, stackTrace) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Request failed - $error")));
       setState(() => _permissionState = _previousState);
     });
   }

@@ -130,7 +130,9 @@ void main() {
       assertSettings(areAllowed: false);
 
       // ... and the error message is displayed
-      expect(find.text("Fake settings permission request failure."),
+      expect(
+          find.text(
+              "Request failed - Fake settings permission request failure."),
           findsOneWidget);
     });
   });
