@@ -73,7 +73,9 @@ class _ParameterPageScaffoldWidgetState
   }
 
   Widget _buildBottomNavigationBar() {
-    return SettingsPermissionWidget(service: _settingsPermissionService);
+    return SettingsPermissionWidget(
+        service: _settingsPermissionService,
+        onChanged: _handleSettingsPermissionChanged);
   }
 
   AppBar _buildAppBar(BuildContext context) {
@@ -203,6 +205,10 @@ class _ParameterPageScaffoldWidgetState
         errorMessage:
             "The request to load the parameter page failed, please try again.",
         detailMessage: detailMessage);
+  }
+
+  void _handleSettingsPermissionChanged(bool settingsAllowed) {
+    setState(() => 1);
   }
 
   void _handleDeleteSubSystem() {
