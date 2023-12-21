@@ -121,6 +121,7 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
             forDuration: SettingsRequestDuration.tenMinutes)
         .then((bool requestGranted) {
       setState(() => _permissionState = _SettingPermissionStatus.enabled);
+      widget.onChanged?.call(true);
     }).onError((error, stackTrace) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Request failed - $error")));
@@ -137,6 +138,7 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
       setState(() => _permissionState = requestGranted
           ? _SettingPermissionStatus.disabled
           : _SettingPermissionStatus.enabled);
+      widget.onChanged?.call(!requestGranted);
     }).onError((error, stackTrace) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Request failed - $error")));
