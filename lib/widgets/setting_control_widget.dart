@@ -16,13 +16,16 @@ class SettingControlWidget extends StatefulWidget {
 
   final Function(String)? onSubmitted;
 
+  final bool settingsAllowed;
+
   const SettingControlWidget(
       {super.key,
       required this.drf,
       this.onSubmitted,
       this.units,
       required this.displayUnits,
-      this.wide = true});
+      this.wide = true,
+      this.settingsAllowed = true});
 
   @override
   State<StatefulWidget> createState() {
@@ -250,10 +253,17 @@ class _SettingControlState extends State<SettingControlWidget> {
   }
 
   void _handleUndoTap() {
+    if (!widget.settingsAllowed) {
+      return;
+    }
+
     _submitSetting(_initialSettingValue!);
   }
 
   void _handleDisplayTap() {
+    if (!widget.settingsAllowed) {
+      return;
+    }
     setState(() {
       _state = _SettingControlInternalState.editing;
       _textFieldController.text = _lastSettingValue!;

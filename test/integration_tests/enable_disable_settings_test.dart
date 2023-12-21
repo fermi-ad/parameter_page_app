@@ -29,7 +29,7 @@ void main() {
       // When I tap the setting property
       await tapSetting(tester, forDRF: "Z:BTE200_TEMP");
 
-      // Then the the setting text input is not visible because settings are inhibited
+      // Then the the setting text input does not activate
       assertSettingTextInput(forDRF: "Z:BTE200_TEMP", isVisible: false);
     });
   });
