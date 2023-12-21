@@ -19,11 +19,13 @@ class ParameterWidget extends StatelessWidget {
   final bool displayAlarmDetails;
   final DisplayUnits displayUnits;
   final bool displayExtendedStatus;
+  final bool settingsAllowed;
 
   const ParameterWidget(
       {required this.drf,
       required this.editMode,
       required this.wide,
+      required this.settingsAllowed,
       this.label,
       super.key,
       this.displayUnits = DisplayUnits.commonUnits,
@@ -47,7 +49,9 @@ class ParameterWidget extends StatelessWidget {
                 wide: wide,
                 dpm: DataAcquisitionWidget.of(context),
                 displayAlarmDetails: displayAlarmDetails,
-                displayExtendedStatus: displayExtendedStatus));
+                displayExtendedStatus: displayExtendedStatus,
+                settingsAllowed: settingsAllowed,
+              ));
   }
 }
 
@@ -58,6 +62,7 @@ class _ActiveParamWidget extends StatefulWidget {
   final DisplayUnits displayUnits;
   final bool displayAlarmDetails;
   final bool displayExtendedStatus;
+  final bool settingsAllowed;
 
   const _ActiveParamWidget(
       {required this.drf,
@@ -65,7 +70,8 @@ class _ActiveParamWidget extends StatefulWidget {
       required this.wide,
       required this.displayUnits,
       required this.displayAlarmDetails,
-      required this.displayExtendedStatus});
+      required this.displayExtendedStatus,
+      required this.settingsAllowed});
 
   @override
   _ActiveParamState createState() => _ActiveParamState();
@@ -248,6 +254,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                 visible: hasSettingProperty,
                 child: SettingControlWidget(
                     key: Key("parameter_setting_${widget.drf}"),
+                    settingsAllowed: widget.settingsAllowed,
                     drf: widget.drf,
                     displayUnits: widget.displayUnits,
                     units: settingUnits,
@@ -287,6 +294,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
             visible: hasSettingProperty,
             child: SettingControlWidget(
                 key: Key("parameter_setting_${widget.drf}"),
+                settingsAllowed: widget.settingsAllowed,
                 drf: widget.drf,
                 displayUnits: widget.displayUnits,
                 units: settingUnits,

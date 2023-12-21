@@ -36,8 +36,11 @@ class PageWidget extends StatefulWidget {
 
   final Function(bool)? onToggleEditing;
 
+  final bool settingsAllowed;
+
   const PageWidget(
       {required this.page,
+      required this.settingsAllowed,
       this.onPageModified,
       this.onToggleEditing,
       super.key});
@@ -108,7 +111,8 @@ class PageWidgetState extends State<PageWidget> {
     return page.editing
         ? Row(children: [
             Expanded(
-                child: entry.buildEntry(context, page.editing, wide, settings)),
+                child: entry.buildEntry(context, page.editing, wide, settings,
+                    widget.settingsAllowed)),
             const SizedBox(width: 8.0),
             GestureDetector(
                 onTap: () async {
@@ -121,7 +125,8 @@ class PageWidgetState extends State<PageWidget> {
                     onPressed: null,
                     icon: Icon(Icons.delete)))
           ])
-        : entry.buildEntry(context, page.editing, wide, settings);
+        : entry.buildEntry(
+            context, page.editing, wide, settings, widget.settingsAllowed);
   }
 
   // Moves an entry from one location to another in the parameter list. It

@@ -192,6 +192,7 @@ class _ParameterPageScaffoldWidgetState
                 child: PageWidget(
                     key: _pageKey,
                     page: _page!,
+                    settingsAllowed: _settingsPermissionService.settingsAllowed,
                     onPageModified: _handlePageModified,
                     onToggleEditing: (bool isEditing) => setState(() {})))));
   }

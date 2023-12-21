@@ -78,7 +78,11 @@ void main() {
           body: DataAcquisitionWidget(
               service: MockDpmService(useEmptyStream: true),
               child: const ParameterWidget(
-                  drf: "M:OUTTMP", editMode: false, wide: true)));
+                drf: "M:OUTTMP",
+                editMode: false,
+                wide: true,
+                settingsAllowed: true,
+              )));
       MaterialApp app = MaterialApp(home: scaffold);
       await tester.pumpWidget(app);
 
@@ -96,11 +100,11 @@ void main() {
               body: DataAcquisitionWidget(
                   service: MockDpmService(useEmptyStream: true),
                   child: const ParameterWidget(
-                    drf: "Z:NO_ALARMS",
-                    editMode: false,
-                    wide: true,
-                    displayAlarmDetails: true,
-                  ))));
+                      drf: "Z:NO_ALARMS",
+                      editMode: false,
+                      wide: true,
+                      displayAlarmDetails: true,
+                      settingsAllowed: true))));
       await tester.pumpWidget(app);
       await waitForParameterToLoad(tester, drf: "Z:NO_ALARMS");
 
@@ -117,11 +121,11 @@ void main() {
               body: DataAcquisitionWidget(
                   service: MockDpmService(useEmptyStream: true),
                   child: const ParameterWidget(
-                    drf: "M:OUTTMP",
-                    editMode: false,
-                    wide: true,
-                    displayAlarmDetails: true,
-                  ))));
+                      drf: "M:OUTTMP",
+                      editMode: false,
+                      wide: true,
+                      displayAlarmDetails: true,
+                      settingsAllowed: true))));
       await tester.pumpWidget(app);
       await waitForParameterToLoad(tester, drf: "M:OUTTMP");
 
@@ -141,11 +145,11 @@ void main() {
               body: DataAcquisitionWidget(
                   service: MockDpmService(useEmptyStream: true),
                   child: const ParameterWidget(
-                    drf: "M:OUTTMP",
-                    editMode: false,
-                    wide: false,
-                    displayAlarmDetails: true,
-                  ))));
+                      drf: "M:OUTTMP",
+                      editMode: false,
+                      wide: false,
+                      displayAlarmDetails: true,
+                      settingsAllowed: true))));
       await tester.pumpWidget(app);
       await waitForParameterToLoad(tester, drf: "M:OUTTMP");
 
