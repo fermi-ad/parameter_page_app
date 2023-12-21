@@ -195,6 +195,34 @@ void main() {
       // Then the settings are disabled
       assertSettings(areAllowed: false);
     });
+
+    testWidgets(
+        'Enable settings, onChanged: callback is invoked with settingsAllowed = true',
+        (WidgetTester tester) async {
+      bool? settingsAllowed;
+
+      // Given the user's settings are disabled
+      MockSettingsPermissionService service = MockSettingsPermissionService();
+
+      // ... and the SettingsPermissionWidget has been rendered with an onChange call-back
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SettingsPermissionWidget(
+                  service: service,
+                  onChanged: (bool newSettingsAllowed) =>
+                      settingsAllowed = newSettingsAllowed)));
+      await tester.pumpWidget(app);
+
+      // When I enable settings for ten minutes
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.tenMinutes);
+
+      // ... and wait for the request to be granted
+      await waitForSettingsPermissionRequest(tester);
+
+      // Then onChange was called will settingsAllowed = true
+      expect(settingsAllowed, true);
+    });
   });
 }
 

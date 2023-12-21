@@ -4,7 +4,10 @@ import 'package:parameter_page/services/settings_permission/settings_permission_
 class SettingsPermissionWidget extends StatefulWidget {
   final SettingsPermissionService service;
 
-  const SettingsPermissionWidget({super.key, required this.service});
+  final Function(bool)? onChanged;
+
+  const SettingsPermissionWidget(
+      {super.key, required this.service, this.onChanged});
 
   @override
   State<SettingsPermissionWidget> createState() {
