@@ -17,5 +17,20 @@ void main() {
       // Then the settings are disabled
       assertSettings(areAllowed: false);
     }, semanticsEnabled: false);
+
+    testWidgets('Settings disabled, change a setting property is inhibited',
+        (WidgetTester tester) async {
+      // Given the test page is loaded and settings are disabled
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      assertSettings(areAllowed: false);
+
+      // When I tap the setting property
+      await tapSetting(tester, forDRF: "Z:BTE200_TEMP");
+
+      // Then the the setting text input is not visible because settings are inhibited
+      assertSettingTextInput(forDRF: "Z:BTE200_TEMP", isVisible: false);
+    });
   });
 }
