@@ -53,19 +53,21 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
   Widget _buildEnableDisableIndicator() {
     Color color;
     String keyName;
+    IconData icon;
     if (_permissionState == _SettingPermissionStatus.disabled) {
       color = Colors.red;
       keyName = "disabled";
+      icon = Icons.lock;
     } else {
       color = Colors.green;
       keyName = "enabled";
+      icon = Icons.lock_open;
     }
 
-    return Icon(
+    return Icon(icon,
         key: Key("settings-permission-indicator-$keyName"),
-        Icons.circle,
         color: color,
-        size: 16.0);
+        size: 24.0);
   }
 
   Widget _buildStatusText() {
