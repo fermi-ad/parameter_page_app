@@ -309,6 +309,18 @@ void main() {
       expect(entries[3].entryText(), "fourth test entry on sub-page 3");
       expect(readBackPage.subPageTitle, "Sub Page Three");
     });
+
+    test("add a tab and savePage(..), new tab is persisted", () {});
+
+    test("change tab titles and savePage(..), new tab title is persisted",
+        () {});
+
+    test("add sub-pages to a tab and savePage(..), new sub-pages are persisted",
+        () {});
+
+    test("delete an empty tab and savePage(..), tab is removed", () {});
+
+    test("delete a tab with sub-pages and savePage(..), tab is removed", () {});
   });
 }
 

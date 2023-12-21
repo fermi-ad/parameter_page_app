@@ -195,49 +195,68 @@ void main() {
       // Then the settings are disabled
       assertSettings(areAllowed: false);
     });
+
+    testWidgets(
+        'Enable settings, onChanged: callback is invoked with settingsAllowed = true',
+        (WidgetTester tester) async {
+      bool? settingsAllowed;
+
+      // Given the user's settings are disabled
+      MockSettingsPermissionService service = MockSettingsPermissionService();
+
+      // ... and the SettingsPermissionWidget has been rendered with an onChange call-back
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SettingsPermissionWidget(
+                  service: service,
+                  onChanged: (bool newSettingsAllowed) =>
+                      settingsAllowed = newSettingsAllowed)));
+      await tester.pumpWidget(app);
+
+      // When I enable settings for ten minutes
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.tenMinutes);
+
+      // ... and wait for the request to be granted
+      await waitForSettingsPermissionRequest(tester);
+
+      // Then onChange was called will settingsAllowed = true
+      expect(settingsAllowed, true);
+    });
+
+    testWidgets(
+        'Disable settings, onChanged: callback is invoked with settingsAllowed = false',
+        (WidgetTester tester) async {
+      bool? settingsAllowed;
+
+      // Given the user's settings are enabled
+      MockSettingsPermissionService service = MockSettingsPermissionService();
+      service.enableMockSettings();
+
+      // ... and the SettingsPermissionWidget has been rendered with an onChange call-back
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: SettingsPermissionWidget(
+                  service: service,
+                  onChanged: (bool newSettingsAllowed) =>
+                      settingsAllowed = newSettingsAllowed)));
+      await tester.pumpWidget(app);
+
+      // When I disable settings
+      await requestSettingsPermissionBeDisabled(tester);
+
+      // ... and wait for the request to be granted
+      await waitForSettingsPermissionRequest(tester);
+
+      // Then onChange was called will settingsAllowed = false
+      expect(settingsAllowed, false);
+    });
   });
 }
 
 void assertDisableSettingsMenuEntry({required bool isVisible}) {
   expect(
       find.text("Disable settings"), isVisible ? findsOneWidget : findsNothing);
-}
-
-Future<void> waitForSettingsPermissionRequest(WidgetTester tester) async {
-  await pumpUntilGone(tester, find.text("Request pending..."));
-}
-
-Future<void> requestSettingsPermissionBeDisabled(WidgetTester tester) async {
-  await openSettingsPermissionMenu(tester);
-  await tester.tap(find.text("Disable settings"));
-  await tester.pump();
-}
-
-Future<void> requestSettingsPermission(WidgetTester tester,
-    {required SettingsRequestDuration forDuration}) async {
-  await openSettingsPermissionMenu(tester);
-
-  switch (forDuration) {
-    case SettingsRequestDuration.tenMinutes:
-      await tester.tap(find.text("10 Minutes"));
-      break;
-
-    case SettingsRequestDuration.oneHour:
-      await tester.tap(find.text("1 Hour"));
-      break;
-
-    case SettingsRequestDuration.eightHours:
-      await tester.tap(find.text("8 Hours"));
-  }
-  await tester.pump();
-}
-
-Future<void> openSettingsPermissionMenu(WidgetTester tester) async {
-  final widgetFinder = find.byKey(const Key("settings-permission"));
-
-  await tester.tap(find.descendant(
-      of: widgetFinder, matching: find.byIcon(Icons.expand_more)));
-  await tester.pumpAndSettle();
 }
 
 void assertSettingsRequestIsPending() {

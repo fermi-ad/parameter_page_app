@@ -403,5 +403,46 @@ void main() {
       assertSettingPendingIndicator(isVisible: true);
       expect(testDPM.pendingSettingValue!.value, equals(72.0));
     });
+
+    testWidgets('settingsAllowed: false, inhibits editing',
+        (WidgetTester tester) async {
+      // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP with an initial value of "72.0"
+      // ... and settingsAllowed is set to false
+      MaterialApp app = initialize(const SettingControlWidget(
+          drf: "Z:BTE200_TEMP",
+          displayUnits: DisplayUnits.commonUnits,
+          settingsAllowed: false));
+      await tester.pumpWidget(app);
+
+      // When I display the setting and tap on it
+      await sendSettingTestData(tester, settingValue: 72.0);
+      await tester.tap(find.text("72.00"));
+      await tester.pumpAndSettle();
+
+      // Then the text input field is not shown
+      assertSettingInput(isVisible: false);
+    });
+
+    testWidgets('Tap undo with settings disabled, does not submit setting',
+        (WidgetTester tester) async {
+      // Given settings are disabled
+      MaterialApp app = initialize(const SettingControlWidget(
+          drf: "Z:BTE200_TEMP",
+          displayUnits: DisplayUnits.commonUnits,
+          settingsAllowed: false));
+      await tester.pumpWidget(app);
+
+      // ... and the setting value has changed
+      await sendSettingTestData(tester, settingValue: 72.0);
+      await sendSettingTestData(tester, settingValue: 75.0);
+      await tester.pumpAndSettle();
+
+      // When I tap the undo value
+      await tester.tap(find.text("72.00"));
+      await tester.pumpAndSettle();
+
+      // Then the undo value is not submitted and stays the same
+      assertSettingPendingIndicator(isVisible: false);
+    });
   });
 }

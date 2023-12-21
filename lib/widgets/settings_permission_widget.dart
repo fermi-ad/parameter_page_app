@@ -4,7 +4,10 @@ import 'package:parameter_page/services/settings_permission/settings_permission_
 class SettingsPermissionWidget extends StatefulWidget {
   final SettingsPermissionService service;
 
-  const SettingsPermissionWidget({super.key, required this.service});
+  final Function(bool)? onChanged;
+
+  const SettingsPermissionWidget(
+      {super.key, required this.service, this.onChanged});
 
   @override
   State<SettingsPermissionWidget> createState() {
@@ -53,19 +56,21 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
   Widget _buildEnableDisableIndicator() {
     Color color;
     String keyName;
+    IconData icon;
     if (_permissionState == _SettingPermissionStatus.disabled) {
       color = Colors.red;
       keyName = "disabled";
+      icon = Icons.lock;
     } else {
       color = Colors.green;
       keyName = "enabled";
+      icon = Icons.lock_open;
     }
 
-    return Icon(
+    return Icon(icon,
         key: Key("settings-permission-indicator-$keyName"),
-        Icons.circle,
         color: color,
-        size: 16.0);
+        size: 24.0);
   }
 
   Widget _buildStatusText() {
@@ -116,6 +121,7 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
             forDuration: SettingsRequestDuration.tenMinutes)
         .then((bool requestGranted) {
       setState(() => _permissionState = _SettingPermissionStatus.enabled);
+      widget.onChanged?.call(true);
     }).onError((error, stackTrace) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Request failed - $error")));
@@ -132,6 +138,7 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
       setState(() => _permissionState = requestGranted
           ? _SettingPermissionStatus.disabled
           : _SettingPermissionStatus.enabled);
+      widget.onChanged?.call(!requestGranted);
     }).onError((error, stackTrace) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Request failed - $error")));
