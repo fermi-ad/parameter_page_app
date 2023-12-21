@@ -203,43 +203,6 @@ void assertDisableSettingsMenuEntry({required bool isVisible}) {
       find.text("Disable settings"), isVisible ? findsOneWidget : findsNothing);
 }
 
-Future<void> waitForSettingsPermissionRequest(WidgetTester tester) async {
-  await pumpUntilGone(tester, find.text("Request pending..."));
-}
-
-Future<void> requestSettingsPermissionBeDisabled(WidgetTester tester) async {
-  await openSettingsPermissionMenu(tester);
-  await tester.tap(find.text("Disable settings"));
-  await tester.pump();
-}
-
-Future<void> requestSettingsPermission(WidgetTester tester,
-    {required SettingsRequestDuration forDuration}) async {
-  await openSettingsPermissionMenu(tester);
-
-  switch (forDuration) {
-    case SettingsRequestDuration.tenMinutes:
-      await tester.tap(find.text("10 Minutes"));
-      break;
-
-    case SettingsRequestDuration.oneHour:
-      await tester.tap(find.text("1 Hour"));
-      break;
-
-    case SettingsRequestDuration.eightHours:
-      await tester.tap(find.text("8 Hours"));
-  }
-  await tester.pump();
-}
-
-Future<void> openSettingsPermissionMenu(WidgetTester tester) async {
-  final widgetFinder = find.byKey(const Key("settings-permission"));
-
-  await tester.tap(find.descendant(
-      of: widgetFinder, matching: find.byIcon(Icons.expand_more)));
-  await tester.pumpAndSettle();
-}
-
 void assertSettingsRequestIsPending() {
   expect(find.text("Request pending..."), findsOneWidget);
 }

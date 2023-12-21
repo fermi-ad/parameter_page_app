@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:parameter_page/services/settings_permission/settings_permission_service.dart';
 
 import 'helpers/assertions.dart';
 import 'helpers/actions.dart';
@@ -15,6 +16,11 @@ void main() {
       await navigateToTestPage1(tester);
       await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
 
+      // ... and settings are enabled
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.tenMinutes);
+      await waitForSettingsPermissionRequest(tester);
+
       // When I tap the setting property for M:OUTTMP
       await tapSetting(tester, forDRF: "Z:BTE200_TEMP");
 
@@ -29,6 +35,9 @@ void main() {
       // Given I am attempting to set Z:BTE200_TEMP
       await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.tenMinutes);
+      await waitForSettingsPermissionRequest(tester);
       await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
       await tapSetting(tester, forDRF: "Z:BTE200_TEMP");
 
@@ -47,6 +56,11 @@ void main() {
       await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
       await waitForDataToLoadFor(tester, "G:AMANDA");
+
+      // ... and settings are enabled
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.tenMinutes);
+      await waitForSettingsPermissionRequest(tester);
 
       // When I submit a new setting...
       await tapSetting(tester, forDRF: "G:AMANDA");
@@ -71,6 +85,11 @@ void main() {
       await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
       await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+
+      // ... and settings are enabled
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.tenMinutes);
+      await waitForSettingsPermissionRequest(tester);
 
       // When I attempt to set a device that will always fail
       await tapSetting(tester, forDRF: "Z:BTE200_TEMP");
@@ -108,6 +127,9 @@ void main() {
       await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
       await waitForDataToLoadFor(tester, "G:AMANDA");
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.tenMinutes);
+      await waitForSettingsPermissionRequest(tester);
       await tapSetting(tester, forDRF: "G:AMANDA");
       await submitSetting(tester, forDRF: "G:AMANDA", newValue: "51.0");
       await waitForSettingDataToLoad(tester, forDRF: "G:AMANDA");
