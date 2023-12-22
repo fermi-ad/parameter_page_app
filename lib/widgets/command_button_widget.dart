@@ -10,11 +10,14 @@ class CommandButtonWidget extends StatefulWidget {
 
   final String longName;
 
+  final bool settingsAllowed;
+
   const CommandButtonWidget(
       {super.key,
       required this.drf,
       required this.value,
-      required this.longName});
+      required this.longName,
+      required this.settingsAllowed});
 
   @override
   State<StatefulWidget> createState() {
@@ -45,7 +48,7 @@ class _CommandButtonState extends State<CommandButtonWidget> {
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
             elevation: 0.0, minimumSize: const Size.fromHeight(40)),
-        onPressed: _handlePress,
+        onPressed: widget.settingsAllowed ? _handlePress : null,
         child: Text(widget.longName));
   }
 

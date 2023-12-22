@@ -370,7 +370,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
           ? SizedBox(
               width: 400,
               child: CommandButtonMenuWidget(
-                  drf: widget.drf, deviceInfo: deviceInfo!))
+                  drf: widget.drf,
+                  deviceInfo: deviceInfo!,
+                  settingsAllowed: widget.settingsAllowed))
           : Container(),
       const Spacer()
     ]);
@@ -382,7 +384,10 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
           stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
           builder: _extendedStatusBuilder),
       deviceInfo != null
-          ? CommandButtonMenuWidget(drf: widget.drf, deviceInfo: deviceInfo!)
+          ? CommandButtonMenuWidget(
+              drf: widget.drf,
+              deviceInfo: deviceInfo!,
+              settingsAllowed: widget.settingsAllowed)
           : Container()
     ]);
   }

@@ -7,8 +7,13 @@ class CommandButtonMenuWidget extends StatelessWidget {
 
   final String drf;
 
+  final bool settingsAllowed;
+
   const CommandButtonMenuWidget(
-      {super.key, required this.deviceInfo, required this.drf});
+      {super.key,
+      required this.deviceInfo,
+      required this.drf,
+      required this.settingsAllowed});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +27,10 @@ class CommandButtonMenuWidget extends StatelessWidget {
     List<CommandButtonWidget> buttons = [];
     for (DeviceInfoDigitalControl command in deviceInfo.digControl) {
       buttons.add(CommandButtonWidget(
-          drf: drf, value: command.shortName, longName: command.longName));
+          drf: drf,
+          value: command.shortName,
+          longName: command.longName,
+          settingsAllowed: settingsAllowed));
     }
     return buttons;
   }
