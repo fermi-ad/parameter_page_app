@@ -32,5 +32,22 @@ void main() {
       // Then the the setting text input does not activate
       assertSettingTextInput(forDRF: "Z:BTE200_TEMP", isVisible: false);
     });
+
+    testWidgets('Settings disabled, sending a command is inhibited',
+        (WidgetTester tester) async {
+      // Given the test page is loaded and settings are disabled
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      assertSettings(areAllowed: false);
+
+      // When I open the expanded digital status for G:AMANDA
+      await expandDigitalStatus(tester, forDRF: "G:AMANDA");
+
+      // Then the command buttons are inhibited
+      assertCommandButtonsAreDisabled(tester,
+          forDRF: "G:AMANDA",
+          withText: ["Reset", "On", "Off", "Positive", "Negative"]);
+    });
   });
 }

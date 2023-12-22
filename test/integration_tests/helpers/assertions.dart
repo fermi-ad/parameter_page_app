@@ -373,13 +373,24 @@ void assertSettingTextInput({required String forDRF, required bool isVisible}) {
 void assertCommandButtons(
     {required bool areVisible,
     required String forDRF,
-    required List<String> withText}) {
+    required List<String> withText,
+    bool? areInhibited}) {
   for (String commandText in withText) {
-    expect(
-        find.descendant(
-            of: find.byKey(Key("parameter_commands_$forDRF")),
-            matching: find.text(commandText)),
-        areVisible ? findsOneWidget : findsNothing);
+    final buttonTextFinder = find.descendant(
+        of: find.byKey(Key("parameter_commands_$forDRF")),
+        matching: find.text(commandText));
+
+    expect(buttonTextFinder, areVisible ? findsOneWidget : findsNothing);
+  }
+}
+
+void assertCommandButtonsAreDisabled(WidgetTester tester,
+    {required String forDRF, required List<String> withText}) {
+  for (String commandText in withText) {
+    final buttonFinder = find.ancestor(
+        of: find.text(commandText), matching: find.byType(ElevatedButton));
+
+    expect((tester.widget(buttonFinder) as ElevatedButton).onPressed, isNull);
   }
 }
 
