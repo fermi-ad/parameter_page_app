@@ -34,10 +34,21 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
           Padding(
               padding: const EdgeInsets.fromLTRB(10.0, 0, 0, 0),
               child: _buildStatusText()),
+          Visibility(
+              visible: _permissionState == _SettingPermissionStatus.enabled,
+              child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10.0, 0, 0, 0),
+                  child: _buildTimerDisplay())),
           Padding(
               padding: const EdgeInsets.fromLTRB(10.0, 0, 0, 0),
               child: _buildPopupMenuButton())
         ]));
+  }
+
+  Widget _buildTimerDisplay() {
+    return Container(
+        key: const Key("settings-permission-timer"),
+        child: const Text("10:00"));
   }
 
   Widget _buildIndicator() {
@@ -120,8 +131,7 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
         .requestSettingsPermission(
             forDuration: SettingsRequestDuration.tenMinutes)
         .then((bool requestGranted) {
-      setState(() => _permissionState = _SettingPermissionStatus.enabled);
-      widget.onChanged?.call(true);
+      _goToEnabledStatus();
     }).onError((error, stackTrace) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Request failed - $error")));
@@ -144,6 +154,13 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
           .showSnackBar(SnackBar(content: Text("Request failed - $error")));
       setState(() => _permissionState = _previousState);
     });
+  }
+
+  void _goToEnabledStatus() {
+    setState(() {
+      _permissionState = _SettingPermissionStatus.enabled;
+    });
+    widget.onChanged?.call(true);
   }
 
   void _goToPendingStatus() {
