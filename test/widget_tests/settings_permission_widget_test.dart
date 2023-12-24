@@ -251,6 +251,26 @@ void main() {
       // Then onChange was called will settingsAllowed = false
       expect(settingsAllowed, false);
     });
+
+    testWidgets(
+        'Settings enabled for 10 minutes, 10:00 displayed in count-down',
+        (WidgetTester tester) async {
+      // Given the user's settings are disabled
+      MockSettingsPermissionService service = MockSettingsPermissionService();
+
+      // ... and the SettingsPermissionWidget has been rendered with an onChange call-back
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SettingsPermissionWidget(service: service)));
+      await tester.pumpWidget(app);
+
+      // When I enable settings for ten minutes
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.tenMinutes);
+      await waitForSettingsPermissionRequest(tester);
+
+      // Then the settings permission count-down shows "10:00"
+      assertSettingsPermissionTimer(isVisible: true, isShowing: "10:00");
+    });
   });
 }
 

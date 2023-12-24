@@ -50,23 +50,5 @@ void main() {
           forDRF: "G:AMANDA",
           withText: ["Reset", "On", "Off", "Positive", "Negative"]);
     });
-
-    testWidgets(
-        'Settings enabled for 10 minutes, 10:00 displayed in count-down',
-        (WidgetTester tester) async {
-      // Given the test page is loaded and settings are disabled
-      await startParameterPageApp(tester);
-      await navigateToTestPage1(tester);
-      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
-      assertSettings(areAllowed: false);
-
-      // When I enable settings for ten minutes
-      await requestSettingsPermission(tester,
-          forDuration: SettingsRequestDuration.tenMinutes);
-      await waitForSettingsPermissionRequest(tester);
-
-      // Then the settings permission count-down shows "10:00"
-      assertSettingsPermissionTimer(isVisible: true, isShowing: "10:00");
-    });
   });
 }
