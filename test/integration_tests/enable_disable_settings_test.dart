@@ -50,5 +50,29 @@ void main() {
           forDRF: "G:AMANDA",
           withText: ["Reset", "On", "Off", "Positive", "Negative"]);
     });
+
+    testWidgets('Settings timer expires, settings are disabled',
+        (WidgetTester tester) async {
+      // Given the test page is loaded and settings are disabled
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      assertSettings(areAllowed: false);
+
+      // When I enable settings for ten minutes
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.tenMinutes);
+      await waitForSettingsPermissionRequest(tester);
+      assertSettingsPermissionTimer(isVisible: true, isShowing: "10:00");
+
+      // ... and then wait for 10 minutes and 1 second
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      // Then the settings permission count-down goes away
+      assertSettingsPermissionTimer(isVisible: false);
+
+      // ... and settings are disabled
+      assertSettings(areAllowed: false);
+    });
   });
 }

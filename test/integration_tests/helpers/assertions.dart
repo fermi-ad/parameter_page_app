@@ -632,7 +632,7 @@ void assertSettings({required bool areAllowed}) {
 }
 
 void assertSettingsPermissionTimer(
-    {required bool isVisible, required String? isShowing}) {
+    {required bool isVisible, String? isShowing}) {
   final widgetFinder = find.byKey(const Key("settings-permission-timer"));
   expect(widgetFinder, isVisible ? findsOneWidget : findsNothing);
 }
