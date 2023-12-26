@@ -295,6 +295,24 @@ void main() {
       expect(service.settingsAllowed, false);
       assertSettings(areAllowed: false);
     });
+
+    testWidgets('Wait two seconds, timer decreases by 2 seconds',
+        (WidgetTester tester) async {
+      // Given I have enabled settings for ten minutes
+      MockSettingsPermissionService service = MockSettingsPermissionService();
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SettingsPermissionWidget(service: service)));
+      await tester.pumpWidget(app);
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.tenMinutes);
+      await waitForSettingsPermissionRequest(tester);
+
+      // When I wait for 2 seconds
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      // Then the timer shows...
+      assertSettingsPermissionTimer(isVisible: true, isShowing: "9:58");
+    });
   });
 }
 
