@@ -1,5 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:parameter_page/main.dart';
+import 'package:parameter_page/services/settings_permission/settings_permission_service.dart';
 
 import 'helpers/actions.dart';
 import 'helpers/assertions.dart';
@@ -31,6 +33,48 @@ void main() {
 
       // Then the the setting text input does not activate
       assertSettingTextInput(forDRF: "Z:BTE200_TEMP", isVisible: false);
+    });
+
+    testWidgets('Settings disabled, sending a command is inhibited',
+        (WidgetTester tester) async {
+      // Given the test page is loaded and settings are disabled
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      assertSettings(areAllowed: false);
+
+      // When I open the expanded digital status for G:AMANDA
+      await expandDigitalStatus(tester, forDRF: "G:AMANDA");
+
+      // Then the command buttons are inhibited
+      assertCommandButtonsAreDisabled(tester,
+          forDRF: "G:AMANDA",
+          withText: ["Reset", "On", "Off", "Positive", "Negative"]);
+    });
+
+    testWidgets('Settings timer expires, settings are disabled',
+        (WidgetTester tester) async {
+      // Given the test page is loaded and settings are disabled
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      assertSettings(areAllowed: false);
+
+      // When I enable settings for ten minutes
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.tenMinutes);
+      await waitForSettingsPermissionRequest(tester);
+      assertSettingsPermissionTimer(isVisible: true, isShowing: "10:00");
+
+      // ... and then wait for the timer to expire
+      mockSettingsPermissionService!.expireMockSettingsTimer();
+      await tester.pumpAndSettle();
+
+      // Then the settings permission count-down goes away
+      assertSettingsPermissionTimer(isVisible: false);
+
+      // ... and settings are disabled
+      assertSettings(areAllowed: false);
     });
   });
 }

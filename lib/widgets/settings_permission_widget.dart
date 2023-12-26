@@ -34,10 +34,20 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
           Padding(
               padding: const EdgeInsets.fromLTRB(10.0, 0, 0, 0),
               child: _buildStatusText()),
+          Visibility(
+              visible: _permissionState == _SettingPermissionStatus.enabled,
+              child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10.0, 0, 0, 0),
+                  child: _buildTimerDisplay())),
           Padding(
               padding: const EdgeInsets.fromLTRB(10.0, 0, 0, 0),
               child: _buildPopupMenuButton())
         ]));
+  }
+
+  Widget _buildTimerDisplay() {
+    return Container(
+        key: const Key("settings-permission-timer"), child: Text(_timerText));
   }
 
   Widget _buildIndicator() {
@@ -85,27 +95,27 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
   }
 
   Widget _buildPopupMenuButton() {
-    return PopupMenuButton<String>(
+    return PopupMenuButton<SettingsRequestDuration>(
         icon: const Icon(Icons.expand_more),
-        onSelected: (String selection) {
-          if (selection == "Disable settings") {
+        onSelected: (SettingsRequestDuration selection) {
+          if (selection == SettingsRequestDuration.disabled) {
             _handleRequestSettingsBeDisabled();
           } else {
             _handleRequestSettingsPermission(selection);
           }
         },
         itemBuilder: (BuildContext context) {
-          List<PopupMenuItem<String>> ret = [
-            const PopupMenuItem<String>(
-                value: "10 Minutes", child: Text("10 Minutes")),
-            const PopupMenuItem<String>(value: "1 Hour", child: Text("1 Hour"))
-          ];
+          List<PopupMenuItem<SettingsRequestDuration>> ret = widget
+              .service.allowedSettingDurations
+              .map((settingDuration) => PopupMenuItem<SettingsRequestDuration>(
+                  value: settingDuration, child: Text(settingDuration.text)))
+              .toList();
 
           if (widget.service.settingsAllowed) {
             ret.insert(
                 0,
-                const PopupMenuItem<String>(
-                    value: "Disable settings",
+                const PopupMenuItem<SettingsRequestDuration>(
+                    value: SettingsRequestDuration.disabled,
                     child: Text("Disable settings")));
           }
 
@@ -113,15 +123,17 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
         });
   }
 
-  void _handleRequestSettingsPermission(String duration) async {
+  void _handleRequestSettingsPermission(
+      SettingsRequestDuration duration) async {
     _goToPendingStatus();
 
     await widget.service
         .requestSettingsPermission(
-            forDuration: SettingsRequestDuration.tenMinutes)
+            forDuration: duration,
+            onTimerExpired: _goToDisabledStatus,
+            onTimerTick: _handleTimerTick)
         .then((bool requestGranted) {
-      setState(() => _permissionState = _SettingPermissionStatus.enabled);
-      widget.onChanged?.call(true);
+      _goToEnabledStatus();
     }).onError((error, stackTrace) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Request failed - $error")));
@@ -146,6 +158,22 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
     });
   }
 
+  void _handleTimerTick(int secondsRemaining) {
+    setState(() => _timerText = _formatCountdown(secondsRemaining));
+  }
+
+  void _goToDisabledStatus() {
+    setState(() => _permissionState = _SettingPermissionStatus.disabled);
+    widget.onChanged?.call(false);
+  }
+
+  void _goToEnabledStatus() {
+    setState(() {
+      _permissionState = _SettingPermissionStatus.enabled;
+    });
+    widget.onChanged?.call(true);
+  }
+
   void _goToPendingStatus() {
     setState(() {
       _previousState = _permissionState;
@@ -153,9 +181,32 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
     });
   }
 
+  String _formatCountdown(int secondsRemaining) {
+    final duration = Duration(seconds: secondsRemaining);
+    int hours = duration.inHours;
+    int minutes = duration.inMinutes.remainder(60);
+    int seconds = duration.inSeconds.remainder(60);
+
+    if (hours > 0) {
+      return "$hours:${_twoDigits(minutes)}:${_twoDigits(seconds)}";
+    } else {
+      return "$minutes:${_twoDigits(seconds)}";
+    }
+  }
+
+  String _twoDigits(int n) {
+    if (n >= 10) {
+      return "$n";
+    } else {
+      return "0$n";
+    }
+  }
+
   _SettingPermissionStatus _permissionState = _SettingPermissionStatus.disabled;
 
   _SettingPermissionStatus _previousState = _SettingPermissionStatus.disabled;
+
+  String _timerText = "10:00";
 }
 
 enum _SettingPermissionStatus { disabled, pending, enabled }
