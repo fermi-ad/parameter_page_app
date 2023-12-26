@@ -34,7 +34,7 @@ class MockSettingsPermissionService implements SettingsPermissionService {
 
       _mockSettingsPermission = true;
 
-      _startTimer(forNSeconds: 60 * 10);
+      _startTimer(forNSeconds: forDuration.seconds);
 
       return true;
     });
