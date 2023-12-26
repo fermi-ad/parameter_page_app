@@ -271,6 +271,29 @@ void main() {
       // Then the settings permission count-down shows "10:00"
       assertSettingsPermissionTimer(isVisible: true, isShowing: "10:00");
     });
+
+    testWidgets(
+        'Timer expires, settings are disabled and timer display is hidden',
+        (WidgetTester tester) async {
+      // Given I have enabled settings for ten minutes
+      MockSettingsPermissionService service = MockSettingsPermissionService();
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SettingsPermissionWidget(service: service)));
+      await tester.pumpWidget(app);
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.tenMinutes);
+      await waitForSettingsPermissionRequest(tester);
+
+      // When the timer expires
+      service.expireMockSettingsTimer();
+
+      // Then the timer display is hidden
+      assertSettingsPermissionTimer(isVisible: false);
+
+      // ... and settings have been disabled
+      expect(service.settingsAllowed, false);
+      assertSettings(areAllowed: false);
+    });
   });
 }
 
