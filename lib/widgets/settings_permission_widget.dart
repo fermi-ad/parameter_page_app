@@ -95,27 +95,29 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
   }
 
   Widget _buildPopupMenuButton() {
-    return PopupMenuButton<String>(
+    return PopupMenuButton<SettingsRequestDuration>(
         icon: const Icon(Icons.expand_more),
-        onSelected: (String selection) {
-          if (selection == "Disable settings") {
+        onSelected: (SettingsRequestDuration selection) {
+          if (selection == SettingsRequestDuration.disabled) {
             _handleRequestSettingsBeDisabled();
           } else {
             _handleRequestSettingsPermission(selection);
           }
         },
         itemBuilder: (BuildContext context) {
-          List<PopupMenuItem<String>> ret = [
-            const PopupMenuItem<String>(
-                value: "10 Minutes", child: Text("10 Minutes")),
-            const PopupMenuItem<String>(value: "1 Hour", child: Text("1 Hour"))
+          List<PopupMenuItem<SettingsRequestDuration>> ret = [
+            const PopupMenuItem<SettingsRequestDuration>(
+                value: SettingsRequestDuration.tenMinutes,
+                child: Text("10 Minutes")),
+            const PopupMenuItem<SettingsRequestDuration>(
+                value: SettingsRequestDuration.oneHour, child: Text("1 Hour"))
           ];
 
           if (widget.service.settingsAllowed) {
             ret.insert(
                 0,
-                const PopupMenuItem<String>(
-                    value: "Disable settings",
+                const PopupMenuItem<SettingsRequestDuration>(
+                    value: SettingsRequestDuration.disabled,
                     child: Text("Disable settings")));
           }
 
@@ -123,12 +125,13 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
         });
   }
 
-  void _handleRequestSettingsPermission(String duration) async {
+  void _handleRequestSettingsPermission(
+      SettingsRequestDuration duration) async {
     _goToPendingStatus();
 
     await widget.service
         .requestSettingsPermission(
-            forDuration: SettingsRequestDuration.tenMinutes,
+            forDuration: duration,
             onTimerExpired: _goToDisabledStatus,
             onTimerTick: _handleTimerTick)
         .then((bool requestGranted) {

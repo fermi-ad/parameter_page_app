@@ -1,4 +1,4 @@
-enum SettingsRequestDuration { tenMinutes, oneHour, eightHours }
+enum SettingsRequestDuration { disabled, tenMinutes, oneHour, eightHours }
 
 abstract class SettingsPermissionService {
   bool get settingsAllowed;
