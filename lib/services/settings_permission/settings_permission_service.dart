@@ -4,7 +4,8 @@ abstract class SettingsPermissionService {
   bool get settingsAllowed;
 
   Future<bool> requestSettingsPermission(
-      {required SettingsRequestDuration forDuration});
+      {required SettingsRequestDuration forDuration,
+      Function()? onTimerExpired});
 
   Future<bool> requestSettingsBeDisabled();
 }

@@ -129,7 +129,8 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
 
     await widget.service
         .requestSettingsPermission(
-            forDuration: SettingsRequestDuration.tenMinutes)
+            forDuration: SettingsRequestDuration.tenMinutes,
+            onTimerExpired: _goToDisabledStatus)
         .then((bool requestGranted) {
       _goToEnabledStatus();
     }).onError((error, stackTrace) {
@@ -154,6 +155,11 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
           .showSnackBar(SnackBar(content: Text("Request failed - $error")));
       setState(() => _permissionState = _previousState);
     });
+  }
+
+  void _goToDisabledStatus() {
+    setState(() => _permissionState = _SettingPermissionStatus.disabled);
+    widget.onChanged?.call(false);
   }
 
   void _goToEnabledStatus() {

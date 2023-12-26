@@ -286,6 +286,7 @@ void main() {
 
       // When the timer expires
       service.expireMockSettingsTimer();
+      await tester.pumpAndSettle();
 
       // Then the timer display is hidden
       assertSettingsPermissionTimer(isVisible: false);
