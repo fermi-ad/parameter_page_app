@@ -59,6 +59,7 @@ void main() {
 
       // Clean-up
       await waitForSettingsPermissionRequest(tester);
+      service.expireMockSettingsTimer();
     });
 
     testWidgets('Request for settings is approved, enable status is displayed',
@@ -80,6 +81,9 @@ void main() {
 
       // Then the widget indicates that settings are approved
       assertSettings(areAllowed: true);
+
+      // Clean-up
+      service.expireMockSettingsTimer();
     });
 
     testWidgets('Request for settings is denied, disabled status is displayed',
@@ -222,6 +226,9 @@ void main() {
 
       // Then onChange was called will settingsAllowed = true
       expect(settingsAllowed, true);
+
+      // Clean-up
+      service.expireMockSettingsTimer();
     });
 
     testWidgets(
@@ -270,6 +277,9 @@ void main() {
 
       // Then the settings permission count-down shows "10:00"
       assertSettingsPermissionTimer(isVisible: true, isShowing: "10:00");
+
+      // Clean-up
+      service.expireMockSettingsTimer();
     });
 
     testWidgets(
@@ -312,6 +322,28 @@ void main() {
 
       // Then the timer shows...
       assertSettingsPermissionTimer(isVisible: true, isShowing: "9:58");
+
+      // Clean-up
+      service.expireMockSettingsTimer();
+    });
+
+    testWidgets('Disable settings, timer resets to 0',
+        (WidgetTester tester) async {
+      // Given settings are enabled for ten minutes
+      MockSettingsPermissionService service = MockSettingsPermissionService();
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SettingsPermissionWidget(service: service)));
+      await tester.pumpWidget(app);
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.tenMinutes);
+      await waitForSettingsPermissionRequest(tester);
+
+      // When I disable settings
+      await requestSettingsPermissionBeDisabled(tester);
+      await waitForSettingsPermissionRequest(tester);
+
+      // Then the remaining time on the settings timer is 0
+      expect(0, service.settingsEnabledSecondsRemaining);
     });
   });
 }

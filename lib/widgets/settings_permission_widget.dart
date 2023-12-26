@@ -47,8 +47,7 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
 
   Widget _buildTimerDisplay() {
     return Container(
-        key: const Key("settings-permission-timer"),
-        child: const Text("10:00"));
+        key: const Key("settings-permission-timer"), child: Text(_timerText));
   }
 
   Widget _buildIndicator() {
@@ -130,7 +129,8 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
     await widget.service
         .requestSettingsPermission(
             forDuration: SettingsRequestDuration.tenMinutes,
-            onTimerExpired: _goToDisabledStatus)
+            onTimerExpired: _goToDisabledStatus,
+            onTimerTick: _handleTimerTick)
         .then((bool requestGranted) {
       _goToEnabledStatus();
     }).onError((error, stackTrace) {
@@ -157,6 +157,10 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
     });
   }
 
+  void _handleTimerTick(int secondsRemaining) {
+    setState(() => _timerText = _formatCountdown(secondsRemaining));
+  }
+
   void _goToDisabledStatus() {
     setState(() => _permissionState = _SettingPermissionStatus.disabled);
     widget.onChanged?.call(false);
@@ -176,9 +180,32 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
     });
   }
 
+  String _formatCountdown(int secondsRemaining) {
+    final duration = Duration(seconds: secondsRemaining);
+    int hours = duration.inHours;
+    int minutes = duration.inMinutes.remainder(60);
+    int seconds = duration.inSeconds.remainder(60);
+
+    if (hours > 0) {
+      return "$hours:${_twoDigits(minutes)}:${_twoDigits(seconds)}";
+    } else {
+      return "$minutes:${_twoDigits(seconds)}";
+    }
+  }
+
+  String _twoDigits(int n) {
+    if (n >= 10) {
+      return "$n";
+    } else {
+      return "0$n";
+    }
+  }
+
   _SettingPermissionStatus _permissionState = _SettingPermissionStatus.disabled;
 
   _SettingPermissionStatus _previousState = _SettingPermissionStatus.disabled;
+
+  String _timerText = "10:00";
 }
 
 enum _SettingPermissionStatus { disabled, pending, enabled }
