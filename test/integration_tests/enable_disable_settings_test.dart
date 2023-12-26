@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:parameter_page/main.dart';
 import 'package:parameter_page/services/settings_permission/settings_permission_service.dart';
 
 import 'helpers/actions.dart';
@@ -65,8 +66,9 @@ void main() {
       await waitForSettingsPermissionRequest(tester);
       assertSettingsPermissionTimer(isVisible: true, isShowing: "10:00");
 
-      // ... and then wait for 10 minutes and 1 second
-      await tester.pumpAndSettle(const Duration(seconds: 1));
+      // ... and then wait for the timer to expire
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+      mockSettingsPermissionService!.expireMockSettingsTimer();
 
       // Then the settings permission count-down goes away
       assertSettingsPermissionTimer(isVisible: false);

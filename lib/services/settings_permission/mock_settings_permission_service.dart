@@ -49,5 +49,7 @@ class MockSettingsPermissionService implements SettingsPermissionService {
     _mockSettingsPermission = true;
   }
 
+  void expireMockSettingsTimer() {}
+
   bool _mockSettingsPermission = false;
 }
