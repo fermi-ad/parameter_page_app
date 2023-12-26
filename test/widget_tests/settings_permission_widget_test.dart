@@ -345,6 +345,28 @@ void main() {
       // Then the remaining time on the settings timer is 0
       expect(0, service.settingsEnabledSecondsRemaining);
     });
+
+    testWidgets('Enable settings for 1 hour, timer set to 1:00:00',
+        (WidgetTester tester) async {
+      // Given the user's settings are disabled
+      MockSettingsPermissionService service = MockSettingsPermissionService();
+
+      // ... and the SettingsPermissionWidget has been rendered
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SettingsPermissionWidget(service: service)));
+      await tester.pumpWidget(app);
+
+      // When I enable settings for 1 hour
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.oneHour);
+      await waitForSettingsPermissionRequest(tester);
+
+      // Then the timer shows 1:00:00
+      assertSettingsPermissionTimer(isVisible: true, isShowing: "1:00:00");
+
+      // Clean-up
+      service.expireMockSettingsTimer();
+    });
   });
 }
 
