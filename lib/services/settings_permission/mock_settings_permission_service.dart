@@ -70,12 +70,13 @@ class MockSettingsPermissionService implements SettingsPermissionService {
   }
 
   void expireMockSettingsTimer() {
-    _mockSettingsPermission = false;
+    _disableSettingsAndResetTimer();
     _onTimerExpired?.call();
-    _timer?.cancel();
   }
 
   void _startTimer({required forNSeconds}) {
+    _timer?.cancel();
+
     _remaining = forNSeconds;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_remaining == 0) {
