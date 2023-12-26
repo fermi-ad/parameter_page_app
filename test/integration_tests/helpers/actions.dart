@@ -513,23 +513,7 @@ Future<void> requestSettingsPermissionBeDisabled(WidgetTester tester) async {
 Future<void> requestSettingsPermission(WidgetTester tester,
     {required SettingsRequestDuration forDuration}) async {
   await openSettingsPermissionMenu(tester);
-
-  switch (forDuration) {
-    case SettingsRequestDuration.disabled:
-      await tester.tap(find.text("Disable settings"));
-      break;
-
-    case SettingsRequestDuration.tenMinutes:
-      await tester.tap(find.text("10 Minutes"));
-      break;
-
-    case SettingsRequestDuration.oneHour:
-      await tester.tap(find.text("1 Hour"));
-      break;
-
-    case SettingsRequestDuration.eightHours:
-      await tester.tap(find.text("8 Hours"));
-  }
+  await tester.tap(find.text(forDuration.text));
   await tester.pump();
 }
 

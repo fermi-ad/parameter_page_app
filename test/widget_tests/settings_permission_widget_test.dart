@@ -367,6 +367,28 @@ void main() {
       // Clean-up
       service.expireMockSettingsTimer();
     });
+
+    testWidgets(
+        'Enable settings for 5 seconds and wait, timer expires and settings are disabled',
+        (WidgetTester tester) async {
+      // Given settings are enabled for ten minutes
+      MockSettingsPermissionService service = MockSettingsPermissionService();
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SettingsPermissionWidget(service: service)));
+      await tester.pumpWidget(app);
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.fiveSeconds);
+      await waitForSettingsPermissionRequest(tester);
+
+      // When I wait for the timer to expire
+      await tester.pumpAndSettle(const Duration(seconds: 6));
+
+      // Then settings are disabled
+      assertSettings(areAllowed: false);
+
+      // ... and the timer is hidden
+      assertSettingsPermissionTimer(isVisible: false);
+    });
   });
 }
 

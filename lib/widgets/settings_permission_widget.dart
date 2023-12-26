@@ -105,13 +105,11 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
           }
         },
         itemBuilder: (BuildContext context) {
-          List<PopupMenuItem<SettingsRequestDuration>> ret = [
-            const PopupMenuItem<SettingsRequestDuration>(
-                value: SettingsRequestDuration.tenMinutes,
-                child: Text("10 Minutes")),
-            const PopupMenuItem<SettingsRequestDuration>(
-                value: SettingsRequestDuration.oneHour, child: Text("1 Hour"))
-          ];
+          List<PopupMenuItem<SettingsRequestDuration>> ret = widget
+              .service.allowedSettingDurations
+              .map((settingDuration) => PopupMenuItem<SettingsRequestDuration>(
+                  value: settingDuration, child: Text(settingDuration.text)))
+              .toList();
 
           if (widget.service.settingsAllowed) {
             ret.insert(

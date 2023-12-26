@@ -11,6 +11,14 @@ class MockSettingsPermissionService implements SettingsPermissionService {
   @override
   int get settingsEnabledSecondsRemaining => _remaining;
 
+  @override
+  List<SettingsRequestDuration> get allowedSettingDurations => [
+        SettingsRequestDuration.fiveSeconds,
+        SettingsRequestDuration.tenMinutes,
+        SettingsRequestDuration.oneHour,
+        SettingsRequestDuration.eightHours
+      ];
+
   bool mockDenySettingsPermissionRequests = false;
 
   bool mockFailSettingsPermissionRequests = false;
@@ -73,6 +81,7 @@ class MockSettingsPermissionService implements SettingsPermissionService {
       if (_remaining == 0) {
         _disableSettingsAndResetTimer();
         _onTimerExpired?.call();
+        _onTimerExpired = null;
       } else {
         _remaining -= 1;
         _onTimerTick?.call(_remaining);
@@ -83,7 +92,6 @@ class MockSettingsPermissionService implements SettingsPermissionService {
 
   void _disableSettingsAndResetTimer() {
     _mockSettingsPermission = false;
-    _onTimerExpired = null;
     _stopAndResetTimer();
   }
 
