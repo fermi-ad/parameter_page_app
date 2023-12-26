@@ -36,7 +36,8 @@ List<GoRoute> configureRoutes(
         builder: (context, state) => ParameterPageScaffoldWidget(
             acsysService: dpmService,
             pageService: pageService,
-            deviceService: deviceService)),
+            deviceService: deviceService,
+            settingsPermissionService: permissionsService)),
     GoRoute(
         name: "DisplayParameterPage",
         path: "/page/:id",
@@ -44,6 +45,7 @@ List<GoRoute> configureRoutes(
             acsysService: dpmService,
             pageService: pageService,
             deviceService: deviceService,
+            settingsPermissionService: permissionsService,
             openPageId: state.pathParameters['id']))
   ];
 }

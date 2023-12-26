@@ -67,8 +67,8 @@ void main() {
       assertSettingsPermissionTimer(isVisible: true, isShowing: "10:00");
 
       // ... and then wait for the timer to expire
-      await tester.pumpAndSettle(const Duration(seconds: 2));
       mockSettingsPermissionService!.expireMockSettingsTimer();
+      await tester.pumpAndSettle();
 
       // Then the settings permission count-down goes away
       assertSettingsPermissionTimer(isVisible: false);

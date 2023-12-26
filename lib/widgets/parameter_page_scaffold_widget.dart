@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_controls_core/flutter_controls_core.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
-import 'package:parameter_page/services/settings_permission/mock_settings_permission_service.dart';
 import 'package:parameter_page/services/settings_permission/settings_permission_service.dart';
 import 'package:parameter_page/services/user_device/user_device_service.dart';
 import 'package:parameter_page/widgets/display_settings_button_widget.dart';
@@ -28,6 +27,7 @@ class ParameterPageScaffoldWidget extends StatefulWidget {
       required this.acsysService,
       required this.pageService,
       required this.deviceService,
+      required this.settingsPermissionService,
       this.openPageId});
 
   final ACSysServiceAPI acsysService;
@@ -35,6 +35,8 @@ class ParameterPageScaffoldWidget extends StatefulWidget {
   final ParameterPageService pageService;
 
   final UserDeviceService deviceService;
+
+  final SettingsPermissionService settingsPermissionService;
 
   final String? openPageId;
 
@@ -74,7 +76,7 @@ class _ParameterPageScaffoldWidgetState
 
   Widget _buildBottomNavigationBar() {
     return SettingsPermissionWidget(
-        service: _settingsPermissionService,
+        service: widget.settingsPermissionService,
         onChanged: _handleSettingsPermissionChanged);
   }
 
@@ -194,7 +196,8 @@ class _ParameterPageScaffoldWidgetState
                 child: PageWidget(
                     key: _pageKey,
                     page: _page!,
-                    settingsAllowed: _settingsPermissionService.settingsAllowed,
+                    settingsAllowed:
+                        widget.settingsPermissionService.settingsAllowed,
                     onPageModified: _handlePageModified,
                     onToggleEditing: (bool isEditing) => setState(() {})))));
   }
@@ -541,7 +544,4 @@ class _ParameterPageScaffoldWidgetState
   ParameterPage? _page;
 
   PagePersistenceState _persistenceState = PagePersistenceState.clean;
-
-  final SettingsPermissionService _settingsPermissionService =
-      MockSettingsPermissionService();
 }
