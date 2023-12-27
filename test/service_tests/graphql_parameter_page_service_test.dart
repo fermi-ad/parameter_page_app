@@ -65,7 +65,7 @@ void main() {
 
   group('createPage', () {
     setUpAll(() async => await _deleteAllTestPages());
-    // tearDownAll(() async => _deleteAllTestPages());
+    tearDownAll(() async => _deleteAllTestPages());
 
     test(
         "createPage(withTitle:), returns a page ID and the new titles shows up in the directory",
@@ -341,13 +341,13 @@ void main() {
 
       // Then the read-back page has the persisted changes
       List<PageEntry> entries = readBackPage.entriesAsList();
-      expect(readBackPage.subPageCount(forTab: "Tab 1"), 1);
+      expect(readBackPage.subPageCount(forTab: "First Tab"), 1);
       expect(readBackPage.subPageIndex, 1);
       expect(entries.length, 1);
       expect(entries[0].entryText(), "test entry on tab-1 sub-page 1");
       expect(readBackPage.subPageTitle, "Tab 1 Sub 1");
 
-      readBackPage.switchTab(to: "Tab 2");
+      readBackPage.switchTab(to: "Second Tab");
       entries = readBackPage.entriesAsList();
       expect(readBackPage.subPageIndex, 1);
       expect(entries.length, 2);
