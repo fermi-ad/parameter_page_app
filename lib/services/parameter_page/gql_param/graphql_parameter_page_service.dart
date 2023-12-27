@@ -90,19 +90,10 @@ class GraphQLParameterPageService extends ParameterPageService {
     try {
       final persistedPageStructure = await _fetchPageStructure(forPageId: id);
 
-      await _deleteExtraSubPages(
-          persistedSubPages: persistedPageStructure['sub_systems'][0]['tabs'][0]
-              ['sub_pages'],
+      await _updateEachTab(
           withPage: page,
-          forTab: "Tab 1");
-
-      await _updateEachSubPage(
-          persistedTabId: persistedPageStructure['sub_systems'][0]['tabs'][0]
-              ['subsystabid'],
-          persistedSubPages: persistedPageStructure['sub_systems'][0]['tabs'][0]
-              ['sub_pages'],
-          withPage: page,
-          forTab: "Tab 1");
+          persistedTabs: persistedPageStructure['sub_systems'][0]['tabs'],
+          subSystemId: persistedPageStructure['sub_systems'][0]['subsysid']);
     } catch (e) {
       Logger().e(e.toString());
       return Future.error("savePage failure");
@@ -129,6 +120,60 @@ class GraphQLParameterPageService extends ParameterPageService {
     }
     */
     return Future.error("renamePage not implemented");
+  }
+
+  Future<void> _updateEachTab(
+      {required List<dynamic> persistedTabs,
+      required ParameterPage withPage,
+      required String subSystemId}) async {
+    for (int tabIndex = 0; tabIndex != withPage.tabTitles.length; tabIndex++) {
+      final tabName = withPage.tabTitles[tabIndex];
+
+      dynamic persistedTab;
+      if (tabIndex >= persistedTabs.length) {
+        persistedTab = await _createANewTab(
+            withTitle: tabName, atIndex: tabIndex, onSubSystem: subSystemId);
+      } else {
+        persistedTab = persistedTabs[tabIndex];
+      }
+
+      await _deleteExtraSubPages(
+          persistedSubPages:
+              persistedTab['sub_pages'] ?? persistedTab['tabpagelist'],
+          withPage: withPage,
+          forTab: tabName);
+
+      await _updateEachSubPage(
+          persistedTabId: persistedTab['subsystabid'],
+          persistedSubPages:
+              persistedTab['sub_pages'] ?? persistedTab['tabpagelist'],
+          withPage: withPage,
+          forTab: tabName);
+    }
+  }
+
+  Future<dynamic> _createANewTab(
+      {required String withTitle,
+      required int atIndex,
+      required String onSubSystem}) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(addTabBranch),
+      variables: {
+        'title': withTitle,
+        "seqnum": atIndex + 1,
+        "subsysid": onSubSystem
+      },
+    );
+
+    final QueryResult result = await client.value.query(options);
+
+    if (result.hasException) {
+      Logger().e(result.exception);
+      return Future.error(
+          "The request to create a new tab returned an exception.  Please refer to the developer console for more detail.");
+    } else {
+      return result.data!['newSubsysTabBranch'];
+    }
   }
 
   Future<void> _deleteExtraSubPages(
@@ -165,13 +210,13 @@ class GraphQLParameterPageService extends ParameterPageService {
 
         await _deleteAllEntries(
             fromSubPageId: subPageId,
-            entries: persistedSubPages[subPageIndex]['entries']);
+            entries: persistedSubPages[subPageIndex]['entries'] ?? []);
       }
 
       await _saveEntries(
           id: subPageId,
           newEntries: withPage.entriesAsListFrom(
-              tab: "Tab 1", subPage: subPageIndex + 1));
+              tab: forTab, subPage: subPageIndex + 1));
 
       final subPageTitle =
           withPage.subPageTitleFor(tab: forTab, subPageIndex: subPageIndex + 1);
