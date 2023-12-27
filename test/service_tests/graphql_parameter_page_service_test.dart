@@ -321,10 +321,12 @@ void main() {
       page.title = "***SERVICE TEST*** Save Multiple Tabs Test";
       page.add(CommentEntry("test entry on tab-1 sub-page 1"));
       page.subPageTitle = "Tab 1 Sub 1";
+      page.renameTab(withTitle: "Tab 1", to: "First Tab");
       page.createTab();
       page.add(CommentEntry("test entry on tab-2 sub-page 1"));
       page.add(CommentEntry("test entry #2 on tab-2 sub-page 1"));
       page.subPageTitle = "Tab 2 Sub 1";
+      page.renameTab(withTitle: "Tab 2", to: "Second Tab");
       page.createSubPage();
       page.add(CommentEntry("test entry #1 on tab-2 sub-page 2"));
       page.add(CommentEntry("test entry #2 on tab-2 sub-page 2"));
