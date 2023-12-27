@@ -90,13 +90,10 @@ class GraphQLParameterPageService extends ParameterPageService {
     try {
       final persistedPageStructure = await _fetchPageStructure(forPageId: id);
 
-      await _updateEachSubPage(
-          persistedTabId: persistedPageStructure['sub_systems'][0]['tabs'][0]
-              ['subsystabid'],
-          persistedSubPages: persistedPageStructure['sub_systems'][0]['tabs'][0]
-              ['sub_pages'],
+      await _updateEachTab(
           withPage: page,
-          forTab: "Tab 1");
+          persistedTabs: persistedPageStructure['sub_systems'][0]['tabs'],
+          subSystemId: persistedPageStructure['sub_systems'][0]['subsysid']);
     } catch (e) {
       Logger().e(e.toString());
       return Future.error("savePage failure");
@@ -125,6 +122,108 @@ class GraphQLParameterPageService extends ParameterPageService {
     return Future.error("renamePage not implemented");
   }
 
+  Future<void> _updateEachTab(
+      {required List<dynamic> persistedTabs,
+      required ParameterPage withPage,
+      required String subSystemId}) async {
+    for (int tabIndex = 0; tabIndex != withPage.tabTitles.length; tabIndex++) {
+      final tabName = withPage.tabTitles[tabIndex];
+
+      dynamic persistedTab;
+      if (tabIndex >= persistedTabs.length) {
+        persistedTab = await _createANewTab(
+            withTitle: tabName, atIndex: tabIndex, onSubSystem: subSystemId);
+      } else {
+        persistedTab = persistedTabs[tabIndex];
+
+        if (tabName != persistedTab["title"]) {
+          _renameTab(id: persistedTab['subsystabid'], newTitle: tabName);
+        }
+      }
+
+      await _deleteExtraSubPages(
+          persistedSubPages:
+              persistedTab['sub_pages'] ?? persistedTab['tabpagelist'],
+          withPage: withPage,
+          forTab: tabName);
+
+      await _updateEachSubPage(
+          persistedTabId: persistedTab['subsystabid'],
+          persistedSubPages:
+              persistedTab['sub_pages'] ?? persistedTab['tabpagelist'],
+          withPage: withPage,
+          forTab: tabName);
+    }
+  }
+
+  Future<dynamic> _createANewTab(
+      {required String withTitle,
+      required int atIndex,
+      required String onSubSystem}) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(addTabBranch),
+      variables: {
+        'title': withTitle,
+        "seqnum": atIndex + 1,
+        "subsysid": onSubSystem
+      },
+    );
+
+    final QueryResult result = await client.value.query(options);
+
+    if (result.hasException) {
+      Logger().e(result.exception);
+      return Future.error(
+          "The request to create a new tab returned an exception.  Please refer to the developer console for more detail.");
+    } else {
+      return result.data!['newSubsysTabBranch'];
+    }
+  }
+
+  Future<void> _renameTab(
+      {required String id, required String newTitle}) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(updateSubjectTitles),
+      variables: {
+        'subjType': "tab",
+        'subjTitles': [
+          {'subjectid': id, 'title': newTitle}
+        ]
+      },
+    );
+
+    final QueryResult result = await client.value.query(options);
+
+    if (result.hasException) {
+      Logger().e(result.exception);
+      return Future.error(
+          "The request to rename the tab returned an exception.  Please refer to the developer console for more detail.");
+    } else {
+      if (result.data?['code'] == -1) {
+        Logger().e(
+            "updateSubjectTitles returned with a failure, message: ${result.data?["message"]}");
+        return Future.error(
+            "The request to rename the tab returned an exception.  Please refer to the developer console for more detail.");
+      }
+    }
+  }
+
+  Future<void> _deleteExtraSubPages(
+      {required List<dynamic> persistedSubPages,
+      required ParameterPage withPage,
+      required String forTab}) async {
+    for (int subPageIndex = 0;
+        subPageIndex != persistedSubPages.length;
+        subPageIndex++) {
+      if (subPageIndex > withPage.subPageCount(forTab: forTab) - 1) {
+        final subPageId = persistedSubPages[subPageIndex]["tabpageid"];
+        final entries = persistedSubPages[subPageIndex]['entries'];
+        await _deleteAllEntries(fromSubPageId: subPageId, entries: entries);
+        await _deleteSubPage(id: subPageId);
+      }
+    }
+  }
+
   Future<void> _updateEachSubPage(
       {required String persistedTabId,
       required List<dynamic> persistedSubPages,
@@ -141,15 +240,15 @@ class GraphQLParameterPageService extends ParameterPageService {
       } else {
         subPageId = persistedSubPages[subPageIndex]['tabpageid'];
 
-        _deleteAllEntries(
+        await _deleteAllEntries(
             fromSubPageId: subPageId,
-            entries: persistedSubPages[subPageIndex]['entries']);
+            entries: persistedSubPages[subPageIndex]['entries'] ?? []);
       }
 
       await _saveEntries(
           id: subPageId,
           newEntries: withPage.entriesAsListFrom(
-              tab: "Tab 1", subPage: subPageIndex + 1));
+              tab: forTab, subPage: subPageIndex + 1));
 
       final subPageTitle =
           withPage.subPageTitleFor(tab: forTab, subPageIndex: subPageIndex + 1);
@@ -159,6 +258,24 @@ class GraphQLParameterPageService extends ParameterPageService {
       if (subPageTitleShouldBeUpdated) {
         await _renameSubPage(id: subPageId, newTitle: subPageTitle);
       }
+    }
+  }
+
+  Future<void> _deleteSubPage({required String id}) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(deleteSubjects),
+      variables: <String, dynamic>{
+        'subjType': "subpage",
+        'subjIds': [id]
+      },
+    );
+
+    final QueryResult result = await client.value.query(options);
+
+    if (result.hasException) {
+      Logger().e(result.exception);
+      return Future.error(
+          "The request to delete a parameter page returned an exception.  Please refer to the developer console for more detail.");
     }
   }
 
@@ -213,7 +330,7 @@ class GraphQLParameterPageService extends ParameterPageService {
     if (result.hasException) {
       Logger().e(result.exception);
       return Future.error(
-          "The request to add entries to a parameter page returned an exception.  Please refer to the developer console for more detail.");
+          "The request to create a new sub-page returned an exception.  Please refer to the developer console for more detail.");
     } else {
       return result.data!['newTabPage']['tabpageid'];
     }

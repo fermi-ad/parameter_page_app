@@ -64,8 +64,8 @@ void main() {
   });
 
   group('createPage', () {
-    setUpAll(() => _deleteAllTestPages());
-    tearDownAll(() => _deleteAllTestPages());
+    setUpAll(() async => await _deleteAllTestPages());
+    tearDownAll(() async => _deleteAllTestPages());
 
     test(
         "createPage(withTitle:), returns a page ID and the new titles shows up in the directory",
@@ -255,8 +255,7 @@ void main() {
       // ... and a new ParameterPage with three sub-pages each populated with entries
       ParameterPage page = ParameterPage();
       page.enableEditing();
-      page.title =
-          "***SERVICE TEST*** Save Existing Page w/ Multiple Sub-pages Test";
+      page.title = "***SERVICE TEST*** Save Multiple Sub-pages";
       page.add(CommentEntry("original test entry on sub-page 1"));
       page.subPageTitle = "Sub Page One";
       page.createSubPage();
@@ -294,23 +293,79 @@ void main() {
       List<PageEntry> entries = readBackPage.entriesAsList();
       expect(readBackPage.subPageCount(forTab: "Tab 1"), 2);
       expect(readBackPage.subPageIndex, 1);
+      expect(readBackPage.subPageTitle, "First Sub-page");
       expect(entries.length, 2);
       expect(entries[0].entryText(), "new test entry on first sub-page");
       expect(entries[1].entryText(), "additional test entry on first sub-page");
-      expect(readBackPage.subPageTitle, "First Sub-page");
 
       readBackPage.incrementSubPage();
       entries = readBackPage.entriesAsList();
       expect(readBackPage.subPageIndex, 2);
-      expect(entries.length, 4);
-      expect(entries[0].entryText(), "test entry on sub-page 3");
-      expect(entries[1].entryText(), "test entry #2 on sub-page 3");
-      expect(entries[2].entryText(), "test entry #3 on sub-page 3");
-      expect(entries[3].entryText(), "fourth test entry on sub-page 3");
       expect(readBackPage.subPageTitle, "Sub Page Three");
+      expect(entries.length, 4);
+      expect(entries[0].entryText(), "original test entry on sub-page 3");
+      expect(entries[1].entryText(), "original test entry #2 on sub-page 3");
+      expect(entries[2].entryText(), "original test entry #3 on sub-page 3");
+      expect(entries[3].entryText(), "fourth test entry on sub-page 3");
     });
 
-    test("add a tab and savePage(..), new tab is persisted", () {});
+    test("savePage(..) a page with multiple tabs, tabs are persisted properly",
+        () async {
+      // Given a GraphQLParameterPageService
+      await dotenv.load(fileName: ".env");
+      final service = GraphQLParameterPageService();
+
+      // ... and a new ParameterPage with two tabs each populated with entries
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.title = "***SERVICE TEST*** Save Multiple Tabs Test";
+      page.add(CommentEntry("test entry on tab-1 sub-page 1"));
+      page.subPageTitle = "Tab 1 Sub 1";
+      page.renameTab(withTitle: "Tab 1", to: "First Tab");
+      page.createTab();
+      page.add(CommentEntry("test entry on tab-2 sub-page 1"));
+      page.add(CommentEntry("test entry #2 on tab-2 sub-page 1"));
+      page.subPageTitle = "Tab 2 Sub 1";
+      page.renameTab(withTitle: "Tab 2", to: "Second Tab");
+      page.createSubPage();
+      page.add(CommentEntry("test entry #1 on tab-2 sub-page 2"));
+      page.add(CommentEntry("test entry #2 on tab-2 sub-page 2"));
+      page.subPageTitle = "Tab 2 Sub 2";
+
+      // When I save the page
+      final pageId = await service.createPage(withTitle: page.title);
+      await service.savePage(id: pageId, page: page);
+
+      // ... and read it back
+      ParameterPage readBackPage = await service.fetchPage(id: pageId);
+
+      // Then the read-back page has the persisted changes
+      List<PageEntry> entries = readBackPage.entriesAsList();
+      expect(readBackPage.subPageCount(forTab: "First Tab"), 1);
+      expect(readBackPage.subPageIndex, 1);
+      expect(entries.length, 1);
+      expect(entries[0].entryText(), "test entry on tab-1 sub-page 1");
+      expect(readBackPage.subPageTitle, "Tab 1 Sub 1");
+
+      readBackPage.switchTab(to: "Second Tab");
+      entries = readBackPage.entriesAsList();
+      expect(readBackPage.subPageIndex, 1);
+      expect(entries.length, 2);
+      expect(entries[0].entryText(), "test entry on tab-2 sub-page 1");
+      expect(entries[1].entryText(), "test entry #2 on tab-2 sub-page 1");
+      expect(readBackPage.subPageTitle, "Tab 2 Sub 1");
+
+      readBackPage.incrementSubPage();
+      entries = readBackPage.entriesAsList();
+      expect(readBackPage.subPageIndex, 2);
+      expect(entries.length, 2);
+      expect(entries[0].entryText(), "test entry #1 on tab-2 sub-page 2");
+      expect(entries[1].entryText(), "test entry #2 on tab-2 sub-page 2");
+      expect(readBackPage.subPageTitle, "Tab 2 Sub 2");
+    });
+
+    test("add entries to multiple tabs and savePage(..), changes are persisted",
+        () {});
 
     test("change tab titles and savePage(..), new tab title is persisted",
         () {});
