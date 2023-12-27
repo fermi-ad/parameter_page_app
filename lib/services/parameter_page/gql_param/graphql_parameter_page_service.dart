@@ -90,6 +90,12 @@ class GraphQLParameterPageService extends ParameterPageService {
     try {
       final persistedPageStructure = await _fetchPageStructure(forPageId: id);
 
+      await _deleteExtraSubPages(
+          persistedSubPages: persistedPageStructure['sub_systems'][0]['tabs'][0]
+              ['sub_pages'],
+          withPage: page,
+          forTab: "Tab 1");
+
       await _updateEachSubPage(
           persistedTabId: persistedPageStructure['sub_systems'][0]['tabs'][0]
               ['subsystabid'],
@@ -125,6 +131,22 @@ class GraphQLParameterPageService extends ParameterPageService {
     return Future.error("renamePage not implemented");
   }
 
+  Future<void> _deleteExtraSubPages(
+      {required List<dynamic> persistedSubPages,
+      required ParameterPage withPage,
+      required String forTab}) async {
+    for (int subPageIndex = 0;
+        subPageIndex != persistedSubPages.length;
+        subPageIndex++) {
+      if (subPageIndex > withPage.subPageCount(forTab: forTab) - 1) {
+        final subPageId = persistedSubPages[subPageIndex]["tabpageid"];
+        final entries = persistedSubPages[subPageIndex]['entries'];
+        await _deleteAllEntries(fromSubPageId: subPageId, entries: entries);
+        await _deleteSubPage(id: subPageId);
+      }
+    }
+  }
+
   Future<void> _updateEachSubPage(
       {required String persistedTabId,
       required List<dynamic> persistedSubPages,
@@ -141,7 +163,7 @@ class GraphQLParameterPageService extends ParameterPageService {
       } else {
         subPageId = persistedSubPages[subPageIndex]['tabpageid'];
 
-        _deleteAllEntries(
+        await _deleteAllEntries(
             fromSubPageId: subPageId,
             entries: persistedSubPages[subPageIndex]['entries']);
       }
@@ -159,6 +181,24 @@ class GraphQLParameterPageService extends ParameterPageService {
       if (subPageTitleShouldBeUpdated) {
         await _renameSubPage(id: subPageId, newTitle: subPageTitle);
       }
+    }
+  }
+
+  Future<void> _deleteSubPage({required String id}) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(deleteSubjects),
+      variables: <String, dynamic>{
+        'subjType': "subpage",
+        'subjIds': [id]
+      },
+    );
+
+    final QueryResult result = await client.value.query(options);
+
+    if (result.hasException) {
+      Logger().e(result.exception);
+      return Future.error(
+          "The request to delete a parameter page returned an exception.  Please refer to the developer console for more detail.");
     }
   }
 
@@ -213,7 +253,7 @@ class GraphQLParameterPageService extends ParameterPageService {
     if (result.hasException) {
       Logger().e(result.exception);
       return Future.error(
-          "The request to add entries to a parameter page returned an exception.  Please refer to the developer console for more detail.");
+          "The request to create a new sub-page returned an exception.  Please refer to the developer console for more detail.");
     } else {
       return result.data!['newTabPage']['tabpageid'];
     }
