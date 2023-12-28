@@ -440,9 +440,21 @@ class GraphQLParameterPageService extends ParameterPageService {
 
   Future<Map<String, dynamic>> _fetchPageStructure(
       {required String forPageId}) async {
+    final result = await _doGraphQL(
+        query: queryOnePageTree,
+        withVariables: {'pageid': forPageId},
+        whatItIs: "fetch a parameter page");
+
+    return result.data?['onePageTree'];
+  }
+
+  Future<QueryResult> _doGraphQL(
+      {required String query,
+      required Map<String, dynamic> withVariables,
+      required String whatItIs}) async {
     final QueryOptions options = QueryOptions(
-      document: gql(queryOnePageTree),
-      variables: <String, dynamic>{'pageid': forPageId},
+      document: gql(query),
+      variables: withVariables,
       fetchPolicy: FetchPolicy.noCache,
     );
 
@@ -451,9 +463,9 @@ class GraphQLParameterPageService extends ParameterPageService {
     if (result.hasException) {
       Logger().e(result.exception);
       return Future.error(
-          "The request to fetch a parameter page returned an exception.  Please refer to the developer console for more detail.");
+          "The request to $whatItIs returned an exception.  Please refer to the developer console for more detail.");
     } else {
-      return result.data?['onePageTree'];
+      return result;
     }
   }
 
