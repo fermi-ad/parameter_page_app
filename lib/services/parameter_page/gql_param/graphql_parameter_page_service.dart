@@ -11,22 +11,15 @@ import 'queries.dart';
 class GraphQLParameterPageService extends ParameterPageService {
   @override
   Future<List<dynamic>> fetchPages() async {
-    final QueryOptions options = QueryOptions(
-      document: gql(queryAllPageTitles),
-      fetchPolicy: FetchPolicy.noCache,
-    );
-
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      Logger().e(result.exception);
-      return Future.error(
-          "The request to fetch a list of parameter pages returned an exception.  Please refer to the developer console for more detail.");
-    } else {
+    return _doGraphQL(
+            query: queryAllPageTitles,
+            withVariables: {},
+            whatItIs: "fetch a list of parameter pages")
+        .then((result) {
       List<dynamic> titles = [];
       titles = result.data?['allPageTitles'];
       return titles;
-    }
+    });
   }
 
   @override
@@ -43,22 +36,13 @@ class GraphQLParameterPageService extends ParameterPageService {
 
   @override
   Future<String> createPage({required String withTitle}) async {
-    final QueryOptions options = QueryOptions(
-      document: gql(addDefaultPageTree),
-      variables: <String, dynamic>{
-        'title': withTitle,
-      },
-    );
-
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      Logger().e(result.exception);
-      return Future.error(
-          "The request to create a parameter page returned an exception.  Please refer to the developer console for more detail.");
-    } else {
-      return result.data?['newParamPage']['pageid'];
-    } //else
+    return _doGraphQL(
+            query: addDefaultPageTree,
+            withVariables: {
+              'title': withTitle,
+            },
+            whatItIs: "create a parameter page")
+        .then((result) => result.data?['newParamPage']['pageid']);
   }
 
   @override
@@ -66,22 +50,13 @@ class GraphQLParameterPageService extends ParameterPageService {
       {required String withPageId,
       required Function(String errorMessage) onFailure,
       required Function() onSuccess}) async {
-    final QueryOptions options = QueryOptions(
-      document: gql(removeTree),
-      variables: <String, dynamic>{
-        'treeid': withPageId,
-      },
-    );
-
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      Logger().e(result.exception);
-      onFailure.call(
-          "The request to delete a parameter page returned an exception.  Please refer to the developer console for more detail.");
-    } else {
-      onSuccess.call();
-    } //else
+    return _doGraphQL(
+            query: removeTree,
+            withVariables: {
+              'treeid': withPageId,
+            },
+            whatItIs: "delete a parameter page")
+        .then((result) => onSuccess.call());
   }
 
   @override
@@ -89,6 +64,10 @@ class GraphQLParameterPageService extends ParameterPageService {
       {required String id, required ParameterPage page}) async {
     try {
       final persistedPageStructure = await _fetchPageStructure(forPageId: id);
+
+      await _deleteExtraTabs(
+          withPage: page,
+          persistedTabs: persistedPageStructure['sub_systems'][0]['tabs']);
 
       await _updateEachTab(
           withPage: page,
@@ -103,23 +82,35 @@ class GraphQLParameterPageService extends ParameterPageService {
   @override
   Future<String> renamePage(
       {required String id, required String newTitle}) async {
-    /*
-    final QueryOptions options = QueryOptions(
-      document: gql(updatepagetitle),
-      variables: <String, dynamic>{'pageid': id, 'title': newTitle},
-    );
+    return _doGraphQL(
+            query: updateSubjectTitles,
+            withVariables: {
+              'subjType': "parampage",
+              'subjTitles': [
+                {'subjectid': id, 'title': newTitle}
+              ]
+            },
+            whatItIs: "rename a parameter page")
+        .then((result) {
+      if (result.data?['code'] == -1) {
+        Logger().e(
+            "updateSubjectTitles returned with a failure, message: ${result.data?["message"]}");
+        return Future.error(
+            "The request to rename the parameter page returned an exception.  Please refer to the developer console for more detail.");
+      }
 
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      Logger().e(result.exception);
-      return Future.error(
-          "The request to rename a parameter page returned an exception.  Please refer to the developer console for more detail.");
-    } else {
       return newTitle;
+    });
+  }
+
+  Future<void> _deleteExtraTabs(
+      {required List<dynamic> persistedTabs,
+      required ParameterPage withPage}) async {
+    for (int tabIndex = 0; tabIndex != persistedTabs.length; tabIndex++) {
+      if (tabIndex >= withPage.tabTitles.length) {
+        await _deleteTab(tab: persistedTabs[tabIndex]);
+      }
     }
-    */
-    return Future.error("renamePage not implemented");
   }
 
   Future<void> _updateEachTab(
@@ -137,7 +128,7 @@ class GraphQLParameterPageService extends ParameterPageService {
         persistedTab = persistedTabs[tabIndex];
 
         if (tabName != persistedTab["title"]) {
-          _renameTab(id: persistedTab['subsystabid'], newTitle: tabName);
+          await _renameTab(id: persistedTab['subsystabid'], newTitle: tabName);
         }
       }
 
@@ -160,52 +151,36 @@ class GraphQLParameterPageService extends ParameterPageService {
       {required String withTitle,
       required int atIndex,
       required String onSubSystem}) async {
-    final QueryOptions options = QueryOptions(
-      document: gql(addTabBranch),
-      variables: {
-        'title': withTitle,
-        "seqnum": atIndex + 1,
-        "subsysid": onSubSystem
-      },
-    );
-
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      Logger().e(result.exception);
-      return Future.error(
-          "The request to create a new tab returned an exception.  Please refer to the developer console for more detail.");
-    } else {
-      return result.data!['newSubsysTabBranch'];
-    }
+    return _doGraphQL(
+            query: addTabBranch,
+            withVariables: {
+              'title': withTitle,
+              "seqnum": atIndex + 1,
+              "subsysid": onSubSystem
+            },
+            whatItIs: "create a new tab")
+        .then((result) => result.data!['newSubsysTabBranch']);
   }
 
   Future<void> _renameTab(
       {required String id, required String newTitle}) async {
-    final QueryOptions options = QueryOptions(
-      document: gql(updateSubjectTitles),
-      variables: {
-        'subjType': "tab",
-        'subjTitles': [
-          {'subjectid': id, 'title': newTitle}
-        ]
-      },
-    );
-
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      Logger().e(result.exception);
-      return Future.error(
-          "The request to rename the tab returned an exception.  Please refer to the developer console for more detail.");
-    } else {
+    return _doGraphQL(
+            query: updateSubjectTitles,
+            withVariables: {
+              'subjType': "tab",
+              'subjTitles': [
+                {'subjectid': id, 'title': newTitle}
+              ]
+            },
+            whatItIs: "rename a tab")
+        .then((result) {
       if (result.data?['code'] == -1) {
         Logger().e(
             "updateSubjectTitles returned with a failure, message: ${result.data?["message"]}");
         return Future.error(
             "The request to rename the tab returned an exception.  Please refer to the developer console for more detail.");
       }
-    }
+    });
   }
 
   Future<void> _deleteExtraSubPages(
@@ -261,50 +236,57 @@ class GraphQLParameterPageService extends ParameterPageService {
     }
   }
 
-  Future<void> _deleteSubPage({required String id}) async {
-    final QueryOptions options = QueryOptions(
-      document: gql(deleteSubjects),
-      variables: <String, dynamic>{
-        'subjType': "subpage",
-        'subjIds': [id]
-      },
-    );
+  Future<void> _deleteTab({required Map<String, dynamic> tab}) async {
+    await _deleteSubPages(fromTab: tab);
 
-    final QueryResult result = await client.value.query(options);
+    await _doGraphQL(
+        query: deleteSubjects,
+        withVariables: {
+          'subjType': "tab",
+          'subjIds': [tab['subsystabid']]
+        },
+        whatItIs: "delete a tab");
+  }
 
-    if (result.hasException) {
-      Logger().e(result.exception);
-      return Future.error(
-          "The request to delete a parameter page returned an exception.  Please refer to the developer console for more detail.");
+  Future<void> _deleteSubPages({required Map<String, dynamic> fromTab}) async {
+    for (Map<String, dynamic> subPage in fromTab['sub_pages']) {
+      await _deleteAllEntries(
+          fromSubPageId: subPage['tabpageid'],
+          entries: subPage['pageentrylist'] ?? subPage['entries']);
+
+      await _deleteSubPage(id: subPage['tabpageid']);
     }
+  }
+
+  Future<void> _deleteSubPage({required String id}) async {
+    await _doGraphQL(
+        query: deleteSubjects,
+        withVariables: {
+          'subjType': "subpage",
+          'subjIds': [id]
+        },
+        whatItIs: "delete a sub-page");
   }
 
   Future<void> _renameSubPage(
       {required String id, required String newTitle}) async {
-    final QueryOptions options = QueryOptions(
-      document: gql(updateSubjectTitles),
-      variables: {
-        'subjType': "subpage",
-        'subjTitles': [
-          {'subjectid': id, 'title': newTitle}
-        ]
-      },
-    );
-
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      Logger().e(result.exception);
-      return Future.error(
-          "The request to rename the sub-page returned an exception.  Please refer to the developer console for more detail.");
-    } else {
+    return _doGraphQL(
+            query: updateSubjectTitles,
+            withVariables: {
+              'subjType': "subpage",
+              'subjTitles': [
+                {'subjectid': id, 'title': newTitle}
+              ]
+            },
+            whatItIs: "rename a sub-page")
+        .then((result) {
       if (result.data?['code'] == -1) {
         Logger().e(
             "updateSubjectTitles returned with a failure, message: ${result.data?["message"]}");
         return Future.error(
             "The request to rename the sub-page returned an exception.  Please refer to the developer console for more detail.");
       }
-    }
+    });
   }
 
   Future _deleteAllEntries(
@@ -320,44 +302,34 @@ class GraphQLParameterPageService extends ParameterPageService {
 
   Future<String> _createANewSubPage(
       {required String onTab, required int atIndex}) async {
-    final QueryOptions options = QueryOptions(
-      document: gql(addSubPage),
-      variables: {'title': "", "seqnum": atIndex + 1, "subsystabid": onTab},
-    );
-
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      Logger().e(result.exception);
-      return Future.error(
-          "The request to create a new sub-page returned an exception.  Please refer to the developer console for more detail.");
-    } else {
-      return result.data!['newTabPage']['tabpageid'];
-    }
+    return _doGraphQL(
+            query: addSubPage,
+            withVariables: {
+              'title': "",
+              "seqnum": atIndex + 1,
+              "subsystabid": onTab
+            },
+            whatItIs: "create a new sub-page")
+        .then((result) => result.data!['newTabPage']['tabpageid']);
   }
 
   Future<void> _saveEntries(
       {required String id, required List<PageEntry> newEntries}) async {
-    final mergeList = _generateEntryMergeList(subPageId: id, from: newEntries);
-    final QueryOptions options = QueryOptions(
-      document: gql(mergeEntries),
-      variables: {'mrgEntries': mergeList},
-    );
-
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      Logger().e(result.exception);
-      return Future.error(
-          "The request to add entries to a parameter page returned an exception.  Please refer to the developer console for more detail.");
-    } else {
+    return _doGraphQL(
+            query: mergeEntries,
+            withVariables: {
+              'mrgEntries':
+                  _generateEntryMergeList(subPageId: id, from: newEntries)
+            },
+            whatItIs: "add entries to a sub-page")
+        .then((result) {
       if (result.data?['code'] == -1) {
         Logger().e(
             "mrgEntries returned with a failure, message: ${result.data?["message"]}");
         return Future.error(
             "The request to add entries to a parameter page returned an exception.  Please refer to the developer console for more detail.");
       }
-    }
+    });
   }
 
   Future<void> _deleteEntries(
@@ -366,30 +338,33 @@ class GraphQLParameterPageService extends ParameterPageService {
       return;
     }
 
-    final QueryOptions options = QueryOptions(
-      document: gql(deleteEntries),
-      variables: {
-        'delEntries': atPositions
-            .map((int position) =>
-                {"tabpageid": fromSubPage, "position": position})
-            .toList()
-      },
-    );
-
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      Logger().e(result.exception);
-      return Future.error(
-          "The request to delete old page entries returned an exception.  Please refer to the developer console for more detail.");
-    }
+    await _doGraphQL(
+        query: deleteEntries,
+        withVariables: {
+          'delEntries': atPositions
+              .map((int position) =>
+                  {"tabpageid": fromSubPage, "position": position})
+              .toList()
+        },
+        whatItIs: "delete sub-page entries");
   }
 
   Future<Map<String, dynamic>> _fetchPageStructure(
       {required String forPageId}) async {
+    return _doGraphQL(
+            query: queryOnePageTree,
+            withVariables: {'pageid': forPageId},
+            whatItIs: "fetch a parameter page")
+        .then((result) => result.data?['onePageTree']);
+  }
+
+  Future<QueryResult> _doGraphQL(
+      {required String query,
+      required Map<String, dynamic> withVariables,
+      required String whatItIs}) async {
     final QueryOptions options = QueryOptions(
-      document: gql(queryOnePageTree),
-      variables: <String, dynamic>{'pageid': forPageId},
+      document: gql(query),
+      variables: withVariables,
       fetchPolicy: FetchPolicy.noCache,
     );
 
@@ -398,9 +373,9 @@ class GraphQLParameterPageService extends ParameterPageService {
     if (result.hasException) {
       Logger().e(result.exception);
       return Future.error(
-          "The request to fetch a parameter page returned an exception.  Please refer to the developer console for more detail.");
+          "The request to $whatItIs returned an exception.  Please refer to the developer console for more detail.");
     } else {
-      return result.data?['onePageTree'];
+      return result;
     }
   }
 
