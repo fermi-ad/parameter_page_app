@@ -183,24 +183,16 @@ class GraphQLParameterPageService extends ParameterPageService {
       {required String withTitle,
       required int atIndex,
       required String onSubSystem}) async {
-    final QueryOptions options = QueryOptions(
-      document: gql(addTabBranch),
-      variables: {
-        'title': withTitle,
-        "seqnum": atIndex + 1,
-        "subsysid": onSubSystem
-      },
-    );
+    final result = await _doGraphQL(
+        query: addTabBranch,
+        withVariables: {
+          'title': withTitle,
+          "seqnum": atIndex + 1,
+          "subsysid": onSubSystem
+        },
+        whatItIs: "create a new tab");
 
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      Logger().e(result.exception);
-      return Future.error(
-          "The request to create a new tab returned an exception.  Please refer to the developer console for more detail.");
-    } else {
-      return result.data!['newSubsysTabBranch'];
-    }
+    return result.data!['newSubsysTabBranch'];
   }
 
   Future<void> _renameTab(
