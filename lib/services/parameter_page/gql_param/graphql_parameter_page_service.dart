@@ -61,14 +61,14 @@ class GraphQLParameterPageService extends ParameterPageService {
     try {
       final persistedPageStructure = await _fetchPageStructure(forPageId: id);
 
-      await _deleteExtraTabs(
+      await _deleteExtraSubSystems(
           withPage: page,
-          persistedTabs: persistedPageStructure['sub_systems'][0]['tabs']);
+          persistedSubSystems: persistedPageStructure['sub_systems']);
 
-      await _updateEachTab(
+      await _updateEachSubSystem(
           withPage: page,
-          persistedTabs: persistedPageStructure['sub_systems'][0]['tabs'],
-          subSystemId: persistedPageStructure['sub_systems'][0]['subsysid']);
+          persistedSubSystems: persistedPageStructure['sub_systems'],
+          pageId: id);
     } catch (e) {
       Logger().e(e.toString());
       return Future.error("savePage failure");
@@ -97,6 +97,23 @@ class GraphQLParameterPageService extends ParameterPageService {
 
       return newTitle;
     });
+  }
+
+  Future<void> _deleteExtraSubSystems(
+      {required List<dynamic> persistedSubSystems,
+      required ParameterPage withPage}) async {}
+
+  Future<void> _updateEachSubSystem(
+      {required List<dynamic> persistedSubSystems,
+      required ParameterPage withPage,
+      required String pageId}) async {
+    await _deleteExtraTabs(
+        withPage: withPage, persistedTabs: persistedSubSystems[0]['tabs']);
+
+    await _updateEachTab(
+        withPage: withPage,
+        persistedTabs: persistedSubSystems[0]['tabs'],
+        subSystemId: persistedSubSystems[0]['subsysid']);
   }
 
   Future<void> _deleteExtraTabs(
