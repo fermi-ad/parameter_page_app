@@ -527,7 +527,6 @@ Future<void> _deletePages(
     {required ParameterPageService using,
     required List<String> pageIds}) async {
   for (final id in pageIds) {
-    await using.deletePage(
-        withPageId: id, onFailure: (error) {}, onSuccess: () {});
+    await using.deletePage(withPageId: id);
   }
 }
