@@ -542,9 +542,6 @@ void main() {
       expect(readBackPage.entriesAsList()[0].entryText(),
           "tab 3 sub-page 1 entry 1");
     });
-
-    test("add sub-pages to a tab and savePage(..), new sub-pages are persisted",
-        () {});
   });
 }
 
