@@ -392,24 +392,17 @@ class GraphQLParameterPageService extends ParameterPageService {
   Future<void> _saveEntries(
       {required String id, required List<PageEntry> newEntries}) async {
     final mergeList = _generateEntryMergeList(subPageId: id, from: newEntries);
-    final QueryOptions options = QueryOptions(
-      document: gql(mergeEntries),
-      variables: {'mrgEntries': mergeList},
-    );
 
-    final QueryResult result = await client.value.query(options);
+    final result = await _doGraphQL(
+        query: mergeEntries,
+        withVariables: {'mrgEntries': mergeList},
+        whatItIs: "add entries to a sub-page");
 
-    if (result.hasException) {
-      Logger().e(result.exception);
+    if (result.data?['code'] == -1) {
+      Logger().e(
+          "mrgEntries returned with a failure, message: ${result.data?["message"]}");
       return Future.error(
           "The request to add entries to a parameter page returned an exception.  Please refer to the developer console for more detail.");
-    } else {
-      if (result.data?['code'] == -1) {
-        Logger().e(
-            "mrgEntries returned with a failure, message: ${result.data?["message"]}");
-        return Future.error(
-            "The request to add entries to a parameter page returned an exception.  Please refer to the developer console for more detail.");
-      }
     }
   }
 
