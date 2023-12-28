@@ -43,22 +43,14 @@ class GraphQLParameterPageService extends ParameterPageService {
 
   @override
   Future<String> createPage({required String withTitle}) async {
-    final QueryOptions options = QueryOptions(
-      document: gql(addDefaultPageTree),
-      variables: <String, dynamic>{
-        'title': withTitle,
-      },
-    );
+    final result = await _doGraphQL(
+        query: addDefaultPageTree,
+        withVariables: {
+          'title': withTitle,
+        },
+        whatItIs: "create a parameter page");
 
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      Logger().e(result.exception);
-      return Future.error(
-          "The request to create a parameter page returned an exception.  Please refer to the developer console for more detail.");
-    } else {
-      return result.data?['newParamPage']['pageid'];
-    } //else
+    return result.data?['newParamPage']['pageid'];
   }
 
   @override
