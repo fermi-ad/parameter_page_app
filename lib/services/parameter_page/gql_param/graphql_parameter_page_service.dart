@@ -373,20 +373,16 @@ class GraphQLParameterPageService extends ParameterPageService {
 
   Future<String> _createANewSubPage(
       {required String onTab, required int atIndex}) async {
-    final QueryOptions options = QueryOptions(
-      document: gql(addSubPage),
-      variables: {'title': "", "seqnum": atIndex + 1, "subsystabid": onTab},
-    );
+    final result = await _doGraphQL(
+        query: addSubPage,
+        withVariables: {
+          'title': "",
+          "seqnum": atIndex + 1,
+          "subsystabid": onTab
+        },
+        whatItIs: "create a new sub-page");
 
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      Logger().e(result.exception);
-      return Future.error(
-          "The request to create a new sub-page returned an exception.  Please refer to the developer console for more detail.");
-    } else {
-      return result.data!['newTabPage']['tabpageid'];
-    }
+    return result.data!['newTabPage']['tabpageid'];
   }
 
   Future<void> _saveEntries(
