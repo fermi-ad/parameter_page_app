@@ -66,22 +66,14 @@ class GraphQLParameterPageService extends ParameterPageService {
       {required String withPageId,
       required Function(String errorMessage) onFailure,
       required Function() onSuccess}) async {
-    final QueryOptions options = QueryOptions(
-      document: gql(removeTree),
-      variables: <String, dynamic>{
-        'treeid': withPageId,
-      },
-    );
+    await _doGraphQL(
+        query: removeTree,
+        withVariables: {
+          'treeid': withPageId,
+        },
+        whatItIs: "delete a parameter page");
 
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      Logger().e(result.exception);
-      onFailure.call(
-          "The request to delete a parameter page returned an exception.  Please refer to the developer console for more detail.");
-    } else {
-      onSuccess.call();
-    } //else
+    onSuccess.call();
   }
 
   @override
@@ -107,29 +99,21 @@ class GraphQLParameterPageService extends ParameterPageService {
   @override
   Future<String> renamePage(
       {required String id, required String newTitle}) async {
-    final QueryOptions options = QueryOptions(
-      document: gql(updateSubjectTitles),
-      variables: {
-        'subjType': "parampage",
-        'subjTitles': [
-          {'subjectid': id, 'title': newTitle}
-        ]
-      },
-    );
+    final result = await _doGraphQL(
+        query: updateSubjectTitles,
+        withVariables: {
+          'subjType': "parampage",
+          'subjTitles': [
+            {'subjectid': id, 'title': newTitle}
+          ]
+        },
+        whatItIs: "rename a parameter page");
 
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      Logger().e(result.exception);
+    if (result.data?['code'] == -1) {
+      Logger().e(
+          "updateSubjectTitles returned with a failure, message: ${result.data?["message"]}");
       return Future.error(
           "The request to rename the parameter page returned an exception.  Please refer to the developer console for more detail.");
-    } else {
-      if (result.data?['code'] == -1) {
-        Logger().e(
-            "updateSubjectTitles returned with a failure, message: ${result.data?["message"]}");
-        return Future.error(
-            "The request to rename the parameter page returned an exception.  Please refer to the developer console for more detail.");
-      }
     }
 
     return newTitle;
