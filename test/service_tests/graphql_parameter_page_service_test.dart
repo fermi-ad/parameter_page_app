@@ -491,7 +491,57 @@ void main() {
     });
 
     test("add entries to multiple tabs and savePage(..), changes are persisted",
-        () {});
+        () async {
+      // Given a GraphQLParameterPageService
+      await dotenv.load(fileName: ".env");
+      final service = GraphQLParameterPageService();
+
+      // ... and a new ParameterPage with three empty tabs
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.title = "***SERVICE TEST*** add entries to tabs";
+      page.createTab();
+      page.createTab();
+
+      // ... and the page has been persisted
+      final pageId = await service.createPage(withTitle: page.title);
+      await service.savePage(id: pageId, page: page);
+
+      // When I add entries to sub-pages on each tab
+      page.switchTab(to: "Tab 1");
+      page.add(CommentEntry("tab 1 sub-page 1 entry 1"));
+      page.switchTab(to: "Tab 2");
+      page.add(CommentEntry("tab 2 sub-page 1 entry 1"));
+      page.createSubPage();
+      page.add(CommentEntry("tab 2 sub-page 2 entry 1"));
+      page.switchTab(to: "Tab 3");
+      page.add(CommentEntry("tab 3 sub-page 1 entry 1"));
+
+      // ... and save the changes
+      await service.savePage(id: pageId, page: page);
+
+      // ... and read it back
+      ParameterPage readBackPage = await service.fetchPage(id: pageId);
+
+      // Then the new entries have been persisted
+      expect(readBackPage.tabTitles[0], "Tab 1");
+      readBackPage.switchTab(to: "Tab 1");
+      expect(readBackPage.entriesAsList()[0].entryText(),
+          "tab 1 sub-page 1 entry 1");
+
+      expect(readBackPage.tabTitles[1], "Tab 2");
+      readBackPage.switchTab(to: "Tab 2");
+      expect(readBackPage.entriesAsList()[0].entryText(),
+          "tab 2 sub-page 1 entry 1");
+      readBackPage.incrementSubPage();
+      expect(readBackPage.entriesAsList()[0].entryText(),
+          "tab 2 sub-page 2 entry 1");
+
+      expect(readBackPage.tabTitles[2], "Tab 3");
+      readBackPage.switchTab(to: "Tab 3");
+      expect(readBackPage.entriesAsList()[0].entryText(),
+          "tab 3 sub-page 1 entry 1");
+    });
 
     test("add sub-pages to a tab and savePage(..), new sub-pages are persisted",
         () {});
