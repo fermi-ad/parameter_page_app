@@ -289,17 +289,6 @@ class GraphQLParameterPageService extends ParameterPageService {
     });
   }
 
-  Future _deleteAllEntries(
-      {required String fromSubPageId, required List<dynamic> entries}) async {
-    List<int> deleteFromPositions = [];
-    for (final entry in entries) {
-      deleteFromPositions.add(entry['position']);
-    }
-
-    await _deleteEntries(
-        fromSubPage: fromSubPageId, atPositions: deleteFromPositions);
-  }
-
   Future<String> _createANewSubPage(
       {required String onTab, required int atIndex}) async {
     return _doGraphQL(
@@ -330,6 +319,17 @@ class GraphQLParameterPageService extends ParameterPageService {
             "The request to add entries to a parameter page returned an exception.  Please refer to the developer console for more detail.");
       }
     });
+  }
+
+  Future _deleteAllEntries(
+      {required String fromSubPageId, required List<dynamic> entries}) async {
+    List<int> deleteFromPositions = [];
+    for (final entry in entries) {
+      deleteFromPositions.add(entry['position']);
+    }
+
+    await _deleteEntries(
+        fromSubPage: fromSubPageId, atPositions: deleteFromPositions);
   }
 
   Future<void> _deleteEntries(
