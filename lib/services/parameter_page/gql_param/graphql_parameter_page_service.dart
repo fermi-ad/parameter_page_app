@@ -419,23 +419,15 @@ class GraphQLParameterPageService extends ParameterPageService {
       return;
     }
 
-    final QueryOptions options = QueryOptions(
-      document: gql(deleteEntries),
-      variables: {
-        'delEntries': atPositions
-            .map((int position) =>
-                {"tabpageid": fromSubPage, "position": position})
-            .toList()
-      },
-    );
-
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      Logger().e(result.exception);
-      return Future.error(
-          "The request to delete old page entries returned an exception.  Please refer to the developer console for more detail.");
-    }
+    await _doGraphQL(
+        query: deleteEntries,
+        withVariables: {
+          'delEntries': atPositions
+              .map((int position) =>
+                  {"tabpageid": fromSubPage, "position": position})
+              .toList()
+        },
+        whatItIs: "delete sub-page entries");
   }
 
   Future<Map<String, dynamic>> _fetchPageStructure(
