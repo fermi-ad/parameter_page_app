@@ -137,7 +137,7 @@ class GraphQLParameterPageService extends ParameterPageService {
         persistedTab = persistedTabs[tabIndex];
 
         if (tabName != persistedTab["title"]) {
-          _renameTab(id: persistedTab['subsystabid'], newTitle: tabName);
+          await _renameTab(id: persistedTab['subsystabid'], newTitle: tabName);
         }
       }
 
