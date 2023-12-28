@@ -183,6 +183,18 @@ class GraphQLParameterPageService extends ParameterPageService {
     });
   }
 
+  Future<void> _deleteTab({required Map<String, dynamic> tab}) async {
+    await _deleteSubPages(fromTab: tab);
+
+    await _doGraphQL(
+        query: deleteSubjects,
+        withVariables: {
+          'subjType': "tab",
+          'subjIds': [tab['subsystabid']]
+        },
+        whatItIs: "delete a tab");
+  }
+
   Future<void> _deleteExtraSubPages(
       {required List<dynamic> persistedSubPages,
       required ParameterPage withPage,
@@ -197,18 +209,6 @@ class GraphQLParameterPageService extends ParameterPageService {
         await _deleteSubPage(id: subPageId);
       }
     }
-  }
-
-  Future<void> _deleteTab({required Map<String, dynamic> tab}) async {
-    await _deleteSubPages(fromTab: tab);
-
-    await _doGraphQL(
-        query: deleteSubjects,
-        withVariables: {
-          'subjType': "tab",
-          'subjIds': [tab['subsystabid']]
-        },
-        whatItIs: "delete a tab");
   }
 
   Future<void> _updateEachSubPage(
