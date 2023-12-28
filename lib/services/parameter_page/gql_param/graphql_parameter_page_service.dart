@@ -103,10 +103,14 @@ class GraphQLParameterPageService extends ParameterPageService {
   @override
   Future<String> renamePage(
       {required String id, required String newTitle}) async {
-    /*
     final QueryOptions options = QueryOptions(
-      document: gql(updatepagetitle),
-      variables: <String, dynamic>{'pageid': id, 'title': newTitle},
+      document: gql(updateSubjectTitles),
+      variables: {
+        'subjType': "parampage",
+        'subjTitles': [
+          {'subjectid': id, 'title': newTitle}
+        ]
+      },
     );
 
     final QueryResult result = await client.value.query(options);
@@ -114,12 +118,17 @@ class GraphQLParameterPageService extends ParameterPageService {
     if (result.hasException) {
       Logger().e(result.exception);
       return Future.error(
-          "The request to rename a parameter page returned an exception.  Please refer to the developer console for more detail.");
+          "The request to rename the parameter page returned an exception.  Please refer to the developer console for more detail.");
     } else {
-      return newTitle;
+      if (result.data?['code'] == -1) {
+        Logger().e(
+            "updateSubjectTitles returned with a failure, message: ${result.data?["message"]}");
+        return Future.error(
+            "The request to rename the parameter page returned an exception.  Please refer to the developer console for more detail.");
+      }
     }
-    */
-    return Future.error("renamePage not implemented");
+
+    return newTitle;
   }
 
   Future<void> _updateEachTab(

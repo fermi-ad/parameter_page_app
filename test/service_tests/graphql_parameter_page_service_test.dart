@@ -381,7 +381,7 @@ void main() {
       final pageId = await service.createPage(withTitle: page.title);
       await service.savePage(id: pageId, page: page);
 
-      // When I change the page titles
+      // When I change the tab titles
       page.renameTab(withTitle: "Tab 1", to: "First Tab");
       page.renameTab(withTitle: "Tab 2", to: "Second Tab");
       page.renameTab(withTitle: "Tab 3", to: "Third Tab");
@@ -396,6 +396,31 @@ void main() {
       expect(readBackPage.tabTitles[0], "First Tab");
       expect(readBackPage.tabTitles[1], "Second Tab");
       expect(readBackPage.tabTitles[2], "Third Tab");
+    });
+
+    test("renamePage(..), new page title is persisted", () async {
+      // Given a GraphQLParameterPageService
+      await dotenv.load(fileName: ".env");
+      final service = GraphQLParameterPageService();
+
+      // ... and a new ParameterPage
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.title = "***SERVICE TEST*** original page title";
+
+      // ... and the page has been persisted
+      final pageId = await service.createPage(withTitle: page.title);
+      await service.savePage(id: pageId, page: page);
+
+      // When I change the page title and save the changes
+      page.title = "***SERVICE TEST*** change page title";
+      await service.renamePage(id: pageId, newTitle: page.title);
+
+      // ... and read it back
+      ParameterPage readBackPage = await service.fetchPage(id: pageId);
+
+      // Then the read-back page has the persisted page title change
+      expect(readBackPage.title, "***SERVICE TEST*** change page title");
     });
 
     test("add entries to multiple tabs and savePage(..), changes are persisted",
