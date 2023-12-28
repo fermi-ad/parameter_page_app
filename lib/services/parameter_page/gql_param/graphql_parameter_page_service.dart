@@ -107,13 +107,40 @@ class GraphQLParameterPageService extends ParameterPageService {
       {required List<dynamic> persistedSubSystems,
       required ParameterPage withPage,
       required String pageId}) async {
-    await _deleteExtraTabs(
-        withPage: withPage, persistedTabs: persistedSubSystems[0]['tabs']);
+    for (int subSystemIndex = 0;
+        subSystemIndex != withPage.subSystemTitles.length;
+        subSystemIndex++) {
+      if (subSystemIndex >= persistedSubSystems.length) {
+        persistedSubSystems.add(await _createANewSubSystem(
+            onPageId: pageId,
+            withTitle: withPage.subSystemTitles[subSystemIndex],
+            atIndex: subSystemIndex));
+      }
 
-    await _updateEachTab(
-        withPage: withPage,
-        persistedTabs: persistedSubSystems[0]['tabs'],
-        subSystemId: persistedSubSystems[0]['subsysid']);
+      await _deleteExtraTabs(
+          withPage: withPage,
+          persistedTabs: persistedSubSystems[subSystemIndex]['tabs']);
+
+      await _updateEachTab(
+          withPage: withPage,
+          persistedTabs: persistedSubSystems[subSystemIndex]['tabs'],
+          subSystemId: persistedSubSystems[subSystemIndex]['subsysid']);
+    }
+  }
+
+  Future<Map<String, dynamic>> _createANewSubSystem(
+      {required String onPageId,
+      required String withTitle,
+      required int atIndex}) async {
+    return _doGraphQL(
+            query: addSubSysBranch,
+            withVariables: {
+              'title': withTitle,
+              "seqnum": atIndex + 1,
+              "pageid": onPageId
+            },
+            whatItIs: "create a new tab")
+        .then((result) => result.data!['newSubsysBranch']);
   }
 
   Future<void> _deleteExtraTabs(
