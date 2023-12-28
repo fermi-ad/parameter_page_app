@@ -423,21 +423,43 @@ void main() {
       expect(readBackPage.title, "***SERVICE TEST*** change page title");
     });
 
+    test("delete an empty tab and savePage(..), tab is removed", () async {
+      // Given a GraphQLParameterPageService
+      await dotenv.load(fileName: ".env");
+      final service = GraphQLParameterPageService();
+
+      // ... and a new ParameterPage with three tabs
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.title = "***SERVICE TEST*** delete empty tab";
+      page.createTab();
+      page.createTab();
+
+      // ... and the page has been persisted
+      final pageId = await service.createPage(withTitle: page.title);
+      await service.savePage(id: pageId, page: page);
+
+      // When I delete a tab
+      page.deleteTab(title: "Tab 2");
+
+      // ... and save the changes
+      await service.savePage(id: pageId, page: page);
+
+      // ... and read it back
+      ParameterPage readBackPage = await service.fetchPage(id: pageId);
+
+      // Then the read-back page has only 2 tabs
+      expect(readBackPage.tabTitles[0], "Tab 1");
+      expect(readBackPage.tabTitles[1], "Tab 3");
+    });
+
+    test("delete a tab with sub-pages and savePage(..), tab is removed", () {});
+
     test("add entries to multiple tabs and savePage(..), changes are persisted",
-        () {});
-
-    test("change tab titles and savePage(..), new tab title is persisted",
-        () {});
-
-    test("change tab titles and savePage(..), new tab title is persisted",
         () {});
 
     test("add sub-pages to a tab and savePage(..), new sub-pages are persisted",
         () {});
-
-    test("delete an empty tab and savePage(..), tab is removed", () {});
-
-    test("delete a tab with sub-pages and savePage(..), tab is removed", () {});
   });
 }
 
