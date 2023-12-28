@@ -542,6 +542,33 @@ void main() {
       expect(readBackPage.entriesAsList()[0].entryText(),
           "tab 3 sub-page 1 entry 1");
     });
+
+    test(
+        'savePage(..) a new ParameterPage with multiple sub-systems, sub-systems are persisted',
+        () async {
+      // Given a GraphQLParameterPageService
+      await dotenv.load(fileName: ".env");
+      final service = GraphQLParameterPageService();
+
+      // ... and a new ParameterPage with two empty sub-systems
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.title = "***SERVICE TEST*** save multiple sub-systems";
+      page.createSubSystem();
+
+      // When I save the new page
+      final pageId = await service.createPage(withTitle: page.title);
+      await service.savePage(id: pageId, page: page);
+
+      // ... and read it back
+      ParameterPage readBackPage = await service.fetchPage(id: pageId);
+
+      // Then the new sub-system has been persisted
+      expect(readBackPage.subSystemTitles.length, 2);
+    });
+
+    test('delete empty sub-system and savePage(..), changes are persisted',
+        () async {});
   });
 }
 
