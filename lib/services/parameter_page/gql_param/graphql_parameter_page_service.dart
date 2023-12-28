@@ -287,21 +287,13 @@ class GraphQLParameterPageService extends ParameterPageService {
   Future<void> _deleteTab({required Map<String, dynamic> tab}) async {
     await _deleteSubPages(fromTab: tab);
 
-    final QueryOptions options = QueryOptions(
-      document: gql(deleteSubjects),
-      variables: <String, dynamic>{
-        'subjType': "tab",
-        'subjIds': [tab['subsystabid']]
-      },
-    );
-
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      Logger().e(result.exception);
-      return Future.error(
-          "The request to delete a tab returned an exception.  Please refer to the developer console for more detail.");
-    }
+    await _doGraphQL(
+        query: deleteSubjects,
+        withVariables: {
+          'subjType': "tab",
+          'subjIds': [tab['subsystabid']]
+        },
+        whatItIs: "delete a tab");
   }
 
   Future<void> _deleteSubPages({required Map<String, dynamic> fromTab}) async {
@@ -315,21 +307,13 @@ class GraphQLParameterPageService extends ParameterPageService {
   }
 
   Future<void> _deleteSubPage({required String id}) async {
-    final QueryOptions options = QueryOptions(
-      document: gql(deleteSubjects),
-      variables: <String, dynamic>{
-        'subjType': "subpage",
-        'subjIds': [id]
-      },
-    );
-
-    final QueryResult result = await client.value.query(options);
-
-    if (result.hasException) {
-      Logger().e(result.exception);
-      return Future.error(
-          "The request to delete a sub-page returned an exception.  Please refer to the developer console for more detail.");
-    }
+    await _doGraphQL(
+        query: deleteSubjects,
+        withVariables: {
+          'subjType': "subpage",
+          'subjIds': [id]
+        },
+        whatItIs: "delete a sub-page");
   }
 
   Future<void> _renameSubPage(
