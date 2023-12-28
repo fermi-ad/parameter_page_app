@@ -65,7 +65,7 @@ void main() {
 
   group('createPage', () {
     setUpAll(() async => await _deleteAllTestPages());
-    tearDownAll(() async => _deleteAllTestPages());
+    // tearDownAll(() async => _deleteAllTestPages());
 
     test(
         "createPage(withTitle:), returns a page ID and the new titles shows up in the directory",
@@ -470,7 +470,7 @@ void main() {
       page.createSubPage();
       page.add(CommentEntry("tab 2 sub-page 2 entry 1"));
       page.createTab();
-      page.add(CommentEntry("tab 2 sub-page 1 entry 1"));
+      page.add(CommentEntry("tab 3 sub-page 1 entry 1"));
 
       // ... and the page has been persisted
       final pageId = await service.createPage(withTitle: page.title);

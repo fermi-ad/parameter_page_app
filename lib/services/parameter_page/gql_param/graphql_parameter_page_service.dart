@@ -139,7 +139,7 @@ class GraphQLParameterPageService extends ParameterPageService {
       {required List<dynamic> persistedTabs,
       required ParameterPage withPage}) async {
     for (int tabIndex = 0; tabIndex != persistedTabs.length; tabIndex++) {
-      if (tabIndex > withPage.tabTitles.length - 1) {
+      if (tabIndex >= withPage.tabTitles.length) {
         await _deleteTab(tab: persistedTabs[tabIndex]);
       }
     }
@@ -308,7 +308,7 @@ class GraphQLParameterPageService extends ParameterPageService {
     for (Map<String, dynamic> subPage in fromTab['sub_pages']) {
       await _deleteAllEntries(
           fromSubPageId: subPage['tabpageid'],
-          entries: subPage['pageentrylist'] ?? []);
+          entries: subPage['pageentrylist'] ?? subPage['entries']);
 
       await _deleteSubPage(id: subPage['tabpageid']);
     }
