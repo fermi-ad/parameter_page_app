@@ -555,6 +555,7 @@ void main() {
       page.enableEditing();
       page.title = "***SERVICE TEST*** save multiple sub-systems";
       page.createSubSystem();
+      page.subSystemTitle = "New sub-system";
 
       // When I save the new page
       final pageId = await service.createPage(withTitle: page.title);
@@ -564,7 +565,9 @@ void main() {
       ParameterPage readBackPage = await service.fetchPage(id: pageId);
 
       // Then the new sub-system has been persisted
-      expect(readBackPage.subSystemTitles.length, 2);
+      final titles = readBackPage.subSystemTitles;
+      expect(titles.length, 2);
+      expect(titles[1], "New sub-system");
     });
 
     test('delete empty sub-system and savePage(..), changes are persisted',
