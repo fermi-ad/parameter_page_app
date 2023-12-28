@@ -453,7 +453,42 @@ void main() {
       expect(readBackPage.tabTitles[1], "Tab 3");
     });
 
-    test("delete a tab with sub-pages and savePage(..), tab is removed", () {});
+    test(
+        "delete a tab with populated sub-pages and savePage(..), tab is removed",
+        () async {
+      // Given a GraphQLParameterPageService
+      await dotenv.load(fileName: ".env");
+      final service = GraphQLParameterPageService();
+
+      // ... and a new ParameterPage with three tabs populate with sub-pages and entries
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.title = "***SERVICE TEST*** delete populated tab";
+      page.add(CommentEntry("tab 1 sub-page 1 entry 1"));
+      page.createTab();
+      page.add(CommentEntry("tab 2 sub-page 1 entry 1"));
+      page.createSubPage();
+      page.add(CommentEntry("tab 2 sub-page 2 entry 1"));
+      page.createTab();
+      page.add(CommentEntry("tab 2 sub-page 1 entry 1"));
+
+      // ... and the page has been persisted
+      final pageId = await service.createPage(withTitle: page.title);
+      await service.savePage(id: pageId, page: page);
+
+      // When I delete tab 2
+      page.deleteTab(title: "Tab 2");
+
+      // ... and save the changes
+      await service.savePage(id: pageId, page: page);
+
+      // ... and read it back
+      ParameterPage readBackPage = await service.fetchPage(id: pageId);
+
+      // Then the read-back page has only 2 tabs
+      expect(readBackPage.tabTitles[0], "Tab 1");
+      expect(readBackPage.tabTitles[1], "Tab 3");
+    });
 
     test("add entries to multiple tabs and savePage(..), changes are persisted",
         () {});
