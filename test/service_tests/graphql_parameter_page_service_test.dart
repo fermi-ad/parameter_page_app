@@ -581,9 +581,9 @@ void main() {
       ParameterPage page = ParameterPage();
       page.enableEditing();
       page.title = "***SERVICE TEST*** update multiple sub-systems";
-      page.subSystemTitle = "First sub-system";
+      page.subSystemTitle = "First subsys";
       page.createSubSystem();
-      page.subSystemTitle = "Second sub-system";
+      page.subSystemTitle = "Second subsys";
 
       // ... and the page has already been persisted
       final pageId = await service.createPage(withTitle: page.title);
@@ -591,7 +591,7 @@ void main() {
 
       // When I make changes to the page
       page.subSystemTitle = "2nd Sub-system";
-      page.switchSubSystem(to: "First sub-system");
+      page.switchSubSystem(to: "First subsys");
       page.subSystemTitle = "1st Sub-system";
 
       // ... and save the changes

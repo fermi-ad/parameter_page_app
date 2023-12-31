@@ -139,7 +139,7 @@ class GraphQLParameterPageService extends ParameterPageService {
               "seqnum": atIndex + 1,
               "pageid": onPageId
             },
-            whatItIs: "create a new tab")
+            whatItIs: "create a new sub-system")
         .then((result) => result.data!['newSubsysBranch']);
   }
 
