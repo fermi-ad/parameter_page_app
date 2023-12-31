@@ -570,6 +570,43 @@ void main() {
       expect(titles[1], "New sub-system");
     });
 
+    test(
+        'modify a persisted ParameterPage with multiple sub-systems, changes are persisted',
+        () async {
+      // Given a GraphQLParameterPageService
+      await dotenv.load(fileName: ".env");
+      final service = GraphQLParameterPageService();
+
+      // ... and a new ParameterPage with two populated sub-systems
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.title = "***SERVICE TEST*** update multiple sub-systems";
+      page.subSystemTitle = "First sub-system";
+      page.createSubSystem();
+      page.subSystemTitle = "Second sub-system";
+
+      // ... and the page has already been persisted
+      final pageId = await service.createPage(withTitle: page.title);
+      await service.savePage(id: pageId, page: page);
+
+      // When I make changes to the page
+      page.subSystemTitle = "2nd Sub-system";
+      page.switchSubSystem(to: "First sub-system");
+      page.subSystemTitle = "1st Sub-system";
+
+      // ... and save the changes
+      await service.savePage(id: pageId, page: page);
+
+      // ... and read back the page
+      ParameterPage readBackPage = await service.fetchPage(id: pageId);
+
+      // Then the changes to sub-system 1 and sub-system 2 have been persisted
+      final subSystemTitles = readBackPage.subSystemTitles;
+      expect(subSystemTitles.length, 2);
+      expect(subSystemTitles[0], "1st Sub-system");
+      expect(subSystemTitles[1], "2nd Sub-system");
+    });
+
     test('delete empty sub-system and savePage(..), changes are persisted',
         () async {});
   });
