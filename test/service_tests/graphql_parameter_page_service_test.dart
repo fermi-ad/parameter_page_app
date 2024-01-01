@@ -602,13 +602,22 @@ void main() {
       // When I make changes to the page
       page.subSystemTitle = "2nd Sub-system";
       page.renameTab(withTitle: "Sub 2 Tab 1", to: "Fourth Tab");
+      page.add(CommentEntry("Sys 2 / Fourth Tab / Sub 1 / Entry 1"));
       page.renameTab(withTitle: "Sub 2 Tab 2", to: "Fifth Tab");
+      page.switchTab(to: "Fifth Tab");
+      page.add(CommentEntry("Sys 2 / Fifth Tab / Sub 1 / Entry 1"));
       page.renameTab(withTitle: "Sub 2 Tab 3", to: "Sixth Tab");
+      page.add(CommentEntry("Sys 2 / Sixth Tab / Sub 1 / Entry 1"));
       page.switchSubSystem(to: "First subsys");
       page.subSystemTitle = "1st Sub-system";
       page.renameTab(withTitle: "Sub 1 Tab 1", to: "First Tab");
+      page.add(CommentEntry("Sys 1 / First Tab / Sub 1 / Entry 1"));
       page.renameTab(withTitle: "Sub 1 Tab 2", to: "Second Tab");
+      page.switchTab(to: "Second Tab");
+      page.add(CommentEntry("Sys 1 / Second Tab / Sub 1 / Entry 1"));
       page.renameTab(withTitle: "Sub 1 Tab 3", to: "Third Tab");
+      page.switchTab(to: "First Tab");
+      page.add(CommentEntry("Sys 1 / First Tab / Sub 1 / Entry 1"));
 
       // ... and save the changes
       await service.savePage(id: pageId, page: page);
@@ -619,17 +628,24 @@ void main() {
       // Then the changes to sub-system 1 and sub-system 2 have been persisted
       final subSystemTitles = readBackPage.subSystemTitles;
       final sub1TabTitles = readBackPage.tabTitles;
+      final sub1Tab1Entries = readBackPage.entriesAsList();
       readBackPage.switchSubSystem(to: "2nd Sub-system");
       final sub2TabTitles = readBackPage.tabTitles;
+      final sub2Tab1Entries = readBackPage.entriesAsList();
+
       expect(subSystemTitles.length, 2);
       expect(subSystemTitles[0], "1st Sub-system");
+      expect(subSystemTitles[1], "2nd Sub-system");
       expect(sub1TabTitles[0], "First Tab");
       expect(sub1TabTitles[1], "Second Tab");
       expect(sub1TabTitles[2], "Third Tab");
       expect(sub2TabTitles[0], "First Tab");
       expect(sub2TabTitles[1], "Second Tab");
       expect(sub2TabTitles[2], "Third Tab");
-      expect(subSystemTitles[1], "2nd Sub-system");
+      expect(sub1Tab1Entries[0].entryText(),
+          "Sys 1 / First Tab / Sub 1 / Entry 1");
+      expect(sub2Tab1Entries[0].entryText(),
+          "Sys 2 / Fourth Tab / Sub 1 / Entry 1");
     });
 
     test('delete empty sub-system and savePage(..), changes are persisted',
