@@ -582,6 +582,7 @@ void main() {
       page.enableEditing();
       page.title = "***SERVICE TEST*** update multiple sub-systems";
       page.subSystemTitle = "First subsys";
+      page.renameTab(withTitle: "Tab 1", to: "Sub 1 Tab 1");
       page.createSubSystem();
       page.subSystemTitle = "Second subsys";
 
@@ -593,6 +594,7 @@ void main() {
       page.subSystemTitle = "2nd Sub-system";
       page.switchSubSystem(to: "First subsys");
       page.subSystemTitle = "1st Sub-system";
+      page.renameTab(withTitle: "Sub 1 Tab 1", to: "First Tab");
 
       // ... and save the changes
       await service.savePage(id: pageId, page: page);
@@ -602,8 +604,10 @@ void main() {
 
       // Then the changes to sub-system 1 and sub-system 2 have been persisted
       final subSystemTitles = readBackPage.subSystemTitles;
+      final sub1TabTitles = readBackPage.tabTitles;
       expect(subSystemTitles.length, 2);
       expect(subSystemTitles[0], "1st Sub-system");
+      expect(sub1TabTitles[0], "First Tab");
       expect(subSystemTitles[1], "2nd Sub-system");
     });
 
