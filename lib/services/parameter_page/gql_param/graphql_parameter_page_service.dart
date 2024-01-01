@@ -110,28 +110,28 @@ class GraphQLParameterPageService extends ParameterPageService {
     for (int subSystemIndex = 0;
         subSystemIndex != withPage.subSystemTitles.length;
         subSystemIndex++) {
+      final title = withPage.subSystemTitles[subSystemIndex];
+      final Map<String, dynamic> persistedSubSystem;
+
       if (subSystemIndex >= persistedSubSystems.length) {
-        persistedSubSystems.add(await _createANewSubSystem(
-            onPageId: pageId,
-            withTitle: withPage.subSystemTitles[subSystemIndex],
-            atIndex: subSystemIndex));
+        persistedSubSystem = await _createANewSubSystem(
+            onPageId: pageId, withTitle: title, atIndex: subSystemIndex);
+        persistedSubSystems.add(persistedSubSystem);
       } else {
-        if (withPage.subSystemTitles[subSystemIndex] !=
-            persistedSubSystems[subSystemIndex]["title"]) {
+        persistedSubSystem = persistedSubSystems[subSystemIndex];
+        if (title != persistedSubSystem["title"]) {
           await _renameSubSystem(
-              id: persistedSubSystems[subSystemIndex]["subsysid"],
-              newTitle: withPage.subSystemTitles[subSystemIndex]);
+              id: persistedSubSystem["subsysid"], newTitle: title);
         }
       }
 
       await _deleteExtraTabs(
-          withPage: withPage,
-          persistedTabs: persistedSubSystems[subSystemIndex]['tabs']);
+          withPage: withPage, persistedTabs: persistedSubSystem['tabs']);
 
       await _updateEachTab(
           withPage: withPage,
-          persistedTabs: persistedSubSystems[subSystemIndex]['tabs'],
-          subSystemId: persistedSubSystems[subSystemIndex]['subsysid']);
+          persistedTabs: persistedSubSystem['tabs'],
+          subSystemId: persistedSubSystem['subsysid']);
     }
   }
 
