@@ -589,6 +589,11 @@ void main() {
       page.renameTab(withTitle: "Tab 3", to: "Sub 1 Tab 3");
       page.createSubSystem();
       page.subSystemTitle = "Second subsys";
+      page.renameTab(withTitle: "Tab 1", to: "Sub 2 Tab 1");
+      page.createTab();
+      page.renameTab(withTitle: "Tab 2", to: "Sub 2 Tab 2");
+      page.createTab();
+      page.renameTab(withTitle: "Tab 3", to: "Sub 2 Tab 3");
 
       // ... and the page has already been persisted
       final pageId = await service.createPage(withTitle: page.title);
@@ -596,6 +601,9 @@ void main() {
 
       // When I make changes to the page
       page.subSystemTitle = "2nd Sub-system";
+      page.renameTab(withTitle: "Sub 2 Tab 1", to: "Fourth Tab");
+      page.renameTab(withTitle: "Sub 2 Tab 2", to: "Fifth Tab");
+      page.renameTab(withTitle: "Sub 2 Tab 3", to: "Sixth Tab");
       page.switchSubSystem(to: "First subsys");
       page.subSystemTitle = "1st Sub-system";
       page.renameTab(withTitle: "Sub 1 Tab 1", to: "First Tab");
@@ -611,11 +619,16 @@ void main() {
       // Then the changes to sub-system 1 and sub-system 2 have been persisted
       final subSystemTitles = readBackPage.subSystemTitles;
       final sub1TabTitles = readBackPage.tabTitles;
+      readBackPage.switchSubSystem(to: "2nd Sub-system");
+      final sub2TabTitles = readBackPage.tabTitles;
       expect(subSystemTitles.length, 2);
       expect(subSystemTitles[0], "1st Sub-system");
       expect(sub1TabTitles[0], "First Tab");
       expect(sub1TabTitles[1], "Second Tab");
       expect(sub1TabTitles[2], "Third Tab");
+      expect(sub2TabTitles[0], "First Tab");
+      expect(sub2TabTitles[1], "Second Tab");
+      expect(sub2TabTitles[2], "Third Tab");
       expect(subSystemTitles[1], "2nd Sub-system");
     });
 
