@@ -115,6 +115,13 @@ class GraphQLParameterPageService extends ParameterPageService {
             onPageId: pageId,
             withTitle: withPage.subSystemTitles[subSystemIndex],
             atIndex: subSystemIndex));
+      } else {
+        if (withPage.subSystemTitles[subSystemIndex] !=
+            persistedSubSystems[subSystemIndex]["title"]) {
+          await _renameSubSystem(
+              id: persistedSubSystems[subSystemIndex]["subsysid"],
+              newTitle: withPage.subSystemTitles[subSystemIndex]);
+        }
       }
 
       await _deleteExtraTabs(
@@ -126,6 +133,27 @@ class GraphQLParameterPageService extends ParameterPageService {
           persistedTabs: persistedSubSystems[subSystemIndex]['tabs'],
           subSystemId: persistedSubSystems[subSystemIndex]['subsysid']);
     }
+  }
+
+  Future<void> _renameSubSystem(
+      {required String id, required String newTitle}) async {
+    return _doGraphQL(
+            query: updateSubjectTitles,
+            withVariables: {
+              'subjType': "subsys",
+              'subjTitles': [
+                {'subjectid': id, 'title': newTitle}
+              ]
+            },
+            whatItIs: "rename a sub-system")
+        .then((result) {
+      if (result.data?['code'] == -1) {
+        Logger().e(
+            "updateSubjectTitles returned with a failure, message: ${result.data?["message"]}");
+        return Future.error(
+            "The request to rename the sub-system returned an exception.  Please refer to the developer console for more detail.");
+      }
+    });
   }
 
   Future<Map<String, dynamic>> _createANewSubSystem(
