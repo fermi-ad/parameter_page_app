@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:parameter_page/entities/page_entry.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
