@@ -589,23 +589,37 @@ void main() {
       page.switchSubSystem(to: "Second subsys");
       page.subSystemTitle = "2nd Sub-system";
       page.renameTab(withTitle: "Sub 2 Tab 3", to: "Sixth Tab");
-      page.add(CommentEntry("Sys 2 / Sixth Tab / Sub 1 / Entry 1"));
       page.renameTab(withTitle: "Sub 2 Tab 2", to: "Fifth Tab");
-      page.switchTab(to: "Fifth Tab");
-      page.add(CommentEntry("Sys 2 / Fifth Tab / Sub 1 / Entry 1"));
       page.renameTab(withTitle: "Sub 2 Tab 1", to: "Fourth Tab");
+
+      page.switchTab(to: "Sixth Tab");
+      page.switchSubPage(to: 1);
+      page.add(CommentEntry("Sys 2 / Sixth Tab / Sub 1 / Entry 1"));
+
+      page.switchTab(to: "Fifth Tab");
+      page.switchSubPage(to: 1);
+      page.add(CommentEntry("Sys 2 / Fifth Tab / Sub 1 / Entry 1"));
+
       page.switchTab(to: "Fourth Tab");
+      page.switchSubPage(to: 1);
       page.add(CommentEntry("Sys 2 / Fourth Tab / Sub 1 / Entry 1"));
 
       page.switchSubSystem(to: "First subsys");
       page.subSystemTitle = "1st Sub-system";
       page.renameTab(withTitle: "Sub 1 Tab 1", to: "First Tab");
-      page.add(CommentEntry("Sys 1 / Third Tab / Sub 1 / Entry 1"));
       page.renameTab(withTitle: "Sub 1 Tab 2", to: "Second Tab");
-      page.switchTab(to: "Second Tab");
-      page.add(CommentEntry("Sys 1 / Second Tab / Sub 1 / Entry 1"));
       page.renameTab(withTitle: "Sub 1 Tab 3", to: "Third Tab");
+
+      page.switchTab(to: "Third Tab");
+      page.switchSubPage(to: 1);
+      page.add(CommentEntry("Sys 1 / Third Tab / Sub 1 / Entry 1"));
+
+      page.switchTab(to: "Second Tab");
+      page.switchSubPage(to: 1);
+      page.add(CommentEntry("Sys 1 / Second Tab / Sub 1 / Entry 1"));
+
       page.switchTab(to: "First Tab");
+      page.switchSubPage(to: 1);
       page.add(CommentEntry("Sys 1 / First Tab / Sub 1 / Entry 1"));
 
       // ... and save the changes
@@ -730,18 +744,26 @@ ParameterPage _createAComplicatedTestPage({required String withTitle}) {
   page.title = withTitle;
   page.subSystemTitle = "First subsys";
   page.renameTab(withTitle: "Tab 1", to: "Sub 1 Tab 1");
+  page.createSubPage();
+  page.createSubPage();
   page.createTab(title: "Sub 1 Tab 2");
   page.createTab(title: "Sub 1 Tab 3");
+
   page.createSubSystem();
   page.subSystemTitle = "Second subsys";
   page.renameTab(withTitle: "Tab 1", to: "Sub 2 Tab 1");
   page.createTab(title: "Sub 2 Tab 2");
+  page.createSubPage();
+  page.createSubPage();
   page.createTab(title: "Sub 2 Tab 3");
+
   page.createSubSystem();
   page.subSystemTitle = "Third subsys";
   page.renameTab(withTitle: "Tab 1", to: "Sub 3 Tab 1");
   page.createTab(title: "Sub 3 Tab 2");
   page.createTab(title: "Sub 3 Tab 3");
+  page.createSubPage();
+  page.createSubPage();
 
   return page;
 }
