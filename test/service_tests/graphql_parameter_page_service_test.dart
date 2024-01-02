@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:parameter_page/entities/page_entry.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
@@ -687,7 +689,36 @@ void main() {
     });
 
     test('delete populated sub-system and savePage(..), changes are persisted',
-        () async {});
+        () async {
+      // Given a GraphQLParameterPageService
+      await dotenv.load(fileName: ".env");
+      final service = GraphQLParameterPageService();
+
+      // ... and a test page
+      ParameterPage page = _createAComplicatedTestPage();
+
+      // ... and the page has already been persisted
+      final pageId = await service.createPage(withTitle: page.title);
+      await service.savePage(id: pageId, page: page);
+
+      // When I delete one of the sub-systems
+      page.deleteSubSystem(withTitle: "First subsys");
+
+      // ... and persist the changes
+      await service.savePage(id: pageId, page: page);
+
+      // ... and then read them back
+      ParameterPage readBackPage = await service.fetchPage(id: pageId);
+
+      // Then the changes are persisted properly
+      expect(readBackPage.subSystemTitles.length, 1);
+      expect(readBackPage.subSystemTitle, "Second subsys");
+      final tabs = readBackPage.tabTitles;
+      expect(tabs.length, 3);
+      expect(tabs[0], "Sub 2 Tab 1");
+      expect(tabs[1], "Sub 2 Tab 2");
+      expect(tabs[2], "Sub 2 Tab 3");
+    });
   });
 }
 
