@@ -586,6 +586,7 @@ void main() {
       await service.savePage(id: pageId, page: page);
 
       // When I make changes to the page
+      page.switchSubSystem(to: "Second subsys");
       page.subSystemTitle = "2nd Sub-system";
       page.renameTab(withTitle: "Sub 2 Tab 3", to: "Sixth Tab");
       page.add(CommentEntry("Sys 2 / Sixth Tab / Sub 1 / Entry 1"));
@@ -632,9 +633,10 @@ void main() {
       final sub2Tab3Entries = readBackPage.entriesAsListFrom(
           subSystem: "2nd Sub-system", tab: "Sixth Tab", subPage: 1);
 
-      expect(subSystemTitles.length, 2);
+      expect(subSystemTitles.length, 3);
       expect(subSystemTitles[0], "1st Sub-system");
       expect(subSystemTitles[1], "2nd Sub-system");
+      expect(subSystemTitles[2], "Third subsys");
       expect(sub1TabTitles[0], "First Tab");
       expect(sub1TabTitles[1], "Second Tab");
       expect(sub1TabTitles[2], "Third Tab");
@@ -711,7 +713,7 @@ void main() {
       ParameterPage readBackPage = await service.fetchPage(id: pageId);
 
       // Then the changes are persisted properly
-      expect(readBackPage.subSystemTitles.length, 1);
+      expect(readBackPage.subSystemTitles.length, 2);
       expect(readBackPage.subSystemTitle, "Second subsys");
       final tabs = readBackPage.tabTitles;
       expect(tabs.length, 3);
@@ -739,6 +741,13 @@ ParameterPage _createAComplicatedTestPage({required String withTitle}) {
   page.renameTab(withTitle: "Tab 2", to: "Sub 2 Tab 2");
   page.createTab();
   page.renameTab(withTitle: "Tab 3", to: "Sub 2 Tab 3");
+  page.createSubSystem();
+  page.subSystemTitle = "Third subsys";
+  page.renameTab(withTitle: "Tab 1", to: "Sub 3 Tab 1");
+  page.createTab();
+  page.renameTab(withTitle: "Tab 2", to: "Sub 3 Tab 2");
+  page.createTab();
+  page.renameTab(withTitle: "Tab 3", to: "Sub 3 Tab 3");
 
   return page;
 }
