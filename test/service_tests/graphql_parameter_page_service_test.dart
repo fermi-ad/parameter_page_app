@@ -601,13 +601,15 @@ void main() {
 
       // When I make changes to the page
       page.subSystemTitle = "2nd Sub-system";
-      page.renameTab(withTitle: "Sub 2 Tab 1", to: "Fourth Tab");
-      page.add(CommentEntry("Sys 2 / Fourth Tab / Sub 1 / Entry 1"));
+      page.renameTab(withTitle: "Sub 2 Tab 3", to: "Sixth Tab");
+      page.add(CommentEntry("Sys 2 / Sixth Tab / Sub 1 / Entry 1"));
       page.renameTab(withTitle: "Sub 2 Tab 2", to: "Fifth Tab");
       page.switchTab(to: "Fifth Tab");
       page.add(CommentEntry("Sys 2 / Fifth Tab / Sub 1 / Entry 1"));
-      page.renameTab(withTitle: "Sub 2 Tab 3", to: "Sixth Tab");
-      page.add(CommentEntry("Sys 2 / Sixth Tab / Sub 1 / Entry 1"));
+      page.renameTab(withTitle: "Sub 2 Tab 1", to: "Fourth Tab");
+      page.switchTab(to: "Fourth Tab");
+      page.add(CommentEntry("Sys 2 / Fourth Tab / Sub 1 / Entry 1"));
+
       page.switchSubSystem(to: "First subsys");
       page.subSystemTitle = "1st Sub-system";
       page.renameTab(withTitle: "Sub 1 Tab 1", to: "First Tab");
@@ -639,9 +641,9 @@ void main() {
       expect(sub1TabTitles[0], "First Tab");
       expect(sub1TabTitles[1], "Second Tab");
       expect(sub1TabTitles[2], "Third Tab");
-      expect(sub2TabTitles[0], "First Tab");
-      expect(sub2TabTitles[1], "Second Tab");
-      expect(sub2TabTitles[2], "Third Tab");
+      expect(sub2TabTitles[0], "Fourth Tab");
+      expect(sub2TabTitles[1], "Fifth Tab");
+      expect(sub2TabTitles[2], "Sixth Tab");
       expect(sub1Tab1Entries[0].entryText(),
           "Sys 1 / First Tab / Sub 1 / Entry 1");
       expect(sub2Tab1Entries[0].entryText(),

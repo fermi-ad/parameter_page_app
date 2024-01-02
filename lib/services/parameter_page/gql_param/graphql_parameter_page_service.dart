@@ -187,8 +187,9 @@ class GraphQLParameterPageService extends ParameterPageService {
       required ParameterPage withPage,
       required String forSubSystem,
       required String subSystemId}) async {
-    for (int tabIndex = 0; tabIndex != withPage.tabTitles.length; tabIndex++) {
-      final tabName = withPage.tabTitles[tabIndex];
+    final tabTitles = withPage.tabTitlesFor(subSystem: forSubSystem);
+    for (int tabIndex = 0; tabIndex != tabTitles.length; tabIndex++) {
+      final tabName = tabTitles[tabIndex];
 
       dynamic persistedTab;
       if (tabIndex >= persistedTabs.length) {
@@ -206,6 +207,7 @@ class GraphQLParameterPageService extends ParameterPageService {
           persistedSubPages:
               persistedTab['sub_pages'] ?? persistedTab['tabpagelist'],
           withPage: withPage,
+          forSubSystem: forSubSystem,
           forTab: tabName);
 
       await _updateEachSubPage(
@@ -213,6 +215,7 @@ class GraphQLParameterPageService extends ParameterPageService {
           persistedSubPages:
               persistedTab['sub_pages'] ?? persistedTab['tabpagelist'],
           withPage: withPage,
+          forSubSystem: forSubSystem,
           forTab: tabName);
     }
   }
@@ -268,11 +271,14 @@ class GraphQLParameterPageService extends ParameterPageService {
   Future<void> _deleteExtraSubPages(
       {required List<dynamic> persistedSubPages,
       required ParameterPage withPage,
+      required String forSubSystem,
       required String forTab}) async {
     for (int subPageIndex = 0;
         subPageIndex != persistedSubPages.length;
         subPageIndex++) {
-      if (subPageIndex > withPage.subPageCount(forTab: forTab) - 1) {
+      if (subPageIndex >
+          withPage.subPageCount(forSubSystem: forSubSystem, forTab: forTab) -
+              1) {
         final subPageId = persistedSubPages[subPageIndex]["tabpageid"];
         final entries = persistedSubPages[subPageIndex]['entries'];
         await _deleteAllEntries(fromSubPageId: subPageId, entries: entries);
@@ -285,9 +291,11 @@ class GraphQLParameterPageService extends ParameterPageService {
       {required String persistedTabId,
       required List<dynamic> persistedSubPages,
       required ParameterPage withPage,
+      required String forSubSystem,
       required String forTab}) async {
     for (int subPageIndex = 0;
-        subPageIndex != withPage.subPageCount(forTab: forTab);
+        subPageIndex !=
+            withPage.subPageCount(forSubSystem: forSubSystem, forTab: forTab);
         subPageIndex++) {
       String subPageId;
 
@@ -305,10 +313,12 @@ class GraphQLParameterPageService extends ParameterPageService {
       await _saveEntries(
           id: subPageId,
           newEntries: withPage.entriesAsListFrom(
-              tab: forTab, subPage: subPageIndex + 1));
+              subSystem: forSubSystem, tab: forTab, subPage: subPageIndex + 1));
 
-      final subPageTitle =
-          withPage.subPageTitleFor(tab: forTab, subPageIndex: subPageIndex + 1);
+      final subPageTitle = withPage.subPageTitleFor(
+          forSubSystem: forSubSystem,
+          tab: forTab,
+          subPageIndex: subPageIndex + 1);
       final subPageTitleShouldBeUpdated =
           subPageIndex >= persistedSubPages.length ||
               subPageTitle != persistedSubPages[subPageIndex]['title'];
