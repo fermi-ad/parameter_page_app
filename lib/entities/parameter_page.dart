@@ -410,6 +410,10 @@ class ParameterPage {
         .title;
   }
 
+  List<String> tabTitlesFor({required String subSystem}) {
+    return [];
+  }
+
   void _enforceEditMode() {
     if (!_editing) {
       throw Exception(

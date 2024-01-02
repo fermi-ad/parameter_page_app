@@ -130,6 +130,7 @@ class GraphQLParameterPageService extends ParameterPageService {
 
       await _updateEachTab(
           withPage: withPage,
+          forSubSystem: title,
           persistedTabs: persistedSubSystem['tabs'],
           subSystemId: persistedSubSystem['subsysid']);
     }
@@ -184,6 +185,7 @@ class GraphQLParameterPageService extends ParameterPageService {
   Future<void> _updateEachTab(
       {required List<dynamic> persistedTabs,
       required ParameterPage withPage,
+      required String forSubSystem,
       required String subSystemId}) async {
     for (int tabIndex = 0; tabIndex != withPage.tabTitles.length; tabIndex++) {
       final tabName = withPage.tabTitles[tabIndex];
