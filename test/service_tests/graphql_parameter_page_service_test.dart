@@ -577,23 +577,8 @@ void main() {
       await dotenv.load(fileName: ".env");
       final service = GraphQLParameterPageService();
 
-      // ... and a new ParameterPage with two populated sub-systems
-      ParameterPage page = ParameterPage();
-      page.enableEditing();
-      page.title = "***SERVICE TEST*** update multiple sub-systems";
-      page.subSystemTitle = "First subsys";
-      page.renameTab(withTitle: "Tab 1", to: "Sub 1 Tab 1");
-      page.createTab();
-      page.renameTab(withTitle: "Tab 2", to: "Sub 1 Tab 2");
-      page.createTab();
-      page.renameTab(withTitle: "Tab 3", to: "Sub 1 Tab 3");
-      page.createSubSystem();
-      page.subSystemTitle = "Second subsys";
-      page.renameTab(withTitle: "Tab 1", to: "Sub 2 Tab 1");
-      page.createTab();
-      page.renameTab(withTitle: "Tab 2", to: "Sub 2 Tab 2");
-      page.createTab();
-      page.renameTab(withTitle: "Tab 3", to: "Sub 2 Tab 3");
+      // ... and a test page
+      ParameterPage page = _createAComplicatedTestPage();
 
       // ... and the page has already been persisted
       final pageId = await service.createPage(withTitle: page.title);
@@ -704,6 +689,27 @@ void main() {
     test('delete populated sub-system and savePage(..), changes are persisted',
         () async {});
   });
+}
+
+ParameterPage _createAComplicatedTestPage() {
+  ParameterPage page = ParameterPage();
+  page.enableEditing();
+  page.title = "***SERVICE TEST*** update multiple sub-systems";
+  page.subSystemTitle = "First subsys";
+  page.renameTab(withTitle: "Tab 1", to: "Sub 1 Tab 1");
+  page.createTab();
+  page.renameTab(withTitle: "Tab 2", to: "Sub 1 Tab 2");
+  page.createTab();
+  page.renameTab(withTitle: "Tab 3", to: "Sub 1 Tab 3");
+  page.createSubSystem();
+  page.subSystemTitle = "Second subsys";
+  page.renameTab(withTitle: "Tab 1", to: "Sub 2 Tab 1");
+  page.createTab();
+  page.renameTab(withTitle: "Tab 2", to: "Sub 2 Tab 2");
+  page.createTab();
+  page.renameTab(withTitle: "Tab 3", to: "Sub 2 Tab 3");
+
+  return page;
 }
 
 Future<void> _deleteAllTestPages() async {
