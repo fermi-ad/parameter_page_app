@@ -46,17 +46,13 @@ class GraphQLParameterPageService extends ParameterPageService {
   }
 
   @override
-  Future<void> deletePage(
-      {required String withPageId,
-      required Function(String errorMessage) onFailure,
-      required Function() onSuccess}) async {
-    return _doGraphQL(
-            query: removeTree,
-            withVariables: {
-              'treeid': withPageId,
-            },
-            whatItIs: "delete a parameter page")
-        .then((result) => onSuccess.call());
+  Future<void> deletePage({required String withPageId}) async {
+    await _doGraphQL(
+        query: removeTree,
+        withVariables: {
+          'treeid': withPageId,
+        },
+        whatItIs: "delete a parameter page");
   }
 
   @override
@@ -65,14 +61,14 @@ class GraphQLParameterPageService extends ParameterPageService {
     try {
       final persistedPageStructure = await _fetchPageStructure(forPageId: id);
 
-      await _deleteExtraTabs(
+      await _deleteExtraSubSystems(
           withPage: page,
-          persistedTabs: persistedPageStructure['sub_systems'][0]['tabs']);
+          persistedSubSystems: persistedPageStructure['sub_systems']);
 
-      await _updateEachTab(
+      await _updateEachSubSystem(
           withPage: page,
-          persistedTabs: persistedPageStructure['sub_systems'][0]['tabs'],
-          subSystemId: persistedPageStructure['sub_systems'][0]['subsysid']);
+          persistedSubSystems: persistedPageStructure['sub_systems'],
+          pageId: id);
     } catch (e) {
       Logger().e(e.toString());
       return Future.error("savePage failure");
@@ -103,6 +99,106 @@ class GraphQLParameterPageService extends ParameterPageService {
     });
   }
 
+  Future<void> _deleteExtraSubSystems(
+      {required List<dynamic> persistedSubSystems,
+      required ParameterPage withPage}) async {
+    for (int subSysIndex = 0;
+        subSysIndex != persistedSubSystems.length;
+        subSysIndex++) {
+      if (subSysIndex >= withPage.subSystemTitles.length) {
+        await _deleteSubSystem(subSystem: persistedSubSystems[subSysIndex]);
+      }
+    }
+  }
+
+  Future<void> _updateEachSubSystem(
+      {required List<dynamic> persistedSubSystems,
+      required ParameterPage withPage,
+      required String pageId}) async {
+    for (int subSystemIndex = withPage.subSystemTitles.length - 1;
+        subSystemIndex >= 0;
+        subSystemIndex--) {
+      final title = withPage.subSystemTitles[subSystemIndex];
+      final Map<String, dynamic> persistedSubSystem;
+
+      if (subSystemIndex >= persistedSubSystems.length) {
+        persistedSubSystem = await _createANewSubSystem(
+            onPageId: pageId, withTitle: title, atIndex: subSystemIndex);
+      } else {
+        persistedSubSystem = persistedSubSystems[subSystemIndex];
+        if (title != persistedSubSystem["title"]) {
+          await _renameSubSystem(
+              id: persistedSubSystem["subsysid"], newTitle: title);
+        }
+      }
+
+      await _deleteExtraTabs(
+          withPage: withPage, persistedTabs: persistedSubSystem['tabs']);
+
+      await _updateEachTab(
+          withPage: withPage,
+          forSubSystem: title,
+          persistedTabs: persistedSubSystem['tabs'],
+          subSystemId: persistedSubSystem['subsysid']);
+    }
+  }
+
+  Future<void> _renameSubSystem(
+      {required String id, required String newTitle}) async {
+    return _doGraphQL(
+            query: updateSubjectTitles,
+            withVariables: {
+              'subjType': "subsys",
+              'subjTitles': [
+                {'subjectid': id, 'title': newTitle}
+              ]
+            },
+            whatItIs: "rename a sub-system")
+        .then((result) {
+      if (result.data?['code'] == -1) {
+        Logger().e(
+            "updateSubjectTitles returned with a failure, message: ${result.data?["message"]}");
+        return Future.error(
+            "The request to rename the sub-system returned an exception.  Please refer to the developer console for more detail.");
+      }
+    });
+  }
+
+  Future<Map<String, dynamic>> _createANewSubSystem(
+      {required String onPageId,
+      required String withTitle,
+      required int atIndex}) async {
+    return _doGraphQL(
+            query: addSubSysBranch,
+            withVariables: {
+              'title': withTitle,
+              "seqnum": atIndex + 1,
+              "pageid": onPageId
+            },
+            whatItIs: "create a new sub-system")
+        .then((result) => result.data!['newSubsysBranch']);
+  }
+
+  Future<void> _deleteSubSystem(
+      {required Map<String, dynamic> subSystem}) async {
+    await _deleteTabs(fromSubSystem: subSystem);
+
+    await _doGraphQL(
+        query: deleteSubjects,
+        withVariables: {
+          'subjType': "subsys",
+          'subjIds': [subSystem['subsysid']]
+        },
+        whatItIs: "delete a sub-system");
+  }
+
+  Future<void> _deleteTabs(
+      {required Map<String, dynamic> fromSubSystem}) async {
+    for (Map<String, dynamic> tab in fromSubSystem['tabs']) {
+      await _deleteTab(tab: tab);
+    }
+  }
+
   Future<void> _deleteExtraTabs(
       {required List<dynamic> persistedTabs,
       required ParameterPage withPage}) async {
@@ -116,9 +212,11 @@ class GraphQLParameterPageService extends ParameterPageService {
   Future<void> _updateEachTab(
       {required List<dynamic> persistedTabs,
       required ParameterPage withPage,
+      required String forSubSystem,
       required String subSystemId}) async {
-    for (int tabIndex = 0; tabIndex != withPage.tabTitles.length; tabIndex++) {
-      final tabName = withPage.tabTitles[tabIndex];
+    final tabTitles = withPage.tabTitlesFor(subSystem: forSubSystem);
+    for (int tabIndex = tabTitles.length - 1; tabIndex >= 0; tabIndex--) {
+      final tabName = tabTitles[tabIndex];
 
       dynamic persistedTab;
       if (tabIndex >= persistedTabs.length) {
@@ -136,6 +234,7 @@ class GraphQLParameterPageService extends ParameterPageService {
           persistedSubPages:
               persistedTab['sub_pages'] ?? persistedTab['tabpagelist'],
           withPage: withPage,
+          forSubSystem: forSubSystem,
           forTab: tabName);
 
       await _updateEachSubPage(
@@ -143,6 +242,7 @@ class GraphQLParameterPageService extends ParameterPageService {
           persistedSubPages:
               persistedTab['sub_pages'] ?? persistedTab['tabpagelist'],
           withPage: withPage,
+          forSubSystem: forSubSystem,
           forTab: tabName);
     }
   }
@@ -183,14 +283,29 @@ class GraphQLParameterPageService extends ParameterPageService {
     });
   }
 
+  Future<void> _deleteTab({required Map<String, dynamic> tab}) async {
+    await _deleteSubPages(fromTab: tab);
+
+    await _doGraphQL(
+        query: deleteSubjects,
+        withVariables: {
+          'subjType': "tab",
+          'subjIds': [tab['subsystabid']]
+        },
+        whatItIs: "delete a tab");
+  }
+
   Future<void> _deleteExtraSubPages(
       {required List<dynamic> persistedSubPages,
       required ParameterPage withPage,
+      required String forSubSystem,
       required String forTab}) async {
     for (int subPageIndex = 0;
         subPageIndex != persistedSubPages.length;
         subPageIndex++) {
-      if (subPageIndex > withPage.subPageCount(forTab: forTab) - 1) {
+      if (subPageIndex >
+          withPage.subPageCount(forSubSystem: forSubSystem, forTab: forTab) -
+              1) {
         final subPageId = persistedSubPages[subPageIndex]["tabpageid"];
         final entries = persistedSubPages[subPageIndex]['entries'];
         await _deleteAllEntries(fromSubPageId: subPageId, entries: entries);
@@ -203,10 +318,13 @@ class GraphQLParameterPageService extends ParameterPageService {
       {required String persistedTabId,
       required List<dynamic> persistedSubPages,
       required ParameterPage withPage,
+      required String forSubSystem,
       required String forTab}) async {
-    for (int subPageIndex = 0;
-        subPageIndex != withPage.subPageCount(forTab: forTab);
-        subPageIndex++) {
+    for (int subPageIndex =
+            withPage.subPageCount(forSubSystem: forSubSystem, forTab: forTab) -
+                1;
+        subPageIndex >= 0;
+        subPageIndex--) {
       String subPageId;
 
       if (subPageIndex >= persistedSubPages.length) {
@@ -223,10 +341,12 @@ class GraphQLParameterPageService extends ParameterPageService {
       await _saveEntries(
           id: subPageId,
           newEntries: withPage.entriesAsListFrom(
-              tab: forTab, subPage: subPageIndex + 1));
+              subSystem: forSubSystem, tab: forTab, subPage: subPageIndex + 1));
 
-      final subPageTitle =
-          withPage.subPageTitleFor(tab: forTab, subPageIndex: subPageIndex + 1);
+      final subPageTitle = withPage.subPageTitleFor(
+          forSubSystem: forSubSystem,
+          tab: forTab,
+          subPageIndex: subPageIndex + 1);
       final subPageTitleShouldBeUpdated =
           subPageIndex >= persistedSubPages.length ||
               subPageTitle != persistedSubPages[subPageIndex]['title'];
@@ -234,18 +354,6 @@ class GraphQLParameterPageService extends ParameterPageService {
         await _renameSubPage(id: subPageId, newTitle: subPageTitle);
       }
     }
-  }
-
-  Future<void> _deleteTab({required Map<String, dynamic> tab}) async {
-    await _deleteSubPages(fromTab: tab);
-
-    await _doGraphQL(
-        query: deleteSubjects,
-        withVariables: {
-          'subjType': "tab",
-          'subjIds': [tab['subsystabid']]
-        },
-        whatItIs: "delete a tab");
   }
 
   Future<void> _deleteSubPages({required Map<String, dynamic> fromTab}) async {
@@ -289,17 +397,6 @@ class GraphQLParameterPageService extends ParameterPageService {
     });
   }
 
-  Future _deleteAllEntries(
-      {required String fromSubPageId, required List<dynamic> entries}) async {
-    List<int> deleteFromPositions = [];
-    for (final entry in entries) {
-      deleteFromPositions.add(entry['position']);
-    }
-
-    await _deleteEntries(
-        fromSubPage: fromSubPageId, atPositions: deleteFromPositions);
-  }
-
   Future<String> _createANewSubPage(
       {required String onTab, required int atIndex}) async {
     return _doGraphQL(
@@ -330,6 +427,17 @@ class GraphQLParameterPageService extends ParameterPageService {
             "The request to add entries to a parameter page returned an exception.  Please refer to the developer console for more detail.");
       }
     });
+  }
+
+  Future _deleteAllEntries(
+      {required String fromSubPageId, required List<dynamic> entries}) async {
+    List<int> deleteFromPositions = [];
+    for (final entry in entries) {
+      deleteFromPositions.add(entry['position']);
+    }
+
+    await _deleteEntries(
+        fromSubPage: fromSubPageId, atPositions: deleteFromPositions);
   }
 
   Future<void> _deleteEntries(

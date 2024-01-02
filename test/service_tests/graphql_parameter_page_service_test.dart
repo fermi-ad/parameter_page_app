@@ -491,11 +491,338 @@ void main() {
     });
 
     test("add entries to multiple tabs and savePage(..), changes are persisted",
-        () {});
+        () async {
+      // Given a GraphQLParameterPageService
+      await dotenv.load(fileName: ".env");
+      final service = GraphQLParameterPageService();
 
-    test("add sub-pages to a tab and savePage(..), new sub-pages are persisted",
-        () {});
+      // ... and a new ParameterPage with three empty tabs
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.title = "***SERVICE TEST*** add entries to tabs";
+      page.createTab();
+      page.createTab();
+
+      // ... and the page has been persisted
+      final pageId = await service.createPage(withTitle: page.title);
+      await service.savePage(id: pageId, page: page);
+
+      // When I add entries to sub-pages on each tab
+      page.switchTab(to: "Tab 1");
+      page.add(CommentEntry("tab 1 sub-page 1 entry 1"));
+      page.switchTab(to: "Tab 2");
+      page.add(CommentEntry("tab 2 sub-page 1 entry 1"));
+      page.createSubPage();
+      page.add(CommentEntry("tab 2 sub-page 2 entry 1"));
+      page.switchTab(to: "Tab 3");
+      page.add(CommentEntry("tab 3 sub-page 1 entry 1"));
+
+      // ... and save the changes
+      await service.savePage(id: pageId, page: page);
+
+      // ... and read it back
+      ParameterPage readBackPage = await service.fetchPage(id: pageId);
+
+      // Then the new entries have been persisted
+      expect(readBackPage.tabTitles[0], "Tab 1");
+      readBackPage.switchTab(to: "Tab 1");
+      expect(readBackPage.entriesAsList()[0].entryText(),
+          "tab 1 sub-page 1 entry 1");
+
+      expect(readBackPage.tabTitles[1], "Tab 2");
+      readBackPage.switchTab(to: "Tab 2");
+      expect(readBackPage.entriesAsList()[0].entryText(),
+          "tab 2 sub-page 1 entry 1");
+      readBackPage.incrementSubPage();
+      expect(readBackPage.entriesAsList()[0].entryText(),
+          "tab 2 sub-page 2 entry 1");
+
+      expect(readBackPage.tabTitles[2], "Tab 3");
+      readBackPage.switchTab(to: "Tab 3");
+      expect(readBackPage.entriesAsList()[0].entryText(),
+          "tab 3 sub-page 1 entry 1");
+    });
+
+    test(
+        'savePage(..) a new ParameterPage with multiple sub-systems, sub-systems are persisted',
+        () async {
+      // Given a GraphQLParameterPageService
+      await dotenv.load(fileName: ".env");
+      final service = GraphQLParameterPageService();
+
+      // ... and a new ParameterPage with two empty sub-systems
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.title = "***SERVICE TEST*** save multiple sub-systems";
+      page.createSubSystem();
+      page.subSystemTitle = "New sub-system";
+
+      // When I save the new page
+      final pageId = await service.createPage(withTitle: page.title);
+      await service.savePage(id: pageId, page: page);
+
+      // ... and read it back
+      ParameterPage readBackPage = await service.fetchPage(id: pageId);
+
+      // Then the new sub-system has been persisted
+      final titles = readBackPage.subSystemTitles;
+      expect(titles.length, 2);
+      expect(titles[1], "New sub-system");
+    });
+
+    test(
+        'modify a persisted ParameterPage with multiple sub-systems, changes are persisted',
+        () async {
+      // Given a GraphQLParameterPageService
+      await dotenv.load(fileName: ".env");
+      final service = GraphQLParameterPageService();
+
+      // ... and a test page
+      ParameterPage page = _createAComplicatedTestPage(
+          withTitle: "***SERVICE TEST*** update multiple sub-systems");
+
+      // ... and the page has already been persisted
+      final pageId = await service.createPage(withTitle: page.title);
+      await service.savePage(id: pageId, page: page);
+
+      // When I make changes to the page
+      page.switchSubSystem(to: "Second subsys");
+      page.subSystemTitle = "2nd Sub-system";
+      page.renameTab(withTitle: "Sub 2 Tab 3", to: "Sixth Tab");
+      page.renameTab(withTitle: "Sub 2 Tab 2", to: "Fifth Tab");
+      page.renameTab(withTitle: "Sub 2 Tab 1", to: "Fourth Tab");
+
+      page.switchTab(to: "Sixth Tab");
+      page.switchSubPage(to: 1);
+      page.add(CommentEntry("Sys 2 / Sixth Tab / Sub 1 / Entry 1"));
+
+      page.switchTab(to: "Fifth Tab");
+      page.switchSubPage(to: 1);
+      page.add(CommentEntry("Sys 2 / Fifth Tab / Sub 1 / Entry 1"));
+
+      page.switchTab(to: "Fourth Tab");
+      page.switchSubPage(to: 1);
+      page.add(CommentEntry("Sys 2 / Fourth Tab / Sub 1 / Entry 1"));
+
+      page.switchSubSystem(to: "First subsys");
+      page.subSystemTitle = "1st Sub-system";
+      page.renameTab(withTitle: "Sub 1 Tab 1", to: "First Tab");
+      page.renameTab(withTitle: "Sub 1 Tab 2", to: "Second Tab");
+      page.renameTab(withTitle: "Sub 1 Tab 3", to: "Third Tab");
+
+      page.switchTab(to: "Third Tab");
+      page.switchSubPage(to: 1);
+      page.add(CommentEntry("Sys 1 / Third Tab / Sub 1 / Entry 1"));
+
+      page.switchTab(to: "Second Tab");
+      page.switchSubPage(to: 1);
+      page.add(CommentEntry("Sys 1 / Second Tab / Sub 1 / Entry 1"));
+
+      page.switchTab(to: "First Tab");
+      page.switchSubPage(to: 1);
+      page.add(CommentEntry("Sys 1 / First Tab / Sub 1 / Entry 1"));
+
+      // ... and save the changes
+      await service.savePage(id: pageId, page: page);
+
+      // ... and read back the page
+      ParameterPage readBackPage = await service.fetchPage(id: pageId);
+
+      // Then the changes to sub-system 1 and sub-system 2 have been persisted
+      final subSystemTitles = readBackPage.subSystemTitles;
+      final sub1TabTitles = readBackPage.tabTitles;
+      final sub1Tab1Entries = readBackPage.entriesAsListFrom(
+          subSystem: "1st Sub-system", tab: "First Tab", subPage: 1);
+      final sub1Tab2Entries = readBackPage.entriesAsListFrom(
+          subSystem: "1st Sub-system", tab: "Second Tab", subPage: 1);
+      final sub1Tab3Entries = readBackPage.entriesAsListFrom(
+          subSystem: "1st Sub-system", tab: "Third Tab", subPage: 1);
+
+      readBackPage.switchSubSystem(to: "2nd Sub-system");
+      final sub2TabTitles = readBackPage.tabTitles;
+      final sub2Tab1Entries = readBackPage.entriesAsListFrom(
+          subSystem: "2nd Sub-system", tab: "Fourth Tab", subPage: 1);
+      final sub2Tab2Entries = readBackPage.entriesAsListFrom(
+          subSystem: "2nd Sub-system", tab: "Fifth Tab", subPage: 1);
+      final sub2Tab3Entries = readBackPage.entriesAsListFrom(
+          subSystem: "2nd Sub-system", tab: "Sixth Tab", subPage: 1);
+
+      expect(subSystemTitles.length, 3);
+      expect(subSystemTitles[0], "1st Sub-system");
+      expect(subSystemTitles[1], "2nd Sub-system");
+      expect(subSystemTitles[2], "Third subsys");
+      expect(sub1TabTitles[0], "First Tab");
+      expect(sub1TabTitles[1], "Second Tab");
+      expect(sub1TabTitles[2], "Third Tab");
+      expect(sub2TabTitles[0], "Fourth Tab");
+      expect(sub2TabTitles[1], "Fifth Tab");
+      expect(sub2TabTitles[2], "Sixth Tab");
+      expect(sub1Tab1Entries[0].entryText(),
+          "Sys 1 / First Tab / Sub 1 / Entry 1");
+      expect(sub1Tab2Entries[0].entryText(),
+          "Sys 1 / Second Tab / Sub 1 / Entry 1");
+      expect(sub1Tab3Entries[0].entryText(),
+          "Sys 1 / Third Tab / Sub 1 / Entry 1");
+      expect(sub2Tab1Entries[0].entryText(),
+          "Sys 2 / Fourth Tab / Sub 1 / Entry 1");
+      expect(sub2Tab2Entries[0].entryText(),
+          "Sys 2 / Fifth Tab / Sub 1 / Entry 1");
+      expect(sub2Tab3Entries[0].entryText(),
+          "Sys 2 / Sixth Tab / Sub 1 / Entry 1");
+    });
+
+    test('delete empty sub-system and savePage(..), changes are persisted',
+        () async {
+      // Given a GraphQLParameterPageService
+      await dotenv.load(fileName: ".env");
+      final service = GraphQLParameterPageService();
+
+      // ... and a new ParameterPage with two empty sub-systems
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.title = "***SERVICE TEST*** delete empty sub-system";
+      page.subSystemTitle = "Sub-system 1";
+      page.createSubSystem();
+      page.subSystemTitle = "Sub-system 2";
+
+      // ... and the page has been persisted already
+      final pageId = await service.createPage(withTitle: page.title);
+      await service.savePage(id: pageId, page: page);
+
+      // When I delete Sub-system 2
+      page.deleteSubSystem(withTitle: "Sub-system 2");
+
+      // ... and save the changes
+      await service.savePage(id: pageId, page: page);
+
+      // ... and read back the page
+      ParameterPage readBackPage = await service.fetchPage(id: pageId);
+
+      // Then only 1 sub-system remains on the page
+      expect(readBackPage.subSystemTitles.length, 1);
+      expect(readBackPage.subSystemTitles[0], "Sub-system 1");
+    });
+
+    test('delete populated sub-system and savePage(..), changes are persisted',
+        () async {
+      // Given a GraphQLParameterPageService
+      await dotenv.load(fileName: ".env");
+      final service = GraphQLParameterPageService();
+
+      // ... and a test page
+      ParameterPage page = _createAComplicatedTestPage(
+          withTitle: "***SERVICE TEST*** delete populated sub-system");
+
+      // ... and the page has already been persisted
+      final pageId = await service.createPage(withTitle: page.title);
+      await service.savePage(id: pageId, page: page);
+
+      // When I delete one of the sub-systems
+      page.deleteSubSystem(withTitle: "First subsys");
+
+      // ... and persist the changes
+      await service.savePage(id: pageId, page: page);
+
+      // ... and then read them back
+      ParameterPage readBackPage = await service.fetchPage(id: pageId);
+
+      // Then the changes are persisted properly
+      expect(readBackPage.subSystemTitles.length, 2);
+      expect(readBackPage.subSystemTitle, "Second subsys");
+      final tabs = readBackPage.tabTitles;
+      expect(tabs.length, 3);
+      expect(tabs[0], "Sub 2 Tab 1");
+      expect(tabs[1], "Sub 2 Tab 2");
+      expect(tabs[2], "Sub 2 Tab 3");
+    });
+
+    test('reverse order of entries and savePage(..), changes are persisted',
+        () async {
+      // Given a GraphQLParameterPageService
+      await dotenv.load(fileName: ".env");
+      final service = GraphQLParameterPageService();
+
+      // ... and a test page
+      ParameterPage page = _createAComplicatedTestPage(
+          withTitle: "***SERVICE TEST*** reverse page entries");
+
+      // ... and the page has already been persisted
+      final pageId = await service.createPage(withTitle: page.title);
+      await service.savePage(id: pageId, page: page);
+
+      // When I reverse-order the entries
+      page.switchSubSystem(to: "Third subsys");
+      page.switchTab(to: "Sub 3 Tab 3");
+      page.switchSubPage(to: 3);
+      page.reorderEntry(atIndex: 9, toIndex: 0);
+      page.reorderEntry(atIndex: 9, toIndex: 1);
+      page.reorderEntry(atIndex: 9, toIndex: 2);
+      page.reorderEntry(atIndex: 9, toIndex: 3);
+      page.reorderEntry(atIndex: 9, toIndex: 4);
+      page.reorderEntry(atIndex: 9, toIndex: 5);
+      page.reorderEntry(atIndex: 9, toIndex: 6);
+      page.reorderEntry(atIndex: 9, toIndex: 7);
+      page.reorderEntry(atIndex: 9, toIndex: 8);
+
+      // ... and persist the changes
+      await service.savePage(id: pageId, page: page);
+      // ... and then read them back
+      ParameterPage readBackPage = await service.fetchPage(id: pageId);
+
+      // Then the changes are persisted
+      final entries = readBackPage.entriesAsListFrom(
+          subSystem: "Third subsys", tab: "Sub 3 Tab 3", subPage: 3);
+      expect(entries[0].entryText(), "Sys 3 / Tab 3 / Sub 3 / Entry 10");
+      expect(entries[1].entryText(), "Sys 3 / Tab 3 / Sub 3 / Entry 9");
+      expect(entries[2].entryText(), "Sys 3 / Tab 3 / Sub 3 / Entry 8");
+      expect(entries[3].entryText(), "Sys 3 / Tab 3 / Sub 3 / Entry 7");
+      expect(entries[4].entryText(), "Sys 3 / Tab 3 / Sub 3 / Entry 6");
+      expect(entries[5].entryText(), "Sys 3 / Tab 3 / Sub 3 / Entry 5");
+      expect(entries[6].entryText(), "Sys 3 / Tab 3 / Sub 3 / Entry 4");
+      expect(entries[7].entryText(), "Sys 3 / Tab 3 / Sub 3 / Entry 3");
+      expect(entries[8].entryText(), "Sys 3 / Tab 3 / Sub 3 / Entry 2");
+      expect(entries[9].entryText(), "Sys 3 / Tab 3 / Sub 3 / Entry 1");
+    });
   });
+}
+
+ParameterPage _createAComplicatedTestPage({required String withTitle}) {
+  ParameterPage page = ParameterPage();
+  page.enableEditing();
+  page.title = withTitle;
+  page.subSystemTitle = "First subsys";
+  page.renameTab(withTitle: "Tab 1", to: "Sub 1 Tab 1");
+  page.createSubPage();
+  page.createSubPage();
+  page.createTab(title: "Sub 1 Tab 2");
+  page.createTab(title: "Sub 1 Tab 3");
+
+  page.createSubSystem();
+  page.subSystemTitle = "Second subsys";
+  page.renameTab(withTitle: "Tab 1", to: "Sub 2 Tab 1");
+  page.createTab(title: "Sub 2 Tab 2");
+  page.createSubPage();
+  page.createSubPage();
+  page.createTab(title: "Sub 2 Tab 3");
+
+  page.createSubSystem();
+  page.subSystemTitle = "Third subsys";
+  page.renameTab(withTitle: "Tab 1", to: "Sub 3 Tab 1");
+  page.createTab(title: "Sub 3 Tab 2");
+  page.createTab(title: "Sub 3 Tab 3");
+  page.createSubPage();
+  page.createSubPage();
+  page.add(CommentEntry("Sys 3 / Tab 3 / Sub 3 / Entry 1"));
+  page.add(CommentEntry("Sys 3 / Tab 3 / Sub 3 / Entry 2"));
+  page.add(CommentEntry("Sys 3 / Tab 3 / Sub 3 / Entry 3"));
+  page.add(CommentEntry("Sys 3 / Tab 3 / Sub 3 / Entry 4"));
+  page.add(CommentEntry("Sys 3 / Tab 3 / Sub 3 / Entry 5"));
+  page.add(CommentEntry("Sys 3 / Tab 3 / Sub 3 / Entry 6"));
+  page.add(CommentEntry("Sys 3 / Tab 3 / Sub 3 / Entry 7"));
+  page.add(CommentEntry("Sys 3 / Tab 3 / Sub 3 / Entry 8"));
+  page.add(CommentEntry("Sys 3 / Tab 3 / Sub 3 / Entry 9"));
+  page.add(CommentEntry("Sys 3 / Tab 3 / Sub 3 / Entry 10"));
+  return page;
 }
 
 Future<void> _deleteAllTestPages() async {
@@ -527,7 +854,6 @@ Future<void> _deletePages(
     {required ParameterPageService using,
     required List<String> pageIds}) async {
   for (final id in pageIds) {
-    await using.deletePage(
-        withPageId: id, onFailure: (error) {}, onSuccess: () {});
+    await using.deletePage(withPageId: id);
   }
 }

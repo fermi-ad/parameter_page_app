@@ -7,10 +7,7 @@ abstract class ParameterPageService {
 
   Future<String> createPage({required String withTitle});
 
-  Future<void> deletePage(
-      {required String withPageId,
-      required Function(String errorMessage) onFailure,
-      required Function() onSuccess});
+  Future<void> deletePage({required String withPageId});
 
   Future<void> savePage({required String id, required ParameterPage page});
 

@@ -44,21 +44,15 @@ class MockParameterPageService extends ParameterPageService {
   }
 
   @override
-  Future<void> deletePage(
-      {required String withPageId,
-      required Function(String errorMessage) onFailure,
-      required Function() onSuccess}) async {
+  Future<void> deletePage({required String withPageId}) async {
     for (var page in _testPages) {
       if (page["pageid"] == withPageId) {
         _testPages.remove(page);
-
-        onSuccess.call();
-
         return;
       }
     }
 
-    onFailure.call("page could not be deleted (pageid not found)");
+    return Future.error("page could not be deleted (pageid not found)");
   }
 
   @override
