@@ -735,6 +735,54 @@ void main() {
       expect(tabs[1], "Sub 2 Tab 2");
       expect(tabs[2], "Sub 2 Tab 3");
     });
+
+    test('reverse order of entries and savePage(..), changes are persisted',
+        () async {
+      // Given a GraphQLParameterPageService
+      await dotenv.load(fileName: ".env");
+      final service = GraphQLParameterPageService();
+
+      // ... and a test page
+      ParameterPage page = _createAComplicatedTestPage(
+          withTitle: "***SERVICE TEST*** reverse page entries");
+
+      // ... and the page has already been persisted
+      final pageId = await service.createPage(withTitle: page.title);
+      await service.savePage(id: pageId, page: page);
+
+      // When I reverse-order the entries
+      page.switchSubSystem(to: "Third subsys");
+      page.switchTab(to: "Sub 3 Tab 3");
+      page.switchSubPage(to: 3);
+      page.reorderEntry(atIndex: 9, toIndex: 0);
+      page.reorderEntry(atIndex: 9, toIndex: 1);
+      page.reorderEntry(atIndex: 9, toIndex: 2);
+      page.reorderEntry(atIndex: 9, toIndex: 3);
+      page.reorderEntry(atIndex: 9, toIndex: 4);
+      page.reorderEntry(atIndex: 9, toIndex: 5);
+      page.reorderEntry(atIndex: 9, toIndex: 6);
+      page.reorderEntry(atIndex: 9, toIndex: 7);
+      page.reorderEntry(atIndex: 9, toIndex: 8);
+
+      // ... and persist the changes
+      await service.savePage(id: pageId, page: page);
+      // ... and then read them back
+      ParameterPage readBackPage = await service.fetchPage(id: pageId);
+
+      // Then the changes are persisted
+      final entries = readBackPage.entriesAsListFrom(
+          subSystem: "Third subsys", tab: "Sub 3 Tab 3", subPage: 3);
+      expect(entries[0].entryText(), "Sys 3 / Tab 3 / Sub 3 / Entry 10");
+      expect(entries[1].entryText(), "Sys 3 / Tab 3 / Sub 3 / Entry 9");
+      expect(entries[2].entryText(), "Sys 3 / Tab 3 / Sub 3 / Entry 8");
+      expect(entries[3].entryText(), "Sys 3 / Tab 3 / Sub 3 / Entry 7");
+      expect(entries[4].entryText(), "Sys 3 / Tab 3 / Sub 3 / Entry 6");
+      expect(entries[5].entryText(), "Sys 3 / Tab 3 / Sub 3 / Entry 5");
+      expect(entries[6].entryText(), "Sys 3 / Tab 3 / Sub 3 / Entry 4");
+      expect(entries[7].entryText(), "Sys 3 / Tab 3 / Sub 3 / Entry 3");
+      expect(entries[8].entryText(), "Sys 3 / Tab 3 / Sub 3 / Entry 2");
+      expect(entries[9].entryText(), "Sys 3 / Tab 3 / Sub 3 / Entry 1");
+    });
   });
 }
 
