@@ -411,7 +411,10 @@ class ParameterPage {
   }
 
   List<String> tabTitlesFor({required String subSystem}) {
-    return [];
+    return _pageData[_findSubSystemIndex(forTitle: subSystem)]
+        .tabs
+        .map((tabData) => tabData.title)
+        .toList();
   }
 
   void _enforceEditMode() {
