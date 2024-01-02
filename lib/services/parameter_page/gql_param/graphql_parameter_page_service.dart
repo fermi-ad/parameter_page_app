@@ -124,7 +124,6 @@ class GraphQLParameterPageService extends ParameterPageService {
       if (subSystemIndex >= persistedSubSystems.length) {
         persistedSubSystem = await _createANewSubSystem(
             onPageId: pageId, withTitle: title, atIndex: subSystemIndex);
-        persistedSubSystems.add(persistedSubSystem);
       } else {
         persistedSubSystem = persistedSubSystems[subSystemIndex];
         if (title != persistedSubSystem["title"]) {
