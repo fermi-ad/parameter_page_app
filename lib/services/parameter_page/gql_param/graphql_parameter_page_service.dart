@@ -101,7 +101,15 @@ class GraphQLParameterPageService extends ParameterPageService {
 
   Future<void> _deleteExtraSubSystems(
       {required List<dynamic> persistedSubSystems,
-      required ParameterPage withPage}) async {}
+      required ParameterPage withPage}) async {
+    for (int subSysIndex = 0;
+        subSysIndex != persistedSubSystems.length;
+        subSysIndex++) {
+      if (subSysIndex >= withPage.subSystemTitles.length) {
+        await _deleteSubSystem(subSystem: persistedSubSystems[subSysIndex]);
+      }
+    }
+  }
 
   Future<void> _updateEachSubSystem(
       {required List<dynamic> persistedSubSystems,
@@ -170,6 +178,26 @@ class GraphQLParameterPageService extends ParameterPageService {
             },
             whatItIs: "create a new sub-system")
         .then((result) => result.data!['newSubsysBranch']);
+  }
+
+  Future<void> _deleteSubSystem(
+      {required Map<String, dynamic> subSystem}) async {
+    await _deleteTabs(fromSubSystem: subSystem);
+
+    await _doGraphQL(
+        query: deleteSubjects,
+        withVariables: {
+          'subjType': "subsys",
+          'subjIds': [subSystem['subsysid']]
+        },
+        whatItIs: "delete a sub-system");
+  }
+
+  Future<void> _deleteTabs(
+      {required Map<String, dynamic> fromSubSystem}) async {
+    for (Map<String, dynamic> tab in fromSubSystem['tabs']) {
+      await _deleteTab(tab: tab);
+    }
   }
 
   Future<void> _deleteExtraTabs(
