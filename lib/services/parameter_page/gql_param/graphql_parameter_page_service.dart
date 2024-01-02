@@ -145,7 +145,6 @@ class GraphQLParameterPageService extends ParameterPageService {
 
   Future<void> _renameSubSystem(
       {required String id, required String newTitle}) async {
-    print("_renameSubSystem $id $newTitle");
     return _doGraphQL(
             query: updateSubjectTitles,
             withVariables: {
@@ -321,10 +320,11 @@ class GraphQLParameterPageService extends ParameterPageService {
       required ParameterPage withPage,
       required String forSubSystem,
       required String forTab}) async {
-    for (int subPageIndex = 0;
-        subPageIndex !=
-            withPage.subPageCount(forSubSystem: forSubSystem, forTab: forTab);
-        subPageIndex++) {
+    for (int subPageIndex =
+            withPage.subPageCount(forSubSystem: forSubSystem, forTab: forTab) -
+                1;
+        subPageIndex >= 0;
+        subPageIndex--) {
       String subPageId;
 
       if (subPageIndex >= persistedSubPages.length) {
