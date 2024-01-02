@@ -216,7 +216,7 @@ class GraphQLParameterPageService extends ParameterPageService {
       required String forSubSystem,
       required String subSystemId}) async {
     final tabTitles = withPage.tabTitlesFor(subSystem: forSubSystem);
-    for (int tabIndex = 0; tabIndex != tabTitles.length; tabIndex++) {
+    for (int tabIndex = tabTitles.length - 1; tabIndex >= 0; tabIndex--) {
       final tabName = tabTitles[tabIndex];
 
       dynamic persistedTab;
