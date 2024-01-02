@@ -730,24 +730,18 @@ ParameterPage _createAComplicatedTestPage({required String withTitle}) {
   page.title = withTitle;
   page.subSystemTitle = "First subsys";
   page.renameTab(withTitle: "Tab 1", to: "Sub 1 Tab 1");
-  page.createTab();
-  page.renameTab(withTitle: "Tab 2", to: "Sub 1 Tab 2");
-  page.createTab();
-  page.renameTab(withTitle: "Tab 3", to: "Sub 1 Tab 3");
+  page.createTab(title: "Sub 1 Tab 2");
+  page.createTab(title: "Sub 1 Tab 3");
   page.createSubSystem();
   page.subSystemTitle = "Second subsys";
   page.renameTab(withTitle: "Tab 1", to: "Sub 2 Tab 1");
-  page.createTab();
-  page.renameTab(withTitle: "Tab 2", to: "Sub 2 Tab 2");
-  page.createTab();
-  page.renameTab(withTitle: "Tab 3", to: "Sub 2 Tab 3");
+  page.createTab(title: "Sub 2 Tab 2");
+  page.createTab(title: "Sub 2 Tab 3");
   page.createSubSystem();
   page.subSystemTitle = "Third subsys";
   page.renameTab(withTitle: "Tab 1", to: "Sub 3 Tab 1");
-  page.createTab();
-  page.renameTab(withTitle: "Tab 2", to: "Sub 3 Tab 2");
-  page.createTab();
-  page.renameTab(withTitle: "Tab 3", to: "Sub 3 Tab 3");
+  page.createTab(title: "Sub 3 Tab 2");
+  page.createTab(title: "Sub 3 Tab 3");
 
   return page;
 }
