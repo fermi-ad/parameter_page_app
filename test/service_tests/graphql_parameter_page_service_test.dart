@@ -670,6 +670,38 @@ void main() {
     });
 
     test('delete empty sub-system and savePage(..), changes are persisted',
+        () async {
+      // Given a GraphQLParameterPageService
+      await dotenv.load(fileName: ".env");
+      final service = GraphQLParameterPageService();
+
+      // ... and a new ParameterPage with two empty sub-systems
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.title = "***SERVICE TEST*** delete empty sub-system";
+      page.subSystemTitle = "Sub-system 1";
+      page.createSubSystem();
+      page.subSystemTitle = "Sub-system 2";
+
+      // ... and the page has been persisted already
+      final pageId = await service.createPage(withTitle: page.title);
+      await service.savePage(id: pageId, page: page);
+
+      // When I delete Sub-system 2
+      page.deleteSubSystem(withTitle: "Sub-system 2");
+
+      // ... and save the changes
+      await service.savePage(id: pageId, page: page);
+
+      // ... and read back the page
+      ParameterPage readBackPage = await service.fetchPage(id: pageId);
+
+      // Then only 1 sub-system remains on the page
+      expect(readBackPage.subSystemTitles.length, 1);
+      expect(readBackPage.subSystemTitles[0], "Sub-system 1");
+    });
+
+    test('delete populated sub-system and savePage(..), changes are persisted',
         () async {});
   });
 }
