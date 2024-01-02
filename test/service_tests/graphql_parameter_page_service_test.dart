@@ -578,7 +578,8 @@ void main() {
       final service = GraphQLParameterPageService();
 
       // ... and a test page
-      ParameterPage page = _createAComplicatedTestPage();
+      ParameterPage page = _createAComplicatedTestPage(
+          withTitle: "***SERVICE TEST*** update multiple sub-systems");
 
       // ... and the page has already been persisted
       final pageId = await service.createPage(withTitle: page.title);
@@ -693,7 +694,8 @@ void main() {
       final service = GraphQLParameterPageService();
 
       // ... and a test page
-      ParameterPage page = _createAComplicatedTestPage();
+      ParameterPage page = _createAComplicatedTestPage(
+          withTitle: "***SERVICE TEST*** delete populated sub-system");
 
       // ... and the page has already been persisted
       final pageId = await service.createPage(withTitle: page.title);
@@ -720,10 +722,10 @@ void main() {
   });
 }
 
-ParameterPage _createAComplicatedTestPage() {
+ParameterPage _createAComplicatedTestPage({required String withTitle}) {
   ParameterPage page = ParameterPage();
   page.enableEditing();
-  page.title = "***SERVICE TEST*** update multiple sub-systems";
+  page.title = withTitle;
   page.subSystemTitle = "First subsys";
   page.renameTab(withTitle: "Tab 1", to: "Sub 1 Tab 1");
   page.createTab();
