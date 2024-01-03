@@ -65,7 +65,7 @@ void main() {
 
   group('createPage', () {
     setUpAll(() async => await _deleteAllTestPages());
-    // tearDownAll(() async => _deleteAllTestPages());
+    tearDownAll(() async => _deleteAllTestPages());
 
     test(
         "createPage(withTitle:), returns a page ID and the new titles shows up in the directory",

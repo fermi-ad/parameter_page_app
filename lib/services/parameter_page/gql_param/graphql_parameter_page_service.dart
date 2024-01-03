@@ -307,8 +307,7 @@ class GraphQLParameterPageService extends ParameterPageService {
           withPage.subPageCount(forSubSystem: forSubSystem, forTab: forTab) -
               1) {
         final subPageId = persistedSubPages[subPageIndex]["tabpageid"];
-        final entries = persistedSubPages[subPageIndex]['entries'];
-        await _deleteAllEntries(fromSubPageId: subPageId, entries: entries);
+        await _deleteAllEntries(fromSubPage: persistedSubPages[subPageIndex]);
         await _deleteSubPage(id: subPageId);
       }
     }
@@ -325,21 +324,17 @@ class GraphQLParameterPageService extends ParameterPageService {
                 1;
         subPageIndex >= 0;
         subPageIndex--) {
-      String subPageId;
+      Map<String, dynamic> persistedSubPage;
 
       if (subPageIndex >= persistedSubPages.length) {
-        subPageId = await _createANewSubPage(
+        persistedSubPage = await _createANewSubPage(
             onTab: persistedTabId, atIndex: subPageIndex);
       } else {
-        subPageId = persistedSubPages[subPageIndex]['tabpageid'];
-
-        await _deleteAllEntries(
-            fromSubPageId: subPageId,
-            entries: persistedSubPages[subPageIndex]['entries'] ?? []);
+        persistedSubPage = persistedSubPages[subPageIndex];
       }
 
       await _saveEntries(
-          id: subPageId,
+          persistedSubPage: persistedSubPage,
           newEntries: withPage.entriesAsListFrom(
               subSystem: forSubSystem, tab: forTab, subPage: subPageIndex + 1));
 
@@ -349,18 +344,17 @@ class GraphQLParameterPageService extends ParameterPageService {
           subPageIndex: subPageIndex + 1);
       final subPageTitleShouldBeUpdated =
           subPageIndex >= persistedSubPages.length ||
-              subPageTitle != persistedSubPages[subPageIndex]['title'];
+              subPageTitle != persistedSubPage['title'];
       if (subPageTitleShouldBeUpdated) {
-        await _renameSubPage(id: subPageId, newTitle: subPageTitle);
+        await _renameSubPage(
+            id: persistedSubPage['tabpageid'], newTitle: subPageTitle);
       }
     }
   }
 
   Future<void> _deleteSubPages({required Map<String, dynamic> fromTab}) async {
     for (Map<String, dynamic> subPage in fromTab['sub_pages']) {
-      await _deleteAllEntries(
-          fromSubPageId: subPage['tabpageid'],
-          entries: subPage['pageentrylist'] ?? subPage['entries']);
+      await _deleteAllEntries(fromSubPage: subPage);
 
       await _deleteSubPage(id: subPage['tabpageid']);
     }
@@ -397,7 +391,7 @@ class GraphQLParameterPageService extends ParameterPageService {
     });
   }
 
-  Future<String> _createANewSubPage(
+  Future<Map<String, dynamic>> _createANewSubPage(
       {required String onTab, required int atIndex}) async {
     return _doGraphQL(
             query: addSubPage,
@@ -407,16 +401,20 @@ class GraphQLParameterPageService extends ParameterPageService {
               "subsystabid": onTab
             },
             whatItIs: "create a new sub-page")
-        .then((result) => result.data!['newTabPage']['tabpageid']);
+        .then((result) => result.data!['newTabPage']);
   }
 
   Future<void> _saveEntries(
-      {required String id, required List<PageEntry> newEntries}) async {
+      {required Map<String, dynamic> persistedSubPage,
+      required List<PageEntry> newEntries}) async {
+    await _deleteExtraEntries(
+        fromSubPage: persistedSubPage, newEntries: newEntries);
+
     return _doGraphQL(
             query: mergeEntries,
             withVariables: {
-              'mrgEntries':
-                  _generateEntryMergeList(subPageId: id, from: newEntries)
+              'mrgEntries': _generateEntryMergeList(
+                  forPersistedSubPage: persistedSubPage, from: newEntries)
             },
             whatItIs: "add entries to a sub-page")
         .then((result) {
@@ -429,15 +427,34 @@ class GraphQLParameterPageService extends ParameterPageService {
     });
   }
 
-  Future _deleteAllEntries(
-      {required String fromSubPageId, required List<dynamic> entries}) async {
-    List<int> deleteFromPositions = [];
-    for (final entry in entries) {
-      deleteFromPositions.add(entry['position']);
-    }
+  Future _deleteExtraEntries(
+      {required Map<String, dynamic> fromSubPage,
+      required List<PageEntry> newEntries}) async {
+    final List<dynamic> persistedEntries =
+        _extractEntries(fromSubPage: fromSubPage);
 
     await _deleteEntries(
-        fromSubPage: fromSubPageId, atPositions: deleteFromPositions);
+        fromSubPage: fromSubPage['tabpageid'],
+        atPositions: _findExtraEntriesToDelete(persistedEntries, newEntries));
+  }
+
+  List<int> _findExtraEntriesToDelete(
+      List<dynamic> persistedEntries, List<PageEntry> entriesToSave) {
+    final List<int> extraEntries = [];
+    for (int i = 0; i != persistedEntries.length; i++) {
+      if (i >= entriesToSave.length) {
+        extraEntries.add(persistedEntries[i]['position'] as int);
+      }
+    }
+    return extraEntries;
+  }
+
+  Future _deleteAllEntries({required Map<String, dynamic> fromSubPage}) async {
+    await _deleteEntries(
+        fromSubPage: fromSubPage['tabpageid'],
+        atPositions: _extractEntries(fromSubPage: fromSubPage)
+            .map((entry) => entry['position'] as int)
+            .toList());
   }
 
   Future<void> _deleteEntries(
@@ -488,15 +505,37 @@ class GraphQLParameterPageService extends ParameterPageService {
   }
 
   List<Map<String, dynamic>> _generateEntryMergeList(
-      {required String subPageId, required List<PageEntry> from}) {
+      {required Map<String, dynamic> forPersistedSubPage,
+      required List<PageEntry> from}) {
+    final persistedEntries = _extractEntries(fromSubPage: forPersistedSubPage);
+
     int n = 0;
-    return from
-        .map((entry) => {
-              'tabpageid': subPageId,
-              'position': n += 1,
+    return from.map((entry) {
+      return n < persistedEntries.length
+          ? {
+              'tabpageid': forPersistedSubPage['tabpageid'],
+              'text_old': persistedEntries[n]['text'],
               'text_new': entry.entryText(),
-              'type_new': entry.typeAsString
-            })
-        .toList();
+              'type_old': persistedEntries[n]['type'],
+              'type_new': entry.typeAsString,
+              'position': n += 1
+            }
+          : {
+              'tabpageid': forPersistedSubPage['tabpageid'],
+              'text_new': entry.entryText(),
+              'type_new': entry.typeAsString,
+              'position': n += 1
+            };
+    }).toList();
+  }
+
+  List<dynamic> _extractEntries({required Map<String, dynamic> fromSubPage}) {
+    if (fromSubPage.containsKey('pageentrylist')) {
+      return fromSubPage['pageentrylist'];
+    } else if (fromSubPage.containsKey('entries')) {
+      return fromSubPage['entries'];
+    } else {
+      return [];
+    }
   }
 }
