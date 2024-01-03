@@ -349,7 +349,7 @@ class GraphQLParameterPageService extends ParameterPageService {
           subPageIndex: subPageIndex + 1);
       final subPageTitleShouldBeUpdated =
           subPageIndex >= persistedSubPages.length ||
-              subPageTitle != persistedSubPages[subPageIndex]['title'];
+              subPageTitle != persistedSubPage['title'];
       if (subPageTitleShouldBeUpdated) {
         await _renameSubPage(
             id: persistedSubPage['tabpageid'], newTitle: subPageTitle);
