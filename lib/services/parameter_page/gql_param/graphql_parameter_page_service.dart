@@ -331,8 +331,6 @@ class GraphQLParameterPageService extends ParameterPageService {
             onTab: persistedTabId, atIndex: subPageIndex);
       } else {
         persistedSubPage = persistedSubPages[subPageIndex];
-
-        await _deleteAllEntries(fromSubPage: persistedSubPage);
       }
 
       await _saveEntries(
@@ -409,6 +407,8 @@ class GraphQLParameterPageService extends ParameterPageService {
   Future<void> _saveEntries(
       {required Map<String, dynamic> persistedSubPage,
       required List<PageEntry> newEntries}) async {
+    await _deleteAllEntries(fromSubPage: persistedSubPage);
+
     return _doGraphQL(
             query: mergeEntries,
             withVariables: {
