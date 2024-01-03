@@ -433,15 +433,20 @@ class GraphQLParameterPageService extends ParameterPageService {
     final List<dynamic> persistedEntries =
         _extractEntries(fromSubPage: fromSubPage);
 
+    await _deleteEntries(
+        fromSubPage: fromSubPage['tabpageid'],
+        atPositions: _findExtraEntriesToDelete(persistedEntries, newEntries));
+  }
+
+  List<int> _findExtraEntriesToDelete(
+      List<dynamic> persistedEntries, List<PageEntry> entriesToSave) {
     final List<int> extraEntries = [];
     for (int i = 0; i != persistedEntries.length; i++) {
-      if (i >= newEntries.length) {
+      if (i >= entriesToSave.length) {
         extraEntries.add(persistedEntries[i]['position'] as int);
       }
     }
-
-    await _deleteEntries(
-        fromSubPage: fromSubPage['tabpageid'], atPositions: extraEntries);
+    return extraEntries;
   }
 
   Future _deleteAllEntries({required Map<String, dynamic> fromSubPage}) async {
