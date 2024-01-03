@@ -407,7 +407,8 @@ class GraphQLParameterPageService extends ParameterPageService {
   Future<void> _saveEntries(
       {required Map<String, dynamic> persistedSubPage,
       required List<PageEntry> newEntries}) async {
-    await _deleteAllEntries(fromSubPage: persistedSubPage);
+    await _deleteExtraEntries(
+        fromSubPage: persistedSubPage, newEntries: newEntries);
 
     return _doGraphQL(
             query: mergeEntries,
@@ -426,19 +427,29 @@ class GraphQLParameterPageService extends ParameterPageService {
     });
   }
 
-  Future _deleteAllEntries({required Map<String, dynamic> fromSubPage}) async {
-    final List<dynamic> entries;
-    if (fromSubPage.containsKey('pageentrylist')) {
-      entries = fromSubPage['pageentrylist'];
-    } else if (fromSubPage.containsKey('entries')) {
-      entries = fromSubPage['entries'];
-    } else {
-      entries = [];
+  Future _deleteExtraEntries(
+      {required Map<String, dynamic> fromSubPage,
+      required List<PageEntry> newEntries}) async {
+    final List<dynamic> persistedEntries =
+        _extractEntries(fromSubPage: fromSubPage);
+
+    final List<int> extraEntries = [];
+    for (int i = 0; i != persistedEntries.length; i++) {
+      if (i >= newEntries.length) {
+        extraEntries.add(persistedEntries[i]['position'] as int);
+      }
     }
 
     await _deleteEntries(
+        fromSubPage: fromSubPage['tabpageid'], atPositions: extraEntries);
+  }
+
+  Future _deleteAllEntries({required Map<String, dynamic> fromSubPage}) async {
+    await _deleteEntries(
         fromSubPage: fromSubPage['tabpageid'],
-        atPositions: entries.map((entry) => entry['position'] as int).toList());
+        atPositions: _extractEntries(fromSubPage: fromSubPage)
+            .map((entry) => entry['position'] as int)
+            .toList());
   }
 
   Future<void> _deleteEntries(
@@ -491,14 +502,35 @@ class GraphQLParameterPageService extends ParameterPageService {
   List<Map<String, dynamic>> _generateEntryMergeList(
       {required Map<String, dynamic> forPersistedSubPage,
       required List<PageEntry> from}) {
+    final persistedEntries = _extractEntries(fromSubPage: forPersistedSubPage);
+
     int n = 0;
-    return from
-        .map((entry) => {
+    return from.map((entry) {
+      return n < persistedEntries.length
+          ? {
               'tabpageid': forPersistedSubPage['tabpageid'],
-              'position': n += 1,
+              'text_old': persistedEntries[n]['text'],
               'text_new': entry.entryText(),
-              'type_new': entry.typeAsString
-            })
-        .toList();
+              'type_old': persistedEntries[n]['type'],
+              'type_new': entry.typeAsString,
+              'position': n += 1
+            }
+          : {
+              'tabpageid': forPersistedSubPage['tabpageid'],
+              'text_new': entry.entryText(),
+              'type_new': entry.typeAsString,
+              'position': n += 1
+            };
+    }).toList();
+  }
+
+  List<dynamic> _extractEntries({required Map<String, dynamic> fromSubPage}) {
+    if (fromSubPage.containsKey('pageentrylist')) {
+      return fromSubPage['pageentrylist'];
+    } else if (fromSubPage.containsKey('entries')) {
+      return fromSubPage['entries'];
+    } else {
+      return [];
+    }
   }
 }
