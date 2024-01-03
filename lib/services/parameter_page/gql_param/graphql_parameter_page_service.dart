@@ -325,21 +325,21 @@ class GraphQLParameterPageService extends ParameterPageService {
                 1;
         subPageIndex >= 0;
         subPageIndex--) {
-      String subPageId;
+      Map<String, dynamic> persistedSubPage;
 
       if (subPageIndex >= persistedSubPages.length) {
-        subPageId = await _createANewSubPage(
+        persistedSubPage = await _createANewSubPage(
             onTab: persistedTabId, atIndex: subPageIndex);
       } else {
-        subPageId = persistedSubPages[subPageIndex]['tabpageid'];
+        persistedSubPage = persistedSubPages[subPageIndex];
 
         await _deleteAllEntries(
-            fromSubPageId: subPageId,
-            entries: persistedSubPages[subPageIndex]['entries'] ?? []);
+            fromSubPageId: persistedSubPage['tabpageid'],
+            entries: persistedSubPage['entries'] ?? []);
       }
 
       await _saveEntries(
-          id: subPageId,
+          persistedSubPage: persistedSubPage,
           newEntries: withPage.entriesAsListFrom(
               subSystem: forSubSystem, tab: forTab, subPage: subPageIndex + 1));
 
@@ -351,7 +351,8 @@ class GraphQLParameterPageService extends ParameterPageService {
           subPageIndex >= persistedSubPages.length ||
               subPageTitle != persistedSubPages[subPageIndex]['title'];
       if (subPageTitleShouldBeUpdated) {
-        await _renameSubPage(id: subPageId, newTitle: subPageTitle);
+        await _renameSubPage(
+            id: persistedSubPage['tabpageid'], newTitle: subPageTitle);
       }
     }
   }
@@ -397,7 +398,7 @@ class GraphQLParameterPageService extends ParameterPageService {
     });
   }
 
-  Future<String> _createANewSubPage(
+  Future<Map<String, dynamic>> _createANewSubPage(
       {required String onTab, required int atIndex}) async {
     return _doGraphQL(
             query: addSubPage,
@@ -407,16 +408,17 @@ class GraphQLParameterPageService extends ParameterPageService {
               "subsystabid": onTab
             },
             whatItIs: "create a new sub-page")
-        .then((result) => result.data!['newTabPage']['tabpageid']);
+        .then((result) => result.data!['newTabPage']);
   }
 
   Future<void> _saveEntries(
-      {required String id, required List<PageEntry> newEntries}) async {
+      {required Map<String, dynamic> persistedSubPage,
+      required List<PageEntry> newEntries}) async {
     return _doGraphQL(
             query: mergeEntries,
             withVariables: {
-              'mrgEntries':
-                  _generateEntryMergeList(subPageId: id, from: newEntries)
+              'mrgEntries': _generateEntryMergeList(
+                  forPersistedSubPage: persistedSubPage, from: newEntries)
             },
             whatItIs: "add entries to a sub-page")
         .then((result) {
@@ -488,11 +490,12 @@ class GraphQLParameterPageService extends ParameterPageService {
   }
 
   List<Map<String, dynamic>> _generateEntryMergeList(
-      {required String subPageId, required List<PageEntry> from}) {
+      {required Map<String, dynamic> forPersistedSubPage,
+      required List<PageEntry> from}) {
     int n = 0;
     return from
         .map((entry) => {
-              'tabpageid': subPageId,
+              'tabpageid': forPersistedSubPage['tabpageid'],
               'position': n += 1,
               'text_new': entry.entryText(),
               'type_new': entry.typeAsString
