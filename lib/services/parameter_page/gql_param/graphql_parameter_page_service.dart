@@ -307,8 +307,7 @@ class GraphQLParameterPageService extends ParameterPageService {
           withPage.subPageCount(forSubSystem: forSubSystem, forTab: forTab) -
               1) {
         final subPageId = persistedSubPages[subPageIndex]["tabpageid"];
-        final entries = persistedSubPages[subPageIndex]['entries'];
-        await _deleteAllEntries(fromSubPageId: subPageId, entries: entries);
+        await _deleteAllEntries(fromSubPage: persistedSubPages[subPageIndex]);
         await _deleteSubPage(id: subPageId);
       }
     }
@@ -333,9 +332,7 @@ class GraphQLParameterPageService extends ParameterPageService {
       } else {
         persistedSubPage = persistedSubPages[subPageIndex];
 
-        await _deleteAllEntries(
-            fromSubPageId: persistedSubPage['tabpageid'],
-            entries: persistedSubPage['entries'] ?? []);
+        await _deleteAllEntries(fromSubPage: persistedSubPage);
       }
 
       await _saveEntries(
@@ -359,9 +356,7 @@ class GraphQLParameterPageService extends ParameterPageService {
 
   Future<void> _deleteSubPages({required Map<String, dynamic> fromTab}) async {
     for (Map<String, dynamic> subPage in fromTab['sub_pages']) {
-      await _deleteAllEntries(
-          fromSubPageId: subPage['tabpageid'],
-          entries: subPage['pageentrylist'] ?? subPage['entries']);
+      await _deleteAllEntries(fromSubPage: subPage);
 
       await _deleteSubPage(id: subPage['tabpageid']);
     }
@@ -431,15 +426,19 @@ class GraphQLParameterPageService extends ParameterPageService {
     });
   }
 
-  Future _deleteAllEntries(
-      {required String fromSubPageId, required List<dynamic> entries}) async {
-    List<int> deleteFromPositions = [];
-    for (final entry in entries) {
-      deleteFromPositions.add(entry['position']);
+  Future _deleteAllEntries({required Map<String, dynamic> fromSubPage}) async {
+    final List<dynamic> entries;
+    if (fromSubPage.containsKey('pageentrylist')) {
+      entries = fromSubPage['pageentrylist'];
+    } else if (fromSubPage.containsKey('entries')) {
+      entries = fromSubPage['entries'];
+    } else {
+      entries = [];
     }
 
     await _deleteEntries(
-        fromSubPage: fromSubPageId, atPositions: deleteFromPositions);
+        fromSubPage: fromSubPage['tabpageid'],
+        atPositions: entries.map((entry) => entry['position'] as int).toList());
   }
 
   Future<void> _deleteEntries(
