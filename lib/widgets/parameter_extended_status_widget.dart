@@ -33,7 +33,7 @@ class ParameterExtendedStatusWidget extends StatelessWidget {
                 attribute.description != null ? attribute.description! : "...",
             valueText:
                 attribute.valueText != null ? attribute.valueText! : "...",
-            value: attribute.value,
+            value: "${attribute.value}",
             valueColor: attribute.color != null
                 ? Util.mapColor(from: attribute.color!)
                 : Colors.grey));
