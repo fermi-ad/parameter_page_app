@@ -3,7 +3,8 @@ enum SettingsRequestDuration {
   fiveSeconds(seconds: 5, text: "5 Seconds"),
   tenMinutes(seconds: 10 * 60, text: "10 Minutes"),
   oneHour(seconds: 1 * 60 * 60, text: "1 Hour"),
-  eightHours(seconds: 8 * 60 * 60, text: "8 Hours");
+  eightHours(seconds: 8 * 60 * 60, text: "8 Hours"),
+  indefinitely(seconds: -1, text: "Indefinitely");
 
   const SettingsRequestDuration({required this.seconds, required this.text});
 

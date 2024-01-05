@@ -16,7 +16,8 @@ class MockSettingsPermissionService implements SettingsPermissionService {
         SettingsRequestDuration.fiveSeconds,
         SettingsRequestDuration.tenMinutes,
         SettingsRequestDuration.oneHour,
-        SettingsRequestDuration.eightHours
+        SettingsRequestDuration.eightHours,
+        SettingsRequestDuration.indefinitely
       ];
 
   bool mockDenySettingsPermissionRequests = false;
@@ -28,7 +29,8 @@ class MockSettingsPermissionService implements SettingsPermissionService {
       {required SettingsRequestDuration forDuration,
       Function()? onTimerExpired,
       Function(int secondsRemaining)? onTimerTick}) async {
-    return Future<bool>.delayed(const Duration(seconds: 1), () {
+    return Future<bool>.delayed(const Duration(seconds: _requestDelaySeconds),
+        () {
       if (mockFailSettingsPermissionRequests) {
         return Future.error("Fake settings permission request failure.");
       }
@@ -42,7 +44,9 @@ class MockSettingsPermissionService implements SettingsPermissionService {
 
       _mockSettingsPermission = true;
 
-      _startTimer(forNSeconds: forDuration.seconds);
+      if (forDuration.seconds > 0) {
+        _startTimer(forNSeconds: forDuration.seconds);
+      }
 
       return true;
     });
@@ -50,7 +54,8 @@ class MockSettingsPermissionService implements SettingsPermissionService {
 
   @override
   Future<bool> requestSettingsBeDisabled() async {
-    return Future<bool>.delayed(const Duration(seconds: 1), () {
+    return Future<bool>.delayed(const Duration(seconds: _requestDelaySeconds),
+        () {
       if (mockFailSettingsPermissionRequests) {
         return Future.error("Fake settings permission request failure.");
       }
@@ -100,6 +105,8 @@ class MockSettingsPermissionService implements SettingsPermissionService {
     _timer?.cancel();
     _remaining = 0;
   }
+
+  static const int _requestDelaySeconds = 0;
 
   Timer? _timer;
 
