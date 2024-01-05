@@ -244,7 +244,7 @@ packages:
       path: "../flutter-controls-core"
       relative: true
     source: path
-    version: "0.1.4"
+    version: "0.1.5"
   flutter_dotenv:
     dependency: "direct main"
     description:
