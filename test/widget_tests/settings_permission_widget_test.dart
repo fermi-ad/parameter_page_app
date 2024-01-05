@@ -389,6 +389,27 @@ void main() {
       // ... and the timer is hidden
       assertSettingsPermissionTimer(isVisible: false);
     });
+
+    testWidgets(
+        'Enable settings indefinitely, settings enabled and no timer is displayed',
+        (WidgetTester tester) async {
+      // Given settings are disabled and the SettingsPermissionWidget has been rendered
+      MockSettingsPermissionService service = MockSettingsPermissionService();
+      MaterialApp app = MaterialApp(
+          home: Scaffold(body: SettingsPermissionWidget(service: service)));
+      await tester.pumpWidget(app);
+
+      // When I request settings permission for an indefinite duration
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.indefinitely);
+      await waitForSettingsPermissionRequest(tester);
+
+      // Then settings are enabled
+      assertSettings(areAllowed: true);
+
+      // ... and the timer is hidden
+      assertSettingsPermissionTimer(isVisible: false);
+    });
   });
 }
 
