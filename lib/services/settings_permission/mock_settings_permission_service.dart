@@ -16,7 +16,8 @@ class MockSettingsPermissionService implements SettingsPermissionService {
         SettingsRequestDuration.fiveSeconds,
         SettingsRequestDuration.tenMinutes,
         SettingsRequestDuration.oneHour,
-        SettingsRequestDuration.eightHours
+        SettingsRequestDuration.eightHours,
+        SettingsRequestDuration.indefinitely
       ];
 
   bool mockDenySettingsPermissionRequests = false;
