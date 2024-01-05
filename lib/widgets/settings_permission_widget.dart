@@ -35,7 +35,7 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
               padding: const EdgeInsets.fromLTRB(10.0, 0, 0, 0),
               child: _buildStatusText()),
           Visibility(
-              visible: _permissionState == _SettingPermissionStatus.enabled,
+              visible: _showTimer(),
               child: Padding(
                   padding: const EdgeInsets.fromLTRB(10.0, 0, 0, 0),
                   child: _buildTimerDisplay())),
@@ -123,6 +123,11 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
         });
   }
 
+  bool _showTimer() {
+    return _permissionState == _SettingPermissionStatus.enabled &&
+        _timerDuration != SettingsRequestDuration.indefinitely;
+  }
+
   void _handleRequestSettingsPermission(
       SettingsRequestDuration duration) async {
     _goToPendingStatus();
@@ -133,7 +138,7 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
             onTimerExpired: _goToDisabledStatus,
             onTimerTick: _handleTimerTick)
         .then((bool requestGranted) {
-      _goToEnabledStatus();
+      _goToEnabledStatus(duration: duration);
     }).onError((error, stackTrace) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Request failed - $error")));
@@ -163,12 +168,16 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
   }
 
   void _goToDisabledStatus() {
-    setState(() => _permissionState = _SettingPermissionStatus.disabled);
+    setState(() {
+      _permissionState = _SettingPermissionStatus.disabled;
+      _timerDuration = null;
+    });
     widget.onChanged?.call(false);
   }
 
-  void _goToEnabledStatus() {
+  void _goToEnabledStatus({required SettingsRequestDuration duration}) {
     setState(() {
+      _timerDuration = duration;
       _permissionState = _SettingPermissionStatus.enabled;
     });
     widget.onChanged?.call(true);
@@ -176,6 +185,7 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
 
   void _goToPendingStatus() {
     setState(() {
+      _timerDuration = null;
       _previousState = _permissionState;
       _permissionState = _SettingPermissionStatus.pending;
     });
@@ -207,6 +217,8 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
   _SettingPermissionStatus _previousState = _SettingPermissionStatus.disabled;
 
   String _timerText = "10:00";
+
+  SettingsRequestDuration? _timerDuration;
 }
 
 enum _SettingPermissionStatus { disabled, pending, enabled }
