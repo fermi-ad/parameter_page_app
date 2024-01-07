@@ -309,6 +309,15 @@ class MockDpmService implements ACSysServiceAPI {
         state: AnalogAlarmState.alarming));
   }
 
+  void noAlarm({required String forDRF}) {
+    _analogAlarmStreams[forDRF]!.add(AnalogAlarmStatus(
+        cycle: 0,
+        refId: 0,
+        status: 0,
+        timestamp: DateTime.now(),
+        state: AnalogAlarmState.notAlarming));
+  }
+
   void succeedAllPendingSettings() {
     _pendingSettingsCompleter.forEach((drf, controller) {
       controller.complete(const SettingStatus(facilityCode: 1, errorCode: 0));

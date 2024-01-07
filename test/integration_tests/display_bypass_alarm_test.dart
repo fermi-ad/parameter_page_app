@@ -39,7 +39,34 @@ void main() {
       // Then the alarm indicator is displayed
       assertAlarmStatus(forDRF: "G:AMANDA", isInAlarm: true);
     });
+
+    testWidgets('Parameter goes out of alarm, alarm indicator goes away',
+        (tester) async {
+      // Given the test page is loaded
+      //   and a device that is in alarm is on the page
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      assertParametersAreOnPage(["G:AMANDA"]);
+      mockDPMService!.raiseAlarm(forDRF: "G:AMANDA");
+      await waitForDeviceToAlarm(tester, forDRF: "G:AMANDA");
+      assertAlarmStatus(forDRF: "G:AMANDA", isInAlarm: true);
+
+      // When the device goes back in tolerance
+      mockDPMService!.noAlarm(forDRF: "G:AMANDA");
+      await waitForAlarmToGoAway(tester, forDRF: "G:AMANDA");
+
+      // Then the alarm indicator is hidden
+      assertAlarmStatus(forDRF: "G:AMANDA", isInAlarm: false);
+    });
   });
+}
+
+Future<void> waitForAlarmToGoAway(WidgetTester tester,
+    {required String forDRF}) async {
+  final parameterFinder = find.byKey(Key("parameter_row_$forDRF"));
+  final alarmIndicatorFinder = find.descendant(
+      of: parameterFinder, matching: find.byIcon(Icons.notifications));
+  await pumpUntilGone(tester, alarmIndicatorFinder);
 }
 
 Future<void> waitForDeviceToAlarm(WidgetTester tester,
