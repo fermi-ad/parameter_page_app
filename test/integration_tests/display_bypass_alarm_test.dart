@@ -34,12 +34,15 @@ void main() {
 
       // When an alarm is raised for G:AMANDA
       mockDPMService!.raiseAlarm(forDRF: "G:AMANDA");
+      await waitForAlarmUpdate(forDRF: "G:AMANDA");
 
       // Then the alarm indicator is displayed
       assertAlarmStatus(forDRF: "G:AMANDA", isInAlarm: true);
     });
   });
 }
+
+Future<void> waitForAlarmUpdate({required String forDRF}) async {}
 
 void assertAlarmStatus({required String forDRF, required bool isInAlarm}) {
   final parameterFinder = find.byKey(Key("parameter_row_$forDRF"));
