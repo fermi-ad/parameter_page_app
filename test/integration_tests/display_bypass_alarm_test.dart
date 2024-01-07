@@ -34,7 +34,7 @@ void main() {
 
       // When an alarm is raised for G:AMANDA
       mockDPMService!.raiseAlarm(forDRF: "G:AMANDA");
-      await waitForAlarmUpdate(forDRF: "G:AMANDA");
+      await waitForDeviceToAlarm(tester, forDRF: "G:AMANDA");
 
       // Then the alarm indicator is displayed
       assertAlarmStatus(forDRF: "G:AMANDA", isInAlarm: true);
@@ -42,11 +42,17 @@ void main() {
   });
 }
 
-Future<void> waitForAlarmUpdate({required String forDRF}) async {}
+Future<void> waitForDeviceToAlarm(WidgetTester tester,
+    {required String forDRF}) async {
+  final parameterFinder = find.byKey(Key("parameter_row_$forDRF"));
+  final alarmIndicatorFinder = find.descendant(
+      of: parameterFinder, matching: find.byIcon(Icons.notifications));
+  await pumpUntilFound(tester, alarmIndicatorFinder);
+}
 
 void assertAlarmStatus({required String forDRF, required bool isInAlarm}) {
   final parameterFinder = find.byKey(Key("parameter_row_$forDRF"));
-  final alarmIndicatorFinder =
-      find.descendant(of: parameterFinder, matching: find.byIcon(Icons.alarm));
+  final alarmIndicatorFinder = find.descendant(
+      of: parameterFinder, matching: find.byIcon(Icons.notifications));
   expect(alarmIndicatorFinder, isInAlarm ? findsOneWidget : findsNothing);
 }

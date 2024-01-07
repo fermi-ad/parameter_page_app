@@ -267,6 +267,11 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                 child: StreamBuilder(
                     stream: widget.dpm.monitorDevices([widget.drf]),
                     builder: _readingBuilder))),
+        Visibility(
+            visible: hasReadingProperty,
+            child: StreamBuilder(
+                stream: widget.dpm.monitorAnalogAlarmDevices([widget.drf]),
+                builder: _analogAlarmBuilder)),
         const SizedBox(width: 8.0),
         SizedBox(
             width: 128.0,
@@ -419,6 +424,14 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     if (snapshot.connectionState == ConnectionState.active) {
       return ParameterExtendedStatusWidget(
           drf: widget.drf, digitalStatus: snapshot.data!);
+    } else {
+      return Container();
+    }
+  }
+
+  Widget _analogAlarmBuilder(context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.active) {
+      return const Icon(Icons.notifications);
     } else {
       return Container();
     }

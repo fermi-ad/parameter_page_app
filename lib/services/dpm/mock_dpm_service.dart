@@ -293,10 +293,17 @@ class MockDpmService implements ACSysServiceAPI {
 
   @override
   Stream<AnalogAlarmStatus> monitorAnalogAlarmProperty(List<String> drfs) {
-    return const Stream<AnalogAlarmStatus>.empty();
+    return _analogAlarmStream.stream;
   }
 
-  void raiseAlarm({required String forDRF}) {}
+  void raiseAlarm({required String forDRF}) {
+    _analogAlarmStream.add(AnalogAlarmStatus(
+        cycle: 0,
+        refId: 0,
+        status: 0,
+        timestamp: DateTime.now(),
+        state: AnalogAlarmState.alarming));
+  }
 
   void succeedAllPendingSettings() {
     _pendingSettingsCompleter.forEach((drf, controller) {
@@ -405,6 +412,9 @@ class MockDpmService implements ACSysServiceAPI {
 
   final StreamController<Reading> _incSettings =
       StreamController<Reading>.broadcast();
+
+  final StreamController<AnalogAlarmStatus> _analogAlarmStream =
+      StreamController<AnalogAlarmStatus>.broadcast();
 
   DevScalar _settingValue = const DevScalar(0.0);
 
