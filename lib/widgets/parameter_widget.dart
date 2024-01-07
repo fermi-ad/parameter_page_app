@@ -431,7 +431,17 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
 
   Widget _analogAlarmBuilder(context, snapshot) {
     if (snapshot.connectionState == ConnectionState.active) {
-      return const Icon(Icons.notifications);
+      final alarmStatus = snapshot!.data as AnalogAlarmStatus;
+      switch (alarmStatus.state) {
+        case AnalogAlarmState.alarming:
+          return const Icon(Icons.notifications);
+
+        case AnalogAlarmState.bypassed:
+          return Container();
+
+        case AnalogAlarmState.notAlarming:
+          return Container();
+      }
     } else {
       return Container();
     }
