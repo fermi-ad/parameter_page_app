@@ -79,6 +79,29 @@ void main() {
       // ... but the device is not in alarm
       assertAlarmStatus(forDRF: "G:AMANDA", isInAlarm: false);
     });
+
+    testWidgets(
+        'Parameter is in tolerance with alarm by-passed, by-passed alarm indicator is shown',
+        (tester) async {
+      // Given the test page is loaded
+      //   and a device that is out-tolerance with alarms by-passed is on the page
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      mockDPMService!.raiseAlarm(forDRF: "G:AMANDA", isByPassed: true);
+      assertParametersAreOnPage(["G:AMANDA"]);
+      assertAlarmStatus(forDRF: "G:AMANDA", isInAlarm: false);
+      assertByPassedAlarmStatus(forDRF: "G:AMANDA", isVisible: true);
+
+      // When the device goes back in tolerance
+      mockDPMService!.noAlarm(forDRF: "G:AMANDA", isByPassed: true);
+      await waitForDeviceAlarmByPassed(tester, forDRF: "G:AMANDA");
+
+      // Then the alarm by-passed indicator is shown
+      assertByPassedAlarmStatus(forDRF: "G:AMANDA", isVisible: true);
+
+      // ... but the device is not in alarm
+      assertAlarmStatus(forDRF: "G:AMANDA", isInAlarm: false);
+    });
   });
 }
 

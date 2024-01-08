@@ -311,13 +311,15 @@ class MockDpmService implements ACSysServiceAPI {
             : AnalogAlarmState.alarming));
   }
 
-  void noAlarm({required String forDRF}) {
+  void noAlarm({required String forDRF, bool isByPassed = false}) {
     _analogAlarmStreams[forDRF]!.add(AnalogAlarmStatus(
         cycle: 0,
         refId: 0,
         status: 0,
         timestamp: DateTime.now(),
-        state: AnalogAlarmState.notAlarming));
+        state: isByPassed
+            ? AnalogAlarmState.bypassed
+            : AnalogAlarmState.notAlarming));
   }
 
   void succeedAllPendingSettings() {
