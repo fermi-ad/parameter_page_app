@@ -58,6 +58,27 @@ void main() {
       // Then the alarm indicator is hidden
       assertAlarmStatus(forDRF: "G:AMANDA", isInAlarm: false);
     });
+
+    testWidgets(
+        'Parameter goes out of tolerance with alarm by-passed, by-passed alarm indicator is shown',
+        (tester) async {
+      // Given the test page is loaded
+      //   and a device that is in-tolerance with alarms by-passed is on the page
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      assertParametersAreOnPage(["G:AMANDA"]);
+      assertAlarmStatus(forDRF: "G:AMANDA", isInAlarm: false);
+
+      // When the device goes out-of-tolerance
+      mockDPMService!.raiseAlarm(forDRF: "G:AMANDA", isByPassed: true);
+      await waitForDeviceAlarmByPassed(tester, forDRF: "G:AMANDA");
+
+      // Then the alarm by-passed indicator is shown
+      assertByPassedAlarmStatus(forDRF: "G:AMANDA", isVisible: true);
+
+      // ... but the device is not in alarm
+      assertAlarmStatus(forDRF: "G:AMANDA", isInAlarm: false);
+    });
   });
 }
 
@@ -77,9 +98,25 @@ Future<void> waitForDeviceToAlarm(WidgetTester tester,
   await pumpUntilFound(tester, alarmIndicatorFinder);
 }
 
+Future<void> waitForDeviceAlarmByPassed(WidgetTester tester,
+    {required String forDRF}) async {
+  final parameterFinder = find.byKey(Key("parameter_row_$forDRF"));
+  final alarmIndicatorFinder = find.descendant(
+      of: parameterFinder, matching: find.byIcon(Icons.notifications_off));
+  await pumpUntilFound(tester, alarmIndicatorFinder);
+}
+
 void assertAlarmStatus({required String forDRF, required bool isInAlarm}) {
   final parameterFinder = find.byKey(Key("parameter_row_$forDRF"));
   final alarmIndicatorFinder = find.descendant(
       of: parameterFinder, matching: find.byIcon(Icons.notifications));
   expect(alarmIndicatorFinder, isInAlarm ? findsOneWidget : findsNothing);
+}
+
+void assertByPassedAlarmStatus(
+    {required String forDRF, required bool isVisible}) {
+  final parameterFinder = find.byKey(Key("parameter_row_$forDRF"));
+  final alarmIndicatorFinder = find.descendant(
+      of: parameterFinder, matching: find.byIcon(Icons.notifications_off));
+  expect(alarmIndicatorFinder, isVisible ? findsOneWidget : findsNothing);
 }
