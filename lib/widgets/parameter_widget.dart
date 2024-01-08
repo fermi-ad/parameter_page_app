@@ -437,7 +437,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
           return const Icon(Icons.notifications);
 
         case AnalogAlarmState.bypassed:
-          return Container();
+          return const Icon(Icons.notifications_off);
 
         case AnalogAlarmState.notAlarming:
           return Container();
