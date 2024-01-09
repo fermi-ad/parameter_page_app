@@ -105,27 +105,3 @@ void main() {
     });
   });
 }
-
-Future<void> waitForAlarmToGoAway(WidgetTester tester,
-    {required String forDRF}) async {
-  final parameterFinder = find.byKey(Key("parameter_row_$forDRF"));
-  final alarmIndicatorFinder = find.descendant(
-      of: parameterFinder, matching: find.byIcon(Icons.notifications));
-  await pumpUntilGone(tester, alarmIndicatorFinder);
-}
-
-Future<void> waitForDeviceToAlarm(WidgetTester tester,
-    {required String forDRF}) async {
-  final parameterFinder = find.byKey(Key("parameter_row_$forDRF"));
-  final alarmIndicatorFinder = find.descendant(
-      of: parameterFinder, matching: find.byIcon(Icons.notifications));
-  await pumpUntilFound(tester, alarmIndicatorFinder);
-}
-
-Future<void> waitForDeviceAlarmByPassed(WidgetTester tester,
-    {required String forDRF}) async {
-  final parameterFinder = find.byKey(Key("parameter_row_$forDRF"));
-  final alarmIndicatorFinder = find.descendant(
-      of: parameterFinder, matching: find.byIcon(Icons.notifications_off));
-  await pumpUntilFound(tester, alarmIndicatorFinder);
-}
