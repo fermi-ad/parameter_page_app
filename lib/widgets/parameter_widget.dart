@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_controls_core/flutter_controls_core.dart';
 import 'package:parameter_page/widgets/command_menu_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
+import 'package:parameter_page/widgets/parameter_alarm_status_widget.dart';
 import 'package:parameter_page/widgets/parameter_basic_status_widget.dart';
 import 'package:parameter_page/widgets/parameter_extended_status_widget.dart';
 import 'package:parameter_page/widgets/setting_control_widget.dart';
@@ -431,17 +432,8 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
 
   Widget _analogAlarmBuilder(context, snapshot) {
     if (snapshot.connectionState == ConnectionState.active) {
-      final alarmStatus = snapshot!.data as AnalogAlarmStatus;
-      switch (alarmStatus.state) {
-        case AnalogAlarmState.alarming:
-          return const Icon(Icons.notifications);
-
-        case AnalogAlarmState.bypassed:
-          return const Icon(Icons.notifications_off);
-
-        case AnalogAlarmState.notAlarming:
-          return Container();
-      }
+      return ParameterAlarmStatusWidget(
+          status: snapshot!.data as AnalogAlarmStatus);
     } else {
       return Container();
     }
