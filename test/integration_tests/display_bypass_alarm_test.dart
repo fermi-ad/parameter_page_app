@@ -129,18 +129,3 @@ Future<void> waitForDeviceAlarmByPassed(WidgetTester tester,
       of: parameterFinder, matching: find.byIcon(Icons.notifications_off));
   await pumpUntilFound(tester, alarmIndicatorFinder);
 }
-
-void assertAlarmStatus({required String forDRF, required bool isInAlarm}) {
-  final parameterFinder = find.byKey(Key("parameter_row_$forDRF"));
-  final alarmIndicatorFinder = find.descendant(
-      of: parameterFinder, matching: find.byIcon(Icons.notifications));
-  expect(alarmIndicatorFinder, isInAlarm ? findsOneWidget : findsNothing);
-}
-
-void assertByPassedAlarmStatus(
-    {required String forDRF, required bool isVisible}) {
-  final parameterFinder = find.byKey(Key("parameter_row_$forDRF"));
-  final alarmIndicatorFinder = find.descendant(
-      of: parameterFinder, matching: find.byIcon(Icons.notifications_off));
-  expect(alarmIndicatorFinder, isVisible ? findsOneWidget : findsNothing);
-}
