@@ -88,6 +88,7 @@ void main() {
       await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
       mockDPMService!.raiseAlarm(forDRF: "G:AMANDA", isByPassed: true);
+      await waitForDeviceAlarmByPassed(tester, forDRF: "G:AMANDA");
       assertParametersAreOnPage(["G:AMANDA"]);
       assertAlarmStatus(forDRF: "G:AMANDA", isInAlarm: false);
       assertByPassedAlarmStatus(forDRF: "G:AMANDA", isVisible: true);
