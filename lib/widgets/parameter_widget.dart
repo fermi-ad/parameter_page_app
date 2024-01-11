@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_controls_core/flutter_controls_core.dart';
 import 'package:parameter_page/widgets/command_menu_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
@@ -404,10 +405,13 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
 
   Widget _readingBuilder(context, snapshot) {
     if (snapshot.connectionState == ConnectionState.active) {
-      return _buildParam(_extractValueString(from: snapshot), readingUnits,
-          key: Key("parameter_reading_${widget.drf}"));
+      return _buildParam(
+          context, _extractValueString(from: snapshot), readingUnits,
+          key: Key("parameter_reading_${widget.drf}"),
+          isAlarming: _lastAlarmStatus != null &&
+              _lastAlarmStatus!.state == AnalogAlarmState.alarming);
     } else {
-      return _buildParam(null, readingUnits,
+      return _buildParam(context, null, readingUnits,
           key: Key("parameter_nullreading_${widget.drf}"));
     }
   }
@@ -432,20 +436,40 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
 
   Widget _analogAlarmBuilder(context, snapshot) {
     if (snapshot.connectionState == ConnectionState.active) {
-      return ParameterAlarmStatusWidget(
-          status: snapshot!.data as AnalogAlarmStatus);
+      final newAlarmStatus = snapshot!.data as AnalogAlarmStatus;
+
+      if (newAlarmStatus != _lastAlarmStatus) {
+        SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {
+              _lastAlarmStatus = newAlarmStatus;
+            }));
+      }
+
+      return ParameterAlarmStatusWidget(status: newAlarmStatus);
     } else {
       return Container();
     }
   }
 
-  Widget _buildParam(String? value, String? units, {required Key key}) {
+  Widget _buildParam(BuildContext context, String? value, String? units,
+      {required Key key, bool isAlarming = false}) {
     return value == null
         ? Container()
         : (units == null
-            ? Text(key: key, textAlign: TextAlign.end, value)
+            ? Text(value,
+                key: key,
+                textAlign: TextAlign.end,
+                style: TextStyle(
+                    color: isAlarming
+                        ? Theme.of(context).colorScheme.error
+                        : Theme.of(context).colorScheme.primary))
             : Row(key: key, children: [
-                Expanded(child: Text(textAlign: TextAlign.end, value)),
+                Expanded(
+                    child: Text(value,
+                        textAlign: TextAlign.end,
+                        style: TextStyle(
+                            color: isAlarming
+                                ? Theme.of(context).colorScheme.error
+                                : Theme.of(context).colorScheme.primary))),
                 const SizedBox(width: 6.0),
                 Text(units, style: const TextStyle(color: Colors.grey))
               ]));
@@ -463,4 +487,6 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   bool _deviceInfoFailure = false;
+
+  AnalogAlarmStatus? _lastAlarmStatus;
 }

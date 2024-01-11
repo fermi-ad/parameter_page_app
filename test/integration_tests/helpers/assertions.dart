@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/widgets/comment_entry_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
@@ -650,8 +651,12 @@ void assertAlarmStatus(WidgetTester tester,
       of: parameterFinder, matching: find.byIcon(Icons.notifications));
   expect(alarmIndicatorFinder, isInAlarm ? findsOneWidget : findsNothing);
 
-  final ThemeData currentTheme =
-      tester.widget<MaterialApp>(find.byType(MaterialApp)).darkTheme!;
+  var brightness =
+      SchedulerBinding.instance.platformDispatcher.platformBrightness;
+  bool isDarkMode = brightness == Brightness.dark;
+  final ThemeData currentTheme = isDarkMode
+      ? tester.widget<MaterialApp>(find.byType(MaterialApp)).darkTheme!
+      : tester.widget<MaterialApp>(find.byType(MaterialApp)).theme!;
 
   final parameterReadingFinder = find.byKey(Key("parameter_reading_$forDRF"));
   final readingTextFinder = find
@@ -661,7 +666,7 @@ void assertAlarmStatus(WidgetTester tester,
   if (isInAlarm) {
     expect(textStyle!.color, equals(currentTheme.colorScheme.error));
   } else {
-    expect(textStyle, isNull);
+    expect(textStyle!.color, equals(currentTheme.colorScheme.primary));
   }
 }
 
