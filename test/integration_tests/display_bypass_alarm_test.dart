@@ -17,6 +17,7 @@ void main() {
       // When the test page is loaded
       //   and a device with no active alarm is on the page
       await navigateToTestPage1(tester);
+      await waitForDataToLoadFor(tester, "M:OUTTMP@e,02");
       assertParametersAreOnPage(["M:OUTTMP@e,02"]);
 
       // Then nothing is display in the digitial status column
@@ -29,6 +30,7 @@ void main() {
       //   and a device with no active alarm is on the page
       await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
+      await waitForDataToLoadFor(tester, "G:AMANDA");
       assertParametersAreOnPage(["G:AMANDA"]);
 
       // When an alarm is raised for G:AMANDA
@@ -45,6 +47,7 @@ void main() {
       //   and a device that is in alarm is on the page
       await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
+      await waitForDataToLoadFor(tester, "G:AMANDA");
       assertParametersAreOnPage(["G:AMANDA"]);
       mockDPMService!.raiseAlarm(forDRF: "G:AMANDA");
       await waitForDeviceToAlarm(tester, forDRF: "G:AMANDA");
@@ -65,6 +68,7 @@ void main() {
       //   and a device that is in-tolerance with alarms by-passed is on the page
       await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
+      await waitForDataToLoadFor(tester, "G:AMANDA");
       assertParametersAreOnPage(["G:AMANDA"]);
       assertAlarmStatus(tester, forDRF: "G:AMANDA", isInAlarm: false);
 
@@ -87,6 +91,7 @@ void main() {
       await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
       mockDPMService!.raiseAlarm(forDRF: "G:AMANDA", isByPassed: true);
+      await waitForDataToLoadFor(tester, "G:AMANDA");
       await waitForDeviceAlarmByPassed(tester, forDRF: "G:AMANDA");
       assertParametersAreOnPage(["G:AMANDA"]);
       assertAlarmStatus(tester, forDRF: "G:AMANDA", isInAlarm: false);

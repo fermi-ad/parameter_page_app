@@ -650,12 +650,18 @@ void assertAlarmStatus(WidgetTester tester,
       of: parameterFinder, matching: find.byIcon(Icons.notifications));
   expect(alarmIndicatorFinder, isInAlarm ? findsOneWidget : findsNothing);
 
+  final ThemeData currentTheme =
+      tester.widget<MaterialApp>(find.byType(MaterialApp)).darkTheme!;
+
+  final parameterReadingFinder = find.byKey(Key("parameter_reading_$forDRF"));
+  final readingTextFinder = find
+      .descendant(of: parameterReadingFinder, matching: find.byType(Text))
+      .first;
+  final textStyle = tester.widget<Text>(readingTextFinder).style;
   if (isInAlarm) {
-    final parameterReadingFinder = find.byKey(Key("parameter_reading_$forDRF"));
-    final readingTextFinder = find.descendant(
-        of: parameterReadingFinder, matching: find.byType(Text));
-    final textStyle = tester.widget<Text>(readingTextFinder).style;
-    expect(textStyle!.color, equals(Colors.red));
+    expect(textStyle!.color, equals(currentTheme.colorScheme.error));
+  } else {
+    expect(textStyle, isNull);
   }
 }
 
