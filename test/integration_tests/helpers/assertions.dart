@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/widgets/comment_entry_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
@@ -640,4 +641,39 @@ void assertSettingsPermissionTimer(
     expect(find.descendant(of: widgetFinder, matching: find.text(isShowing)),
         findsOneWidget);
   }
+}
+
+void assertAlarmStatus(WidgetTester tester,
+    {required String forDRF, required bool isInAlarm}) {
+  final parameterFinder = find.byKey(Key("parameter_row_$forDRF"));
+
+  final alarmIndicatorFinder = find.descendant(
+      of: parameterFinder, matching: find.byIcon(Icons.notifications));
+  expect(alarmIndicatorFinder, isInAlarm ? findsOneWidget : findsNothing);
+
+  var brightness =
+      SchedulerBinding.instance.platformDispatcher.platformBrightness;
+  bool isDarkMode = brightness == Brightness.dark;
+  final ThemeData currentTheme = isDarkMode
+      ? tester.widget<MaterialApp>(find.byType(MaterialApp)).darkTheme!
+      : tester.widget<MaterialApp>(find.byType(MaterialApp)).theme!;
+
+  final parameterReadingFinder = find.byKey(Key("parameter_reading_$forDRF"));
+  final readingTextFinder = find
+      .descendant(of: parameterReadingFinder, matching: find.byType(Text))
+      .first;
+  final textStyle = tester.widget<Text>(readingTextFinder).style;
+  if (isInAlarm) {
+    expect(textStyle!.color, equals(currentTheme.colorScheme.error));
+  } else {
+    expect(textStyle!.color, equals(currentTheme.colorScheme.primary));
+  }
+}
+
+void assertByPassedAlarmStatus(
+    {required String forDRF, required bool isVisible}) {
+  final parameterFinder = find.byKey(Key("parameter_row_$forDRF"));
+  final alarmIndicatorFinder = find.descendant(
+      of: parameterFinder, matching: find.byIcon(Icons.notifications_off));
+  expect(alarmIndicatorFinder, isVisible ? findsOneWidget : findsNothing);
 }

@@ -10,22 +10,22 @@ void main() {
       timestamp: DateTime(2023),
       extendedStatus: [
         const ExtendedStatusAttribute(
-          value: "1",
+          value: 1,
         ),
         const ExtendedStatusAttribute(
-          value: "1",
+          value: 1,
         ),
         const ExtendedStatusAttribute(
-          value: "0",
+          value: 0,
         ),
         const ExtendedStatusAttribute(
-          value: "0",
+          value: 0,
         ),
         const ExtendedStatusAttribute(
-          value: "0",
+          value: 0,
         ),
         const ExtendedStatusAttribute(
-          value: "0",
+          value: 0,
         )
       ]);
 
@@ -36,32 +36,32 @@ void main() {
       extendedStatus: [
         const ExtendedStatusAttribute(
             description: "Henk On/Off",
-            value: "1",
+            value: 1,
             valueText: "On",
             color: StatusColor.green),
         const ExtendedStatusAttribute(
             description: "Ready???",
-            value: "1",
+            value: 1,
             valueText: "Always",
             color: StatusColor.green),
         const ExtendedStatusAttribute(
             description: "Remote Henk",
-            value: "0",
+            value: 0,
             valueText: "L",
             color: StatusColor.blue),
         const ExtendedStatusAttribute(
             description: "Polarity",
-            value: "0",
+            value: 0,
             valueText: "Mono",
             color: StatusColor.red),
         const ExtendedStatusAttribute(
             description: " test 2",
-            value: "0",
+            value: 0,
             valueText: " good",
             color: StatusColor.green),
         const ExtendedStatusAttribute(
             description: "testtest",
-            value: "0",
+            value: 0,
             valueText: "GOOD",
             color: StatusColor.green)
       ]);
@@ -73,7 +73,7 @@ void main() {
       extendedStatus: [
         const ExtendedStatusAttribute(
             description: "Henk On/Off",
-            value: "1",
+            value: 1,
             valueText: "On",
             color: StatusColor.green)
       ]);

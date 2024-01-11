@@ -190,7 +190,7 @@ class MockDpmService implements ACSysServiceAPI {
       return Stream<DigitalStatus>.periodic(
         const Duration(seconds: 1),
         (count) {
-          const emptyBit = ExtendedStatusAttribute(value: "0");
+          const emptyBit = ExtendedStatusAttribute(value: 0);
           return DigitalStatus(
               refId: 0,
               cycle: 0,
@@ -200,12 +200,12 @@ class MockDpmService implements ACSysServiceAPI {
               extendedStatus: [
                 const ExtendedStatusAttribute(
                     description: "On/Off",
-                    value: "1",
+                    value: 1,
                     valueText: "On",
                     color: StatusColor.green),
                 const ExtendedStatusAttribute(
                     description: "Cool/Heat",
-                    value: "1",
+                    value: 1,
                     valueText: "Cooling",
                     color: StatusColor.blue),
                 emptyBit,
@@ -229,7 +229,7 @@ class MockDpmService implements ACSysServiceAPI {
       return Stream<DigitalStatus>.periodic(
         const Duration(seconds: 1),
         (count) {
-          const emptyBit = ExtendedStatusAttribute(value: "0");
+          const emptyBit = ExtendedStatusAttribute(value: 0);
           return DigitalStatus(
               refId: 0,
               cycle: 0,
@@ -245,32 +245,32 @@ class MockDpmService implements ACSysServiceAPI {
               extendedStatus: [
                 const ExtendedStatusAttribute(
                     description: "Henk On/Off",
-                    value: "1",
+                    value: 1,
                     valueText: "On",
                     color: StatusColor.green),
                 const ExtendedStatusAttribute(
                     description: "Ready???",
-                    value: "1",
+                    value: 1,
                     valueText: "Always",
                     color: StatusColor.green),
                 const ExtendedStatusAttribute(
                     description: "Remote Henk",
-                    value: "0",
+                    value: 0,
                     valueText: "L",
                     color: StatusColor.blue),
                 const ExtendedStatusAttribute(
                     description: "Polarity",
-                    value: "0",
+                    value: 0,
                     valueText: "Mono",
                     color: StatusColor.red),
                 const ExtendedStatusAttribute(
                     description: " test 2",
-                    value: "0",
+                    value: 0,
                     valueText: " good",
                     color: StatusColor.green),
                 const ExtendedStatusAttribute(
                     description: "testtest",
-                    value: "0",
+                    value: 0,
                     valueText: "GOOD",
                     color: StatusColor.green),
                 emptyBit,
@@ -289,6 +289,37 @@ class MockDpmService implements ACSysServiceAPI {
     } else {
       return const Stream<DigitalStatus>.empty();
     }
+  }
+
+  @override
+  Stream<AnalogAlarmStatus> monitorAnalogAlarmProperty(List<String> drfs) {
+    if (!_analogAlarmStreams.containsKey(drfs[0])) {
+      _analogAlarmStreams[drfs[0]] =
+          StreamController<AnalogAlarmStatus>.broadcast();
+    }
+    return _analogAlarmStreams[drfs[0]]!.stream;
+  }
+
+  void raiseAlarm({required String forDRF, bool isByPassed = false}) {
+    _analogAlarmStreams[forDRF]!.add(AnalogAlarmStatus(
+        cycle: 0,
+        refId: 0,
+        status: 0,
+        timestamp: DateTime.now(),
+        state: isByPassed
+            ? AnalogAlarmState.bypassed
+            : AnalogAlarmState.alarming));
+  }
+
+  void noAlarm({required String forDRF, bool isByPassed = false}) {
+    _analogAlarmStreams[forDRF]!.add(AnalogAlarmStatus(
+        cycle: 0,
+        refId: 0,
+        status: 0,
+        timestamp: DateTime.now(),
+        state: isByPassed
+            ? AnalogAlarmState.bypassed
+            : AnalogAlarmState.notAlarming));
   }
 
   void succeedAllPendingSettings() {
@@ -398,6 +429,9 @@ class MockDpmService implements ACSysServiceAPI {
 
   final StreamController<Reading> _incSettings =
       StreamController<Reading>.broadcast();
+
+  final Map<String, StreamController<AnalogAlarmStatus>> _analogAlarmStreams =
+      {};
 
   DevScalar _settingValue = const DevScalar(0.0);
 
