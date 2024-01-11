@@ -642,11 +642,21 @@ void assertSettingsPermissionTimer(
   }
 }
 
-void assertAlarmStatus({required String forDRF, required bool isInAlarm}) {
+void assertAlarmStatus(WidgetTester tester,
+    {required String forDRF, required bool isInAlarm}) {
   final parameterFinder = find.byKey(Key("parameter_row_$forDRF"));
+
   final alarmIndicatorFinder = find.descendant(
       of: parameterFinder, matching: find.byIcon(Icons.notifications));
   expect(alarmIndicatorFinder, isInAlarm ? findsOneWidget : findsNothing);
+
+  if (isInAlarm) {
+    final parameterReadingFinder = find.byKey(Key("parameter_reading_$forDRF"));
+    final readingTextFinder = find.descendant(
+        of: parameterReadingFinder, matching: find.byType(Text));
+    final textStyle = tester.widget<Text>(readingTextFinder).style;
+    expect(textStyle!.color, equals(Colors.red));
+  }
 }
 
 void assertByPassedAlarmStatus(
