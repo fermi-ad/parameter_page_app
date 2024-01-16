@@ -296,6 +296,16 @@ class MockDpmService implements ACSysServiceAPI {
     if (!_analogAlarmStreams.containsKey(drfs[0])) {
       _analogAlarmStreams[drfs[0]] =
           StreamController<AnalogAlarmStatus>.broadcast();
+
+      if (drfs[0] == "Z:BTE200_TEMP") {
+        Timer.periodic(const Duration(seconds: 5), (Timer timer) {
+          _analogAlarmStreams["Z:BTE200_TEMP"]!.add(AnalogAlarmStatus(
+              refId: 0,
+              cycle: 0,
+              timestamp: DateTime.now(),
+              state: AnalogAlarmState.alarming));
+        });
+      }
     }
     return _analogAlarmStreams[drfs[0]]!.stream;
   }
