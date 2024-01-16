@@ -438,7 +438,8 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     if (snapshot.connectionState == ConnectionState.active) {
       final newAlarmStatus = snapshot!.data as AnalogAlarmStatus;
 
-      if (newAlarmStatus != _lastAlarmStatus) {
+      if (_lastAlarmStatus == null ||
+          newAlarmStatus.state != _lastAlarmStatus!.state) {
         SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {
               _lastAlarmStatus = newAlarmStatus;
             }));

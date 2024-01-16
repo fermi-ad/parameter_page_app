@@ -298,7 +298,7 @@ class MockDpmService implements ACSysServiceAPI {
           StreamController<AnalogAlarmStatus>.broadcast();
 
       if (drfs[0] == "Z:BTE200_TEMP") {
-        Timer.periodic(const Duration(seconds: 5), (Timer timer) {
+        Timer.periodic(const Duration(seconds: 1), (Timer timer) {
           _analogAlarmStreams["Z:BTE200_TEMP"]!.add(AnalogAlarmStatus(
               refId: 0,
               cycle: 0,
