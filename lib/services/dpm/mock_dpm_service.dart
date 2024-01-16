@@ -306,6 +306,16 @@ class MockDpmService implements ACSysServiceAPI {
               state: AnalogAlarmState.alarming));
         });
       }
+
+      if (drfs[0] == "Z:NO_SET") {
+        Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+          _analogAlarmStreams["Z:NO_SET"]!.add(AnalogAlarmStatus(
+              refId: 0,
+              cycle: 0,
+              timestamp: DateTime.now(),
+              state: AnalogAlarmState.bypassed));
+        });
+      }
     }
     return _analogAlarmStreams[drfs[0]]!.stream;
   }
