@@ -447,7 +447,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
 
       return ParameterAlarmStatusWidget(status: newAlarmStatus);
     } else {
-      return Container();
+      return const Padding(
+          padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
+          child: SizedBox(width: 16.0));
     }
   }
 
