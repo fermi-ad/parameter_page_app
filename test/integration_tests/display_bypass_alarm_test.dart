@@ -112,5 +112,28 @@ void main() {
       // ... but the device is not in alarm
       assertAlarmStatus(tester, forDRF: "G:AMANDA", isInAlarm: false);
     }, semanticsEnabled: false);
+
+    testWidgets('By-pass alarming device, alarm indicator changes to by-passed',
+        (tester) async {
+      // Given a test page with an alarming device is loaded...
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      await waitForDeviceToAlarm(tester, forDRF: "Z:BTE200_TEMP");
+      assertAlarmStatus(tester, forDRF: "Z:BTE200_TEMP", isInAlarm: true);
+
+      // When I by-pass the alarm
+      await byPassAlarm(tester, forDRF: "Z:BTE200_TEMP");
+      await waitForDeviceAlarmByPassed(tester, forDRF: "Z:BTE200_TEMP");
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+
+      // Then the alarm inicator goes away
+      assertAlarmStatus(tester, forDRF: "Z:BTE200_TEMP", isInAlarm: false);
+
+      // ... and the by-passed indicator is shown
+      assertByPassedAlarmStatus(forDRF: "Z:BTE200_TEMP", isVisible: true);
+    });
   });
 }
+
+Future<void> byPassAlarm(WidgetTester tester, {required String forDRF}) async {}
