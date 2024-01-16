@@ -10,7 +10,8 @@ class ParameterAlarmStatusWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (status.state) {
       case AnalogAlarmState.alarming:
-        return const Icon(Icons.notifications);
+        return Icon(Icons.notifications,
+            color: Theme.of(context).colorScheme.error);
 
       case AnalogAlarmState.bypassed:
         return const Icon(Icons.notifications_off);
