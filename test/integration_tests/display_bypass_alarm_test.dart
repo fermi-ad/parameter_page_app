@@ -113,6 +113,28 @@ void main() {
       assertAlarmStatus(tester, forDRF: "G:AMANDA", isInAlarm: false);
     }, semanticsEnabled: false);
 
+    testWidgets(
+        'Alarming device by-passed by someone else, alarm indicator changes to by-passed',
+        (tester) async {
+      // Given a test page with an alarming device is loaded...
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      await waitForDeviceToAlarm(tester, forDRF: "Z:BTE200_TEMP");
+      assertAlarmStatus(tester, forDRF: "Z:BTE200_TEMP", isInAlarm: true);
+
+      // When someone else by-passes the alarm
+      mockDPMService!.raiseAlarm(forDRF: "Z:BTE200_TEMP", isByPassed: true);
+      await waitForDeviceAlarmByPassed(tester, forDRF: "Z:BTE200_TEMP");
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+
+      // Then the alarm inicator goes away
+      assertAlarmStatus(tester, forDRF: "Z:BTE200_TEMP", isInAlarm: false);
+
+      // ... and the by-passed indicator is shown
+      assertByPassedAlarmStatus(forDRF: "Z:BTE200_TEMP", isVisible: true);
+    });
+
     testWidgets('By-pass alarming device, alarm indicator changes to by-passed',
         (tester) async {
       // Given a test page with an alarming device is loaded...
