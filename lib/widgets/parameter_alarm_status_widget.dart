@@ -26,7 +26,8 @@ class ParameterAlarmStatusWidget extends StatelessWidget {
             size: iconSize, color: Theme.of(context).colorScheme.primary);
 
       case AnalogAlarmState.notAlarming:
-        return const SizedBox(width: iconSize);
+        return Icon(Icons.notifications,
+            size: iconSize, color: Theme.of(context).colorScheme.onPrimary);
     }
   }
 }
