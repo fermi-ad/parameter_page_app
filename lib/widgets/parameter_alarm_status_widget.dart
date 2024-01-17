@@ -12,7 +12,16 @@ class ParameterAlarmStatusWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
-        child: _buildIcon(context));
+        child: _buildAlarmActionsMenu(context));
+  }
+
+  PopupMenuButton _buildAlarmActionsMenu(BuildContext context) {
+    return PopupMenuButton(
+        icon: _buildIcon(context),
+        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                  value: "By-pass Alarm", child: Text("By-pass Alarm")),
+            ]);
   }
 
   _buildIcon(BuildContext context) {

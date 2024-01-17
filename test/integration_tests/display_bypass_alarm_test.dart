@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:parameter_page/main.dart';
+import 'package:parameter_page/widgets/parameter_alarm_status_widget.dart';
 
 import 'helpers/assertions.dart';
 import 'helpers/actions.dart';
@@ -146,8 +148,6 @@ void main() {
 
       // When I by-pass the alarm
       await byPassAlarm(tester, forDRF: "Z:BTE200_TEMP");
-      await waitForDeviceAlarmByPassed(tester, forDRF: "Z:BTE200_TEMP");
-      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
 
       // Then the alarm inicator goes away
       assertAlarmStatus(tester, forDRF: "Z:BTE200_TEMP", isInAlarm: false);
@@ -158,4 +158,13 @@ void main() {
   });
 }
 
-Future<void> byPassAlarm(WidgetTester tester, {required String forDRF}) async {}
+Future<void> byPassAlarm(WidgetTester tester, {required String forDRF}) async {
+  await tester.tap(find.descendant(
+      of: find.byKey(Key("parameter_row_$forDRF")),
+      matching: find.byType(ParameterAlarmStatusWidget)));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text("By-pass Alarm"));
+  await tester.pumpAndSettle();
+  await waitForDeviceAlarmByPassed(tester, forDRF: forDRF);
+  await waitForDataToLoadFor(tester, forDRF);
+}
