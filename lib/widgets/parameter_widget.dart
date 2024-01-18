@@ -438,15 +438,19 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     if (snapshot.connectionState == ConnectionState.active) {
       final newAlarmStatus = snapshot!.data as AnalogAlarmStatus;
 
-      if (newAlarmStatus != _lastAlarmStatus) {
+      if (_lastAlarmStatus == null ||
+          newAlarmStatus.state != _lastAlarmStatus!.state) {
         SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {
               _lastAlarmStatus = newAlarmStatus;
             }));
       }
 
-      return ParameterAlarmStatusWidget(status: newAlarmStatus);
+      return ParameterAlarmStatusWidget(
+          status: newAlarmStatus, drf: widget.drf);
     } else {
-      return Container();
+      return const Padding(
+          padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
+          child: SizedBox(width: 16.0));
     }
   }
 

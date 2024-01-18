@@ -8,9 +8,14 @@ import 'package:parameter_page/main.dart' as app;
 import 'package:parameter_page/widgets/parameter_page_scaffold_widget.dart';
 
 Future<void> startParameterPageApp(WidgetTester tester) async {
+  await _setScreenToWide(tester);
   app.main();
   await tester.pumpAndSettle();
   await pumpUntilFound(tester, find.text("Welcome!"));
+}
+
+Future<void> _setScreenToWide(WidgetTester tester) async {
+  tester.binding.setSurfaceSize(const Size(2560, 1440));
 }
 
 Future<void> pumpUntilGone(
@@ -59,6 +64,9 @@ Future<void> waitForDataToLoadFor(tester, parameter) async {
 
   final settingFinder = find.byKey(Key("parameter_setting_$parameter"));
   await pumpUntilFound(tester, settingFinder);
+
+  final analogAlarmFinder = find.byKey(Key("parameter_analogalarm_$parameter"));
+  await pumpUntilFound(tester, analogAlarmFinder);
 }
 
 Future<void> waitForExtendedStatusDataToLoadFor(tester, parameter) async {
@@ -97,7 +105,7 @@ Future<void> waitForAlarmToGoAway(WidgetTester tester,
     {required String forDRF}) async {
   final parameterFinder = find.byKey(Key("parameter_row_$forDRF"));
   final alarmIndicatorFinder = find.descendant(
-      of: parameterFinder, matching: find.byIcon(Icons.notifications));
+      of: parameterFinder, matching: find.byIcon(Icons.notifications_active));
   await pumpUntilGone(tester, alarmIndicatorFinder);
 }
 
@@ -105,7 +113,7 @@ Future<void> waitForDeviceToAlarm(WidgetTester tester,
     {required String forDRF}) async {
   final parameterFinder = find.byKey(Key("parameter_row_$forDRF"));
   final alarmIndicatorFinder = find.descendant(
-      of: parameterFinder, matching: find.byIcon(Icons.notifications));
+      of: parameterFinder, matching: find.byIcon(Icons.notifications_active));
   await pumpUntilFound(tester, alarmIndicatorFinder);
 }
 

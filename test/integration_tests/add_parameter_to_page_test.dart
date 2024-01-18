@@ -18,7 +18,7 @@ void main() {
 
       // Then the focus should be on the NewEntryEditor text field
       assertNewEntryEditorHasFocus(tester);
-    });
+    }, semanticsEnabled: false);
 
     testWidgets('Add a parameter, focus return to the NewEntryEditor',
         (tester) async {
@@ -31,7 +31,7 @@ void main() {
 
       // Then the focus should return to the NewEntryEditor text field
       assertNewEntryEditorHasFocus(tester);
-    });
+    }, semanticsEnabled: false);
 
     testWidgets(
         'Submit ACNET parameter, should appear at the bottom of the page',
@@ -52,7 +52,7 @@ void main() {
           description: "device description",
           settingValue: "50.00",
           readingValue: "100.0");
-    });
+    }, semanticsEnabled: false);
 
     testWidgets('Submit EPICS PV, should appear at the bottom of the page',
         (tester) async {
@@ -72,6 +72,6 @@ void main() {
           description: "device description",
           settingValue: "50.00",
           readingValue: "100.0");
-    });
+    }, semanticsEnabled: false);
   });
 }

@@ -648,7 +648,7 @@ void assertAlarmStatus(WidgetTester tester,
   final parameterFinder = find.byKey(Key("parameter_row_$forDRF"));
 
   final alarmIndicatorFinder = find.descendant(
-      of: parameterFinder, matching: find.byIcon(Icons.notifications));
+      of: parameterFinder, matching: find.byIcon(Icons.notifications_active));
   expect(alarmIndicatorFinder, isInAlarm ? findsOneWidget : findsNothing);
 
   var brightness =
