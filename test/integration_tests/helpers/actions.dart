@@ -59,6 +59,9 @@ Future<void> waitForDataToLoadFor(tester, parameter) async {
 
   final settingFinder = find.byKey(Key("parameter_setting_$parameter"));
   await pumpUntilFound(tester, settingFinder);
+
+  final analogAlarmFinder = find.byKey(Key("parameter_analogalarm_$parameter"));
+  await pumpUntilFound(tester, analogAlarmFinder);
 }
 
 Future<void> waitForExtendedStatusDataToLoadFor(tester, parameter) async {
