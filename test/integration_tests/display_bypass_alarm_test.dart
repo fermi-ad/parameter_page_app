@@ -155,6 +155,22 @@ void main() {
       // ... and the by-passed indicator is shown
       assertByPassedAlarmStatus(forDRF: "Z:BTE200_TEMP", isVisible: true);
     });
+
+    testWidgets(
+        'By-pass non-alarming device, alarm indicator changes to by-passed',
+        (tester) async {
+      // Given a test page with an alarming device is loaded...
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await waitForDataToLoadFor(tester, "G:AMANDA");
+      assertAlarmStatus(tester, forDRF: "G:AMANDA", isInAlarm: false);
+
+      // When I by-pass the alarm
+      await byPassAlarm(tester, forDRF: "G:AMANDA");
+
+      // Then the by-passed indicator is shown
+      assertByPassedAlarmStatus(forDRF: "G:AMANDA", isVisible: true);
+    });
   });
 }
 
