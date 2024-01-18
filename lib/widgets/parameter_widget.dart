@@ -445,7 +445,8 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
             }));
       }
 
-      return ParameterAlarmStatusWidget(status: newAlarmStatus);
+      return ParameterAlarmStatusWidget(
+          status: newAlarmStatus, drf: widget.drf);
     } else {
       return const Padding(
           padding: EdgeInsets.fromLTRB(8, 0, 0, 0),

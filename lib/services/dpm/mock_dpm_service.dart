@@ -350,6 +350,11 @@ class MockDpmService implements ACSysServiceAPI {
   @override
   Future<SettingStatus> submit(
       {required String forDRF, required DeviceValue newSetting}) async {
+    if (forDRF.contains(".ANALOG.ENABLE")) {
+      final base = forDRF.split(".")[0];
+      _analogAlarmStreams[base]!.currentState = AnalogAlarmState.bypassed;
+    }
+
     if (useEmptyStream) {
       return const SettingStatus(facilityCode: 0, errorCode: 0);
     } else {
