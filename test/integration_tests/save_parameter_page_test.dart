@@ -74,7 +74,7 @@ void main() {
     testWidgets('Save existing page, changes persist',
         (WidgetTester tester) async {
       // Given I have modified Test Page 1 by adding a new comment and saved it
-      await tester.binding.setSurfaceSize(const Size(2560, 1440));
+      await setScreenToWide(tester);
       await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
       await enterEditMode(tester);
@@ -223,7 +223,7 @@ void main() {
         'Save changes to an existing page fails, error message displayed and save is still enabled',
         (WidgetTester tester) async {
       // Given I have made changs to an existing page
-      await tester.binding.setSurfaceSize(const Size(2560, 1440));
+      await setScreenToWide(tester);
       await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
       await enterEditMode(tester);

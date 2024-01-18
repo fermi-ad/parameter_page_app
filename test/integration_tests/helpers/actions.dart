@@ -13,6 +13,10 @@ Future<void> startParameterPageApp(WidgetTester tester) async {
   await pumpUntilFound(tester, find.text("Welcome!"));
 }
 
+Future<void> setScreenToWide(WidgetTester tester) async {
+  tester.binding.setSurfaceSize(const Size(2560, 1440));
+}
+
 Future<void> pumpUntilGone(
   WidgetTester tester,
   Finder finder, {
