@@ -37,6 +37,7 @@ void main() {
         'Submit ACNET parameter, should appear at the bottom of the page',
         (tester) async {
       // Given the test page is loaded and I am in edit mode
+      await setScreenToWide(tester);
       await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
       await enterEditMode(tester);
@@ -57,6 +58,7 @@ void main() {
     testWidgets('Submit EPICS PV, should appear at the bottom of the page',
         (tester) async {
       // Given the test page is loaded and I am in edit mode
+      await setScreenToWide(tester);
       await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
       await enterEditMode(tester);
