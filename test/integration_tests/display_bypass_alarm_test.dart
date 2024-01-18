@@ -171,8 +171,32 @@ void main() {
       // Then the by-passed indicator is shown
       assertByPassedAlarmStatus(forDRF: "G:AMANDA", isVisible: true);
     });
+
+    testWidgets(
+        'Enable alarm on out-of-tolerance parameter, alarm indicator is displayed',
+        (tester) async {
+      // Given the test page is loaded...
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      assertAlarmStatus(tester, forDRF: "G:AMANDA", isInAlarm: true);
+
+      // ... and the alarm for Z:BTE200_TEMP has been by-passed
+      await byPassAlarm(tester, forDRF: "Z:BTE200_TEMP");
+      await waitForDeviceAlarmByPassed(tester, forDRF: "Z:BTE200_TEMP");
+      assertAlarmStatus(tester, forDRF: "Z:BTE200_TEMP", isInAlarm: false);
+
+      // When I re-enable the alarm
+      await enableAlarm(tester, forDRF: "Z:BTE200_TEMP");
+
+      // Then the alarm indicator is shown
+      await waitForDeviceToAlarm(tester, forDRF: "Z:BTE200_TEMP");
+      assertAlarmStatus(tester, forDRF: "Z:BTE200_TEMP", isInAlarm: true);
+    });
   });
 }
+
+Future<void> enableAlarm(WidgetTester tester, {required String forDRF}) async {}
 
 Future<void> byPassAlarm(WidgetTester tester, {required String forDRF}) async {
   await tester.tap(find.descendant(
