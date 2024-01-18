@@ -8,12 +8,13 @@ import 'package:parameter_page/main.dart' as app;
 import 'package:parameter_page/widgets/parameter_page_scaffold_widget.dart';
 
 Future<void> startParameterPageApp(WidgetTester tester) async {
+  await _setScreenToWide(tester);
   app.main();
   await tester.pumpAndSettle();
   await pumpUntilFound(tester, find.text("Welcome!"));
 }
 
-Future<void> setScreenToWide(WidgetTester tester) async {
+Future<void> _setScreenToWide(WidgetTester tester) async {
   tester.binding.setSurfaceSize(const Size(2560, 1440));
 }
 

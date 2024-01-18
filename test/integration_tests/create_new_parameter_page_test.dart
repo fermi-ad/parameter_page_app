@@ -57,7 +57,6 @@ void main() {
     testWidgets('Cancel New Page, should preserve the existing page',
         (tester) async {
       // Given the test page is loaded and I have added a new comment but did not save the page yet
-      await setScreenToWide(tester);
       await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
       await waitForMainPageToLoad(tester);
