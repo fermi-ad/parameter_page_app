@@ -293,6 +293,10 @@ class MockDpmService implements ACSysServiceAPI {
 
   @override
   Stream<AnalogAlarmStatus> monitorAnalogAlarmProperty(List<String> drfs) {
+    if (useEmptyStream) {
+      return const Stream<AnalogAlarmStatus>.empty();
+    }
+
     if (!_analogAlarmStreams.containsKey(drfs[0])) {
       final AnalogAlarmState initialState;
       if (drfs[0] == "Z:BTE200_TEMP") {
@@ -314,6 +318,7 @@ class MockDpmService implements ACSysServiceAPI {
                 state: _analogAlarmStreams[drfs[0]]!.currentState));
           }));
     }
+
     return _analogAlarmStreams[drfs[0]]!.controller.stream;
   }
 
