@@ -23,8 +23,10 @@ class ParameterAlarmStatusWidget extends StatelessWidget {
     return PopupMenuButton(
         key: Key("parameter_analogalarm_$drf"),
         icon: _buildIcon(context),
-        onSelected: (item) => _handleBypass(context),
+        onSelected: (item) => _handleMenuSelection(item, context),
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                  value: "Enable Alarm", child: Text("Enable Alarm")),
               const PopupMenuItem<String>(
                   value: "By-pass Alarm", child: Text("By-pass Alarm")),
             ]);
@@ -44,6 +46,19 @@ class ParameterAlarmStatusWidget extends StatelessWidget {
         return Icon(Icons.notifications,
             size: iconSize, color: Theme.of(context).colorScheme.onPrimary);
     }
+  }
+
+  void _handleMenuSelection(String item, BuildContext context) {
+    if (item == "By-pass Alarm") {
+      _handleBypass(context);
+    } else if (item == "Enable Alarm") {
+      _handleEnable(context);
+    }
+  }
+
+  void _handleEnable(BuildContext context) {
+    final DataAcquisitionWidget daqWidget = DataAcquisitionWidget.of(context);
+    daqWidget.submit(forDRF: "$drf.ANALOG.ENABLE", newSetting: "1");
   }
 
   void _handleBypass(BuildContext context) {
