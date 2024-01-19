@@ -39,7 +39,7 @@ void _assertByPassAlarm(WidgetTester tester, {required bool isEnabled}) {
       of: find.text("By-pass Alarm"),
       matching: find.byType(PopupMenuItem<String>));
   final menuItemWidget = tester.widget<PopupMenuItem>(finder);
-  expect(menuItemWidget.onTap, isEnabled ? isNotNull : isNull);
+  expect(menuItemWidget.enabled, isEnabled);
 }
 
 void _assertEnableAlarm(WidgetTester tester, {required bool isEnabled}) {
@@ -47,5 +47,5 @@ void _assertEnableAlarm(WidgetTester tester, {required bool isEnabled}) {
       of: find.text("Enable Alarm"),
       matching: find.byType(PopupMenuItem<String>));
   final menuItemWidget = tester.widget<PopupMenuItem>(finder);
-  expect(menuItemWidget.onTap, isEnabled ? isNotNull : isNull);
+  expect(menuItemWidget.enabled, isEnabled);
 }
