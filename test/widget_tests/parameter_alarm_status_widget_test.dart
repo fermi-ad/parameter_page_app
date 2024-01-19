@@ -31,6 +31,31 @@ void main() {
       // ... and enable alarm is disabled
       _assertEnableAlarm(tester, isEnabled: false);
     });
+
+    testWidgets(
+        'Open menu for by-passed device, by-pass is disabled and enable alarm is',
+        (WidgetTester tester) async {
+      // Given a ParameterAlarmStatusWidget has been rendered for an alarming device
+      final app = MaterialApp(
+          home: Scaffold(
+              body: ParameterAlarmStatusWidget(
+                  drf: "G:AMANDA",
+                  status: AnalogAlarmStatus(
+                      refId: 0,
+                      cycle: 0,
+                      timestamp: DateTime.now(),
+                      state: AnalogAlarmState.bypassed))));
+      await tester.pumpWidget(app);
+
+      // When I open the menu
+      await openParameterAlarmMenu(tester, forDRF: "G:AMANDA");
+
+      // Then by-pass is disabled
+      _assertByPassAlarm(tester, isEnabled: false);
+
+      // ... and enable alarm is enabled
+      _assertEnableAlarm(tester, isEnabled: true);
+    });
   });
 }
 
