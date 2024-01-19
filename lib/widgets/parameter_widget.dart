@@ -151,6 +151,11 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
 
   Widget _buildWide(BuildContext context) {
     return Card(
+        shape: _isAlarming
+            ? RoundedRectangleBorder(
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                side: BorderSide(color: Theme.of(context).colorScheme.error))
+            : null,
         child: ConstrainedBox(
             constraints: const BoxConstraints(minHeight: 34.0),
             child: Padding(
@@ -488,6 +493,11 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
       case DisplayUnits.raw:
         return from.data!.rawValue;
     }
+  }
+
+  bool get _isAlarming {
+    return _lastAlarmStatus != null &&
+        _lastAlarmStatus!.state == AnalogAlarmState.alarming;
   }
 
   bool get _deviceHasAnalogAlarmBlock {
