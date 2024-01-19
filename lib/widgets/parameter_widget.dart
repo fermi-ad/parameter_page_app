@@ -435,8 +435,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   Widget _analogAlarmBuilder(context, snapshot) {
-    if (deviceInfo != null &&
-        deviceInfo!.alarm != null &&
+    if (_deviceHasAnalogAlarmBlock &&
         snapshot.connectionState == ConnectionState.active) {
       final newAlarmStatus = snapshot!.data as AnalogAlarmStatus;
 
@@ -490,6 +489,10 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
       case DisplayUnits.raw:
         return from.data!.rawValue;
     }
+  }
+
+  bool get _deviceHasAnalogAlarmBlock {
+    return deviceInfo != null && deviceInfo!.alarm != null;
   }
 
   bool _deviceInfoFailure = false;
