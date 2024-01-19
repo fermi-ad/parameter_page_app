@@ -357,7 +357,14 @@ class MockDpmService implements ACSysServiceAPI {
       {required String forDRF, required DeviceValue newSetting}) async {
     if (forDRF.contains(".ANALOG.ENABLE")) {
       final base = forDRF.split(".")[0];
-      _analogAlarmStreams[base]!.currentState = AnalogAlarmState.bypassed;
+      final scalar = newSetting as DevScalar;
+      if (scalar.value == 0) {
+        _analogAlarmStreams[base]!.currentState = AnalogAlarmState.bypassed;
+      } else if (scalar.value == 1) {
+        _analogAlarmStreams[base]!.currentState = base == "Z:BTE200_TEMP"
+            ? AnalogAlarmState.alarming
+            : AnalogAlarmState.notAlarming;
+      }
     }
 
     if (useEmptyStream) {

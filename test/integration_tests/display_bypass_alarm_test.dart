@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:parameter_page/main.dart';
-import 'package:parameter_page/widgets/parameter_alarm_status_widget.dart';
 
 import 'helpers/assertions.dart';
 import 'helpers/actions.dart';
@@ -11,6 +9,21 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Display Alarm Status', () {
+    testWidgets(
+        'Parameters without an alarm block, do not show analog alarm status',
+        (WidgetTester tester) async {
+      // Given nothing
+      await startParameterPageApp(tester);
+
+      // When the test page is loaded
+      //   and a device with no alarm block is on the page
+      await navigateToTestPage1(tester);
+      await waitForDataToLoadFor(tester, "Z:NO_ALARMS");
+
+      // Then nothing is displayed in the analog alarm column
+      assertAnalogAlarmIndicator(forDRF: "Z:NO_ALARMS", isVisible: false);
+    });
+
     testWidgets('Parameter with no active alarm, display no alarm indicator',
         (tester) async {
       // Given nothing
@@ -155,14 +168,57 @@ void main() {
       // ... and the by-passed indicator is shown
       assertByPassedAlarmStatus(forDRF: "Z:BTE200_TEMP", isVisible: true);
     });
+
+    testWidgets(
+        'By-pass non-alarming device, alarm indicator changes to by-passed',
+        (tester) async {
+      // Given a test page with an alarming device is loaded...
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await waitForDataToLoadFor(tester, "G:AMANDA");
+      assertAlarmStatus(tester, forDRF: "G:AMANDA", isInAlarm: false);
+
+      // When I by-pass the alarm
+      await byPassAlarm(tester, forDRF: "G:AMANDA");
+
+      // Then the by-passed indicator is shown
+      assertByPassedAlarmStatus(forDRF: "G:AMANDA", isVisible: true);
+    });
+
+    testWidgets(
+        'Enable alarm on out-of-tolerance parameter, alarm indicator is displayed',
+        (tester) async {
+      // Given the test page is loaded...
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      assertAlarmStatus(tester, forDRF: "Z:BTE200_TEMP", isInAlarm: true);
+
+      // ... and the alarm for Z:BTE200_TEMP has been by-passed
+      await byPassAlarm(tester, forDRF: "Z:BTE200_TEMP");
+      await waitForDeviceAlarmByPassed(tester, forDRF: "Z:BTE200_TEMP");
+      assertAlarmStatus(tester, forDRF: "Z:BTE200_TEMP", isInAlarm: false);
+
+      // When I re-enable the alarm
+      await enableAlarm(tester, forDRF: "Z:BTE200_TEMP");
+
+      // Then the alarm indicator is shown
+      await waitForDeviceToAlarm(tester, forDRF: "Z:BTE200_TEMP");
+      assertAlarmStatus(tester, forDRF: "Z:BTE200_TEMP", isInAlarm: true);
+    });
   });
 }
 
-Future<void> byPassAlarm(WidgetTester tester, {required String forDRF}) async {
-  await tester.tap(find.descendant(
-      of: find.byKey(Key("parameter_row_$forDRF")),
-      matching: find.byType(ParameterAlarmStatusWidget)));
+Future<void> enableAlarm(WidgetTester tester, {required String forDRF}) async {
+  await openParameterAlarmMenu(tester, forDRF: forDRF);
+  await tester.tap(find.text("Enable Alarm"));
   await tester.pumpAndSettle();
+  await waitForDeviceToAlarm(tester, forDRF: forDRF);
+  await waitForDataToLoadFor(tester, forDRF);
+}
+
+Future<void> byPassAlarm(WidgetTester tester, {required String forDRF}) async {
+  await openParameterAlarmMenu(tester, forDRF: forDRF);
   await tester.tap(find.text("By-pass Alarm"));
   await tester.pumpAndSettle();
   await waitForDeviceAlarmByPassed(tester, forDRF: forDRF);

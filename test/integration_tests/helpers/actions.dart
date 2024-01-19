@@ -556,3 +556,9 @@ Future<void> openSettingsPermissionMenu(WidgetTester tester) async {
       of: widgetFinder, matching: find.byIcon(Icons.expand_more)));
   await tester.pumpAndSettle();
 }
+
+Future<void> openParameterAlarmMenu(WidgetTester tester,
+    {required String forDRF}) async {
+  await tester.tap(find.byKey(Key("parameter_analogalarm_$forDRF")));
+  await tester.pumpAndSettle();
+}

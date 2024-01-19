@@ -677,3 +677,9 @@ void assertByPassedAlarmStatus(
       of: parameterFinder, matching: find.byIcon(Icons.notifications_off));
   expect(alarmIndicatorFinder, isVisible ? findsOneWidget : findsNothing);
 }
+
+void assertAnalogAlarmIndicator(
+    {required String forDRF, required bool isVisible}) {
+  final analogAlarmFinder = find.byKey(Key("parameter_analogalarm_$forDRF"));
+  expect(analogAlarmFinder, isVisible ? findsOneWidget : findsNothing);
+}
