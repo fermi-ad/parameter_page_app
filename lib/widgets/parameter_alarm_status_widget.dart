@@ -35,16 +35,23 @@ class ParameterAlarmStatusWidget extends StatelessWidget {
   _buildIcon(BuildContext context) {
     switch (status.state) {
       case AnalogAlarmState.alarming:
-        return Icon(Icons.notifications_active,
-            color: Theme.of(context).colorScheme.error, size: iconSize);
+        return Tooltip(
+            message: "Alarming",
+            child: Icon(Icons.notifications_active,
+                color: Theme.of(context).colorScheme.error, size: iconSize));
 
       case AnalogAlarmState.bypassed:
-        return Icon(Icons.notifications_off,
-            size: iconSize, color: Theme.of(context).colorScheme.primary);
+        return Tooltip(
+            message: "Alarm by-passed",
+            child: Icon(Icons.notifications_off,
+                size: iconSize, color: Theme.of(context).colorScheme.primary));
 
       case AnalogAlarmState.notAlarming:
-        return Icon(Icons.notifications,
-            size: iconSize, color: Theme.of(context).colorScheme.onPrimary);
+        return Tooltip(
+            message: "Not alarming",
+            child: Icon(Icons.notifications,
+                size: iconSize,
+                color: Theme.of(context).colorScheme.onPrimary));
     }
   }
 
