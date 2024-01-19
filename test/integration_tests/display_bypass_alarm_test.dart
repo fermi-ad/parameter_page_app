@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:parameter_page/main.dart';
-import 'package:parameter_page/widgets/parameter_alarm_status_widget.dart';
 
 import 'helpers/assertions.dart';
 import 'helpers/actions.dart';
@@ -225,12 +223,4 @@ Future<void> byPassAlarm(WidgetTester tester, {required String forDRF}) async {
   await tester.pumpAndSettle();
   await waitForDeviceAlarmByPassed(tester, forDRF: forDRF);
   await waitForDataToLoadFor(tester, forDRF);
-}
-
-Future<void> openParameterAlarmMenu(WidgetTester tester,
-    {required String forDRF}) async {
-  await tester.tap(find.descendant(
-      of: find.byKey(Key("parameter_row_$forDRF")),
-      matching: find.byType(ParameterAlarmStatusWidget)));
-  await tester.pumpAndSettle();
 }
