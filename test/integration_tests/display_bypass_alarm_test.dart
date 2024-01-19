@@ -11,6 +11,21 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Display Alarm Status', () {
+    testWidgets(
+        'Parameters without an alarm block, do not show analog alarm status',
+        (WidgetTester tester) async {
+      // Given nothing
+      await startParameterPageApp(tester);
+
+      // When the test page is loaded
+      //   and a device with no alarm block is on the page
+      await navigateToTestPage1(tester);
+      await waitForDataToLoadFor(tester, "Z:NO_ALARMS");
+
+      // Then nothing is displayed in the analog alarm column
+      assertAnalogAlarmIndicator(forDRF: "Z:NO_ALARMS", isVisible: false);
+    });
+
     testWidgets('Parameter with no active alarm, display no alarm indicator',
         (tester) async {
       // Given nothing
