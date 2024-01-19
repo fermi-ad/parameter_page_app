@@ -25,14 +25,14 @@ class ParameterAlarmStatusWidget extends StatelessWidget {
         icon: _buildIcon(context),
         onSelected: (item) => _handleMenuSelection(item, context),
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              const PopupMenuItem<String>(
+              PopupMenuItem<String>(
                   value: "Enable Alarm",
-                  enabled: false,
-                  child: Text("Enable Alarm")),
-              const PopupMenuItem<String>(
+                  enabled: status.state == AnalogAlarmState.bypassed,
+                  child: const Text("Enable Alarm")),
+              PopupMenuItem<String>(
                   value: "By-pass Alarm",
-                  enabled: true,
-                  child: Text("By-pass Alarm")),
+                  enabled: status.state != AnalogAlarmState.bypassed,
+                  child: const Text("By-pass Alarm")),
             ]);
   }
 
