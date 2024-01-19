@@ -11,15 +11,10 @@ void main() {
         'Open menu for alarming device, by-pass is enabled and enable alarm is not',
         (WidgetTester tester) async {
       // Given a ParameterAlarmStatusWidget has been rendered for an alarming device
-      final app = MaterialApp(
+      const app = MaterialApp(
           home: Scaffold(
               body: ParameterAlarmStatusWidget(
-                  drf: "G:AMANDA",
-                  status: AnalogAlarmStatus(
-                      refId: 0,
-                      cycle: 0,
-                      timestamp: DateTime.now(),
-                      state: AnalogAlarmState.alarming))));
+                  drf: "G:AMANDA", alarmState: AnalogAlarmState.alarming)));
       await tester.pumpWidget(app);
 
       // When I open the menu
@@ -36,15 +31,10 @@ void main() {
         'Open menu for by-passed device, by-pass is disabled and enable alarm is',
         (WidgetTester tester) async {
       // Given a ParameterAlarmStatusWidget has been rendered for an alarming device
-      final app = MaterialApp(
+      const app = MaterialApp(
           home: Scaffold(
               body: ParameterAlarmStatusWidget(
-                  drf: "G:AMANDA",
-                  status: AnalogAlarmStatus(
-                      refId: 0,
-                      cycle: 0,
-                      timestamp: DateTime.now(),
-                      state: AnalogAlarmState.bypassed))));
+                  drf: "G:AMANDA", alarmState: AnalogAlarmState.bypassed)));
       await tester.pumpWidget(app);
 
       // When I open the menu

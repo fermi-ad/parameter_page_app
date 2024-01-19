@@ -5,12 +5,12 @@ import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 class ParameterAlarmStatusWidget extends StatelessWidget {
   static const iconSize = 16.0;
 
-  final AnalogAlarmStatus status;
+  final AnalogAlarmState alarmState;
 
   final String drf;
 
   const ParameterAlarmStatusWidget(
-      {super.key, required this.status, required this.drf});
+      {super.key, required this.alarmState, required this.drf});
 
   @override
   Widget build(BuildContext context) {
@@ -27,17 +27,17 @@ class ParameterAlarmStatusWidget extends StatelessWidget {
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               PopupMenuItem<String>(
                   value: "Enable Alarm",
-                  enabled: status.state == AnalogAlarmState.bypassed,
+                  enabled: alarmState == AnalogAlarmState.bypassed,
                   child: const Text("Enable Alarm")),
               PopupMenuItem<String>(
                   value: "By-pass Alarm",
-                  enabled: status.state != AnalogAlarmState.bypassed,
+                  enabled: alarmState != AnalogAlarmState.bypassed,
                   child: const Text("By-pass Alarm")),
             ]);
   }
 
   _buildIcon(BuildContext context) {
-    switch (status.state) {
+    switch (alarmState) {
       case AnalogAlarmState.alarming:
         return Tooltip(
             message: "Alarming",
