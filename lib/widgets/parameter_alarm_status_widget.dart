@@ -30,19 +30,25 @@ class ParameterAlarmStatusWidget extends StatelessWidget {
     switch (alarmState) {
       case AnalogAlarmState.alarming:
         return Tooltip(
-            message: "By-pass Alarm",
+            message: settingsAllowed
+                ? "By-pass Alarm"
+                : "Alarming (enable settings to by-pass)",
             child: Icon(Icons.notifications_active,
                 color: Theme.of(context).colorScheme.error, size: iconSize));
 
       case AnalogAlarmState.bypassed:
         return Tooltip(
-            message: "Enable Alarm",
+            message: settingsAllowed
+                ? "Enable Alarm"
+                : "Alarm By-passed (enable settings to enable alarm)",
             child: Icon(Icons.notifications_off,
                 size: iconSize, color: Theme.of(context).colorScheme.primary));
 
       case AnalogAlarmState.notAlarming:
         return Tooltip(
-            message: "By-pass Alarm",
+            message: settingsAllowed
+                ? "By-pass Alarm"
+                : "Not Alarming (enable settings to by-pass)",
             child: Icon(Icons.notifications,
                 size: iconSize,
                 color: Theme.of(context).colorScheme.onPrimary));
