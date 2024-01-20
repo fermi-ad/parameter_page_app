@@ -449,7 +449,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
       return Container(
           key: Key("parameter_analogalarm_${widget.drf}"),
           child: ParameterAlarmStatusWidget(
-              alarmState: newAlarmStatus.state, drf: widget.drf));
+              settingsAllowed: widget.settingsAllowed,
+              alarmState: newAlarmStatus.state,
+              drf: widget.drf));
     } else {
       return const Padding(
           padding: EdgeInsets.fromLTRB(8, 0, 0, 0), child: SizedBox(width: 40));

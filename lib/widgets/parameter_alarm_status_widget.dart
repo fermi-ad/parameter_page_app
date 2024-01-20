@@ -9,8 +9,13 @@ class ParameterAlarmStatusWidget extends StatelessWidget {
 
   final String drf;
 
+  final bool settingsAllowed;
+
   const ParameterAlarmStatusWidget(
-      {super.key, required this.alarmState, required this.drf});
+      {super.key,
+      required this.alarmState,
+      required this.drf,
+      required this.settingsAllowed});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +23,7 @@ class ParameterAlarmStatusWidget extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
         child: IconButton(
             icon: _buildIcon(context),
-            onPressed: () => _handleToggle(context)));
+            onPressed: settingsAllowed ? () => _handleToggle(context) : null));
   }
 
   _buildIcon(BuildContext context) {
