@@ -10,6 +10,21 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Display Alarm Status', () {
+    testWidgets('Settings are disabled, alarm toggle button is disabled',
+        (WidgetTester tester) async {
+      // Given settings are disabled
+      await startParameterPageApp(tester);
+
+      // When the test page is loaded
+      //   and a device with no alarm block is on the page
+      await navigateToTestPage1(tester);
+      await waitForDataToLoadFor(tester, "Z:NO_ALARMS");
+
+      // Then the alarm toggle button is disabled
+      assertAnalogAlarmToggle(tester,
+          forDRF: "Z:BTE200_TEMP", isEnabled: false);
+    });
+
     testWidgets(
         'Parameters without an alarm block, do not show analog alarm status',
         (WidgetTester tester) async {
