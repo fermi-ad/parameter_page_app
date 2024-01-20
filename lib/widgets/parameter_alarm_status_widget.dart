@@ -22,6 +22,7 @@ class ParameterAlarmStatusWidget extends StatelessWidget {
   PopupMenuButton _buildAlarmActionsMenu(BuildContext context) {
     return PopupMenuButton(
         key: Key("parameter_analogalarm_$drf"),
+        enabled: true,
         icon: _buildIcon(context),
         onSelected: (item) => _handleMenuSelection(item, context),
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[

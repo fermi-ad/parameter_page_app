@@ -151,7 +151,6 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
 
   Widget _buildWide(BuildContext context) {
     return Card(
-        shape: _buildCardBorder(),
         child: ConstrainedBox(
             constraints: const BoxConstraints(minHeight: 34.0),
             child: Padding(
@@ -167,35 +166,24 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
 
   Widget _buildNarrow(BuildContext context) {
     return Card(
-        shape: _buildCardBorder(),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            _buildName(),
-            _buildDescription(),
-            const SizedBox(height: 10.0),
-            Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [Expanded(child: _buildProperties(wide: false))]),
-            Visibility(
-                visible: _displayExtendedStatus,
-                child: _buildExtendedStatusRow()),
-            Row(children: [
-              const Spacer(),
-              _buildExpandOrCollapseExtendedStatusButton(),
-              const Spacer()
-            ])
-          ]),
-        ));
-  }
-
-  RoundedRectangleBorder? _buildCardBorder() {
-    return _isAlarming
-        ? RoundedRectangleBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-            side: BorderSide(color: Theme.of(context).colorScheme.error))
-        : null;
+      padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        _buildName(),
+        _buildDescription(),
+        const SizedBox(height: 10.0),
+        Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [Expanded(child: _buildProperties(wide: false))]),
+        Visibility(
+            visible: _displayExtendedStatus, child: _buildExtendedStatusRow()),
+        Row(children: [
+          const Spacer(),
+          _buildExpandOrCollapseExtendedStatusButton(),
+          const Spacer()
+        ])
+      ]),
+    ));
   }
 
   Widget _buildParameterDetailsRow() {
@@ -500,11 +488,6 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
       case DisplayUnits.raw:
         return from.data!.rawValue;
     }
-  }
-
-  bool get _isAlarming {
-    return _lastAlarmStatus != null &&
-        _lastAlarmStatus!.state == AnalogAlarmState.alarming;
   }
 
   bool get _deviceHasAnalogAlarmBlock {
