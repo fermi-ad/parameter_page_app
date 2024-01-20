@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:parameter_page/main.dart';
+import 'package:parameter_page/services/settings_permission/settings_permission_service.dart';
 
 import 'helpers/assertions.dart';
 import 'helpers/actions.dart';
@@ -159,6 +160,10 @@ void main() {
       await waitForDeviceToAlarm(tester, forDRF: "Z:BTE200_TEMP");
       assertAlarmStatus(tester, forDRF: "Z:BTE200_TEMP", isInAlarm: true);
 
+      // ... and settings are enabled
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.indefinitely);
+
       // When I by-pass the alarm
       await toggleAnalogAlarm(tester, forDRF: "Z:BTE200_TEMP");
       await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
@@ -180,6 +185,10 @@ void main() {
       await waitForDataToLoadFor(tester, "G:AMANDA");
       assertAlarmStatus(tester, forDRF: "G:AMANDA", isInAlarm: false);
 
+      // ... and settings are enabled
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.indefinitely);
+
       // When I by-pass the alarm
       await toggleAnalogAlarm(tester, forDRF: "G:AMANDA");
       await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
@@ -198,6 +207,10 @@ void main() {
       await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
       await waitForDeviceToAlarm(tester, forDRF: "Z:BTE200_TEMP");
       assertAlarmStatus(tester, forDRF: "Z:BTE200_TEMP", isInAlarm: true);
+
+      // ... and settings are enabled
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.indefinitely);
 
       // ... and the alarm for Z:BTE200_TEMP has been by-passed
       await toggleAnalogAlarm(tester, forDRF: "Z:BTE200_TEMP");
