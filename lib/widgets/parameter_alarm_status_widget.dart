@@ -16,25 +16,9 @@ class ParameterAlarmStatusWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
-        child: _buildAlarmActionsMenu(context));
-  }
-
-  PopupMenuButton _buildAlarmActionsMenu(BuildContext context) {
-    return PopupMenuButton(
-        key: Key("parameter_analogalarm_$drf"),
-        enabled: true,
-        icon: _buildIcon(context),
-        onSelected: (item) => _handleMenuSelection(item, context),
-        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              PopupMenuItem<String>(
-                  value: "Enable Alarm",
-                  enabled: alarmState == AnalogAlarmState.bypassed,
-                  child: const Text("Enable Alarm")),
-              PopupMenuItem<String>(
-                  value: "By-pass Alarm",
-                  enabled: alarmState != AnalogAlarmState.bypassed,
-                  child: const Text("By-pass Alarm")),
-            ]);
+        child: IconButton(
+            icon: _buildIcon(context),
+            onPressed: () => _handleToggle(context)));
   }
 
   _buildIcon(BuildContext context) {
@@ -60,11 +44,11 @@ class ParameterAlarmStatusWidget extends StatelessWidget {
     }
   }
 
-  void _handleMenuSelection(String item, BuildContext context) {
-    if (item == "By-pass Alarm") {
-      _handleBypass(context);
-    } else if (item == "Enable Alarm") {
+  void _handleToggle(BuildContext context) {
+    if (alarmState == AnalogAlarmState.bypassed) {
       _handleEnable(context);
+    } else {
+      _handleBypass(context);
     }
   }
 

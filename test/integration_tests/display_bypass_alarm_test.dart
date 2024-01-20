@@ -160,7 +160,9 @@ void main() {
       assertAlarmStatus(tester, forDRF: "Z:BTE200_TEMP", isInAlarm: true);
 
       // When I by-pass the alarm
-      await byPassAlarm(tester, forDRF: "Z:BTE200_TEMP");
+      await toggleAnalogAlarm(tester, forDRF: "Z:BTE200_TEMP");
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      await waitForDeviceAlarmByPassed(tester, forDRF: "Z:BTE200_TEMP");
 
       // Then the alarm inicator goes away
       assertAlarmStatus(tester, forDRF: "Z:BTE200_TEMP", isInAlarm: false);
@@ -179,7 +181,9 @@ void main() {
       assertAlarmStatus(tester, forDRF: "G:AMANDA", isInAlarm: false);
 
       // When I by-pass the alarm
-      await byPassAlarm(tester, forDRF: "G:AMANDA");
+      await toggleAnalogAlarm(tester, forDRF: "G:AMANDA");
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      await waitForDeviceAlarmByPassed(tester, forDRF: "G:AMANDA");
 
       // Then the by-passed indicator is shown
       assertByPassedAlarmStatus(forDRF: "G:AMANDA", isVisible: true);
@@ -192,35 +196,22 @@ void main() {
       await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
       await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      await waitForDeviceToAlarm(tester, forDRF: "Z:BTE200_TEMP");
       assertAlarmStatus(tester, forDRF: "Z:BTE200_TEMP", isInAlarm: true);
 
       // ... and the alarm for Z:BTE200_TEMP has been by-passed
-      await byPassAlarm(tester, forDRF: "Z:BTE200_TEMP");
+      await toggleAnalogAlarm(tester, forDRF: "Z:BTE200_TEMP");
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
       await waitForDeviceAlarmByPassed(tester, forDRF: "Z:BTE200_TEMP");
       assertAlarmStatus(tester, forDRF: "Z:BTE200_TEMP", isInAlarm: false);
 
       // When I re-enable the alarm
-      await enableAlarm(tester, forDRF: "Z:BTE200_TEMP");
+      await toggleAnalogAlarm(tester, forDRF: "Z:BTE200_TEMP");
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      await waitForDeviceToAlarm(tester, forDRF: "Z:BTE200_TEMP");
 
       // Then the alarm indicator is shown
-      await waitForDeviceToAlarm(tester, forDRF: "Z:BTE200_TEMP");
       assertAlarmStatus(tester, forDRF: "Z:BTE200_TEMP", isInAlarm: true);
     });
   });
-}
-
-Future<void> enableAlarm(WidgetTester tester, {required String forDRF}) async {
-  await openParameterAlarmMenu(tester, forDRF: forDRF);
-  await tester.tap(find.text("Enable Alarm"));
-  await tester.pumpAndSettle();
-  await waitForDeviceToAlarm(tester, forDRF: forDRF);
-  await waitForDataToLoadFor(tester, forDRF);
-}
-
-Future<void> byPassAlarm(WidgetTester tester, {required String forDRF}) async {
-  await openParameterAlarmMenu(tester, forDRF: forDRF);
-  await tester.tap(find.text("By-pass Alarm"));
-  await tester.pumpAndSettle();
-  await waitForDeviceAlarmByPassed(tester, forDRF: forDRF);
-  await waitForDataToLoadFor(tester, forDRF);
 }
