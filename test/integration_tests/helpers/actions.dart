@@ -557,7 +557,7 @@ Future<void> openSettingsPermissionMenu(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> openParameterAlarmMenu(WidgetTester tester,
+Future<void> toggleAnalogAlarm(WidgetTester tester,
     {required String forDRF}) async {
   await tester.tap(find.byKey(Key("parameter_analogalarm_$forDRF")));
   await tester.pumpAndSettle();

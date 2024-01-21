@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:parameter_page/main.dart';
+import 'package:parameter_page/services/settings_permission/settings_permission_service.dart';
 
 import 'helpers/assertions.dart';
 import 'helpers/actions.dart';
@@ -9,6 +10,21 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Display Alarm Status', () {
+    testWidgets('Settings are disabled, alarm toggle button is disabled',
+        (WidgetTester tester) async {
+      // Given settings are disabled
+      await startParameterPageApp(tester);
+
+      // When the test page is loaded
+      //   and a device with no alarm block is on the page
+      await navigateToTestPage1(tester);
+      await waitForDataToLoadFor(tester, "Z:NO_ALARMS");
+
+      // Then the alarm toggle button is disabled
+      assertAnalogAlarmToggle(tester,
+          forDRF: "Z:BTE200_TEMP", isEnabled: false);
+    });
+
     testWidgets(
         'Parameters without an alarm block, do not show analog alarm status',
         (WidgetTester tester) async {
@@ -159,8 +175,14 @@ void main() {
       await waitForDeviceToAlarm(tester, forDRF: "Z:BTE200_TEMP");
       assertAlarmStatus(tester, forDRF: "Z:BTE200_TEMP", isInAlarm: true);
 
+      // ... and settings are enabled
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.indefinitely);
+
       // When I by-pass the alarm
-      await byPassAlarm(tester, forDRF: "Z:BTE200_TEMP");
+      await toggleAnalogAlarm(tester, forDRF: "Z:BTE200_TEMP");
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      await waitForDeviceAlarmByPassed(tester, forDRF: "Z:BTE200_TEMP");
 
       // Then the alarm inicator goes away
       assertAlarmStatus(tester, forDRF: "Z:BTE200_TEMP", isInAlarm: false);
@@ -178,8 +200,14 @@ void main() {
       await waitForDataToLoadFor(tester, "G:AMANDA");
       assertAlarmStatus(tester, forDRF: "G:AMANDA", isInAlarm: false);
 
+      // ... and settings are enabled
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.indefinitely);
+
       // When I by-pass the alarm
-      await byPassAlarm(tester, forDRF: "G:AMANDA");
+      await toggleAnalogAlarm(tester, forDRF: "G:AMANDA");
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      await waitForDeviceAlarmByPassed(tester, forDRF: "G:AMANDA");
 
       // Then the by-passed indicator is shown
       assertByPassedAlarmStatus(forDRF: "G:AMANDA", isVisible: true);
@@ -192,35 +220,26 @@ void main() {
       await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
       await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      await waitForDeviceToAlarm(tester, forDRF: "Z:BTE200_TEMP");
       assertAlarmStatus(tester, forDRF: "Z:BTE200_TEMP", isInAlarm: true);
 
+      // ... and settings are enabled
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.indefinitely);
+
       // ... and the alarm for Z:BTE200_TEMP has been by-passed
-      await byPassAlarm(tester, forDRF: "Z:BTE200_TEMP");
+      await toggleAnalogAlarm(tester, forDRF: "Z:BTE200_TEMP");
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
       await waitForDeviceAlarmByPassed(tester, forDRF: "Z:BTE200_TEMP");
       assertAlarmStatus(tester, forDRF: "Z:BTE200_TEMP", isInAlarm: false);
 
       // When I re-enable the alarm
-      await enableAlarm(tester, forDRF: "Z:BTE200_TEMP");
+      await toggleAnalogAlarm(tester, forDRF: "Z:BTE200_TEMP");
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      await waitForDeviceToAlarm(tester, forDRF: "Z:BTE200_TEMP");
 
       // Then the alarm indicator is shown
-      await waitForDeviceToAlarm(tester, forDRF: "Z:BTE200_TEMP");
       assertAlarmStatus(tester, forDRF: "Z:BTE200_TEMP", isInAlarm: true);
     });
   });
-}
-
-Future<void> enableAlarm(WidgetTester tester, {required String forDRF}) async {
-  await openParameterAlarmMenu(tester, forDRF: forDRF);
-  await tester.tap(find.text("Enable Alarm"));
-  await tester.pumpAndSettle();
-  await waitForDeviceToAlarm(tester, forDRF: forDRF);
-  await waitForDataToLoadFor(tester, forDRF);
-}
-
-Future<void> byPassAlarm(WidgetTester tester, {required String forDRF}) async {
-  await openParameterAlarmMenu(tester, forDRF: forDRF);
-  await tester.tap(find.text("By-pass Alarm"));
-  await tester.pumpAndSettle();
-  await waitForDeviceAlarmByPassed(tester, forDRF: forDRF);
-  await waitForDataToLoadFor(tester, forDRF);
 }
