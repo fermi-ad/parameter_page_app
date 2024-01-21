@@ -88,6 +88,7 @@ class MockDpmService implements ACSysServiceAPI {
                   tolerance: "10.00",
                   min: "62.00",
                   max: "82.00"),
+              digitalAlarm: DeviceInfoDigitalAlarm(),
               basicStatus: const DeviceInfoBasicStatus(
                   onOffProperty: BasicStatusProperty(
                       invert: false,

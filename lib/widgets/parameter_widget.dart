@@ -96,6 +96,10 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     return deviceInfo?.basicStatus != null;
   }
 
+  bool get hasDigitalAlarmProperty {
+    return deviceInfo?.digitalAlarm != null;
+  }
+
   String? get readingUnits {
     switch (widget.displayUnits) {
       case DisplayUnits.commonUnits:
@@ -282,7 +286,15 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                 child: StreamBuilder(
                     stream:
                         widget.dpm.monitorDigitalStatusDevices([widget.drf]),
-                    builder: _basicStatusBuilder)))
+                    builder: _basicStatusBuilder))),
+        Visibility(
+            visible: hasDigitalAlarmProperty,
+            child: Container(
+                key: Key("parameter_digitalalarm_${widget.drf}"),
+                child: ParameterAlarmStatusWidget(
+                    drf: widget.drf,
+                    alarmState: AlarmState.notAlarming,
+                    settingsAllowed: widget.settingsAllowed)))
       ]),
       Visibility(
           visible: widget.displayAlarmDetails,
