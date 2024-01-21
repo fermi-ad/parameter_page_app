@@ -328,6 +328,11 @@ class MockDpmService implements ACSysServiceAPI {
         isByPassed ? AlarmState.bypassed : AlarmState.alarming;
   }
 
+  void raiseDigitalAlarm({required String forDRF, bool isByPassed = false}) {
+    _digitalAlarmStreams[forDRF]!.currentState =
+        isByPassed ? AlarmState.bypassed : AlarmState.alarming;
+  }
+
   void noAlarm({required String forDRF, bool isByPassed = false}) {
     _analogAlarmStreams[forDRF]!.currentState =
         isByPassed ? AlarmState.bypassed : AlarmState.notAlarming;
@@ -454,6 +459,8 @@ class MockDpmService implements ACSysServiceAPI {
       StreamController<Reading>.broadcast();
 
   final Map<String, MockAlarmStream> _analogAlarmStreams = {};
+
+  final Map<String, MockAlarmStream> _digitalAlarmStreams = {};
 
   DevScalar _settingValue = const DevScalar(0.0);
 

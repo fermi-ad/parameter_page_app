@@ -59,7 +59,7 @@ void main() {
           forDRF: "G:AMANDA", isInState: AlarmState.notAlarming);
     }, semanticsEnabled: false);
 
-    testWidgets('Parameter is in alarm, display alarm indicator',
+    testWidgets('Parameter goes into alarm, display alarm indicator (analog)',
         (tester) async {
       // Given the test page is loaded
       //   and a device with no active alarm is on the page
@@ -75,6 +75,25 @@ void main() {
 
       // Then the alarm indicator is displayed
       assertAnalogAlarmStatus(tester, forDRF: "G:AMANDA", isInAlarm: true);
+    }, semanticsEnabled: false);
+
+    testWidgets('Parameter goes into alarm, display alarm indicator (digital)',
+        (tester) async {
+      // Given the test page is loaded
+      //   and a device with no active alarm is on the page
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await waitForDataToLoadFor(tester, "G:AMANDA");
+      assertParametersAreOnPage(["G:AMANDA"]);
+
+      // When an alarm is raised for G:AMANDA
+      mockDPMService!.raiseDigitalAlarm(forDRF: "G:AMANDA");
+      await waitForDeviceToAlarmDigital(tester, forDRF: "G:AMANDA");
+      await waitForDataToLoadFor(tester, "G:AMANDA");
+
+      // Then the alarm indicator is displayed
+      assertDigitalAlarmStatus(tester,
+          forDRF: "G:AMANDA", isInState: AlarmState.alarming);
     }, semanticsEnabled: false);
 
     testWidgets('Parameter goes out of alarm, alarm indicator goes away',
