@@ -55,6 +55,7 @@ class MockDpmService implements ACSysServiceAPI {
                   tolerance: "10.00",
                   min: "62.00",
                   max: "82.00"),
+              digitalAlarm: DeviceInfoDigitalAlarm(),
               basicStatus: const DeviceInfoBasicStatus(
                   onOffProperty: BasicStatusProperty(
                       invert: false,
@@ -321,6 +322,37 @@ class MockDpmService implements ACSysServiceAPI {
     }
 
     return _analogAlarmStreams[drfs[0]]!.controller.stream;
+  }
+
+  @override
+  Stream<AlarmStatus> monitorDigitalAlarmProperty(List<String> drfs) {
+    if (useEmptyStream) {
+      return const Stream<AlarmStatus>.empty();
+    }
+
+    if (!_digitalAlarmStreams.containsKey(drfs[0])) {
+      final AlarmState initialState;
+      if (drfs[0] == "Z:BTE200_TEMP") {
+        initialState = AlarmState.alarming;
+      } else if (drfs[0] == "G:AMANDA") {
+        initialState = AlarmState.notAlarming;
+      } else {
+        initialState = AlarmState.notAlarming;
+      }
+
+      _digitalAlarmStreams[drfs[0]] = MockAlarmStream(
+          currentState: initialState,
+          controller: StreamController<AlarmStatus>.broadcast(),
+          timer: Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+            _digitalAlarmStreams[drfs[0]]!.controller.add(AlarmStatus(
+                refId: 0,
+                cycle: 0,
+                timestamp: DateTime.now(),
+                state: _digitalAlarmStreams[drfs[0]]!.currentState));
+          }));
+    }
+
+    return _digitalAlarmStreams[drfs[0]]!.controller.stream;
   }
 
   void raiseAlarm({required String forDRF, bool isByPassed = false}) {

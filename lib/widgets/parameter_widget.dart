@@ -289,12 +289,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                     builder: _basicStatusBuilder))),
         Visibility(
             visible: hasDigitalAlarmProperty,
-            child: Container(
-                key: Key("parameter_digitalalarm_${widget.drf}"),
-                child: ParameterAlarmStatusWidget(
-                    drf: widget.drf,
-                    alarmState: AlarmState.notAlarming,
-                    settingsAllowed: widget.settingsAllowed)))
+            child: StreamBuilder(
+                stream: widget.dpm.monitorDigitalAlarmDevices([widget.drf]),
+                builder: _digitalAlarmBuilder))
       ]),
       Visibility(
           visible: widget.displayAlarmDetails,
@@ -470,6 +467,23 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     }
   }
 
+  Widget _digitalAlarmBuilder(BuildContext context, AsyncSnapshot snapshot) {
+    if (_deviceHasDigitalAlarmBlock &&
+        snapshot.connectionState == ConnectionState.active) {
+      final newAlarmStatus = snapshot.data as AlarmStatus;
+
+      return Container(
+          key: Key("parameter_digitalalarm_${widget.drf}"),
+          child: ParameterAlarmStatusWidget(
+              settingsAllowed: widget.settingsAllowed,
+              alarmState: newAlarmStatus.state,
+              drf: widget.drf));
+    } else {
+      return const Padding(
+          padding: EdgeInsets.fromLTRB(8, 0, 0, 0), child: SizedBox(width: 40));
+    }
+  }
+
   Widget _buildParam(BuildContext context, String? value, String? units,
       {required Key key, bool isAlarming = false}) {
     return value == null
@@ -508,6 +522,10 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
 
   bool get _deviceHasAnalogAlarmBlock {
     return deviceInfo != null && deviceInfo!.alarm != null;
+  }
+
+  bool get _deviceHasDigitalAlarmBlock {
+    return deviceInfo != null && deviceInfo!.digitalAlarm != null;
   }
 
   bool _deviceInfoFailure = false;

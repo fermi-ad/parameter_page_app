@@ -27,6 +27,10 @@ class DataAcquisitionWidget extends InheritedWidget {
     return service.monitorAnalogAlarmProperty(drfs);
   }
 
+  Stream<AlarmStatus> monitorDigitalAlarmDevices(List<String> drfs) {
+    return service.monitorDigitalAlarmProperty(drfs);
+  }
+
   bool isACNETDRF(String val) {
     var drfRegEx = RegExp(r"^[A-Za-z][:_|][A-Za-z0-9@,]{1,255}$");
 
