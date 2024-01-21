@@ -23,7 +23,7 @@ class DataAcquisitionWidget extends InheritedWidget {
     return service.monitorDigitalStatusDevices(drfs);
   }
 
-  Stream<AnalogAlarmStatus> monitorAnalogAlarmDevices(List<String> drfs) {
+  Stream<AlarmStatus> monitorAnalogAlarmDevices(List<String> drfs) {
     return service.monitorAnalogAlarmProperty(drfs);
   }
 

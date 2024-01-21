@@ -5,7 +5,7 @@ import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 class ParameterAlarmStatusWidget extends StatelessWidget {
   static const iconSize = 16.0;
 
-  final AnalogAlarmState alarmState;
+  final AlarmState alarmState;
 
   final String drf;
 
@@ -28,7 +28,7 @@ class ParameterAlarmStatusWidget extends StatelessWidget {
 
   _buildIcon(BuildContext context) {
     switch (alarmState) {
-      case AnalogAlarmState.alarming:
+      case AlarmState.alarming:
         return Tooltip(
             message: settingsAllowed
                 ? "By-pass Alarm"
@@ -36,7 +36,7 @@ class ParameterAlarmStatusWidget extends StatelessWidget {
             child: Icon(Icons.notifications_active,
                 color: Theme.of(context).colorScheme.error, size: iconSize));
 
-      case AnalogAlarmState.bypassed:
+      case AlarmState.bypassed:
         return Tooltip(
             message: settingsAllowed
                 ? "Enable Alarm"
@@ -44,7 +44,7 @@ class ParameterAlarmStatusWidget extends StatelessWidget {
             child: Icon(Icons.notifications_off,
                 size: iconSize, color: Theme.of(context).colorScheme.primary));
 
-      case AnalogAlarmState.notAlarming:
+      case AlarmState.notAlarming:
         return Tooltip(
             message: settingsAllowed
                 ? "By-pass Alarm"
@@ -56,7 +56,7 @@ class ParameterAlarmStatusWidget extends StatelessWidget {
   }
 
   void _handleToggle(BuildContext context) {
-    if (alarmState == AnalogAlarmState.bypassed) {
+    if (alarmState == AlarmState.bypassed) {
       _handleEnable(context);
     } else {
       _handleBypass(context);

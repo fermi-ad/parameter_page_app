@@ -292,26 +292,26 @@ class MockDpmService implements ACSysServiceAPI {
   }
 
   @override
-  Stream<AnalogAlarmStatus> monitorAnalogAlarmProperty(List<String> drfs) {
+  Stream<AlarmStatus> monitorAnalogAlarmProperty(List<String> drfs) {
     if (useEmptyStream) {
-      return const Stream<AnalogAlarmStatus>.empty();
+      return const Stream<AlarmStatus>.empty();
     }
 
     if (!_analogAlarmStreams.containsKey(drfs[0])) {
-      final AnalogAlarmState initialState;
+      final AlarmState initialState;
       if (drfs[0] == "Z:BTE200_TEMP") {
-        initialState = AnalogAlarmState.alarming;
+        initialState = AlarmState.alarming;
       } else if (drfs[0] == "Z:NO_SET") {
-        initialState = AnalogAlarmState.bypassed;
+        initialState = AlarmState.bypassed;
       } else {
-        initialState = AnalogAlarmState.notAlarming;
+        initialState = AlarmState.notAlarming;
       }
 
       _analogAlarmStreams[drfs[0]] = MockAlarmStream(
           currentState: initialState,
-          controller: StreamController<AnalogAlarmStatus>.broadcast(),
+          controller: StreamController<AlarmStatus>.broadcast(),
           timer: Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-            _analogAlarmStreams[drfs[0]]!.controller.add(AnalogAlarmStatus(
+            _analogAlarmStreams[drfs[0]]!.controller.add(AlarmStatus(
                 refId: 0,
                 cycle: 0,
                 timestamp: DateTime.now(),
@@ -324,12 +324,12 @@ class MockDpmService implements ACSysServiceAPI {
 
   void raiseAlarm({required String forDRF, bool isByPassed = false}) {
     _analogAlarmStreams[forDRF]!.currentState =
-        isByPassed ? AnalogAlarmState.bypassed : AnalogAlarmState.alarming;
+        isByPassed ? AlarmState.bypassed : AlarmState.alarming;
   }
 
   void noAlarm({required String forDRF, bool isByPassed = false}) {
     _analogAlarmStreams[forDRF]!.currentState =
-        isByPassed ? AnalogAlarmState.bypassed : AnalogAlarmState.notAlarming;
+        isByPassed ? AlarmState.bypassed : AlarmState.notAlarming;
   }
 
   void succeedAllPendingSettings() {
@@ -359,11 +359,11 @@ class MockDpmService implements ACSysServiceAPI {
       final base = forDRF.split(".")[0];
       final scalar = newSetting as DevScalar;
       if (scalar.value == 0) {
-        _analogAlarmStreams[base]!.currentState = AnalogAlarmState.bypassed;
+        _analogAlarmStreams[base]!.currentState = AlarmState.bypassed;
       } else if (scalar.value == 1) {
         _analogAlarmStreams[base]!.currentState = base == "Z:BTE200_TEMP"
-            ? AnalogAlarmState.alarming
-            : AnalogAlarmState.notAlarming;
+            ? AlarmState.alarming
+            : AlarmState.notAlarming;
       }
     }
 
@@ -462,8 +462,8 @@ class MockDpmService implements ACSysServiceAPI {
 }
 
 class MockAlarmStream {
-  StreamController<AnalogAlarmStatus> controller;
-  AnalogAlarmState currentState;
+  StreamController<AlarmStatus> controller;
+  AlarmState currentState;
   Timer timer;
 
   MockAlarmStream(

@@ -409,7 +409,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
           context, _extractValueString(from: snapshot), readingUnits,
           key: Key("parameter_reading_${widget.drf}"),
           isAlarming: _lastAlarmStatus != null &&
-              _lastAlarmStatus!.state == AnalogAlarmState.alarming);
+              _lastAlarmStatus!.state == AlarmState.alarming);
     } else {
       return _buildParam(context, null, readingUnits,
           key: Key("parameter_nullreading_${widget.drf}"));
@@ -437,7 +437,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   Widget _analogAlarmBuilder(context, snapshot) {
     if (_deviceHasAnalogAlarmBlock &&
         snapshot.connectionState == ConnectionState.active) {
-      final newAlarmStatus = snapshot!.data as AnalogAlarmStatus;
+      final newAlarmStatus = snapshot!.data as AlarmStatus;
 
       if (_lastAlarmStatus == null ||
           newAlarmStatus.state != _lastAlarmStatus!.state) {
@@ -500,5 +500,5 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
 
   bool _deviceInfoFailure = false;
 
-  AnalogAlarmStatus? _lastAlarmStatus;
+  AlarmStatus? _lastAlarmStatus;
 }
