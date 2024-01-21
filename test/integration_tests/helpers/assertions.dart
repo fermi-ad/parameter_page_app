@@ -684,6 +684,12 @@ void assertAnalogAlarmIndicator(
   expect(analogAlarmFinder, isVisible ? findsOneWidget : findsNothing);
 }
 
+void assertDigitalAlarmIndicator(
+    {required String forDRF, required bool isVisible}) {
+  final digitalAlarmFinder = find.byKey(Key("parameter_digitalalarm_$forDRF"));
+  expect(digitalAlarmFinder, isVisible ? findsOneWidget : findsNothing);
+}
+
 void assertAnalogAlarmToggle(WidgetTester tester,
     {required String forDRF, required bool isEnabled}) {
   final button = tester.widget<IconButton>(find.descendant(

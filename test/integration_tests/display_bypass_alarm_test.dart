@@ -25,8 +25,7 @@ void main() {
           forDRF: "Z:BTE200_TEMP", isEnabled: false);
     });
 
-    testWidgets(
-        'Parameters without an alarm block, do not show analog alarm status',
+    testWidgets('Parameters without an alarm block, do not show alarm status',
         (WidgetTester tester) async {
       // Given nothing
       await startParameterPageApp(tester);
@@ -38,6 +37,7 @@ void main() {
 
       // Then nothing is displayed in the analog alarm column
       assertAnalogAlarmIndicator(forDRF: "Z:NO_ALARMS", isVisible: false);
+      assertDigitalAlarmIndicator(forDRF: "Z:NO_ALARMS", isVisible: false);
     });
 
     testWidgets('Parameter with no active alarm, display no alarm indicator',
