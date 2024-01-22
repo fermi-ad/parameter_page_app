@@ -74,6 +74,7 @@ void main() {
         (WidgetTester tester) async {
       // Given nothing...
       // When I instantiate and display a ParameterEntry with showAlarmDetails = false
+      await tester.binding.setSurfaceSize(const Size(2560, 1440));
       Scaffold scaffold = Scaffold(
           body: DataAcquisitionWidget(
               service: MockDpmService(useEmptyStream: true),
@@ -95,6 +96,7 @@ void main() {
         (WidgetTester tester) async {
       // Given a parameter with no alarms block (Z:NO_ALARMS)
       // When I instantiate and display a ParameterWidget with showAlarmDetails = true
+      await tester.binding.setSurfaceSize(const Size(2560, 1440));
       MaterialApp app = MaterialApp(
           home: Scaffold(
               body: DataAcquisitionWidget(
@@ -116,6 +118,7 @@ void main() {
         (WidgetTester tester) async {
       // Given nothing...
       // When I instantiate and display a ParameterEntry with showAlarmDetails = true
+      await tester.binding.setSurfaceSize(const Size(2560, 1440));
       MaterialApp app = MaterialApp(
           home: Scaffold(
               body: DataAcquisitionWidget(

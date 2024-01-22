@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_controls_core/flutter_controls_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/widgets/comment_entry_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
@@ -643,12 +644,12 @@ void assertSettingsPermissionTimer(
   }
 }
 
-void assertAlarmStatus(WidgetTester tester,
+void assertAnalogAlarmStatus(WidgetTester tester,
     {required String forDRF, required bool isInAlarm}) {
-  final parameterFinder = find.byKey(Key("parameter_row_$forDRF"));
+  final analogAlarmFinder = find.byKey(Key("parameter_analogalarm_$forDRF"));
 
   final alarmIndicatorFinder = find.descendant(
-      of: parameterFinder, matching: find.byIcon(Icons.notifications_active));
+      of: analogAlarmFinder, matching: find.byIcon(Icons.notifications_active));
   expect(alarmIndicatorFinder, isInAlarm ? findsOneWidget : findsNothing);
 
   var brightness =
@@ -670,6 +671,30 @@ void assertAlarmStatus(WidgetTester tester,
   }
 }
 
+void assertDigitalAlarmStatus(WidgetTester tester,
+    {required String forDRF, required AlarmState isInState}) {
+  final digitalAlarmFinder = find.byKey(Key("parameter_digitalalarm_$forDRF"));
+
+  switch (isInState) {
+    case AlarmState.alarming:
+      final inAlarmIndicatorFinder = find.descendant(
+          of: digitalAlarmFinder,
+          matching: find.byIcon(Icons.notifications_active));
+      expect(inAlarmIndicatorFinder, findsOneWidget);
+
+    case AlarmState.notAlarming:
+      final noAlarmIndicatorFinder = find.descendant(
+          of: digitalAlarmFinder, matching: find.byIcon(Icons.notifications));
+      expect(noAlarmIndicatorFinder, findsOneWidget);
+
+    case AlarmState.bypassed:
+      final byPassedAlarmIndicatorFinder = find.descendant(
+          of: digitalAlarmFinder,
+          matching: find.byIcon(Icons.notifications_off));
+      expect(byPassedAlarmIndicatorFinder, findsOneWidget);
+  }
+}
+
 void assertByPassedAlarmStatus(
     {required String forDRF, required bool isVisible}) {
   final parameterFinder = find.byKey(Key("parameter_row_$forDRF"));
@@ -682,6 +707,12 @@ void assertAnalogAlarmIndicator(
     {required String forDRF, required bool isVisible}) {
   final analogAlarmFinder = find.byKey(Key("parameter_analogalarm_$forDRF"));
   expect(analogAlarmFinder, isVisible ? findsOneWidget : findsNothing);
+}
+
+void assertDigitalAlarmIndicator(
+    {required String forDRF, required bool isVisible}) {
+  final digitalAlarmFinder = find.byKey(Key("parameter_digitalalarm_$forDRF"));
+  expect(digitalAlarmFinder, isVisible ? findsOneWidget : findsNothing);
 }
 
 void assertAnalogAlarmToggle(WidgetTester tester,

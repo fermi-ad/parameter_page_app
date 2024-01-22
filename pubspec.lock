@@ -242,8 +242,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v0.1.x"
-      resolved-ref: "28a36ac62684aa4fbcd9eb13feb5d07ef8547e85"
+      ref: alarms
+      resolved-ref: "6c98ea4930bae093ce5100f159569b2b59da10ae"
       url: "https://github.com/fermi-ad/flutter-controls-core.git"
     source: git
     version: "0.1.5"

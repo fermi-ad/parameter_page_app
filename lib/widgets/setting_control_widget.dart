@@ -105,16 +105,18 @@ class _SettingControlState extends State<SettingControlWidget> {
         : Padding(
             padding: const EdgeInsets.fromLTRB(4.0, 0.0, 0.0, 0.0),
             child: Text(widget.units!,
-                style: const TextStyle(color: Colors.grey)));
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.outline)));
   }
 
   Widget _buildSubmitButton(BuildContext context) {
     return _state == _SettingControlInternalState.editing
         ? GestureDetector(
             onTap: () => _handleSubmitted(context),
-            child: const Padding(
-                padding: EdgeInsets.fromLTRB(4.0, 0.0, 0.0, 0.0),
-                child: Icon(Icons.check_circle, color: Colors.blue)))
+            child: Padding(
+                padding: const EdgeInsets.fromLTRB(4.0, 0.0, 0.0, 0.0),
+                child: Icon(Icons.check_circle,
+                    color: Theme.of(context).colorScheme.primary)))
         : Container();
   }
 
@@ -122,9 +124,10 @@ class _SettingControlState extends State<SettingControlWidget> {
     return _state == _SettingControlInternalState.editing
         ? GestureDetector(
             onTap: _handleAbort,
-            child: const Padding(
-                padding: EdgeInsets.fromLTRB(4.0, 0.0, 0.0, 0.0),
-                child: Icon(Icons.cancel, color: Colors.red)))
+            child: Padding(
+                padding: const EdgeInsets.fromLTRB(4.0, 0.0, 0.0, 0.0),
+                child: Icon(Icons.cancel,
+                    color: Theme.of(context).colorScheme.error)))
         : Container();
   }
 
@@ -144,7 +147,7 @@ class _SettingControlState extends State<SettingControlWidget> {
         key: Key("parameter_settingerror_${widget.drf}"),
         child: Text(
             textAlign: TextAlign.start,
-            style: const TextStyle(color: Colors.red),
+            style: TextStyle(color: Theme.of(context).colorScheme.error),
             "$_facilityCode $_errorCode"));
   }
 
@@ -204,7 +207,7 @@ class _SettingControlState extends State<SettingControlWidget> {
             onTap: _handleUndoTap,
             child: Text(
                 textAlign: TextAlign.end,
-                style: const TextStyle(color: Colors.purple),
+                style: TextStyle(color: Theme.of(context).colorScheme.tertiary),
                 _initialSettingValue!)));
   }
 
@@ -213,13 +216,16 @@ class _SettingControlState extends State<SettingControlWidget> {
       _lastSettingValue = _extractValueString(from: snapshot);
       return Container(
           key: Key("parameter_settingdisplay_${widget.drf}"),
-          child: Text(textAlign: TextAlign.end, _lastSettingValue!));
+          child: Text(
+              textAlign: TextAlign.end,
+              _lastSettingValue!,
+              style: TextStyle(color: Theme.of(context).colorScheme.primary)));
     } else {
       return Container(
           key: Key("parameter_settingloading_${widget.drf}"),
-          child: const Text(
+          child: Text(
               textAlign: TextAlign.end,
-              style: TextStyle(color: Colors.grey),
+              style: TextStyle(color: Theme.of(context).colorScheme.outline),
               "Loading..."));
     }
   }

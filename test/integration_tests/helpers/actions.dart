@@ -103,7 +103,15 @@ Future<void> waitForPageSaveToFail(tester) async {
 
 Future<void> waitForAlarmToGoAway(WidgetTester tester,
     {required String forDRF}) async {
-  final parameterFinder = find.byKey(Key("parameter_row_$forDRF"));
+  final parameterFinder = find.byKey(Key("parameter_analogalarm_$forDRF"));
+  final alarmIndicatorFinder = find.descendant(
+      of: parameterFinder, matching: find.byIcon(Icons.notifications_active));
+  await pumpUntilGone(tester, alarmIndicatorFinder);
+}
+
+Future<void> waitForDigitalAlarmToGoAway(WidgetTester tester,
+    {required String forDRF}) async {
+  final parameterFinder = find.byKey(Key("parameter_digitalalarm_$forDRF"));
   final alarmIndicatorFinder = find.descendant(
       of: parameterFinder, matching: find.byIcon(Icons.notifications_active));
   await pumpUntilGone(tester, alarmIndicatorFinder);
@@ -111,7 +119,15 @@ Future<void> waitForAlarmToGoAway(WidgetTester tester,
 
 Future<void> waitForDeviceToAlarm(WidgetTester tester,
     {required String forDRF}) async {
-  final parameterFinder = find.byKey(Key("parameter_row_$forDRF"));
+  final parameterFinder = find.byKey(Key("parameter_analogalarm_$forDRF"));
+  final alarmIndicatorFinder = find.descendant(
+      of: parameterFinder, matching: find.byIcon(Icons.notifications_active));
+  await pumpUntilFound(tester, alarmIndicatorFinder);
+}
+
+Future<void> waitForDeviceToAlarmDigital(WidgetTester tester,
+    {required String forDRF}) async {
+  final parameterFinder = find.byKey(Key("parameter_digitalalarm_$forDRF"));
   final alarmIndicatorFinder = find.descendant(
       of: parameterFinder, matching: find.byIcon(Icons.notifications_active));
   await pumpUntilFound(tester, alarmIndicatorFinder);
@@ -119,7 +135,15 @@ Future<void> waitForDeviceToAlarm(WidgetTester tester,
 
 Future<void> waitForDeviceAlarmByPassed(WidgetTester tester,
     {required String forDRF}) async {
-  final parameterFinder = find.byKey(Key("parameter_row_$forDRF"));
+  final parameterFinder = find.byKey(Key("parameter_analogalarm_$forDRF"));
+  final alarmIndicatorFinder = find.descendant(
+      of: parameterFinder, matching: find.byIcon(Icons.notifications_off));
+  await pumpUntilFound(tester, alarmIndicatorFinder);
+}
+
+Future<void> waitForDeviceAlarmByPassedDigital(WidgetTester tester,
+    {required String forDRF}) async {
+  final parameterFinder = find.byKey(Key("parameter_digitalalarm_$forDRF"));
   final alarmIndicatorFinder = find.descendant(
       of: parameterFinder, matching: find.byIcon(Icons.notifications_off));
   await pumpUntilFound(tester, alarmIndicatorFinder);
@@ -560,5 +584,11 @@ Future<void> openSettingsPermissionMenu(WidgetTester tester) async {
 Future<void> toggleAnalogAlarm(WidgetTester tester,
     {required String forDRF}) async {
   await tester.tap(find.byKey(Key("parameter_analogalarm_$forDRF")));
+  await tester.pumpAndSettle();
+}
+
+Future<void> toggleDigitalAlarm(WidgetTester tester,
+    {required String forDRF}) async {
+  await tester.tap(find.byKey(Key("parameter_digitalalarm_$forDRF")));
   await tester.pumpAndSettle();
 }

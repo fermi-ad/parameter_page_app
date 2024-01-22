@@ -15,49 +15,53 @@ class PagePersistenceStateIndicatorWidget extends StatelessWidget {
         return Container();
 
       case PagePersistenceState.unsaved:
-        return _buildUnsaved();
+        return _buildUnsaved(context);
 
       case PagePersistenceState.saving:
-        return _buildSaving();
+        return _buildSaving(context);
 
       case PagePersistenceState.saved:
-        return _buildSaved();
+        return _buildSaved(context);
 
       case PagePersistenceState.unsavedError:
-        return _buildUnsavedError();
+        return _buildUnsavedError(context);
     }
   }
 
-  Widget _buildSaved() {
-    return const Text(
-        key: Key("page_saved_indicator"),
+  Widget _buildSaved(BuildContext context) {
+    return Text(
+        key: const Key("page_saved_indicator"),
         "Saved",
-        style: TextStyle(fontSize: 12.0, color: Colors.grey));
+        style: TextStyle(
+            fontSize: 12.0, color: Theme.of(context).colorScheme.secondary));
   }
 
-  Widget _buildSaving() {
-    return const Text(
-        key: Key("page_saving_indicator"),
+  Widget _buildSaving(BuildContext context) {
+    return Text(
+        key: const Key("page_saving_indicator"),
         "Saving...",
-        style: TextStyle(fontSize: 12.0, color: Colors.grey));
+        style: TextStyle(
+            fontSize: 12.0, color: Theme.of(context).colorScheme.secondary));
   }
 
-  Widget _buildUnsaved() {
-    return const Row(children: [
+  Widget _buildUnsaved(BuildContext context) {
+    return Row(children: [
       Tooltip(
-          key: Key("unsaved_changes_indicator"),
+          key: const Key("unsaved_changes_indicator"),
           message: "This page has unsaved changes.",
-          child: Icon(Icons.warning, color: Colors.amber))
+          child: Icon(Icons.warning,
+              color: Theme.of(context).colorScheme.tertiary))
     ]);
   }
 
-  Widget _buildUnsavedError() {
-    return const Row(children: [
+  Widget _buildUnsavedError(BuildContext context) {
+    return Row(children: [
       Tooltip(
-          key: Key("page_save_failed_indicator"),
+          key: const Key("page_save_failed_indicator"),
           message:
               "This page has unsaved changes.  The last attempt to save this page failed.  Please try again.",
-          child: Icon(Icons.warning, color: Colors.red))
+          child:
+              Icon(Icons.warning, color: Theme.of(context).colorScheme.error))
     ]);
   }
 }

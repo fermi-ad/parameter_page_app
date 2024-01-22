@@ -45,7 +45,8 @@ dependencies:
     flutter_controls_core:
         git:
             url: https://github.com/fermi-ad/flutter-controls-core.git
-            ref: v0.1.x
+            ref: alarms
+        #    ref: v0.1.x
     logger: ^2.0.2+1
 
 dev_dependencies:

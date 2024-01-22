@@ -96,6 +96,10 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     return deviceInfo?.basicStatus != null;
   }
 
+  bool get hasDigitalAlarmProperty {
+    return deviceInfo?.digitalAlarm != null;
+  }
+
   String? get readingUnits {
     switch (widget.displayUnits) {
       case DisplayUnits.commonUnits:
@@ -226,20 +230,19 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
               : Theme.of(context)
                   .textTheme
                   .bodySmall!
-                  .copyWith(fontStyle: FontStyle.italic, color: Colors.grey));
+                  .copyWith(fontStyle: FontStyle.italic));
     }
   }
 
   Widget _buildDeviceInfoFailureError(BuildContext context) {
     return Row(key: Key("parameter_infoerror_${widget.drf}"), children: [
-      const Padding(
-          padding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
-          child: Icon(Icons.error, color: Colors.red)),
+      Padding(
+          padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+          child: Icon(Icons.error, color: Theme.of(context).colorScheme.error)),
       Text("Failed to get this parameter",
-          style: Theme.of(context)
-              .textTheme
-              .bodyLarge!
-              .copyWith(fontStyle: FontStyle.italic, color: Colors.grey))
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+              fontStyle: FontStyle.italic,
+              color: Theme.of(context).colorScheme.error))
     ]);
   }
 
@@ -269,11 +272,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                 child: StreamBuilder(
                     stream: widget.dpm.monitorDevices([widget.drf]),
                     builder: _readingBuilder))),
-        Visibility(
-            visible: hasReadingProperty,
-            child: StreamBuilder(
-                stream: widget.dpm.monitorAnalogAlarmDevices([widget.drf]),
-                builder: _analogAlarmBuilder)),
+        StreamBuilder(
+            stream: widget.dpm.monitorAnalogAlarmDevices([widget.drf]),
+            builder: _analogAlarmBuilder),
         const SizedBox(width: 8.0),
         SizedBox(
             width: 128.0,
@@ -282,7 +283,10 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                 child: StreamBuilder(
                     stream:
                         widget.dpm.monitorDigitalStatusDevices([widget.drf]),
-                    builder: _basicStatusBuilder)))
+                    builder: _basicStatusBuilder))),
+        StreamBuilder(
+            stream: widget.dpm.monitorDigitalAlarmDevices([widget.drf]),
+            builder: _digitalAlarmBuilder)
       ]),
       Visibility(
           visible: widget.displayAlarmDetails,
@@ -409,7 +413,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
           context, _extractValueString(from: snapshot), readingUnits,
           key: Key("parameter_reading_${widget.drf}"),
           isAlarming: _lastAlarmStatus != null &&
-              _lastAlarmStatus!.state == AnalogAlarmState.alarming);
+              _lastAlarmStatus!.state == AlarmState.alarming);
     } else {
       return _buildParam(context, null, readingUnits,
           key: Key("parameter_nullreading_${widget.drf}"));
@@ -437,7 +441,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   Widget _analogAlarmBuilder(context, snapshot) {
     if (_deviceHasAnalogAlarmBlock &&
         snapshot.connectionState == ConnectionState.active) {
-      final newAlarmStatus = snapshot!.data as AnalogAlarmStatus;
+      final newAlarmStatus = snapshot!.data as AlarmStatus;
 
       if (_lastAlarmStatus == null ||
           newAlarmStatus.state != _lastAlarmStatus!.state) {
@@ -449,6 +453,25 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
       return Container(
           key: Key("parameter_analogalarm_${widget.drf}"),
           child: ParameterAlarmStatusWidget(
+              isDigital: false,
+              settingsAllowed: widget.settingsAllowed,
+              alarmState: newAlarmStatus.state,
+              drf: widget.drf));
+    } else {
+      return const Padding(
+          padding: EdgeInsets.fromLTRB(8, 0, 0, 0), child: SizedBox(width: 40));
+    }
+  }
+
+  Widget _digitalAlarmBuilder(BuildContext context, AsyncSnapshot snapshot) {
+    if (_deviceHasDigitalAlarmBlock &&
+        snapshot.connectionState == ConnectionState.active) {
+      final newAlarmStatus = snapshot.data as AlarmStatus;
+
+      return Container(
+          key: Key("parameter_digitalalarm_${widget.drf}"),
+          child: ParameterAlarmStatusWidget(
+              isDigital: true,
               settingsAllowed: widget.settingsAllowed,
               alarmState: newAlarmStatus.state,
               drf: widget.drf));
@@ -479,7 +502,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                                 ? Theme.of(context).colorScheme.error
                                 : Theme.of(context).colorScheme.primary))),
                 const SizedBox(width: 6.0),
-                Text(units, style: const TextStyle(color: Colors.grey))
+                Text(units,
+                    style:
+                        TextStyle(color: Theme.of(context).colorScheme.outline))
               ]));
   }
 
@@ -498,7 +523,11 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     return deviceInfo != null && deviceInfo!.alarm != null;
   }
 
+  bool get _deviceHasDigitalAlarmBlock {
+    return deviceInfo != null && deviceInfo!.digitalAlarm != null;
+  }
+
   bool _deviceInfoFailure = false;
 
-  AnalogAlarmStatus? _lastAlarmStatus;
+  AlarmStatus? _lastAlarmStatus;
 }

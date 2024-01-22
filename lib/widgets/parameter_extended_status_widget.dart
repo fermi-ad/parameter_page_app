@@ -16,18 +16,18 @@ class ParameterExtendedStatusWidget extends StatelessWidget {
           constraints: const BoxConstraints(maxWidth: 320),
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: _buildRows())),
+              children: _buildRows(context))),
       const Spacer()
     ]);
   }
 
-  List<Row> _buildRows() {
+  List<Row> _buildRows(BuildContext context) {
     List<Row> rows = List<Row>.empty(growable: true);
 
     if (digitalStatus.extendedStatus != null) {
       for (int i = 0; i < digitalStatus.extendedStatus!.length; i++) {
         final attribute = digitalStatus.extendedStatus![i];
-        rows.add(_buildRow(
+        rows.add(_buildRow(context,
             bitN: i,
             description:
                 attribute.description != null ? attribute.description! : "...",
@@ -36,19 +36,20 @@ class ParameterExtendedStatusWidget extends StatelessWidget {
             value: "${attribute.value}",
             valueColor: attribute.color != null
                 ? Util.mapColor(from: attribute.color!)
-                : Colors.grey));
+                : Theme.of(context).colorScheme.primary));
       }
     }
     return rows;
   }
 
-  Row _buildRow(
+  Row _buildRow(BuildContext context,
       {required int bitN,
       required String description,
       required String valueText,
       required String value,
       required Color valueColor}) {
-    const labelsStyle = TextStyle(color: Colors.grey, fontSize: 16.0);
+    final labelsStyle =
+        TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 16.0);
     final valueStyle = TextStyle(color: valueColor, fontSize: 16.0);
 
     return Row(
