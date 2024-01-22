@@ -9,6 +9,8 @@ class CommentEntryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PageEntryWidget(
-        child: Text(text, style: const TextStyle(color: Colors.cyan)));
+        child: Text(text,
+            style:
+                TextStyle(color: Theme.of(context).colorScheme.onBackground)));
   }
 }
