@@ -408,6 +408,16 @@ class MockDpmService implements ACSysServiceAPI {
             ? AlarmState.alarming
             : AlarmState.notAlarming;
       }
+    } else if (forDRF.contains(".DIGITAL.ENABLE")) {
+      final base = forDRF.split(".")[0];
+      final scalar = newSetting as DevScalar;
+      if (scalar.value == 0) {
+        _digitalAlarmStreams[base]!.currentState = AlarmState.bypassed;
+      } else if (scalar.value == 1) {
+        _digitalAlarmStreams[base]!.currentState = base == "Z:BTE200_TEMP"
+            ? AlarmState.alarming
+            : AlarmState.notAlarming;
+      }
     }
 
     if (useEmptyStream) {

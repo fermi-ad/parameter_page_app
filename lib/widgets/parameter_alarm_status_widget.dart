@@ -11,11 +11,14 @@ class ParameterAlarmStatusWidget extends StatelessWidget {
 
   final bool settingsAllowed;
 
+  final bool isDigital;
+
   const ParameterAlarmStatusWidget(
       {super.key,
       required this.alarmState,
       required this.drf,
-      required this.settingsAllowed});
+      required this.settingsAllowed,
+      required this.isDigital});
 
   @override
   Widget build(BuildContext context) {
@@ -65,11 +68,15 @@ class ParameterAlarmStatusWidget extends StatelessWidget {
 
   void _handleEnable(BuildContext context) {
     final DataAcquisitionWidget daqWidget = DataAcquisitionWidget.of(context);
-    daqWidget.submit(forDRF: "$drf.ANALOG.ENABLE", newSetting: "1");
+    daqWidget.submit(forDRF: "$drf.$_alarmProperty.ENABLE", newSetting: "1");
   }
 
   void _handleBypass(BuildContext context) {
     final DataAcquisitionWidget daqWidget = DataAcquisitionWidget.of(context);
-    daqWidget.submit(forDRF: "$drf.ANALOG.ENABLE", newSetting: "0");
+    daqWidget.submit(forDRF: "$drf.$_alarmProperty.ENABLE", newSetting: "0");
+  }
+
+  String get _alarmProperty {
+    return isDigital ? "DIGITAL" : "ANALOG";
   }
 }

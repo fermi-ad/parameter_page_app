@@ -458,6 +458,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
       return Container(
           key: Key("parameter_analogalarm_${widget.drf}"),
           child: ParameterAlarmStatusWidget(
+              isDigital: false,
               settingsAllowed: widget.settingsAllowed,
               alarmState: newAlarmStatus.state,
               drf: widget.drf));
@@ -475,6 +476,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
       return Container(
           key: Key("parameter_digitalalarm_${widget.drf}"),
           child: ParameterAlarmStatusWidget(
+              isDigital: true,
               settingsAllowed: widget.settingsAllowed,
               alarmState: newAlarmStatus.state,
               drf: widget.drf));
