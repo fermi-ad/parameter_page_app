@@ -10,7 +10,6 @@ class CommentEntryWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageEntryWidget(
         child: Text(text,
-            style:
-                TextStyle(color: Theme.of(context).colorScheme.onBackground)));
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary)));
   }
 }
