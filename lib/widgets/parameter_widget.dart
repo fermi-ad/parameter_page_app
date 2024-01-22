@@ -287,11 +287,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                     stream:
                         widget.dpm.monitorDigitalStatusDevices([widget.drf]),
                     builder: _basicStatusBuilder))),
-        Visibility(
-            visible: hasDigitalAlarmProperty,
-            child: StreamBuilder(
-                stream: widget.dpm.monitorDigitalAlarmDevices([widget.drf]),
-                builder: _digitalAlarmBuilder))
+        StreamBuilder(
+            stream: widget.dpm.monitorDigitalAlarmDevices([widget.drf]),
+            builder: _digitalAlarmBuilder)
       ]),
       Visibility(
           visible: widget.displayAlarmDetails,
