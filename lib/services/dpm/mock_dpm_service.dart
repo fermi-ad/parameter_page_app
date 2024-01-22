@@ -370,6 +370,11 @@ class MockDpmService implements ACSysServiceAPI {
         isByPassed ? AlarmState.bypassed : AlarmState.notAlarming;
   }
 
+  void noAlarmDigital({required String forDRF, bool isByPassed = false}) {
+    _digitalAlarmStreams[forDRF]!.currentState =
+        isByPassed ? AlarmState.bypassed : AlarmState.notAlarming;
+  }
+
   void succeedAllPendingSettings() {
     _pendingSettingsCompleter.forEach((drf, controller) {
       controller.complete(const SettingStatus(facilityCode: 1, errorCode: 0));

@@ -119,6 +119,31 @@ void main() {
     }, semanticsEnabled: false);
 
     testWidgets(
+        'Parameter goes out of alarm, alarm indicator goes away (digital)',
+        (tester) async {
+      // Given the test page is loaded
+      //   and a device that is in alarm is on the page
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await waitForDataToLoadFor(tester, "G:AMANDA");
+      assertParametersAreOnPage(["G:AMANDA"]);
+      mockDPMService!.raiseDigitalAlarm(forDRF: "G:AMANDA");
+      await waitForDeviceToAlarmDigital(tester, forDRF: "G:AMANDA");
+      await waitForDataToLoadFor(tester, "G:AMANDA");
+      assertDigitalAlarmStatus(tester,
+          forDRF: "G:AMANDA", isInState: AlarmState.alarming);
+
+      // When the device goes back in tolerance
+      mockDPMService!.noAlarmDigital(forDRF: "G:AMANDA");
+      await waitForDigitalAlarmToGoAway(tester, forDRF: "G:AMANDA");
+      await waitForDataToLoadFor(tester, "G:AMANDA");
+
+      // Then the alarm indicator is hidden
+      assertDigitalAlarmStatus(tester,
+          forDRF: "G:AMANDA", isInState: AlarmState.notAlarming);
+    }, semanticsEnabled: false);
+
+    testWidgets(
         'Parameter goes out of tolerance with alarm by-passed, by-passed alarm indicator is shown',
         (tester) async {
       // Given the test page is loaded
