@@ -273,11 +273,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                 child: StreamBuilder(
                     stream: widget.dpm.monitorDevices([widget.drf]),
                     builder: _readingBuilder))),
-        Visibility(
-            visible: hasReadingProperty,
-            child: StreamBuilder(
-                stream: widget.dpm.monitorAnalogAlarmDevices([widget.drf]),
-                builder: _analogAlarmBuilder)),
+        StreamBuilder(
+            stream: widget.dpm.monitorAnalogAlarmDevices([widget.drf]),
+            builder: _analogAlarmBuilder),
         const SizedBox(width: 8.0),
         SizedBox(
             width: 128.0,
