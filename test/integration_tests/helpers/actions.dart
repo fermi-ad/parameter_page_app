@@ -135,7 +135,15 @@ Future<void> waitForDeviceToAlarmDigital(WidgetTester tester,
 
 Future<void> waitForDeviceAlarmByPassed(WidgetTester tester,
     {required String forDRF}) async {
-  final parameterFinder = find.byKey(Key("parameter_row_$forDRF"));
+  final parameterFinder = find.byKey(Key("parameter_analogalarm_$forDRF"));
+  final alarmIndicatorFinder = find.descendant(
+      of: parameterFinder, matching: find.byIcon(Icons.notifications_off));
+  await pumpUntilFound(tester, alarmIndicatorFinder);
+}
+
+Future<void> waitForDeviceAlarmByPassedDigital(WidgetTester tester,
+    {required String forDRF}) async {
+  final parameterFinder = find.byKey(Key("parameter_digitalalarm_$forDRF"));
   final alarmIndicatorFinder = find.descendant(
       of: parameterFinder, matching: find.byIcon(Icons.notifications_off));
   await pumpUntilFound(tester, alarmIndicatorFinder);
