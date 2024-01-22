@@ -356,7 +356,31 @@ void main() {
     });
 
     testWidgets(
-        'Enable alarm on out-of-tolerance parameter, alarm indicator is displayed',
+        'By-pass non-alarming device, alarm indicator changes to by-passed (digital)',
+        (tester) async {
+      // Given a test page with an alarming device loaded...
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await waitForDataToLoadFor(tester, "G:AMANDA");
+      assertDigitalAlarmStatus(tester,
+          forDRF: "G:AMANDA", isInState: AlarmState.notAlarming);
+
+      // ... and settings are enabled
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.indefinitely);
+
+      // When I by-pass the alarm
+      await toggleDigitalAlarm(tester, forDRF: "G:AMANDA");
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      await waitForDeviceAlarmByPassedDigital(tester, forDRF: "G:AMANDA");
+
+      // Then the by-passed indicator is shown
+      assertDigitalAlarmStatus(tester,
+          forDRF: "G:AMANDA", isInState: AlarmState.bypassed);
+    });
+
+    testWidgets(
+        'Enable alarm for an out-of-tolerance parameter, alarm indicator is displayed',
         (tester) async {
       // Given the test page is loaded...
       await startParameterPageApp(tester);
@@ -383,6 +407,38 @@ void main() {
 
       // Then the alarm indicator is shown
       assertAnalogAlarmStatus(tester, forDRF: "Z:BTE200_TEMP", isInAlarm: true);
+    });
+
+    testWidgets(
+        'Enable alarm for an out-of-tolerance parameter, alarm indicator is displayed (digital)',
+        (tester) async {
+      // Given the test page is loaded...
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      await waitForDeviceToAlarm(tester, forDRF: "Z:BTE200_TEMP");
+      assertDigitalAlarmStatus(tester,
+          forDRF: "Z:BTE200_TEMP", isInState: AlarmState.alarming);
+
+      // ... and settings are enabled
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.indefinitely);
+
+      // ... and the alarm for Z:BTE200_TEMP has been by-passed
+      await toggleDigitalAlarm(tester, forDRF: "Z:BTE200_TEMP");
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      await waitForDeviceAlarmByPassedDigital(tester, forDRF: "Z:BTE200_TEMP");
+      assertDigitalAlarmStatus(tester,
+          forDRF: "Z:BTE200_TEMP", isInState: AlarmState.bypassed);
+
+      // When I re-enable the alarm
+      await toggleDigitalAlarm(tester, forDRF: "Z:BTE200_TEMP");
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      await waitForDeviceToAlarmDigital(tester, forDRF: "Z:BTE200_TEMP");
+
+      // Then the alarm indicator is shown
+      assertDigitalAlarmStatus(tester,
+          forDRF: "Z:BTE200_TEMP", isInState: AlarmState.alarming);
     });
   });
 }
