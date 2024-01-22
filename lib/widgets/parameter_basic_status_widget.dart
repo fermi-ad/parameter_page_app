@@ -18,14 +18,14 @@ class ParameterBasicStatusWidget extends StatelessWidget {
     return Column(
         key: Key("parameter_basicstatus_$drf"),
         crossAxisAlignment: CrossAxisAlignment.end,
-        children: _buildBasicStatusWidgets());
+        children: _buildBasicStatusWidgets(context));
   }
 
-  List<Widget> _buildBasicStatusWidgets() {
+  List<Widget> _buildBasicStatusWidgets(BuildContext context) {
     List<Widget> statusWidgets = List<Widget>.empty(growable: true);
 
     if (digitalStatus.onOff != null) {
-      statusWidgets.add(_buildRow(
+      statusWidgets.add(_buildRow(context,
           forProperty: "onoff",
           withLabel: "On/Off: ",
           withCharacter: digitalStatus.onOff!.character,
@@ -33,7 +33,7 @@ class ParameterBasicStatusWidget extends StatelessWidget {
     }
 
     if (digitalStatus.readyTripped != null) {
-      statusWidgets.add(_buildRow(
+      statusWidgets.add(_buildRow(context,
           forProperty: "readytripped",
           withLabel: "Ready/Tripped: ",
           withCharacter: digitalStatus.readyTripped!.character,
@@ -41,7 +41,7 @@ class ParameterBasicStatusWidget extends StatelessWidget {
     }
 
     if (digitalStatus.remoteLocal != null) {
-      statusWidgets.add(_buildRow(
+      statusWidgets.add(_buildRow(context,
           forProperty: "remotelocal",
           withLabel: "Remote/Local: ",
           withCharacter: digitalStatus.remoteLocal!.character,
@@ -49,7 +49,7 @@ class ParameterBasicStatusWidget extends StatelessWidget {
     }
 
     if (digitalStatus.positiveNegative != null) {
-      statusWidgets.add(_buildRow(
+      statusWidgets.add(_buildRow(context,
           forProperty: "positivenegative",
           withLabel: "Positive/Negative: ",
           withCharacter: digitalStatus.positiveNegative!.character,
@@ -59,12 +59,13 @@ class ParameterBasicStatusWidget extends StatelessWidget {
     return statusWidgets;
   }
 
-  Row _buildRow(
+  Row _buildRow(BuildContext context,
       {required String forProperty,
       required String withLabel,
       required String withCharacter,
       required StatusColor withColor}) {
-    const labelsStyle = TextStyle(color: Colors.grey, fontSize: _fontSize);
+    final labelsStyle = TextStyle(
+        color: Theme.of(context).colorScheme.outline, fontSize: _fontSize);
     final valueStyle =
         TextStyle(color: Util.mapColor(from: withColor), fontSize: _fontSize);
 
