@@ -586,3 +586,9 @@ Future<void> toggleAnalogAlarm(WidgetTester tester,
   await tester.tap(find.byKey(Key("parameter_analogalarm_$forDRF")));
   await tester.pumpAndSettle();
 }
+
+Future<void> toggleDigitalAlarm(WidgetTester tester,
+    {required String forDRF}) async {
+  await tester.tap(find.byKey(Key("parameter_digitalalarm_$forDRF")));
+  await tester.pumpAndSettle();
+}

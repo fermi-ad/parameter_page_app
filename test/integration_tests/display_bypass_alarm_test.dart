@@ -309,6 +309,31 @@ void main() {
     });
 
     testWidgets(
+        'By-pass alarming device, alarm indicator changes to by-passed (digital)',
+        (tester) async {
+      // Given a test page with an alarming device is loaded...
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      await waitForDeviceToAlarmDigital(tester, forDRF: "Z:BTE200_TEMP");
+      assertDigitalAlarmStatus(tester,
+          forDRF: "Z:BTE200_TEMP", isInState: AlarmState.alarming);
+
+      // ... and settings are enabled
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.indefinitely);
+
+      // When I by-pass the alarm
+      await toggleDigitalAlarm(tester, forDRF: "Z:BTE200_TEMP");
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      await waitForDeviceAlarmByPassedDigital(tester, forDRF: "Z:BTE200_TEMP");
+
+      // Then the alarm inicator goes away
+      assertDigitalAlarmStatus(tester,
+          forDRF: "Z:BTE200_TEMP", isInState: AlarmState.bypassed);
+    });
+
+    testWidgets(
         'By-pass non-alarming device, alarm indicator changes to by-passed',
         (tester) async {
       // Given a test page with an alarming device is loaded...
