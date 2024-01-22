@@ -66,12 +66,13 @@ class _CommandButtonState extends State<CommandButtonWidget> {
   Widget _buildErrorButton() {
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.red,
+            backgroundColor: Theme.of(context).colorScheme.error,
             elevation: 0.0,
             minimumSize: const Size.fromHeight(40)),
         onPressed: _handlePress,
-        child:
-            Text(style: const TextStyle(color: Colors.white), _errorMessage!));
+        child: Text(
+            style: TextStyle(color: Theme.of(context).colorScheme.onError),
+            _errorMessage!));
   }
 
   void _handlePress() {
