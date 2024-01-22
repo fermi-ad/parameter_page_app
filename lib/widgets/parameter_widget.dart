@@ -230,20 +230,19 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
               : Theme.of(context)
                   .textTheme
                   .bodySmall!
-                  .copyWith(fontStyle: FontStyle.italic, color: Colors.grey));
+                  .copyWith(fontStyle: FontStyle.italic));
     }
   }
 
   Widget _buildDeviceInfoFailureError(BuildContext context) {
     return Row(key: Key("parameter_infoerror_${widget.drf}"), children: [
-      const Padding(
-          padding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
-          child: Icon(Icons.error, color: Colors.red)),
+      Padding(
+          padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+          child: Icon(Icons.error, color: Theme.of(context).colorScheme.error)),
       Text("Failed to get this parameter",
-          style: Theme.of(context)
-              .textTheme
-              .bodyLarge!
-              .copyWith(fontStyle: FontStyle.italic, color: Colors.grey))
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+              fontStyle: FontStyle.italic,
+              color: Theme.of(context).colorScheme.error))
     ]);
   }
 
@@ -503,7 +502,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                                 ? Theme.of(context).colorScheme.error
                                 : Theme.of(context).colorScheme.primary))),
                 const SizedBox(width: 6.0),
-                Text(units, style: const TextStyle(color: Colors.grey))
+                Text(units,
+                    style:
+                        TextStyle(color: Theme.of(context).colorScheme.outline))
               ]));
   }
 
