@@ -68,11 +68,11 @@ class _SettingPermissionState extends State<SettingsPermissionWidget> {
     String keyName;
     IconData icon;
     if (_permissionState == _SettingPermissionStatus.disabled) {
-      color = Colors.red;
+      color = Theme.of(context).colorScheme.tertiary;
       keyName = "disabled";
       icon = Icons.lock;
     } else {
-      color = Colors.green;
+      color = Theme.of(context).colorScheme.secondary;
       keyName = "enabled";
       icon = Icons.lock_open;
     }
