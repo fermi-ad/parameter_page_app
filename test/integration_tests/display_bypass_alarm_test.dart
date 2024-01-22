@@ -215,6 +215,30 @@ void main() {
     }, semanticsEnabled: false);
 
     testWidgets(
+        'Parameter is in tolerance with alarm by-passed, by-passed alarm indicator is shown (digital)',
+        (tester) async {
+      // Given the test page is loaded
+      //   and a device that is out-tolerance with alarms by-passed is on the page
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+      mockDPMService!.raiseDigitalAlarm(forDRF: "G:AMANDA", isByPassed: true);
+      await waitForDataToLoadFor(tester, "G:AMANDA");
+      await waitForDeviceAlarmByPassedDigital(tester, forDRF: "G:AMANDA");
+      assertParametersAreOnPage(["G:AMANDA"]);
+      assertDigitalAlarmStatus(tester,
+          forDRF: "G:AMANDA", isInState: AlarmState.bypassed);
+
+      // When the device goes back in tolerance
+      mockDPMService!.noAlarmDigital(forDRF: "G:AMANDA", isByPassed: true);
+      await waitForDeviceAlarmByPassedDigital(tester, forDRF: "G:AMANDA");
+      await waitForDataToLoadFor(tester, "G:AMANDA");
+
+      // Then the alarm by-passed indicator is shown
+      assertDigitalAlarmStatus(tester,
+          forDRF: "G:AMANDA", isInState: AlarmState.bypassed);
+    }, semanticsEnabled: false);
+
+    testWidgets(
         'Alarming device by-passed by someone else, alarm indicator changes to by-passed',
         (tester) async {
       // Given a test page with an alarming device is loaded...
