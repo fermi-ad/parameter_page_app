@@ -34,7 +34,7 @@ class DataAcquisitionWidget extends InheritedWidget {
   }
 
   Stream<bool> monitorDigitalAlarmBeamAbortInhibit(String drf) async* {
-    yield* monitorDevices(["$drf.DIGITAL.ALARM.ABORT_INHIBIT"])
+    yield* monitorDevices(["$drf.DIGITAL.ABORT_INHIBIT"])
         .map((v) => v.value == 1 ? true : false);
   }
 

@@ -487,5 +487,22 @@ void main() {
       assertDigitalAlarmBeamInhibitStatus(tester,
           forDRF: "G:AMANDA", isInState: BeamInhibitState.willInhibit);
     });
+
+    testWidgets(
+        'Alarm beam inhibit is by-passed, beam inhibit by-passed indicator is displayed',
+        (WidgetTester tester) async {
+      // Given nothing...
+      await startParameterPageApp(tester);
+
+      // When I load a test page with a device that has a digital alarm block
+      // ... and the beam inhibit flag is on
+      await navigateToTestPage1(tester);
+      mockDPMService!.byPassDigitalAlarmBeamAbort("G:AMANDA");
+      await waitForDigitalBeamInhibitIndicator(tester, forDRF: "G:AMANDA");
+
+      // Then the beam-inhibit by-passed indicator is shown
+      assertDigitalAlarmBeamInhibitStatus(tester,
+          forDRF: "G:AMANDA", isInState: BeamInhibitState.byPassed);
+    });
   });
 }
