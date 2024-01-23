@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:parameter_page/main.dart';
 import 'package:parameter_page/services/settings_permission/settings_permission_service.dart';
+import 'package:parameter_page/widgets/parameter_alarm_status_widget.dart';
 
 import 'helpers/assertions.dart';
 import 'helpers/actions.dart';
@@ -439,6 +440,22 @@ void main() {
       // Then the alarm indicator is shown
       assertDigitalAlarmStatus(tester,
           forDRF: "Z:BTE200_TEMP", isInState: AlarmState.alarming);
+    });
+
+    testWidgets(
+        'Alarm beam inhibit is off, beam inhibit disabled indicator is shown for device with digital alarm block',
+        (WidgetTester tester) async {
+      // Given nothing...
+      await startParameterPageApp(tester);
+
+      // When I load a test page with a device that has a digital alarm block
+      // ... and the beam inhibit flag is off
+      await navigateToTestPage1(tester);
+      await waitForDigitalBeamInhibitIndicator(tester, forDRF: "Z:BTE200_TEMP");
+
+      // Then the no beam-inhibit indicator is shown
+      assertDigitalAlarmBeamInhibitStatus(tester,
+          forDRF: "Z:BTE200_TEMP", isInState: BeamInhibitState.wontInhibit);
     });
   });
 }

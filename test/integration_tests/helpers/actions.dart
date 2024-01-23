@@ -149,6 +149,15 @@ Future<void> waitForDeviceAlarmByPassedDigital(WidgetTester tester,
   await pumpUntilFound(tester, alarmIndicatorFinder);
 }
 
+Future<void> waitForDigitalBeamInhibitIndicator(WidgetTester tester,
+    {required String forDRF}) async {
+  final containerFinder =
+      find.byKey(Key("parameter_digitalalarm_beaminhibit_$forDRF"));
+  final indicatorFinder = find.descendant(
+      of: containerFinder, matching: find.byIcon(Icons.stop_circle));
+  await pumpUntilFound(tester, indicatorFinder);
+}
+
 Future<void> enterEditMode(tester) async {
   await tester.tap(find.byKey(const Key("enable_edit_mode_button")));
   await tester.pumpAndSettle();
