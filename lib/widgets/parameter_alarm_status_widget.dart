@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_controls_core/service/acsys/service.dart';
 import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 
-enum BeamInhibitState { wontInhibit, willInhibit, byPassed }
-
 class ParameterAlarmStatusWidget extends StatelessWidget {
   static const iconSize = 16.0;
 

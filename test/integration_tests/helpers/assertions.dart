@@ -3,8 +3,8 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_controls_core/flutter_controls_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/widgets/comment_entry_widget.dart';
+import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
-import 'package:parameter_page/widgets/parameter_alarm_status_widget.dart';
 import 'package:parameter_page/widgets/sub_page_navigation_widget.dart';
 
 void assertIsOnPage({required String comment}) {

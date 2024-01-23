@@ -288,12 +288,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         StreamBuilder(
             stream: widget.dpm.monitorDigitalAlarmDevices([widget.drf]),
             builder: _digitalAlarmBuilder),
-        Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-            child: deviceInfo?.digitalAlarm == null
-                ? const SizedBox(width: 16)
-                : ParameterBeamInhibitStatusWidget(
-                    drf: widget.drf, alarmInfo: deviceInfo!.digitalAlarm!))
+        StreamBuilder(
+            stream: widget.dpm.monitorDigitalAlarmBeamAbortInhibit(widget.drf),
+            builder: _digitalAlarmBeamInhibitBuilder),
       ]),
       Visibility(
           visible: widget.displayAlarmDetails,
@@ -486,6 +483,28 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
       return const Padding(
           padding: EdgeInsets.fromLTRB(8, 0, 0, 0), child: SizedBox(width: 40));
     }
+  }
+
+  Widget _digitalAlarmBeamInhibitBuilder(
+      BuildContext context, AsyncSnapshot snapshot) {
+    if (_deviceHasDigitalAlarmBlock &&
+        snapshot.connectionState == ConnectionState.active) {
+      final isByPassed = snapshot.data as bool;
+
+      return ParameterBeamInhibitStatusWidget(
+          state: _beamInhibitState(
+              abort: deviceInfo!.digitalAlarm!.abort, byPassed: isByPassed),
+          drf: widget.drf);
+    } else {
+      return const SizedBox(width: 16);
+    }
+  }
+
+  BeamInhibitState _beamInhibitState(
+      {required bool abort, required bool byPassed}) {
+    return abort
+        ? (byPassed ? BeamInhibitState.byPassed : BeamInhibitState.willInhibit)
+        : BeamInhibitState.wontInhibit;
   }
 
   Widget _buildParam(BuildContext context, String? value, String? units,
