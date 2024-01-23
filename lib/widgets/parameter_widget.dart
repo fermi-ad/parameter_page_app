@@ -6,6 +6,7 @@ import 'package:parameter_page/widgets/command_menu_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
 import 'package:parameter_page/widgets/parameter_alarm_status_widget.dart';
 import 'package:parameter_page/widgets/parameter_basic_status_widget.dart';
+import 'package:parameter_page/widgets/parameter_beam_inhibit_status_widget.dart';
 import 'package:parameter_page/widgets/parameter_extended_status_widget.dart';
 import 'package:parameter_page/widgets/setting_control_widget.dart';
 
@@ -286,7 +287,10 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                     builder: _basicStatusBuilder))),
         StreamBuilder(
             stream: widget.dpm.monitorDigitalAlarmDevices([widget.drf]),
-            builder: _digitalAlarmBuilder)
+            builder: _digitalAlarmBuilder),
+        StreamBuilder(
+            stream: widget.dpm.monitorDigitalAlarmBeamAbortInhibit(widget.drf),
+            builder: _digitalAlarmBeamInhibitBuilder),
       ]),
       Visibility(
           visible: widget.displayAlarmDetails,
@@ -479,6 +483,28 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
       return const Padding(
           padding: EdgeInsets.fromLTRB(8, 0, 0, 0), child: SizedBox(width: 40));
     }
+  }
+
+  Widget _digitalAlarmBeamInhibitBuilder(
+      BuildContext context, AsyncSnapshot snapshot) {
+    if (_deviceHasDigitalAlarmBlock &&
+        snapshot.connectionState == ConnectionState.active) {
+      final isByPassed = snapshot.data as bool;
+
+      return ParameterBeamInhibitStatusWidget(
+          state: _beamInhibitState(
+              abort: deviceInfo!.digitalAlarm!.abort, byPassed: isByPassed),
+          drf: widget.drf);
+    } else {
+      return const SizedBox(width: 16);
+    }
+  }
+
+  BeamInhibitState _beamInhibitState(
+      {required bool abort, required bool byPassed}) {
+    return abort
+        ? (byPassed ? BeamInhibitState.byPassed : BeamInhibitState.willInhibit)
+        : BeamInhibitState.wontInhibit;
   }
 
   Widget _buildParam(BuildContext context, String? value, String? units,

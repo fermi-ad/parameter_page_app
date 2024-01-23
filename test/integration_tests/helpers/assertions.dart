@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_controls_core/flutter_controls_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/widgets/comment_entry_widget.dart';
+import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
 import 'package:parameter_page/widgets/sub_page_navigation_widget.dart';
 
@@ -652,12 +653,7 @@ void assertAnalogAlarmStatus(WidgetTester tester,
       of: analogAlarmFinder, matching: find.byIcon(Icons.notifications_active));
   expect(alarmIndicatorFinder, isInAlarm ? findsOneWidget : findsNothing);
 
-  var brightness =
-      SchedulerBinding.instance.platformDispatcher.platformBrightness;
-  bool isDarkMode = brightness == Brightness.dark;
-  final ThemeData currentTheme = isDarkMode
-      ? tester.widget<MaterialApp>(find.byType(MaterialApp)).darkTheme!
-      : tester.widget<MaterialApp>(find.byType(MaterialApp)).theme!;
+  final ThemeData currentTheme = _getCurrentTheme(tester);
 
   final parameterReadingFinder = find.byKey(Key("parameter_reading_$forDRF"));
   final readingTextFinder = find
@@ -721,4 +717,49 @@ void assertAnalogAlarmToggle(WidgetTester tester,
       of: find.byKey(Key("parameter_analogalarm_$forDRF")),
       matching: find.byType(IconButton)));
   expect(button.onPressed, isEnabled ? isNotNull : isNull);
+}
+
+void assertDigitalAlarmBeamInhibitStatus(WidgetTester tester,
+    {required String forDRF, required BeamInhibitState isInState}) {
+  final alarmInhbitFinder =
+      find.byKey(Key("parameter_digitalalarm_beaminhibit_$forDRF"));
+  final iconFinder = find.descendant(
+      of: alarmInhbitFinder,
+      matching: isInState == BeamInhibitState.byPassed
+          ? find.byIcon(Icons.do_not_touch)
+          : find.byIcon(Icons.pan_tool));
+
+  expect(alarmInhbitFinder, findsOneWidget);
+
+  final icon = tester.widget<Icon>(iconFinder);
+  switch (isInState) {
+    case BeamInhibitState.wontInhibit:
+      expect(
+          icon.color, equals(_getCurrentTheme(tester).colorScheme.background));
+
+    case BeamInhibitState.willInhibit:
+      expect(icon.color, equals(_getCurrentTheme(tester).colorScheme.primary));
+
+    case BeamInhibitState.byPassed:
+      expect(icon.color, equals(_getCurrentTheme(tester).colorScheme.primary));
+  }
+}
+
+ThemeData _getCurrentTheme(WidgetTester tester) {
+  var brightness =
+      SchedulerBinding.instance.platformDispatcher.platformBrightness;
+
+  bool isDarkMode = brightness == Brightness.dark;
+
+  return isDarkMode
+      ? tester.widget<MaterialApp>(find.byType(MaterialApp)).darkTheme!
+      : tester.widget<MaterialApp>(find.byType(MaterialApp)).theme!;
+}
+
+void assertDigitalAlarmBeamInhibitIndicator(
+    {required String forDRF, required bool isVisible}) {
+  final alarmInhbitFinder =
+      find.byKey(Key("parameter_digitalalarm_beaminhibit_$forDRF"));
+
+  expect(alarmInhbitFinder, isVisible ? findsOneWidget : findsNothing);
 }

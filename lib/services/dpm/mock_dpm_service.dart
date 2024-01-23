@@ -55,7 +55,7 @@ class MockDpmService implements ACSysServiceAPI {
                   tolerance: "10.00",
                   min: "62.00",
                   max: "82.00"),
-              digitalAlarm: DeviceInfoDigitalAlarm(),
+              digitalAlarm: DeviceInfoDigitalAlarm(abort: false),
               basicStatus: const DeviceInfoBasicStatus(
                   onOffProperty: BasicStatusProperty(
                       invert: false,
@@ -89,7 +89,7 @@ class MockDpmService implements ACSysServiceAPI {
                   tolerance: "10.00",
                   min: "62.00",
                   max: "82.00"),
-              digitalAlarm: DeviceInfoDigitalAlarm(),
+              digitalAlarm: DeviceInfoDigitalAlarm(abort: true),
               basicStatus: const DeviceInfoBasicStatus(
                   onOffProperty: BasicStatusProperty(
                       invert: false,
@@ -158,18 +158,33 @@ class MockDpmService implements ACSysServiceAPI {
     if (useEmptyStream) {
       return const Stream<Reading>.empty();
     } else {
-      return Stream<Reading>.periodic(
-        const Duration(seconds: 1),
-        (count) {
-          return Reading(
-              refId: 0,
-              cycle: 0,
-              timestamp: DateTime(2023),
-              value: 100.0,
-              rawValue: "FFFF",
-              primaryValue: 10.0); //  + count * 0.1);
-        },
-      ).asBroadcastStream();
+      if (drfs[0] == "G:AMANDA.DIGITAL.ABORT_INHIBIT") {
+        return Stream<Reading>.periodic(
+          const Duration(seconds: 1),
+          (count) {
+            return Reading(
+                refId: 0,
+                cycle: 0,
+                timestamp: DateTime(2023),
+                value: _beamAbortByPassed ? 1 : 0,
+                rawValue: "0000",
+                primaryValue: 0.0); //  + count * 0.1);
+          },
+        ).asBroadcastStream();
+      } else {
+        return Stream<Reading>.periodic(
+          const Duration(seconds: 1),
+          (count) {
+            return Reading(
+                refId: 0,
+                cycle: 0,
+                timestamp: DateTime(2023),
+                value: 100.0,
+                rawValue: "FFFF",
+                primaryValue: 10.0); //  + count * 0.1);
+          },
+        ).asBroadcastStream();
+      }
     }
   }
 
@@ -375,6 +390,10 @@ class MockDpmService implements ACSysServiceAPI {
         isByPassed ? AlarmState.bypassed : AlarmState.notAlarming;
   }
 
+  void byPassDigitalAlarmBeamAbort(String drf) {
+    _beamAbortByPassed = true;
+  }
+
   void succeedAllPendingSettings() {
     _pendingSettingsCompleter.forEach((drf, controller) {
       controller.complete(const SettingStatus(facilityCode: 1, errorCode: 0));
@@ -514,6 +533,8 @@ class MockDpmService implements ACSysServiceAPI {
   double _incrementingSettingValue = 0.0;
 
   DevScalar? pendingSettingValue;
+
+  bool _beamAbortByPassed = false;
 }
 
 class MockAlarmStream {
