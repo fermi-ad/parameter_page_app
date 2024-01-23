@@ -472,5 +472,20 @@ void main() {
       assertDigitalAlarmBeamInhibitIndicator(
           forDRF: "Z:NO_ALARMS", isVisible: false);
     });
+
+    testWidgets('Alarm beam inhibit is on, beam inhibit indicator is on',
+        (WidgetTester tester) async {
+      // Given nothing...
+      await startParameterPageApp(tester);
+
+      // When I load a test page with a device that has a digital alarm block
+      // ... and the beam inhibit flag is on
+      await navigateToTestPage1(tester);
+      await waitForDigitalBeamInhibitIndicator(tester, forDRF: "G:AMANDA");
+
+      // Then the no beam-inhibit indicator is shown
+      assertDigitalAlarmBeamInhibitStatus(tester,
+          forDRF: "Z:BTE200_TEMP", isInState: BeamInhibitState.willInhibit);
+    });
   });
 }
