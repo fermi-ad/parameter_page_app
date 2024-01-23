@@ -298,7 +298,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                         message: "Digital alarm does not inhibit beam",
                         child: Icon(Icons.pan_tool,
                             size: 16,
-                            color: Theme.of(context).colorScheme.background))))
+                            color: deviceInfo!.digitalAlarm!.abort
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context).colorScheme.background))))
       ]),
       Visibility(
           visible: widget.displayAlarmDetails,

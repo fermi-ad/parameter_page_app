@@ -485,7 +485,7 @@ void main() {
 
       // Then the no beam-inhibit indicator is shown
       assertDigitalAlarmBeamInhibitStatus(tester,
-          forDRF: "Z:BTE200_TEMP", isInState: BeamInhibitState.willInhibit);
+          forDRF: "G:AMANDA", isInState: BeamInhibitState.willInhibit);
     });
   });
 }
