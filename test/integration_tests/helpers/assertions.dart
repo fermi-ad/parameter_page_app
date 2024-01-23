@@ -749,3 +749,11 @@ ThemeData _getCurrentTheme(WidgetTester tester) {
       ? tester.widget<MaterialApp>(find.byType(MaterialApp)).darkTheme!
       : tester.widget<MaterialApp>(find.byType(MaterialApp)).theme!;
 }
+
+void assertDigitalAlarmBeamInhibitIndicator(
+    {required String forDRF, required bool isVisible}) {
+  final alarmInhbitFinder =
+      find.byKey(Key("parameter_digitalalarm_beaminhibit_$forDRF"));
+
+  expect(alarmInhbitFinder, isVisible ? findsOneWidget : findsNothing);
+}

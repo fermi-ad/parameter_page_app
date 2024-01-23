@@ -286,7 +286,13 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                     builder: _basicStatusBuilder))),
         StreamBuilder(
             stream: widget.dpm.monitorDigitalAlarmDevices([widget.drf]),
-            builder: _digitalAlarmBuilder)
+            builder: _digitalAlarmBuilder),
+        Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child: Container(
+                key: Key("parameter_digitalalarm_beaminhibit_${widget.drf}"),
+                child: Icon(Icons.stop_circle,
+                    size: 16, color: Theme.of(context).colorScheme.background)))
       ]),
       Visibility(
           visible: widget.displayAlarmDetails,
