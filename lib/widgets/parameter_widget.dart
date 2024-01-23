@@ -294,9 +294,11 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                 : Container(
                     key:
                         Key("parameter_digitalalarm_beaminhibit_${widget.drf}"),
-                    child: Icon(Icons.stop_circle,
-                        size: 16,
-                        color: Theme.of(context).colorScheme.background)))
+                    child: Tooltip(
+                        message: "Digital alarm does not inhibit beam",
+                        child: Icon(Icons.stop_circle,
+                            size: 16,
+                            color: Theme.of(context).colorScheme.background))))
       ]),
       Visibility(
           visible: widget.displayAlarmDetails,
