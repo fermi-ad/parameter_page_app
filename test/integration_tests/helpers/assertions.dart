@@ -724,7 +724,10 @@ void assertDigitalAlarmBeamInhibitStatus(WidgetTester tester,
   final alarmInhbitFinder =
       find.byKey(Key("parameter_digitalalarm_beaminhibit_$forDRF"));
   final iconFinder = find.descendant(
-      of: alarmInhbitFinder, matching: find.byIcon(Icons.stop_circle));
+      of: alarmInhbitFinder,
+      matching: isInState == BeamInhibitState.byPassed
+          ? find.byIcon(Icons.do_not_touch)
+          : find.byIcon(Icons.stop_circle));
 
   expect(alarmInhbitFinder, findsOneWidget);
 
@@ -735,6 +738,9 @@ void assertDigitalAlarmBeamInhibitStatus(WidgetTester tester,
           icon.color, equals(_getCurrentTheme(tester).colorScheme.background));
 
     case BeamInhibitState.willInhibit:
+      expect(icon.color, equals(_getCurrentTheme(tester).colorScheme.primary));
+
+    case BeamInhibitState.byPassed:
       expect(icon.color, equals(_getCurrentTheme(tester).colorScheme.primary));
   }
 }
