@@ -6,6 +6,7 @@ import 'package:parameter_page/widgets/command_menu_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
 import 'package:parameter_page/widgets/parameter_alarm_status_widget.dart';
 import 'package:parameter_page/widgets/parameter_basic_status_widget.dart';
+import 'package:parameter_page/widgets/parameter_beam_inhibit_status_widget.dart';
 import 'package:parameter_page/widgets/parameter_extended_status_widget.dart';
 import 'package:parameter_page/widgets/setting_control_widget.dart';
 
@@ -291,16 +292,8 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
             padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: deviceInfo?.digitalAlarm == null
                 ? const SizedBox(width: 16)
-                : Container(
-                    key:
-                        Key("parameter_digitalalarm_beaminhibit_${widget.drf}"),
-                    child: Tooltip(
-                        message: "Digital alarm does not inhibit beam",
-                        child: Icon(Icons.pan_tool,
-                            size: 16,
-                            color: deviceInfo!.digitalAlarm!.abort
-                                ? Theme.of(context).colorScheme.primary
-                                : Theme.of(context).colorScheme.background))))
+                : ParameterBeamInhibitStatusWidget(
+                    drf: widget.drf, alarmInfo: deviceInfo!.digitalAlarm!))
       ]),
       Visibility(
           visible: widget.displayAlarmDetails,
