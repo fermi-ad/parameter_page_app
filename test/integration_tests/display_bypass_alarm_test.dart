@@ -470,7 +470,7 @@ void main() {
 
       // Then there is no beam-inhibit indicator
       assertDigitalAlarmBeamInhibitIndicator(
-          forDRF: "Z:BTE200_TEMP", isVisible: false);
+          forDRF: "Z:NO_ALARMS", isVisible: false);
     });
   });
 }
