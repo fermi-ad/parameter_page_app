@@ -32,7 +32,7 @@ class ParameterBeamInhibitStatusWidget extends StatelessWidget {
 
       case BeamInhibitState.byPassed:
         return Tooltip(
-            message: "Beam abort by-passed",
+            message: "Beam inhibit by-passed",
             child: Icon(Icons.do_not_touch,
                 size: 16, color: Theme.of(context).colorScheme.primary));
     }
