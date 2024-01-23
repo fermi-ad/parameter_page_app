@@ -727,7 +727,7 @@ void assertDigitalAlarmBeamInhibitStatus(WidgetTester tester,
       of: alarmInhbitFinder,
       matching: isInState == BeamInhibitState.byPassed
           ? find.byIcon(Icons.do_not_touch)
-          : find.byIcon(Icons.stop_circle));
+          : find.byIcon(Icons.pan_tool));
 
   expect(alarmInhbitFinder, findsOneWidget);
 
