@@ -14,6 +14,68 @@ void main() {
       expect(results[0].description, "Amanda catchall alarm!!!");
     });
 
+    test('getDeviceInfo for G:AMANDA, reading property is returned', () async {
+      // Given an ACSysService
+      final service = ACSysService();
+
+      // When I getDeviceInfo for G:AMANDA
+      final results = await service.getDeviceInfo(["G:AMANDA"]);
+
+      // Then an analog alarm block is returned
+      expect(results[0].reading, isNotNull);
+      expect(results[0].reading!.commonUnits, "oops");
+      expect(results[0].reading!.primaryUnits, "oops");
+    });
+
+    test('getDeviceInfo for G:AMANDA, setting property is returned', () async {
+      // Given an ACSysService
+      final service = ACSysService();
+
+      // When I getDeviceInfo for G:AMANDA
+      final results = await service.getDeviceInfo(["G:AMANDA"]);
+
+      // Then an analog alarm block is returned
+      expect(results[0].reading, isNotNull);
+      expect(results[0].reading!.commonUnits, "oops");
+      expect(results[0].reading!.primaryUnits, "oops");
+    });
+
+    test('getDeviceInfo for G:AMANDA, digital control property is returned',
+        () async {
+      // Given an ACSysService
+      final service = ACSysService();
+
+      // When I getDeviceInfo for G:AMANDA
+      final results = await service.getDeviceInfo(["G:AMANDA"]);
+
+      // Then an analog alarm block is returned
+      expect(results[0].digControl, isNotNull);
+    });
+
+    test('getDeviceInfo for G:AMANDA, basic status property is returned',
+        () async {
+      // Given an ACSysService
+      final service = ACSysService();
+
+      // When I getDeviceInfo for G:AMANDA
+      final results = await service.getDeviceInfo(["G:AMANDA"]);
+
+      // Then an analog alarm block is returned
+      expect(results[0].basicStatus, isNotNull);
+    });
+
+    test('getDeviceInfo for G:AMANDA, extended status info is returned',
+        () async {
+      // Given an ACSysService
+      final service = ACSysService();
+
+      // When I getDeviceInfo for G:AMANDA
+      final results = await service.getDeviceInfo(["G:AMANDA"]);
+
+      // Then an analog alarm block is returned
+      expect(results[0].basicStatus!.extendedBasicStatus, isNotNull);
+    });
+
     test('getDeviceInfo for G:AMANDA, analog alarm block is present', () async {
       // Given an ACSysService
       final service = ACSysService();
