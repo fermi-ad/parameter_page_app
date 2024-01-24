@@ -24,6 +24,18 @@ void main() {
       // Then an analog alarm block is returned
       expect(results[0].alarm, isNotNull);
     });
+
+    test('getDeviceInfo for G:AMANDA, digital alarm block is present',
+        () async {
+      // Given an ACSysService
+      final service = ACSysService();
+
+      // When I getDeviceInfo for G:AMANDA
+      final results = await service.getDeviceInfo(["G:AMANDA"]);
+
+      // Then an analog alarm block is returned
+      expect(results[0].digitalAlarm, isNotNull);
+    });
   });
 
   group('monitorAlarm', () {
