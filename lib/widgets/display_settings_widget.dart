@@ -63,12 +63,8 @@ class _DisplaySettingsState extends State<DisplaySettingsWidget> {
           title: const Text('Display Settings'),
         ),
         body: SettingsList(
-            darkTheme: SettingsThemeData(
-                settingsListBackground:
-                    Theme.of(context).colorScheme.background),
-            lightTheme: SettingsThemeData(
-                settingsListBackground:
-                    Theme.of(context).colorScheme.background),
+            darkTheme: _themeData(context),
+            lightTheme: _themeData(context),
             sections: [
               SettingsSection(
                   title: const Text("Display"),
@@ -89,6 +85,18 @@ class _DisplaySettingsState extends State<DisplaySettingsWidget> {
                             "Show Parameter Alarm Details (${_settings.showAlarmDetails ? "on" : "off"})"))
                   ])
             ]));
+  }
+
+  SettingsThemeData _themeData(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return SettingsThemeData(
+        settingsListBackground: colorScheme.background,
+        titleTextColor: colorScheme.onBackground,
+        settingsTileTextColor: colorScheme.primary,
+        dividerColor: colorScheme.background,
+        tileDescriptionTextColor: colorScheme.secondary,
+        settingsSectionBackground: colorScheme.surface,
+        leadingIconsColor: colorScheme.onSurface);
   }
 
   void _popupUnitsMenu(BuildContext context) {
