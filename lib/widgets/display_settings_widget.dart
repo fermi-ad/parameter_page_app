@@ -62,24 +62,41 @@ class _DisplaySettingsState extends State<DisplaySettingsWidget> {
           key: const Key("display_settings_appbar"),
           title: const Text('Display Settings'),
         ),
-        body: SettingsList(sections: [
-          SettingsSection(title: const Text("Display"), tiles: <SettingsTile>[
-            SettingsTile.navigation(
-              key: const Key("display_settings_tile_units"),
-              leading: const Icon(Icons.abc),
-              title: const Text("Units"),
-              onPressed: _popupUnitsMenu,
-              value: Text(_settings.units.asString),
-            ),
-            SettingsTile.switchTile(
-                key: const Key("display_settings_tile_alarm_details"),
-                initialValue: _settings.showAlarmDetails,
-                onToggle: _toggleShowAlarmDetails,
-                leading: const Icon(Icons.alarm),
-                title: Text(
-                    "Show Parameter Alarm Details (${_settings.showAlarmDetails ? "on" : "off"})"))
-          ])
-        ]));
+        body: SettingsList(
+            darkTheme: _themeData(context),
+            lightTheme: _themeData(context),
+            sections: [
+              SettingsSection(
+                  title: const Text("Display"),
+                  tiles: <SettingsTile>[
+                    SettingsTile.navigation(
+                      key: const Key("display_settings_tile_units"),
+                      leading: const Icon(Icons.abc),
+                      title: const Text("Units"),
+                      onPressed: _popupUnitsMenu,
+                      value: Text(_settings.units.asString),
+                    ),
+                    SettingsTile.switchTile(
+                        key: const Key("display_settings_tile_alarm_details"),
+                        initialValue: _settings.showAlarmDetails,
+                        onToggle: _toggleShowAlarmDetails,
+                        leading: const Icon(Icons.alarm),
+                        title: Text(
+                            "Show Parameter Alarm Details (${_settings.showAlarmDetails ? "on" : "off"})"))
+                  ])
+            ]));
+  }
+
+  SettingsThemeData _themeData(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return SettingsThemeData(
+        settingsListBackground: colorScheme.background,
+        titleTextColor: colorScheme.onBackground,
+        settingsTileTextColor: colorScheme.primary,
+        dividerColor: colorScheme.background,
+        tileDescriptionTextColor: colorScheme.secondary,
+        settingsSectionBackground: colorScheme.surface,
+        leadingIconsColor: colorScheme.onSurface);
   }
 
   void _popupUnitsMenu(BuildContext context) {

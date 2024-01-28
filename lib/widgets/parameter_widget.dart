@@ -295,8 +295,10 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
       Visibility(
           visible: widget.displayAlarmDetails,
           child: (deviceInfo != null && deviceInfo!.alarm != null)
-              ? ParameterAlarmDetailsWidget(
-                  drf: widget.drf, alarmBlock: deviceInfo!.alarm!)
+              ? Padding(
+                  padding: const EdgeInsets.fromLTRB(308, 8, 0, 0),
+                  child: ParameterAlarmDetailsWidget(
+                      drf: widget.drf, alarmBlock: deviceInfo!.alarm!))
               : Container()),
     ]);
   }
