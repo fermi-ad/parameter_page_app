@@ -6,6 +6,8 @@ import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 import 'package:parameter_page/widgets/display_settings_widget.dart';
 import 'package:parameter_page/widgets/setting_control_widget.dart';
 
+import '../integration_tests/helpers/assertions.dart';
+
 void main() {
   MockDpmService testDPM = MockDpmService();
 
@@ -443,6 +445,29 @@ void main() {
 
       // Then the undo value is not submitted and stays the same
       assertSettingPendingIndicator(isVisible: false);
+    });
+
+    testWidgets('Knobbing enabled, step size shown when tapped',
+        (WidgetTester tester) async {
+      // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP with an initial value of "72.0"
+      // ... and settingsAllowed is set to true
+      MaterialApp app = initialize(const SettingControlWidget(
+          drf: "Z:BTE200_TEMP",
+          displayUnits: DisplayUnits.commonUnits,
+          settingsAllowed: true));
+      await tester.pumpWidget(app);
+      await sendSettingTestData(tester, settingValue: 72.0);
+      await tester.pumpAndSettle();
+
+      // When tapped
+      await tester.tap(find.text("72.00"));
+      await tester.pumpAndSettle();
+
+      // Then the knobbing controls are visible
+      assertKnobbingControls(areVisible: true, forDRF: "Z:BTE200_TEMP");
+
+      // ... and the step size is 0.005
+      assertKnobbing(stepSizeIs: "0.005", forDRF: "Z:BTE200_TEMP");
     });
   });
 }
