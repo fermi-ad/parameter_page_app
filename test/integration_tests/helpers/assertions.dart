@@ -769,3 +769,11 @@ void assertKnobbingControls(
   expect(find.byKey(Key("parameter_settingknobbing_$forDRF")),
       areVisible ? findsOneWidget : findsNothing);
 }
+
+void assertKnobbing({required String stepSizeIs, required String forDRF}) {
+  expect(
+      find.descendant(
+          of: find.byKey(Key("parameter_settingknobbing_$forDRF")),
+          matching: find.text(stepSizeIs)),
+      findsOneWidget);
+}
