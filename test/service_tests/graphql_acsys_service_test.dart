@@ -84,6 +84,7 @@ void main() {
       final results = await service.getDeviceInfo(["G:AMANDA"]);
 
       // Then the knob info is returned
+      expect(results[0].setting, isNotNull);
       // final knobInfo = results[0].setting!.knobInfo;
       // expect(knobInfo, isNotNull);
       // expect(knobInfo.minVal, isNotNull);
