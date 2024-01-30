@@ -76,6 +76,21 @@ void main() {
       expect(results[0].basicStatus!.extendedBasicStatus, isNotNull);
     });
 
+    test('getDeviceInfo for G:AMANDA, setting knob info is returned', () async {
+      // Given an ACSysService
+      final service = ACSysService();
+
+      // When I getDeviceInfo for G:AMANDA
+      final results = await service.getDeviceInfo(["G:AMANDA"]);
+
+      // Then the knob info is returned
+      // final knobInfo = results[0].setting!.knobInfo;
+      // expect(knobInfo, isNotNull);
+      // expect(knobInfo.minVal, isNotNull);
+      // expect(knobInfo.maxVal, isNotNull);
+      // expect(knobInfo.step, 0.005);
+    });
+
     test('getDeviceInfo for G:AMANDA, analog alarm block is present', () async {
       // Given an ACSysService
       final service = ACSysService();
