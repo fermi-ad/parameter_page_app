@@ -763,3 +763,9 @@ void assertDigitalAlarmBeamInhibitIndicator(
 
   expect(alarmInhbitFinder, isVisible ? findsOneWidget : findsNothing);
 }
+
+void assertKnobbingControls(
+    {required bool areVisible, required String forDRF}) {
+  expect(find.byKey(Key("parameter_settingknobbing_$forDRF")),
+      areVisible ? findsOneWidget : findsNothing);
+}
