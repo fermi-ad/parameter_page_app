@@ -69,15 +69,7 @@ class _SettingControlState extends State<SettingControlWidget> {
             SizedBox(width: 32.0, child: _buildSubmitButton(context)),
             SizedBox(width: 32.0, child: _buildCancelButton())
           ])),
-          Flexible(
-              child: Visibility(
-                  visible: widget.knobbingEnabled,
-                  child: Row(
-                      key: Key("parameter_settingknobbing_${widget.drf}"),
-                      children: const [
-                        Text("Knob +/- (F4/F5): "),
-                        Text("0.005")
-                      ])))
+          Flexible(child: _buildKnobbingControls())
         ]));
   }
 
@@ -146,6 +138,14 @@ class _SettingControlState extends State<SettingControlWidget> {
                 child: Icon(Icons.cancel,
                     color: Theme.of(context).colorScheme.error)))
         : Container();
+  }
+
+  Widget _buildKnobbingControls() {
+    return Visibility(
+        visible: widget.knobbingEnabled,
+        child: Row(
+            key: Key("parameter_settingknobbing_${widget.drf}"),
+            children: const [Text("Knob +/- (F4/F5): "), Text("0.005")]));
   }
 
   Widget _buildDisplayingState() {
