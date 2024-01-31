@@ -70,9 +70,14 @@ class _SettingControlState extends State<SettingControlWidget> {
             SizedBox(width: 32.0, child: _buildCancelButton())
           ])),
           Flexible(
-              child: Row(
-                  key: Key("parameter_settingknobbing_${widget.drf}"),
-                  children: const [Text("Knob +/- (F4/F5): "), Text("0.005")]))
+              child: Visibility(
+                  visible: widget.knobbingEnabled,
+                  child: Row(
+                      key: Key("parameter_settingknobbing_${widget.drf}"),
+                      children: const [
+                        Text("Knob +/- (F4/F5): "),
+                        Text("0.005")
+                      ])))
         ]));
   }
 
