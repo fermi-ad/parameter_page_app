@@ -454,7 +454,8 @@ void main() {
       MaterialApp app = initialize(const SettingControlWidget(
           drf: "Z:BTE200_TEMP",
           displayUnits: DisplayUnits.commonUnits,
-          settingsAllowed: true));
+          settingsAllowed: true,
+          knobbingEnabled: true));
       await tester.pumpWidget(app);
       await sendSettingTestData(tester, settingValue: 72.0);
       await tester.pumpAndSettle();

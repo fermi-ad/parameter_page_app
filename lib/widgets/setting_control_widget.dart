@@ -18,6 +18,8 @@ class SettingControlWidget extends StatefulWidget {
 
   final bool settingsAllowed;
 
+  final bool knobbingEnabled;
+
   const SettingControlWidget(
       {super.key,
       required this.drf,
@@ -25,7 +27,8 @@ class SettingControlWidget extends StatefulWidget {
       this.units,
       required this.displayUnits,
       this.wide = true,
-      this.settingsAllowed = true});
+      this.settingsAllowed = true,
+      this.knobbingEnabled = false});
 
   @override
   State<StatefulWidget> createState() {
@@ -54,14 +57,23 @@ class _SettingControlState extends State<SettingControlWidget> {
   }
 
   Widget _buildWide(BuildContext context) {
-    return Row(children: [
-      _buildUndo(context),
-      const SizedBox(width: 4.0),
-      SizedBox(width: 128.0, child: _buildStates(context)),
-      SizedBox(width: 56.0, child: _buildUnits()),
-      SizedBox(width: 32.0, child: _buildSubmitButton(context)),
-      SizedBox(width: 32.0, child: _buildCancelButton())
-    ]);
+    return SizedBox(
+        height: 64,
+        child: Column(children: [
+          Flexible(
+              child: Row(children: [
+            _buildUndo(context),
+            const SizedBox(width: 4.0),
+            SizedBox(width: 128.0, child: _buildStates(context)),
+            SizedBox(width: 56.0, child: _buildUnits()),
+            SizedBox(width: 32.0, child: _buildSubmitButton(context)),
+            SizedBox(width: 32.0, child: _buildCancelButton())
+          ])),
+          Flexible(
+              child: Row(
+                  key: Key("parameter_settingknobbing_${widget.drf}"),
+                  children: const [Text("Knob +/- (F4/F5): "), Text("0.005")]))
+        ]));
   }
 
   Widget _buildNarrow(BuildContext context) {
