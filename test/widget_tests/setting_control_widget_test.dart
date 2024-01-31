@@ -447,6 +447,28 @@ void main() {
       assertSettingPendingIndicator(isVisible: false);
     });
 
+    testWidgets('Knobbing disabled, step size is not shown',
+        (WidgetTester tester) async {
+      // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP with an initial value of "72.0"
+      // ... and settingsAllowed is set to true
+      // ... and knobbing is disabled
+      MaterialApp app = initialize(const SettingControlWidget(
+          drf: "Z:BTE200_TEMP",
+          displayUnits: DisplayUnits.commonUnits,
+          settingsAllowed: true,
+          knobbingEnabled: false));
+      await tester.pumpWidget(app);
+      await sendSettingTestData(tester, settingValue: 72.0);
+      await tester.pumpAndSettle();
+
+      // When tapped
+      await tester.tap(find.text("72.00"));
+      await tester.pumpAndSettle();
+
+      // Then the knobbing controls are NOT visible
+      assertKnobbingControls(areVisible: false, forDRF: "Z:BTE200_TEMP");
+    });
+
     testWidgets('Knobbing enabled, step size shown when tapped',
         (WidgetTester tester) async {
       // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP with an initial value of "72.0"
