@@ -115,9 +115,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   String? get settingUnits {
     switch (widget.displayUnits) {
       case DisplayUnits.commonUnits:
-        return deviceInfo?.setting?.commonUnits;
+        return deviceInfo?.setting?.$1.commonUnits;
       case DisplayUnits.primaryUnits:
-        return deviceInfo?.setting?.primaryUnits;
+        return deviceInfo?.setting?.$1.primaryUnits;
       case DisplayUnits.raw:
         return null;
     }

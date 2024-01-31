@@ -22,15 +22,30 @@ class MockDpmService implements ACSysServiceAPI {
               name: drf,
               description: "device description",
               reading: null,
-              setting: const DeviceInfoProperty(
-                  commonUnits: "cUS", primaryUnits: "pUS"));
+              setting: (
+                const DeviceInfoProperty(
+                    commonUnits: "cUS",
+                    primaryUnits: "pUS",
+                    minVal: -double.infinity,
+                    maxVal: double.infinity,
+                    commonIndex: 0,
+                    commonCoeff: [],
+                    primaryIndex: 0),
+                const KnobbingInfo(minVal: 0, maxVal: 0, step: 0.0)
+              ));
         case "Z:NO_SET":
           return DeviceInfo(
               di: 0,
               name: drf,
               description: "device description",
               reading: const DeviceInfoProperty(
-                  commonUnits: "cUR", primaryUnits: "pUR"),
+                  commonUnits: "cUR",
+                  primaryUnits: "pUR",
+                  minVal: -double.infinity,
+                  maxVal: double.infinity,
+                  commonIndex: 0,
+                  commonCoeff: [],
+                  primaryIndex: 0),
               setting: null);
         case "Z:NO_ALARMS":
           return DeviceInfo(
@@ -38,18 +53,48 @@ class MockDpmService implements ACSysServiceAPI {
               name: drf,
               description: "device description",
               reading: const DeviceInfoProperty(
-                  commonUnits: "cUR", primaryUnits: "pUR"),
-              setting: const DeviceInfoProperty(
-                  commonUnits: "cUS", primaryUnits: "pUS"));
+                  commonUnits: "cUR",
+                  primaryUnits: "pUR",
+                  minVal: -double.infinity,
+                  maxVal: double.infinity,
+                  commonIndex: 0,
+                  commonCoeff: [],
+                  primaryIndex: 0),
+              setting: (
+                const DeviceInfoProperty(
+                    commonUnits: "cUS",
+                    primaryUnits: "pUS",
+                    minVal: -double.infinity,
+                    maxVal: double.infinity,
+                    commonIndex: 0,
+                    commonCoeff: [],
+                    primaryIndex: 0),
+                const KnobbingInfo(minVal: 0, maxVal: 0, step: 0.0)
+              ));
         case "Z:BTE200_TEMP":
           return DeviceInfo(
               di: 0,
               name: drf,
               description: "device description",
               reading: const DeviceInfoProperty(
-                  commonUnits: "cUR", primaryUnits: "pUR"),
-              setting: const DeviceInfoProperty(
-                  commonUnits: "cUS", primaryUnits: "pUS"),
+                  commonUnits: "cUR",
+                  primaryUnits: "pUR",
+                  minVal: -double.infinity,
+                  maxVal: double.infinity,
+                  commonIndex: 0,
+                  commonCoeff: [],
+                  primaryIndex: 0),
+              setting: (
+                const DeviceInfoProperty(
+                    commonUnits: "cUS",
+                    primaryUnits: "pUS",
+                    minVal: -double.infinity,
+                    maxVal: double.infinity,
+                    commonIndex: 0,
+                    commonCoeff: [],
+                    primaryIndex: 0),
+                const KnobbingInfo(minVal: 0, maxVal: 0, step: 0.0)
+              ),
               alarm: const DeviceInfoAnalogAlarm(
                   nominal: "72.00",
                   tolerance: "10.00",
@@ -81,9 +126,24 @@ class MockDpmService implements ACSysServiceAPI {
               name: drf,
               description: "device description",
               reading: const DeviceInfoProperty(
-                  commonUnits: "cUR", primaryUnits: "pUR"),
-              setting: const DeviceInfoProperty(
-                  commonUnits: "cUS", primaryUnits: "pUS"),
+                  commonUnits: "cUR",
+                  primaryUnits: "pUR",
+                  minVal: -double.infinity,
+                  maxVal: double.infinity,
+                  commonIndex: 0,
+                  commonCoeff: [],
+                  primaryIndex: 0),
+              setting: (
+                const DeviceInfoProperty(
+                    commonUnits: "cUS",
+                    primaryUnits: "pUS",
+                    minVal: -double.infinity,
+                    maxVal: double.infinity,
+                    commonIndex: 0,
+                    commonCoeff: [],
+                    primaryIndex: 0),
+                const KnobbingInfo(minVal: 0, maxVal: 0, step: 0.0)
+              ),
               alarm: const DeviceInfoAnalogAlarm(
                   nominal: "72.00",
                   tolerance: "10.00",
@@ -141,9 +201,24 @@ class MockDpmService implements ACSysServiceAPI {
               name: drf,
               description: "device description",
               reading: const DeviceInfoProperty(
-                  commonUnits: "cUR", primaryUnits: "pUR"),
-              setting: const DeviceInfoProperty(
-                  commonUnits: "cUS", primaryUnits: "pUS"),
+                  commonUnits: "cUR",
+                  primaryUnits: "pUR",
+                  minVal: -double.infinity,
+                  maxVal: double.infinity,
+                  commonIndex: 0,
+                  commonCoeff: [],
+                  primaryIndex: 0),
+              setting: (
+                const DeviceInfoProperty(
+                    commonUnits: "cUS",
+                    primaryUnits: "pUS",
+                    minVal: -double.infinity,
+                    maxVal: double.infinity,
+                    commonIndex: 0,
+                    commonCoeff: [],
+                    primaryIndex: 0),
+                const KnobbingInfo(minVal: 0, maxVal: 0, step: 0.0)
+              ),
               alarm: const DeviceInfoAnalogAlarm(
                   nominal: "72.00",
                   tolerance: "10.00",
