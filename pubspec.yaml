@@ -38,7 +38,7 @@ dependencies:
     # Use with the CupertinoIcons class for iOS style icons.
     cupertino_icons: ^1.0.2
     settings_ui: ^2.0.2
-    graphql_flutter: ^5.2.0-beta.4
+    graphql_flutter: ^5.2.0-beta.5
     flutter_dotenv: ^5.1.0
     go_router: ^12.0.0
 
