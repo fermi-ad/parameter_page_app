@@ -312,7 +312,7 @@ Future<void> closeMainMenu(tester) async {
 }
 
 Future<void> tapSetting(tester, {required String forDRF}) async {
-  await tester.tap(find.byKey(Key("parameter_setting_$forDRF")));
+  await tester.tap(find.byKey(Key("parameter_settingdisplay_$forDRF")));
   await tester.pumpAndSettle();
 }
 

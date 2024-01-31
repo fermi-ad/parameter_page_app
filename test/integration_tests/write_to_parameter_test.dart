@@ -26,7 +26,7 @@ void main() {
 
       // Then the the setting text is replaced with a text input
       assertSettingTextInput(forDRF: "Z:BTE200_TEMP", isVisible: true);
-    });
+    }, semanticsEnabled: false);
 
     // Test cancel setting
     testWidgets(
@@ -46,7 +46,7 @@ void main() {
 
       // Then the setting text field is hidden
       assertSettingTextInput(forDRF: "Z:BTE200_TEMP", isVisible: false);
-    });
+    }, semanticsEnabled: false);
 
     // Test submit setting success & active undo update
     testWidgets(
@@ -76,7 +76,7 @@ void main() {
 
       // ... and the undo display shows the old value
       assertUndo(forDRF: "G:AMANDA", isVisible: true, isValue: "50.00");
-    });
+    }, semanticsEnabled: false);
 
     // Test submit setting failure
     testWidgets('Failed setting, displays error message for three seconds',
@@ -103,7 +103,7 @@ void main() {
           isVisible: true,
           facilityCode: 57,
           errorCode: -10);
-    });
+    }, semanticsEnabled: false);
 
     // Test passive undo update
     testWidgets('Setting changes, undo displays the original setting value',
@@ -118,7 +118,7 @@ void main() {
 
       // Then the undo is dispayed showing the original setting
       assertUndo(forDRF: "Z:INC_SETTING", isVisible: true);
-    });
+    }, semanticsEnabled: false);
 
     // Test undo setting
     testWidgets('Click Undo display, original value is submitted and set',
@@ -141,6 +141,6 @@ void main() {
       // Then the original value is restored successfully
       await waitForSettingDataToLoad(tester, forDRF: "G:AMANDA");
       assertParameterHasDetails("G:AMANDA", settingValue: "50.00");
-    });
+    }, semanticsEnabled: false);
   });
 }
