@@ -767,7 +767,10 @@ void assertDigitalAlarmBeamInhibitIndicator(
 void assertKnobbingControls(
     {required bool areVisible, required String forDRF}) {
   expect(find.byKey(Key("parameter_settingknobbing_$forDRF")),
-      areVisible ? findsOneWidget : findsNothing);
+      areVisible ? findsOneWidget : findsNothing,
+      reason: areVisible
+          ? "(assertKnobbingControls) Expected to see knobbing controls for $forDRF"
+          : "(assertKnobbingControls) Expected not to see knobbing controls for $forDRF");
 }
 
 void assertKnobbing({required String stepSizeIs, required String forDRF}) {
@@ -775,5 +778,7 @@ void assertKnobbing({required String stepSizeIs, required String forDRF}) {
       find.descendant(
           of: find.byKey(Key("parameter_settingknobbing_$forDRF")),
           matching: find.text(stepSizeIs)),
-      findsOneWidget);
+      findsOneWidget,
+      reason:
+          "(assertKnobbing) Expected the knobbing step size to be $stepSizeIs for $forDRF");
 }

@@ -264,6 +264,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                     drf: widget.drf,
                     displayUnits: widget.displayUnits,
                     units: settingUnits,
+                    knobbingEnabled: deviceInfo?.setting?.$2 != null,
                     wide: true))),
         const SizedBox(width: 8.0),
         SizedBox(

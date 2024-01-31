@@ -31,7 +31,7 @@ class MockDpmService implements ACSysServiceAPI {
                     commonIndex: 0,
                     commonCoeff: [],
                     primaryIndex: 0),
-                const KnobbingInfo(minVal: 0, maxVal: 0, step: 0.0)
+                null
               ));
         case "Z:NO_SET":
           return DeviceInfo(
