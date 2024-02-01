@@ -142,8 +142,7 @@ class _SettingControlState extends State<SettingControlWidget> {
 
   Widget _buildKnobbingControls() {
     return Visibility(
-        visible: widget.knobbingEnabled &&
-            _state == _SettingControlInternalState.editing,
+        visible: _showKnobbingControls,
         child: Row(
             key: Key("parameter_settingknobbing_${widget.drf}"),
             children: const [Text("Knob +/- (F4/F5): "), Text("0.005")]));
@@ -333,6 +332,11 @@ class _SettingControlState extends State<SettingControlWidget> {
       _errorCode = errorCode;
       _state = _SettingControlInternalState.displayingError;
     });
+  }
+
+  bool get _showKnobbingControls {
+    return widget.knobbingEnabled &&
+        _state == _SettingControlInternalState.editing;
   }
 
   _SettingControlInternalState _state = _SettingControlInternalState.displaying;
