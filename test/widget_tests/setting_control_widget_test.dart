@@ -469,7 +469,7 @@ void main() {
       assertKnobbingControls(areVisible: false, forDRF: "Z:BTE200_TEMP");
     });
 
-    testWidgets('Knobbing enabled, step size shown when tapped',
+    testWidgets('Knobbing enabled, step size shown only when tapped',
         (WidgetTester tester) async {
       // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP with an initial value of "72.0"
       // ... and settingsAllowed is set to true
@@ -481,6 +481,7 @@ void main() {
       await tester.pumpWidget(app);
       await sendSettingTestData(tester, settingValue: 72.0);
       await tester.pumpAndSettle();
+      assertKnobbingControls(areVisible: false, forDRF: "Z:BTE200_TEMP");
 
       // When tapped
       await tester.tap(find.text("72.00"));
