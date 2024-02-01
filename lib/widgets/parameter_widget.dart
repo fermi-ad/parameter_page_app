@@ -255,7 +255,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(children: [
         SizedBox(
-            width: 300,
+            width: 330,
             child: Visibility(
                 visible: hasSettingProperty,
                 child: SettingControlWidget(
