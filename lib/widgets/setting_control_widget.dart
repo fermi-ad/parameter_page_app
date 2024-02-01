@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 import 'package:parameter_page/widgets/display_settings_widget.dart';
 
@@ -20,6 +21,8 @@ class SettingControlWidget extends StatefulWidget {
 
   final bool knobbingEnabled;
 
+  final double knobbingStepSize;
+
   const SettingControlWidget(
       {super.key,
       required this.drf,
@@ -28,7 +31,8 @@ class SettingControlWidget extends StatefulWidget {
       required this.displayUnits,
       this.wide = true,
       this.settingsAllowed = true,
-      this.knobbingEnabled = false});
+      this.knobbingEnabled = false,
+      this.knobbingStepSize = 1.0});
 
   @override
   State<StatefulWidget> createState() {
@@ -141,11 +145,14 @@ class _SettingControlState extends State<SettingControlWidget> {
   }
 
   Widget _buildKnobbingControls() {
+    final f = NumberFormat("######0.0#####", "en_US");
+    final stepSize = f.format(widget.knobbingStepSize);
+
     return Visibility(
         visible: _showKnobbingControls,
         child: Row(
             key: Key("parameter_settingknobbing_${widget.drf}"),
-            children: const [Text("Knob +/- (F4/F5): "), Text("0.005")]));
+            children: [const Text("Knob +/- (F4/F5): "), Text(stepSize)]));
   }
 
   Widget _buildDisplayingState() {

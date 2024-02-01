@@ -491,6 +491,32 @@ void main() {
       assertKnobbingControls(areVisible: true, forDRF: "Z:BTE200_TEMP");
 
       // ... and the step size is 0.005
+      assertKnobbing(stepSizeIs: "1.0", forDRF: "Z:BTE200_TEMP");
+    });
+
+    testWidgets('Supply step size, step size is properly formatted',
+        (WidgetTester tester) async {
+      // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP with an initial value of "72.0"
+      // ... and settingsAllowed is set to true
+      MaterialApp app = initialize(const SettingControlWidget(
+          drf: "Z:BTE200_TEMP",
+          displayUnits: DisplayUnits.commonUnits,
+          settingsAllowed: true,
+          knobbingEnabled: true,
+          knobbingStepSize: 0.005));
+      await tester.pumpWidget(app);
+      await sendSettingTestData(tester, settingValue: 72.0);
+      await tester.pumpAndSettle();
+      assertKnobbingControls(areVisible: false, forDRF: "Z:BTE200_TEMP");
+
+      // When tapped
+      await tester.tap(find.text("72.00"));
+      await tester.pumpAndSettle();
+
+      // Then the knobbing controls are visible
+      assertKnobbingControls(areVisible: true, forDRF: "Z:BTE200_TEMP");
+
+      // ... and the step size is 0.005
       assertKnobbing(stepSizeIs: "0.005", forDRF: "Z:BTE200_TEMP");
     });
   });

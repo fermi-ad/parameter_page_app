@@ -48,6 +48,7 @@ dependencies:
             ref: alarms
         #    ref: v0.1.x
     logger: ^2.0.2+1
+    intl: ^0.19.0
 
 dev_dependencies:
     integration_test:
