@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/services/settings_permission/settings_permission_service.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
@@ -600,4 +601,12 @@ Future<void> toggleDigitalAlarm(WidgetTester tester,
     {required String forDRF}) async {
   await tester.tap(find.byKey(Key("parameter_digitalalarm_$forDRF")));
   await tester.pumpAndSettle();
+}
+
+Future<void> knobUp(WidgetTester tester, {required int steps}) async {
+  await tester.sendKeyDownEvent(LogicalKeyboardKey.f5);
+}
+
+Future<void> knobDown(WidgetTester tester, {required int steps}) async {
+  await tester.sendKeyDownEvent(LogicalKeyboardKey.f4);
 }

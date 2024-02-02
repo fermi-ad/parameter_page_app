@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:parameter_page/main.dart';
 import 'package:parameter_page/services/settings_permission/settings_permission_service.dart';
 
 import 'helpers/actions.dart';
@@ -55,7 +56,31 @@ void main() {
     });
 
     testWidgets('Knob up one step, setting is incremented by one step size',
-        (WidgetTester tester) async {});
+        (WidgetTester tester) async {
+      // Given the test page is loaded
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+
+      // ... and data for Z:BTE200_TEMP has been loaded
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+
+      // ... and settings are enabled
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.indefinitely);
+
+      // When I tap the setting property
+      await tapSetting(tester, forDRF: "Z:BTE200_TEMP");
+      assertSettingTextInputValue(forDRF: "Z:BTE200_TEMP", isSetTo: "50.00");
+
+      // ... and then knob up by 1 step
+      await knobUp(tester, steps: 1);
+
+      // Then the value displayed in the setting control's text field is...
+      assertSettingTextInputValue(forDRF: "Z:BTE200_TEMP", isSetTo: "51.00");
+
+      // ... and the last value sent for Z:BTE200_TEMP is...
+      expect(mockDPMService!.pendingSettingValue!.value, equals(73.0));
+    });
 
     testWidgets('Knob up n steps, setting is incremented by n * step size',
         (WidgetTester tester) async {});

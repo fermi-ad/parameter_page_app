@@ -370,7 +370,27 @@ void assertSettingError(
 
 void assertSettingTextInput({required String forDRF, required bool isVisible}) {
   expect(find.byKey(Key("parameter_settinginput_$forDRF")),
-      isVisible ? findsOneWidget : findsNothing);
+      isVisible ? findsOneWidget : findsNothing,
+      reason: isVisible
+          ? "(assertSettingTextInput) Expected the setting text input field for $forDRF to be visible"
+          : "(assertSettingTextInput) Expected the setting text input field for $forDRF to NOT be visible");
+}
+
+void assertSettingTextInputValue(
+    {required String forDRF, required String isSetTo}) {
+  assertSettingTextInput(forDRF: forDRF, isVisible: true);
+
+  final textField = find
+      .descendant(
+          of: find.byKey(Key("parameter_settinginput_$forDRF")),
+          matching: find.byType(TextField))
+      .evaluate()
+      .first
+      .widget as TextField;
+
+  expect(textField.controller!.text, equals(isSetTo),
+      reason:
+          "(assertSettingTextInputValue) Expected the setting input field for $forDRF to read $isSetTo");
 }
 
 void assertCommandButtons(
