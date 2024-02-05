@@ -605,8 +605,10 @@ Future<void> toggleDigitalAlarm(WidgetTester tester,
 
 Future<void> knobUp(WidgetTester tester, {required int steps}) async {
   await tester.sendKeyDownEvent(LogicalKeyboardKey.f5);
+  await tester.pumpAndSettle();
 }
 
 Future<void> knobDown(WidgetTester tester, {required int steps}) async {
   await tester.sendKeyDownEvent(LogicalKeyboardKey.f4);
+  await tester.pumpAndSettle();
 }

@@ -185,6 +185,8 @@ class _SettingControlState extends State<SettingControlWidget> {
           onKey: (key) {
             if (key.isKeyPressed(LogicalKeyboardKey.escape)) {
               _handleAbort();
+            } else if (key.isKeyPressed(LogicalKeyboardKey.f5)) {
+              _handleKnobUp();
             }
           },
           child: TextFormField(
@@ -297,6 +299,13 @@ class _SettingControlState extends State<SettingControlWidget> {
     }
     setState(() {
       _state = _SettingControlInternalState.editing;
+      _textFieldController.text = _lastSetting!.$2;
+    });
+  }
+
+  void _handleKnobUp() {
+    setState(() {
+      _lastSetting = (73, "73.00");
       _textFieldController.text = _lastSetting!.$2;
     });
   }
