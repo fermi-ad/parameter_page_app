@@ -237,12 +237,13 @@ class _SettingControlState extends State<SettingControlWidget> {
 
   Widget _settingDisplayBuilder(context, snapshot) {
     if (snapshot.connectionState == ConnectionState.active) {
-      _lastSettingValue = _extractValueString(from: snapshot);
+      _lastSetting =
+          (snapshot.data!.value, _extractValueString(from: snapshot));
       return Container(
           key: Key("parameter_settingdisplay_${widget.drf}"),
           child: Text(
               textAlign: TextAlign.end,
-              _lastSettingValue!,
+              _lastSetting!.$2,
               style: TextStyle(color: Theme.of(context).colorScheme.primary)));
     } else {
       return Container(
@@ -296,7 +297,7 @@ class _SettingControlState extends State<SettingControlWidget> {
     }
     setState(() {
       _state = _SettingControlInternalState.editing;
-      _textFieldController.text = _lastSettingValue!;
+      _textFieldController.text = _lastSetting!.$2;
     });
   }
 
@@ -362,5 +363,5 @@ class _SettingControlState extends State<SettingControlWidget> {
 
   String? _initialSettingValue;
 
-  String? _lastSettingValue;
+  (double, String)? _lastSetting;
 }
