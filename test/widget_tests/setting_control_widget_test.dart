@@ -592,5 +592,29 @@ void main() {
       // Then the value in the input field is decremented by 10 steps
       assertSettingTextInputValue(forDRF: "Z:BTE200_TEMP", isSetTo: "62.00");
     });
+
+    testWidgets('Knob up 10 times, input value is knobbed up by 10 steps',
+        (WidgetTester tester) async {
+      // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP with an initial value of "72.0"
+      // ... and settingsAllowed is set to true
+      // ... and the step size is 1.0
+      MaterialApp app = initialize(const SettingControlWidget(
+          drf: "Z:BTE200_TEMP",
+          displayUnits: DisplayUnits.commonUnits,
+          settingsAllowed: true,
+          knobbingEnabled: true,
+          knobbingStepSize: 1.0));
+      await tester.pumpWidget(app);
+      await sendSettingTestData(tester, settingValue: 72.0);
+      await tester.pumpAndSettle();
+
+      // When I enter edit mode and knob up ten times
+      await tester.tap(find.text("72.00"));
+      await tester.pumpAndSettle();
+      await knobUp(tester, steps: 10);
+
+      // Then the value in the input field is decremented by 10 steps
+      assertSettingTextInputValue(forDRF: "Z:BTE200_TEMP", isSetTo: "82.00");
+    });
   });
 }
