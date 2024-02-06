@@ -187,6 +187,8 @@ class _SettingControlState extends State<SettingControlWidget> {
               _handleAbort();
             } else if (key.isKeyPressed(LogicalKeyboardKey.f5)) {
               _handleKnobUp();
+            } else if (key.isKeyPressed(LogicalKeyboardKey.f4)) {
+              _handleKnobDown();
             }
           },
           child: TextFormField(
@@ -306,6 +308,13 @@ class _SettingControlState extends State<SettingControlWidget> {
   void _handleKnobUp() {
     setState(() {
       _lastSetting = (73, "73.00");
+      _textFieldController.text = _lastSetting!.$2;
+    });
+  }
+
+  void _handleKnobDown() {
+    setState(() {
+      _lastSetting = (73, "71.00");
       _textFieldController.text = _lastSetting!.$2;
     });
   }
