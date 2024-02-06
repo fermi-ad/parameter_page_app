@@ -283,9 +283,9 @@ class _SettingControlState extends State<SettingControlWidget> {
     if (key.isKeyPressed(LogicalKeyboardKey.escape)) {
       _handleAbort();
     } else if (key.isKeyPressed(LogicalKeyboardKey.f5)) {
-      _handleKnobUp();
+      _handleKnob(withStep: 1);
     } else if (key.isKeyPressed(LogicalKeyboardKey.f4)) {
-      _handleKnobDown();
+      _handleKnob(withStep: -1);
     }
   }
 
@@ -307,16 +307,10 @@ class _SettingControlState extends State<SettingControlWidget> {
     });
   }
 
-  void _handleKnobUp() {
+  void _handleKnob({required int withStep}) {
+    final newValue = _lastSetting!.$1 + withStep;
     setState(() {
-      _lastSetting = (73, "73.00");
-      _textFieldController.text = _lastSetting!.$2;
-    });
-  }
-
-  void _handleKnobDown() {
-    setState(() {
-      _lastSetting = (73, "71.00");
+      _lastSetting = (newValue, newValue.toStringAsPrecision(4));
       _textFieldController.text = _lastSetting!.$2;
     });
   }
