@@ -521,7 +521,7 @@ void main() {
       assertKnobbing(stepSizeIs: "0.005", forDRF: "Z:BTE200_TEMP");
     });
 
-    testWidgets('Press F4 in edit mode, input value is knobbed up by 1 step',
+    testWidgets('Press F5 in edit mode, input value is knobbed up by 1 step',
         (WidgetTester tester) async {
       // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP with an initial value of "72.0"
       // ... and settingsAllowed is set to true
@@ -543,6 +543,30 @@ void main() {
 
       // Then the value in the input field is incremented by 1 step
       assertSettingTextInputValue(forDRF: "Z:BTE200_TEMP", isSetTo: "73.00");
+    });
+
+    testWidgets('Press F4 in edit mode, input value is knobbed down by 1 step',
+        (WidgetTester tester) async {
+      // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP with an initial value of "72.0"
+      // ... and settingsAllowed is set to true
+      // ... and the step size is 1.0
+      MaterialApp app = initialize(const SettingControlWidget(
+          drf: "Z:BTE200_TEMP",
+          displayUnits: DisplayUnits.commonUnits,
+          settingsAllowed: true,
+          knobbingEnabled: true,
+          knobbingStepSize: 1.0));
+      await tester.pumpWidget(app);
+      await sendSettingTestData(tester, settingValue: 72.0);
+      await tester.pumpAndSettle();
+
+      // When I enter edit mode and knob up once
+      await tester.tap(find.text("72.00"));
+      await tester.pumpAndSettle();
+      await knobDown(tester, steps: 1);
+
+      // Then the value in the input field is incremented by 1 step
+      assertSettingTextInputValue(forDRF: "Z:BTE200_TEMP", isSetTo: "71.00");
     });
   });
 }
