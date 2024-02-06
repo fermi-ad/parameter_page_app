@@ -182,15 +182,7 @@ class _SettingControlState extends State<SettingControlWidget> {
         key: Key("parameter_settinginput_${widget.drf}"),
         child: RawKeyboardListener(
           focusNode: FocusNode(),
-          onKey: (key) {
-            if (key.isKeyPressed(LogicalKeyboardKey.escape)) {
-              _handleAbort();
-            } else if (key.isKeyPressed(LogicalKeyboardKey.f5)) {
-              _handleKnobUp();
-            } else if (key.isKeyPressed(LogicalKeyboardKey.f4)) {
-              _handleKnobDown();
-            }
-          },
+          onKey: _handleEditingKey,
           child: TextFormField(
               key: Key("parameter_settingtextfield_${widget.drf}"),
               autofocus: true,
@@ -285,6 +277,16 @@ class _SettingControlState extends State<SettingControlWidget> {
         _state = _SettingControlInternalState.displaying;
       });
     });
+  }
+
+  void _handleEditingKey(RawKeyEvent key) {
+    if (key.isKeyPressed(LogicalKeyboardKey.escape)) {
+      _handleAbort();
+    } else if (key.isKeyPressed(LogicalKeyboardKey.f5)) {
+      _handleKnobUp();
+    } else if (key.isKeyPressed(LogicalKeyboardKey.f4)) {
+      _handleKnobDown();
+    }
   }
 
   void _handleUndoTap() {
