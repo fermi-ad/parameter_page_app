@@ -89,14 +89,14 @@ void main() {
       await navigateToTestPage1(tester);
 
       // ... and data for Z:BTE200_TEMP has been loaded
-      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      await waitForDataToLoadFor(tester, "G:AMANDA");
 
       // ... and settings are enabled
       await requestSettingsPermission(tester,
           forDuration: SettingsRequestDuration.indefinitely);
 
       // When I tap the setting value
-      await tapSetting(tester, forDRF: "Z:BTE200_TEMP");
+      await tapSetting(tester, forDRF: "G:AMANDA");
 
       // ... and knob up ten times
       for (int i = 0; i != 10; i++) {
@@ -105,7 +105,7 @@ void main() {
         // Then the text field value is adjusted on each step
         final expected = 50.0 + i + 1;
         assertSettingTextInputValue(
-            forDRF: "Z:BTE200_TEMP", isSetTo: expected.toStringAsPrecision(4));
+            forDRF: "G:AMANDA", isSetTo: expected.toStringAsPrecision(4));
 
         // ... and a new setting is sent
         expect(mockDPMService!.pendingSettingValue!.value, equals(expected),
@@ -119,15 +119,15 @@ void main() {
       await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
 
-      // ... and data for Z:BTE200_TEMP has been loaded
-      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      // ... and data for G:AMANDA has been loaded
+      await waitForDataToLoadFor(tester, "G:AMANDA");
 
       // ... and settings are enabled
       await requestSettingsPermission(tester,
           forDuration: SettingsRequestDuration.indefinitely);
 
       // When I tap the setting value
-      await tapSetting(tester, forDRF: "Z:BTE200_TEMP");
+      await tapSetting(tester, forDRF: "G:AMANDA");
 
       // ... and knob down ten times
       for (int i = 0; i != 10; i++) {
@@ -136,10 +136,10 @@ void main() {
         // Then the text field value is adjusted on each step
         final expected = 50.0 - i - 1;
         assertSettingTextInputValue(
-            forDRF: "Z:BTE200_TEMP", isSetTo: expected.toStringAsPrecision(4));
+            forDRF: "G:AMANDA", isSetTo: expected.toStringAsPrecision(4));
 
         // ... and a new setting is sent
-        expect(mockDPMService!.pendingSettingValue!.value, equals(expected),
+        expect(mockDPMService!.pendingSettingValue?.value, equals(expected),
             reason: "The new value ($expected) was not submitted to DPM");
       }
     });

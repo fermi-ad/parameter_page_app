@@ -330,11 +330,7 @@ class _SettingControlState extends State<SettingControlWidget> {
 
   void _submitKnobbedSetting(String newValue) {
     final DataAcquisitionWidget daqWidget = DataAcquisitionWidget.of(context);
-    daqWidget.submit(
-        forDRF: widget.drf,
-        newSetting: newValue,
-        onSuccess: _settingSuccess,
-        onFailure: _settingFailure);
+    daqWidget.submit(forDRF: widget.drf, newSetting: newValue);
   }
 
   void _submitSetting(String newValue) {
