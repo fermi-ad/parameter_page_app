@@ -2,8 +2,6 @@ import 'dart:async';
 import 'package:flutter_controls_core/flutter_controls_core.dart';
 
 class MockDpmService implements ACSysServiceAPI {
-  double? lastSettingValue;
-
   bool getDeviceInfoShouldFail = false;
 
   final bool useEmptyStream;

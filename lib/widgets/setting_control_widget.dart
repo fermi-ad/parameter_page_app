@@ -309,6 +309,9 @@ class _SettingControlState extends State<SettingControlWidget> {
 
   void _handleKnob({required int withStep}) {
     final newValue = _lastSetting!.$1 + withStep;
+
+    _submitKnobbedSetting(newValue.toString());
+
     setState(() {
       _lastSetting = (newValue, newValue.toStringAsPrecision(4));
       _textFieldController.text = _lastSetting!.$2;
@@ -323,6 +326,15 @@ class _SettingControlState extends State<SettingControlWidget> {
     setState(() {
       _state = _SettingControlInternalState.displaying;
     });
+  }
+
+  void _submitKnobbedSetting(String newValue) {
+    final DataAcquisitionWidget daqWidget = DataAcquisitionWidget.of(context);
+    daqWidget.submit(
+        forDRF: widget.drf,
+        newSetting: newValue,
+        onSuccess: _settingSuccess,
+        onFailure: _settingFailure);
   }
 
   void _submitSetting(String newValue) {

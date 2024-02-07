@@ -521,7 +521,7 @@ void main() {
       assertKnobbing(stepSizeIs: "0.005", forDRF: "Z:BTE200_TEMP");
     });
 
-    testWidgets('Press F5 in edit mode, input value is knobbed up by 1 step',
+    testWidgets('Press F5 in edit mode, input value is incremented by 1 step',
         (WidgetTester tester) async {
       // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP with an initial value of "72.0"
       // ... and settingsAllowed is set to true
@@ -545,7 +545,7 @@ void main() {
       assertSettingTextInputValue(forDRF: "Z:BTE200_TEMP", isSetTo: "73.00");
     });
 
-    testWidgets('Press F4 in edit mode, input value is knobbed down by 1 step',
+    testWidgets('Press F4 in edit mode, input value is decremented by 1 step',
         (WidgetTester tester) async {
       // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP with an initial value of "72.0"
       // ... and settingsAllowed is set to true
@@ -569,7 +569,7 @@ void main() {
       assertSettingTextInputValue(forDRF: "Z:BTE200_TEMP", isSetTo: "71.00");
     });
 
-    testWidgets('Knob down 10 times, input value is knobbed down by 10 steps',
+    testWidgets('Knob down 10 times, input value is decremented by 10 steps',
         (WidgetTester tester) async {
       // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP with an initial value of "72.0"
       // ... and settingsAllowed is set to true
@@ -593,7 +593,7 @@ void main() {
       assertSettingTextInputValue(forDRF: "Z:BTE200_TEMP", isSetTo: "62.00");
     });
 
-    testWidgets('Knob up 10 times, input value is knobbed up by 10 steps',
+    testWidgets('Knob up 10 times, input value is incremented by 10 steps',
         (WidgetTester tester) async {
       // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP with an initial value of "72.0"
       // ... and settingsAllowed is set to true
@@ -615,6 +615,40 @@ void main() {
 
       // Then the value in the input field is decremented by 10 steps
       assertSettingTextInputValue(forDRF: "Z:BTE200_TEMP", isSetTo: "82.00");
+    });
+
+    testWidgets('Knob up 10 times, 10 new settings are sent',
+        (WidgetTester tester) async {
+      // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP with an initial value of "72.0"
+      // ... and settingsAllowed is set to true
+      // ... and the step size is 1.0
+      MaterialApp app = initialize(const SettingControlWidget(
+          drf: "Z:BTE200_TEMP",
+          displayUnits: DisplayUnits.commonUnits,
+          settingsAllowed: true,
+          knobbingEnabled: true,
+          knobbingStepSize: 1.0));
+      await tester.pumpWidget(app);
+      await sendSettingTestData(tester, settingValue: 72.0);
+      await tester.pumpAndSettle();
+
+      // When I enter edit mode
+      await tester.tap(find.text("72.00"));
+      await tester.pumpAndSettle();
+
+      // ... and knob up ten times
+      for (int i = 0; i != 10; i++) {
+        await knobUp(tester, steps: 1);
+
+        // Then the text field value is adjusted on each step
+        final expected = 72.0 + i + 1;
+        assertSettingTextInputValue(
+            forDRF: "Z:BTE200_TEMP", isSetTo: expected.toStringAsPrecision(4));
+
+        // ... and a new setting is sent
+        expect(testDPM.pendingSettingValue!.value, equals(expected),
+            reason: "The new value ($expected) was not submitted to DPM");
+      }
     });
   });
 }
