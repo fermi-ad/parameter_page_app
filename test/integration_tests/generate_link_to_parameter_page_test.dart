@@ -4,6 +4,7 @@ import 'package:parameter_page/main.dart';
 
 import 'helpers/assertions.dart';
 import 'helpers/actions.dart';
+import 'helpers/setup.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();

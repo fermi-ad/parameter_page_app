@@ -7,6 +7,7 @@ import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 
 import 'helpers/assertions.dart';
 import 'helpers/actions.dart';
+import 'helpers/setup.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
