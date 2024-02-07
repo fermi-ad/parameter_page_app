@@ -79,13 +79,69 @@ void main() {
       assertSettingTextInputValue(forDRF: "Z:BTE200_TEMP", isSetTo: "51.00");
 
       // ... and the last value sent for Z:BTE200_TEMP is...
-      expect(mockDPMService!.pendingSettingValue!.value, equals(73.0));
+      expect(mockDPMService!.pendingSettingValue!.value, equals(51.0));
     });
 
     testWidgets('Knob up n steps, setting is incremented by n * step size',
-        (WidgetTester tester) async {});
+        (WidgetTester tester) async {
+      // Given the test page is loaded
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+
+      // ... and data for Z:BTE200_TEMP has been loaded
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+
+      // ... and settings are enabled
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.indefinitely);
+
+      // When I tap the setting value
+      await tapSetting(tester, forDRF: "Z:BTE200_TEMP");
+
+      // ... and knob up ten times
+      for (int i = 0; i != 10; i++) {
+        await knobUp(tester, steps: 1);
+
+        // Then the text field value is adjusted on each step
+        final expected = 50.0 + i + 1;
+        assertSettingTextInputValue(
+            forDRF: "Z:BTE200_TEMP", isSetTo: expected.toStringAsPrecision(4));
+
+        // ... and a new setting is sent
+        expect(mockDPMService!.pendingSettingValue!.value, equals(expected),
+            reason: "The new value ($expected) was not submitted to DPM");
+      }
+    });
 
     testWidgets('Knob down n steps, setting is decremented by n * step size',
-        (WidgetTester tester) async {});
+        (WidgetTester tester) async {
+      // Given the test page is loaded
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+
+      // ... and data for Z:BTE200_TEMP has been loaded
+      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+
+      // ... and settings are enabled
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.indefinitely);
+
+      // When I tap the setting value
+      await tapSetting(tester, forDRF: "Z:BTE200_TEMP");
+
+      // ... and knob down ten times
+      for (int i = 0; i != 10; i++) {
+        await knobDown(tester, steps: 1);
+
+        // Then the text field value is adjusted on each step
+        final expected = 50.0 - i - 1;
+        assertSettingTextInputValue(
+            forDRF: "Z:BTE200_TEMP", isSetTo: expected.toStringAsPrecision(4));
+
+        // ... and a new setting is sent
+        expect(mockDPMService!.pendingSettingValue!.value, equals(expected),
+            reason: "The new value ($expected) was not submitted to DPM");
+      }
+    });
   });
 }
