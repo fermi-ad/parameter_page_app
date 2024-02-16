@@ -156,7 +156,7 @@ class _SettingControlState extends State<SettingControlWidget> {
                 key: Key("parameter_settingknobbing_${widget.drf}"),
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Knob +/- (F4/F5): ",
+                  Text("Knob +/- (F5/F4): ",
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.outline)),
                   Text(stepSize,
