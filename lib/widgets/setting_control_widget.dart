@@ -150,9 +150,19 @@ class _SettingControlState extends State<SettingControlWidget> {
 
     return Visibility(
         visible: _showKnobbingControls,
-        child: Row(
-            key: Key("parameter_settingknobbing_${widget.drf}"),
-            children: [const Text("Knob +/- (F4/F5): "), Text(stepSize)]));
+        child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+            child: Row(
+                key: Key("parameter_settingknobbing_${widget.drf}"),
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Knob +/- (F4/F5): ",
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.outline)),
+                  Text(stepSize,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.outline))
+                ])));
   }
 
   Widget _buildDisplayingState() {
@@ -283,9 +293,9 @@ class _SettingControlState extends State<SettingControlWidget> {
     if (key.isKeyPressed(LogicalKeyboardKey.escape)) {
       _handleAbort();
     } else if (key.isKeyPressed(LogicalKeyboardKey.f5)) {
-      _handleKnob(withStep: 1);
+      _handleKnob(withStep: widget.knobbingStepSize);
     } else if (key.isKeyPressed(LogicalKeyboardKey.f4)) {
-      _handleKnob(withStep: -1);
+      _handleKnob(withStep: -widget.knobbingStepSize);
     }
   }
 
@@ -307,7 +317,7 @@ class _SettingControlState extends State<SettingControlWidget> {
     });
   }
 
-  void _handleKnob({required int withStep}) {
+  void _handleKnob({required double withStep}) {
     final newValue = _lastSetting!.$1 + withStep;
 
     _submitKnobbedSetting(newValue.toString());
