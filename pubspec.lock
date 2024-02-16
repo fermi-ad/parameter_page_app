@@ -241,12 +241,10 @@ packages:
   flutter_controls_core:
     dependency: "direct main"
     description:
-      path: "."
-      ref: alarms
-      resolved-ref: dfb70f939730998b2603b96d1561f74a6509221e
-      url: "https://github.com/fermi-ad/flutter-controls-core.git"
-    source: git
-    version: "0.1.8"
+      path: "../flutter-controls-core"
+      relative: true
+    source: path
+    version: "0.1.9"
   flutter_dotenv:
     dependency: "direct main"
     description:

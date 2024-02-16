@@ -30,7 +30,11 @@ class MockDpmService implements ACSysServiceAPI {
                     maxVal: double.infinity,
                     commonIndex: 0,
                     commonCoeff: [],
-                    primaryIndex: 0),
+                    primaryIndex: 0,
+                    isContrSetting: false,
+                    isDestructiveRead: false,
+                    isFeScaling: false,
+                    isStepMotor: false),
                 null
               ));
         case "Z:NO_SET":
@@ -45,7 +49,11 @@ class MockDpmService implements ACSysServiceAPI {
                   maxVal: double.infinity,
                   commonIndex: 0,
                   commonCoeff: [],
-                  primaryIndex: 0),
+                  primaryIndex: 0,
+                  isContrSetting: false,
+                  isDestructiveRead: false,
+                  isFeScaling: false,
+                  isStepMotor: false),
               setting: null);
         case "Z:NO_ALARMS":
           return DeviceInfo(
@@ -59,7 +67,11 @@ class MockDpmService implements ACSysServiceAPI {
                   maxVal: double.infinity,
                   commonIndex: 0,
                   commonCoeff: [],
-                  primaryIndex: 0),
+                  primaryIndex: 0,
+                  isContrSetting: false,
+                  isDestructiveRead: false,
+                  isFeScaling: false,
+                  isStepMotor: false),
               setting: (
                 const DeviceInfoProperty(
                     commonUnits: "cUS",
@@ -68,7 +80,11 @@ class MockDpmService implements ACSysServiceAPI {
                     maxVal: double.infinity,
                     commonIndex: 0,
                     commonCoeff: [],
-                    primaryIndex: 0),
+                    primaryIndex: 0,
+                    isContrSetting: false,
+                    isDestructiveRead: false,
+                    isFeScaling: false,
+                    isStepMotor: false),
                 const KnobbingInfo(minVal: 0, maxVal: 0, step: 0.0)
               ));
         case "Z:BTE200_TEMP":
@@ -83,7 +99,11 @@ class MockDpmService implements ACSysServiceAPI {
                   maxVal: double.infinity,
                   commonIndex: 0,
                   commonCoeff: [],
-                  primaryIndex: 0),
+                  primaryIndex: 0,
+                  isContrSetting: false,
+                  isDestructiveRead: false,
+                  isFeScaling: false,
+                  isStepMotor: false),
               setting: (
                 const DeviceInfoProperty(
                     commonUnits: "cUS",
@@ -92,7 +112,11 @@ class MockDpmService implements ACSysServiceAPI {
                     maxVal: double.infinity,
                     commonIndex: 0,
                     commonCoeff: [],
-                    primaryIndex: 0),
+                    primaryIndex: 0,
+                    isContrSetting: false,
+                    isDestructiveRead: false,
+                    isFeScaling: false,
+                    isStepMotor: false),
                 const KnobbingInfo(minVal: 0, maxVal: 0, step: 1.0)
               ),
               alarm: const DeviceInfoAnalogAlarm(
@@ -132,7 +156,11 @@ class MockDpmService implements ACSysServiceAPI {
                   maxVal: double.infinity,
                   commonIndex: 0,
                   commonCoeff: [],
-                  primaryIndex: 0),
+                  primaryIndex: 0,
+                  isContrSetting: false,
+                  isDestructiveRead: false,
+                  isFeScaling: false,
+                  isStepMotor: false),
               setting: (
                 const DeviceInfoProperty(
                     commonUnits: "cUS",
@@ -141,7 +169,11 @@ class MockDpmService implements ACSysServiceAPI {
                     maxVal: double.infinity,
                     commonIndex: 0,
                     commonCoeff: [],
-                    primaryIndex: 0),
+                    primaryIndex: 0,
+                    isContrSetting: false,
+                    isDestructiveRead: false,
+                    isFeScaling: false,
+                    isStepMotor: false),
                 const KnobbingInfo(minVal: 0, maxVal: 0, step: 1.0)
               ),
               alarm: const DeviceInfoAnalogAlarm(
@@ -207,7 +239,11 @@ class MockDpmService implements ACSysServiceAPI {
                   maxVal: double.infinity,
                   commonIndex: 0,
                   commonCoeff: [],
-                  primaryIndex: 0),
+                  primaryIndex: 0,
+                  isContrSetting: false,
+                  isDestructiveRead: false,
+                  isFeScaling: false,
+                  isStepMotor: false),
               setting: (
                 const DeviceInfoProperty(
                     commonUnits: "cUS",
@@ -216,7 +252,11 @@ class MockDpmService implements ACSysServiceAPI {
                     maxVal: double.infinity,
                     commonIndex: 0,
                     commonCoeff: [],
-                    primaryIndex: 0),
+                    primaryIndex: 0,
+                    isContrSetting: false,
+                    isDestructiveRead: false,
+                    isFeScaling: false,
+                    isStepMotor: false),
                 const KnobbingInfo(minVal: 0, maxVal: 0, step: 0.0)
               ),
               alarm: const DeviceInfoAnalogAlarm(
