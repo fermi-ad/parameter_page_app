@@ -571,7 +571,7 @@ void main() {
 
     testWidgets('Knob down 10 times, input value is decremented by 10 steps',
         (WidgetTester tester) async {
-      // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP with an initial value of "72.0"
+      // Given a SettingControlWidget instantiated for a device called G:AMANDA with an initial value of "72.0"
       // ... and settingsAllowed is set to true
       // ... and the step size is 1.0
       MaterialApp app = initialize(const SettingControlWidget(

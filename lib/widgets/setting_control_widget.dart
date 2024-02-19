@@ -290,14 +290,16 @@ class _SettingControlState extends State<SettingControlWidget> {
   }
 
   void _handleEditingKey(KeyEvent event) {
-    if (event is KeyDownEvent) {
-      if (event.logicalKey == LogicalKeyboardKey.escape) {
-        _handleAbort();
-      } else if (event.logicalKey == LogicalKeyboardKey.f5) {
-        _handleKnob(withStep: widget.knobbingStepSize);
-      } else if (event.logicalKey == LogicalKeyboardKey.f4) {
-        _handleKnob(withStep: -widget.knobbingStepSize);
-      }
+    if (event is KeyUpEvent) {
+      return;
+    }
+
+    if (event.logicalKey == LogicalKeyboardKey.escape) {
+      _handleAbort();
+    } else if (event.logicalKey == LogicalKeyboardKey.f5) {
+      _handleKnob(withStep: widget.knobbingStepSize);
+    } else if (event.logicalKey == LogicalKeyboardKey.f4) {
+      _handleKnob(withStep: -widget.knobbingStepSize);
     }
   }
 
