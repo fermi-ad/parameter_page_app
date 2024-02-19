@@ -190,9 +190,9 @@ class _SettingControlState extends State<SettingControlWidget> {
 
     return Container(
         key: Key("parameter_settinginput_${widget.drf}"),
-        child: RawKeyboardListener(
+        child: KeyboardListener(
           focusNode: FocusNode(),
-          onKey: _handleEditingKey,
+          onKeyEvent: _handleEditingKey,
           child: TextFormField(
               key: Key("parameter_settingtextfield_${widget.drf}"),
               autofocus: true,
@@ -289,13 +289,15 @@ class _SettingControlState extends State<SettingControlWidget> {
     });
   }
 
-  void _handleEditingKey(RawKeyEvent key) {
-    if (key.isKeyPressed(LogicalKeyboardKey.escape)) {
-      _handleAbort();
-    } else if (key.isKeyPressed(LogicalKeyboardKey.f5)) {
-      _handleKnob(withStep: widget.knobbingStepSize);
-    } else if (key.isKeyPressed(LogicalKeyboardKey.f4)) {
-      _handleKnob(withStep: -widget.knobbingStepSize);
+  void _handleEditingKey(KeyEvent event) {
+    if (event is KeyDownEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.escape) {
+        _handleAbort();
+      } else if (event.logicalKey == LogicalKeyboardKey.f5) {
+        _handleKnob(withStep: widget.knobbingStepSize);
+      } else if (event.logicalKey == LogicalKeyboardKey.f4) {
+        _handleKnob(withStep: -widget.knobbingStepSize);
+      }
     }
   }
 
