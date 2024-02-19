@@ -53,7 +53,7 @@ void main() {
       assertKnobbingControls(areVisible: true, forDRF: "G:AMANDA");
 
       // ... and the step size is...
-      assertKnobbing(stepSizeIs: "0.005", forDRF: "G:AMANDA");
+      assertKnobbing(stepSizeIs: "1.0", forDRF: "G:AMANDA");
     });
 
     testWidgets('Knob up one step, setting is incremented by one step size',
