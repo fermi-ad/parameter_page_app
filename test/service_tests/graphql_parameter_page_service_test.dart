@@ -85,7 +85,7 @@ void main() {
       List<String> newTitles = await service.fetchPages().then(
           (List<dynamic> pages) =>
               pages.map((page) => page['title'] as String).toList());
-      expect(newTitles, contains("createPage test 1"));
+      expect(newTitles, contains("createPage test"));
 
       // Clean-up
     });
