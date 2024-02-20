@@ -47,6 +47,7 @@ class PageTitleWidget extends StatelessWidget {
         maxLines: 1,
         minLines: 1,
         controller: controller,
+        onEditingComplete: () => onTitleUpdate.call(controller.text),
         onTapOutside: (PointerDownEvent event) =>
             onTitleUpdate.call(controller.text),
       ))
