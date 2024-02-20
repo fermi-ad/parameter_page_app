@@ -85,7 +85,7 @@ class MockDpmService implements ACSysServiceAPI {
                     isDestructiveRead: false,
                     isFeScaling: false,
                     isStepMotor: false),
-                const KnobbingInfo(minVal: 0, maxVal: 0, step: 0.0)
+                const KnobbingInfo(minVal: 0, maxVal: 0, step: 0.005)
               ));
         case "Z:BTE200_TEMP":
           return DeviceInfo(
@@ -257,7 +257,7 @@ class MockDpmService implements ACSysServiceAPI {
                     isDestructiveRead: false,
                     isFeScaling: false,
                     isStepMotor: false),
-                const KnobbingInfo(minVal: 0, maxVal: 0, step: 0.0)
+                const KnobbingInfo(minVal: 0, maxVal: 0, step: 0.005)
               ),
               alarm: const DeviceInfoAnalogAlarm(
                   nominal: "72.00",
