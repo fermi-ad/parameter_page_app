@@ -55,6 +55,30 @@ void main() {
       assertKnobbing(stepSizeIs: "1.0", forDRF: "G:AMANDA");
     });
 
+    testWidgets(
+        'Knobbing enabled for device with a small step size, step size is shown with proper precision and formatting',
+        (WidgetTester tester) async {
+      // Given the test page is loaded
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+
+      // ... and data for Z:NO_READ has been loaded
+      await waitForDataToLoadFor(tester, "Z:NO_ALARMS");
+
+      // ... and settings are enabled
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.indefinitely);
+
+      // When I tap on the setting property
+      await tapSetting(tester, forDRF: "Z:NO_ALARMS");
+
+      // Then the knobbing controls are visisble
+      assertKnobbingControls(areVisible: true, forDRF: "Z:NO_ALARMS");
+
+      // ... and the step size is...
+      assertKnobbing(stepSizeIs: "0.005", forDRF: "Z:NO_ALARMS");
+    });
+
     testWidgets('Knob up one step, setting is incremented by one step size',
         (WidgetTester tester) async {
       // Given the test page is loaded
