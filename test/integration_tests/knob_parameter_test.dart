@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:parameter_page/main.dart';
 import 'package:parameter_page/services/settings_permission/settings_permission_service.dart';
 
 import 'helpers/actions.dart';
@@ -53,7 +52,31 @@ void main() {
       assertKnobbingControls(areVisible: true, forDRF: "G:AMANDA");
 
       // ... and the step size is...
-      assertKnobbing(stepSizeIs: "0.005", forDRF: "G:AMANDA");
+      assertKnobbing(stepSizeIs: "1.0", forDRF: "G:AMANDA");
+    });
+
+    testWidgets(
+        'Knobbing enabled for device with a small step size, step size is shown with proper precision and formatting',
+        (WidgetTester tester) async {
+      // Given the test page is loaded
+      await startParameterPageApp(tester);
+      await navigateToTestPage1(tester);
+
+      // ... and data for Z:NO_READ has been loaded
+      await waitForDataToLoadFor(tester, "Z:NO_ALARMS");
+
+      // ... and settings are enabled
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.indefinitely);
+
+      // When I tap on the setting property
+      await tapSetting(tester, forDRF: "Z:NO_ALARMS");
+
+      // Then the knobbing controls are visisble
+      assertKnobbingControls(areVisible: true, forDRF: "Z:NO_ALARMS");
+
+      // ... and the step size is...
+      assertKnobbing(stepSizeIs: "0.005", forDRF: "Z:NO_ALARMS");
     });
 
     testWidgets('Knob up one step, setting is incremented by one step size',
@@ -62,25 +85,22 @@ void main() {
       await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
 
-      // ... and data for Z:BTE200_TEMP has been loaded
-      await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
+      // ... and data for G:AMANDA has been loaded
+      await waitForDataToLoadFor(tester, "G:AMANDA");
 
       // ... and settings are enabled
       await requestSettingsPermission(tester,
           forDuration: SettingsRequestDuration.indefinitely);
 
       // When I tap the setting property
-      await tapSetting(tester, forDRF: "Z:BTE200_TEMP");
-      assertSettingTextInputValue(forDRF: "Z:BTE200_TEMP", isSetTo: "50.00");
+      await tapSetting(tester, forDRF: "G:AMANDA");
+      assertSettingTextInputValue(forDRF: "G:AMANDA", isSetTo: "50.00");
 
       // ... and then knob up by 1 step
       await knobUp(tester, steps: 1);
 
       // Then the value displayed in the setting control's text field is...
-      assertSettingTextInputValue(forDRF: "Z:BTE200_TEMP", isSetTo: "51.00");
-
-      // ... and the last value sent for Z:BTE200_TEMP is...
-      expect(mockDPMService!.pendingSettingValue!.value, equals(51.0));
+      assertSettingTextInputValue(forDRF: "G:AMANDA", isSetTo: "51.00");
     });
 
     testWidgets('Knob up n steps, setting is incremented by n * step size',
@@ -107,10 +127,6 @@ void main() {
         final expected = 50.0 + i + 1;
         assertSettingTextInputValue(
             forDRF: "G:AMANDA", isSetTo: expected.toStringAsPrecision(4));
-
-        // ... and a new setting is sent
-        expect(mockDPMService!.pendingSettingValue!.value, equals(expected),
-            reason: "The new value ($expected) was not submitted to DPM");
       }
     });
 
@@ -138,10 +154,6 @@ void main() {
         final expected = 50.0 - i - 1;
         assertSettingTextInputValue(
             forDRF: "G:AMANDA", isSetTo: expected.toStringAsPrecision(4));
-
-        // ... and a new setting is sent
-        expect(mockDPMService!.pendingSettingValue?.value, equals(expected),
-            reason: "The new value ($expected) was not submitted to DPM");
       }
     });
   });

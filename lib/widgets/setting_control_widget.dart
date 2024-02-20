@@ -150,9 +150,19 @@ class _SettingControlState extends State<SettingControlWidget> {
 
     return Visibility(
         visible: _showKnobbingControls,
-        child: Row(
-            key: Key("parameter_settingknobbing_${widget.drf}"),
-            children: [const Text("Knob +/- (F4/F5): "), Text(stepSize)]));
+        child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+            child: Row(
+                key: Key("parameter_settingknobbing_${widget.drf}"),
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Knob +/- (F5/F4): ",
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.outline)),
+                  Text(stepSize,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.outline))
+                ])));
   }
 
   Widget _buildDisplayingState() {
@@ -180,9 +190,9 @@ class _SettingControlState extends State<SettingControlWidget> {
 
     return Container(
         key: Key("parameter_settinginput_${widget.drf}"),
-        child: RawKeyboardListener(
+        child: KeyboardListener(
           focusNode: FocusNode(),
-          onKey: _handleEditingKey,
+          onKeyEvent: _handleEditingKey,
           child: TextFormField(
               key: Key("parameter_settingtextfield_${widget.drf}"),
               autofocus: true,
@@ -279,13 +289,17 @@ class _SettingControlState extends State<SettingControlWidget> {
     });
   }
 
-  void _handleEditingKey(RawKeyEvent key) {
-    if (key.isKeyPressed(LogicalKeyboardKey.escape)) {
+  void _handleEditingKey(KeyEvent event) {
+    if (event is KeyUpEvent) {
+      return;
+    }
+
+    if (event.logicalKey == LogicalKeyboardKey.escape) {
       _handleAbort();
-    } else if (key.isKeyPressed(LogicalKeyboardKey.f5)) {
-      _handleKnob(withStep: 1);
-    } else if (key.isKeyPressed(LogicalKeyboardKey.f4)) {
-      _handleKnob(withStep: -1);
+    } else if (event.logicalKey == LogicalKeyboardKey.f5) {
+      _handleKnob(withStep: widget.knobbingStepSize);
+    } else if (event.logicalKey == LogicalKeyboardKey.f4) {
+      _handleKnob(withStep: -widget.knobbingStepSize);
     }
   }
 
@@ -307,7 +321,7 @@ class _SettingControlState extends State<SettingControlWidget> {
     });
   }
 
-  void _handleKnob({required int withStep}) {
+  void _handleKnob({required double withStep}) {
     final newValue = _lastSetting!.$1 + withStep;
 
     _submitKnobbedSetting(newValue.toString());
