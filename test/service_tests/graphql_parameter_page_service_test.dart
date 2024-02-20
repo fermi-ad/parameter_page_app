@@ -5,8 +5,6 @@ import 'package:parameter_page/services/parameter_page/gql_param/graphql_paramet
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
 import 'package:test/test.dart';
 
-import '../integration_tests/helpers/actions.dart';
-
 void main() {
   group('fetchPages', () {
     test("fetchPages, returns a non-empty list of parameter page titles",
