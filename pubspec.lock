@@ -319,10 +319,10 @@ packages:
     dependency: transitive
     description:
       name: gql
-      sha256: f820a3c6bdd1ceecce405a70dd6f4ef97666e0103f7f6424b795afcdaa4f7cce
+      sha256: b54669d671e55d22fe0b5364ca4c4b2ea7c9563fd76f1b87a9527e14ff0865d6
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1-alpha+1708195451519"
+    version: "1.0.1-alpha+1708718049275"
   gql_code_builder:
     dependency: transitive
     description:
@@ -335,10 +335,10 @@ packages:
     dependency: transitive
     description:
       name: gql_dedupe_link
-      sha256: "2e7ca0f2aa94ac749b61265b25ba1c5d5b840be94ad30aad37bbc2649e7a6272"
+      sha256: d2f953708fbed3e3db64a9d1a675d45f63ff8211383f7234b4469a31ddca4ef7
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.4-alpha+1708195451601"
+    version: "2.0.4-alpha+1708718049359"
   gql_error_link:
     dependency: transitive
     description:
@@ -367,10 +367,10 @@ packages:
     dependency: transitive
     description:
       name: gql_link
-      sha256: "0d4f537bf6736c32e676a27c11a01e4155d4668da87b09701a341b1282828aec"
+      sha256: bafe346bae79bdabf8a0f1dd966cfafeca9ccbc2d660c8fa08e32f2ca7028a7a
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1-alpha+1708195451534"
+    version: "1.0.1-alpha+1708718049290"
   gql_transform_link:
     dependency: transitive
     description:
@@ -508,10 +508,10 @@ packages:
     dependency: "direct main"
     description:
       name: logger
-      sha256: "6bbb9d6f7056729537a4309bda2e74e18e5d9f14302489cc1e93f33b3fe32cac"
+      sha256: b3ff55aeb08d9d8901b767650285872cb1bb8f508373b3e348d60268b0c7f770
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.2+1"
+    version: "2.1.0"
   logging:
     dependency: transitive
     description:
@@ -881,10 +881,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher
-      sha256: c512655380d241a337521703af62d2c122bf7b77a46ff7dd750092aa9433499c
+      sha256: "0ecc004c62fd3ed36a2ffcbe0dd9700aee63bd7532d0b642a488b1ec310f492e"
       url: "https://pub.dev"
     source: hosted
-    version: "6.2.4"
+    version: "6.2.5"
   url_launcher_android:
     dependency: transitive
     description:
@@ -897,10 +897,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_ios
-      sha256: "75bb6fe3f60070407704282a2d295630cab232991eb52542b18347a8a941df03"
+      sha256: "9149d493b075ed740901f3ee844a38a00b33116c7c5c10d7fb27df8987fb51d5"
       url: "https://pub.dev"
     source: hosted
-    version: "6.2.4"
+    version: "6.2.5"
   url_launcher_linux:
     dependency: transitive
     description:
@@ -929,10 +929,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_web
-      sha256: "7fd2f55fe86cea2897b963e864dc01a7eb0719ecc65fcef4c1cc3d686d718bb2"
+      sha256: "3692a459204a33e04bc94f5fb91158faf4f2c8903281ddd82915adecdb1a901d"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0"
+    version: "2.3.0"
   url_launcher_windows:
     dependency: transitive
     description:
@@ -973,7 +973,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
-<<<<<<< Updated upstream
   web:
     dependency: transitive
     description:
@@ -982,8 +981,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.0"
-=======
->>>>>>> Stashed changes
   web_socket_channel:
     dependency: transitive
     description:
@@ -1049,10 +1046,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-<<<<<<< Updated upstream
   dart: ">=3.3.0 <4.0.0"
-  flutter: ">=3.13.0"
-=======
-  dart: ">=3.2.0-0 <4.0.0"
-  flutter: ">=3.7.0"
->>>>>>> Stashed changes
+  flutter: ">=3.19.0"
