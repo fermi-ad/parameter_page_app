@@ -95,6 +95,7 @@ void main() {
       // Then the returned entry should be a MultEntry
       await createNewEntryAndExpectMultEntry(tester, "mult:0");
       await createNewEntryAndExpectMultEntry(tester, "mult:0 test mult");
+      await createNewEntryAndExpectMultEntry(tester, "mult:2");
     });
   });
 }

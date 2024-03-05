@@ -79,7 +79,8 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
   }
 
   bool _isMult(String val) {
-    return val == "mult:0";
+    RegExp multRegExp = RegExp(r"^mult:\d", caseSensitive: false);
+    return multRegExp.hasMatch(val);
   }
 
   bool _isHardComment(String val) {
