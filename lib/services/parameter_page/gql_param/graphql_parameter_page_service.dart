@@ -89,6 +89,16 @@ class GraphQLParameterPageService extends ParameterPageService {
     });
   }
 
+  @override
+  Future<void> deletePage({required String withPageId}) async {
+    await _doGraphQL(
+        query: removeTree,
+        withVariables: {
+          'treeid': withPageId,
+        },
+        whatItIs: "delete a parameter page");
+  }
+
   Future<void> _deleteExtraSubSystems(
       {required List<dynamic> persistedSubSystems,
       required ParameterPage withPage}) async {
