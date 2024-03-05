@@ -6,6 +6,7 @@ import 'package:parameter_page/widgets/comment_entry_widget.dart';
 import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 import 'package:parameter_page/widgets/mult_entry_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
+import 'package:parameter_page/widgets/parameter_widget.dart';
 import 'package:parameter_page/widgets/sub_page_navigation_widget.dart';
 
 void assertIsOnPage({required String comment}) {
@@ -824,8 +825,8 @@ void assertMult(
 void assertMultContains(
     {required int atIndex, required List<String> parameters}) {
   final finder = find.descendant(
-      of: find.byType(MultEntryWidget), matching: find.byType(PageEntryWidget));
-  int foundHowMany = finder.found.length;
+      of: find.byType(MultEntryWidget), matching: find.byType(ParameterWidget));
+  int foundHowMany = finder.evaluate().isEmpty ? 0 : finder.found.length;
 
   expect(foundHowMany, parameters.length);
 }

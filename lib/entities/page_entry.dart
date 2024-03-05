@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:parameter_page/widgets/mult_entry_widget.dart';
 
 import '../widgets/comment_entry_widget.dart';
 import '../widgets/display_settings_widget.dart';
@@ -40,7 +41,7 @@ class MultEntry extends PageEntry {
   @override
   Widget buildEntry(BuildContext context, bool editMode, bool wide,
       DisplaySettings settings, bool settingsAllowed) {
-    return CommentEntryWidget(text);
+    return const MultEntryWidget(numberOfEntries: 0, description: "test mult");
   }
 
   @override
