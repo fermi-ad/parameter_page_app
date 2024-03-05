@@ -251,9 +251,9 @@ const deleteSubjects = r"""
 ///            "position": 12,
 ///            "typeattrid": "PSCAL",
 ///            "ext_value": "1.4"
-///         } 
+///         }
 ///       ]
-///       acceptable typeattrid: MROWS (number of rows in a Mult), PSCAL (parameter scale factor)   
+///       acceptable typeattrid: MROWS (number of rows in a Mult), PSCAL (parameter scale factor)
 /// output: transaction return code and message.
 ///          (return code, 1: succeed, -1: failed)
 ///**********************************************************************
@@ -263,5 +263,11 @@ const mergeEntryValues = r"""
                 code
                 message
               }
+            }
+""";
+
+const removeTree = r"""
+            mutation removeTree($treeid: ID!) {
+              removeTree(treeid: $treeid)
             }
 """;
