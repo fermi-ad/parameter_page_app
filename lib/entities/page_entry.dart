@@ -32,6 +32,24 @@ abstract class PageEntry {
   String get typeAsString => "PageEntry";
 }
 
+class MultEntry extends PageEntry {
+  final String text;
+
+  MultEntry(this.text, {super.key, super.id});
+
+  @override
+  Widget buildEntry(BuildContext context, bool editMode, bool wide,
+      DisplaySettings settings, bool settingsAllowed) {
+    return CommentEntryWidget(text);
+  }
+
+  @override
+  String entryText() => text;
+
+  @override
+  String get typeAsString => "Mult";
+}
+
 class CommentEntry extends PageEntry {
   final String text;
 

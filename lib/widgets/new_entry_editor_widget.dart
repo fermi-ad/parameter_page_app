@@ -51,6 +51,8 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
   List<PageEntry> _extractPageEntriesFrom({required final String textInput}) {
     if (_isHardComment(textInput)) {
       return [CommentEntry(_stripBang(textInput))];
+    } else if (_isMult(textInput)) {
+      return [MultEntry(textInput)];
     } else {
       final entries = _findAllTheParameterEntries(inside: textInput);
       if (entries.isEmpty && textInput.length > 1) {
@@ -74,6 +76,10 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
     }
 
     return ret;
+  }
+
+  bool _isMult(String val) {
+    return val == "mult:0";
   }
 
   bool _isHardComment(String val) {
