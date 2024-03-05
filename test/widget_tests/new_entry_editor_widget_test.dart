@@ -94,6 +94,7 @@ void main() {
       // when I create a mult entry with mult:n
       // Then the returned entry should be a MultEntry
       await createNewEntryAndExpectMultEntry(tester, "mult:0");
+      await createNewEntryAndExpectMultEntry(tester, "mult:0 test mult");
     });
   });
 }
