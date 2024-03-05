@@ -1,6 +1,8 @@
 import 'package:flutter_controls_core/flutter_controls_core.dart';
 import 'package:flutter/widgets.dart';
 
+enum BeamInhibitState { wontInhibit, willInhibit, byPassed }
+
 class DataAcquisitionWidget extends InheritedWidget {
   final ACSysServiceAPI service;
 
@@ -21,6 +23,19 @@ class DataAcquisitionWidget extends InheritedWidget {
 
   Stream<DigitalStatus> monitorDigitalStatusDevices(List<String> drfs) {
     return service.monitorDigitalStatusDevices(drfs);
+  }
+
+  Stream<AlarmStatus> monitorAnalogAlarmDevices(List<String> drfs) {
+    return service.monitorAnalogAlarmProperty(drfs);
+  }
+
+  Stream<AlarmStatus> monitorDigitalAlarmDevices(List<String> drfs) {
+    return service.monitorDigitalAlarmProperty(drfs);
+  }
+
+  Stream<bool> monitorDigitalAlarmBeamAbortInhibit(String drf) async* {
+    yield* monitorDevices(["$drf.DIGITAL.ABORT_INHIBIT"])
+        .map((v) => v.value == 1 ? true : false);
   }
 
   bool isACNETDRF(String val) {

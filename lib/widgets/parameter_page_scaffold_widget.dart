@@ -5,12 +5,14 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_controls_core/flutter_controls_core.dart';
 import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
+import 'package:parameter_page/services/settings_permission/settings_permission_service.dart';
 import 'package:parameter_page/services/user_device/user_device_service.dart';
 import 'package:parameter_page/widgets/display_settings_button_widget.dart';
 import 'package:parameter_page/widgets/fermi_controls_common/error_display_widget.dart';
 import 'package:parameter_page/widgets/main_menu_widget.dart';
 import 'package:parameter_page/widgets/page_title_widget.dart';
 import 'package:parameter_page/widgets/parameter_page_tabbar_widget.dart';
+import 'package:parameter_page/widgets/settings_permission_widget.dart';
 import 'package:parameter_page/widgets/sub_page_navigation_widget.dart';
 import 'package:parameter_page/widgets/sub_system_navigation_widget.dart';
 
@@ -25,6 +27,7 @@ class ParameterPageScaffoldWidget extends StatefulWidget {
       required this.acsysService,
       required this.pageService,
       required this.deviceService,
+      required this.settingsPermissionService,
       this.openPageId});
 
   final ACSysServiceAPI acsysService;
@@ -32,6 +35,8 @@ class ParameterPageScaffoldWidget extends StatefulWidget {
   final ParameterPageService pageService;
 
   final UserDeviceService deviceService;
+
+  final SettingsPermissionService settingsPermissionService;
 
   final String? openPageId;
 
@@ -65,7 +70,14 @@ class _ParameterPageScaffoldWidgetState
         key: _scaffoldKey,
         appBar: _buildAppBar(context),
         drawer: _buildDrawer(context),
-        body: _buildBody(context));
+        body: _buildBody(context),
+        bottomNavigationBar: _buildBottomNavigationBar());
+  }
+
+  Widget _buildBottomNavigationBar() {
+    return SettingsPermissionWidget(
+        service: widget.settingsPermissionService,
+        onChanged: _handleSettingsPermissionChanged);
   }
 
   AppBar _buildAppBar(BuildContext context) {
@@ -184,6 +196,8 @@ class _ParameterPageScaffoldWidgetState
                 child: PageWidget(
                     key: _pageKey,
                     page: _page!,
+                    settingsAllowed:
+                        widget.settingsPermissionService.settingsAllowed,
                     onPageModified: _handlePageModified,
                     onToggleEditing: (bool isEditing) => setState(() {})))));
   }
@@ -194,6 +208,10 @@ class _ParameterPageScaffoldWidgetState
         errorMessage:
             "The request to load the parameter page failed, please try again.",
         detailMessage: detailMessage);
+  }
+
+  void _handleSettingsPermissionChanged(bool settingsAllowed) {
+    setState(() => 1);
   }
 
   void _handleDeleteSubSystem() {
@@ -295,7 +313,7 @@ class _ParameterPageScaffoldWidgetState
     });
   }
 
-  Future<void> _handleSaveError(error, stackTrace) async {
+  FutureOr<Null> _handleSaveError(error, stackTrace) async {
     setState(() {
       _persistenceState = PagePersistenceState.unsavedError;
     });
@@ -383,15 +401,10 @@ class _ParameterPageScaffoldWidgetState
       {required String pageId,
       required ParameterPage page,
       required Function onSuccess}) async {
-    widget.pageService
-        .savePage(
-            id: pageId,
-            page: page,
-            onSuccess: () {
-              page.commit();
-              onSuccess.call();
-            })
-        .onError(_handleSaveError);
+    widget.pageService.savePage(id: pageId, page: page).then((_) {
+      page.commit();
+      onSuccess.call();
+    }).onError(_handleSaveError);
   }
 
   _loadPage({required String pageId}) {

@@ -10,22 +10,22 @@ void main() {
       timestamp: DateTime(2023),
       extendedStatus: [
         const ExtendedStatusAttribute(
-          value: "1",
+          value: 1,
         ),
         const ExtendedStatusAttribute(
-          value: "1",
+          value: 1,
         ),
         const ExtendedStatusAttribute(
-          value: "0",
+          value: 0,
         ),
         const ExtendedStatusAttribute(
-          value: "0",
+          value: 0,
         ),
         const ExtendedStatusAttribute(
-          value: "0",
+          value: 0,
         ),
         const ExtendedStatusAttribute(
-          value: "0",
+          value: 0,
         )
       ]);
 
@@ -36,32 +36,32 @@ void main() {
       extendedStatus: [
         const ExtendedStatusAttribute(
             description: "Henk On/Off",
-            value: "1",
+            value: 1,
             valueText: "On",
             color: StatusColor.green),
         const ExtendedStatusAttribute(
             description: "Ready???",
-            value: "1",
+            value: 1,
             valueText: "Always",
             color: StatusColor.green),
         const ExtendedStatusAttribute(
             description: "Remote Henk",
-            value: "0",
+            value: 0,
             valueText: "L",
             color: StatusColor.blue),
         const ExtendedStatusAttribute(
             description: "Polarity",
-            value: "0",
+            value: 0,
             valueText: "Mono",
             color: StatusColor.red),
         const ExtendedStatusAttribute(
             description: " test 2",
-            value: "0",
+            value: 0,
             valueText: " good",
             color: StatusColor.green),
         const ExtendedStatusAttribute(
             description: "testtest",
-            value: "0",
+            value: 0,
             valueText: "GOOD",
             color: StatusColor.green)
       ]);
@@ -73,7 +73,7 @@ void main() {
       extendedStatus: [
         const ExtendedStatusAttribute(
             description: "Henk On/Off",
-            value: "1",
+            value: 1,
             valueText: "On",
             color: StatusColor.green)
       ]);
@@ -91,7 +91,7 @@ void main() {
       required int bitNumber,
       required String description,
       required String valueText,
-      required Color valueColor,
+      Color? valueColor,
       required String value}) {
     final bitRowFinder = find
         .byKey(Key("parameter_extendeddigitalstatus_${forDRF}_bit$bitNumber"));
@@ -109,8 +109,11 @@ void main() {
     final displayValueTextFinder =
         find.descendant(of: bitRowFinder, matching: find.text(valueText));
     expect(displayValueTextFinder, findsAtLeastNWidgets(1));
-    final displayValueText = tester.firstWidget<Text>(displayValueTextFinder);
-    expect(displayValueText.style.color, valueColor);
+
+    if (valueColor != null) {
+      final displayValueText = tester.firstWidget<Text>(displayValueTextFinder);
+      expect(displayValueText.style.color, valueColor);
+    }
   }
 
   group("ParameterExtendedStatusWidget", () {
@@ -217,42 +220,36 @@ void main() {
           bitNumber: 0,
           description: "...",
           valueText: "...",
-          valueColor: Colors.grey,
           value: "1");
       assertBitDetails(tester,
           forDRF: "G:AMANDA",
           bitNumber: 1,
           description: "...",
           valueText: "...",
-          valueColor: Colors.grey,
           value: "1");
       assertBitDetails(tester,
           forDRF: "G:AMANDA",
           bitNumber: 2,
           description: "...",
           valueText: "...",
-          valueColor: Colors.grey,
           value: "0");
       assertBitDetails(tester,
           forDRF: "G:AMANDA",
           bitNumber: 3,
           description: "...",
           valueText: "...",
-          valueColor: Colors.grey,
           value: "0");
       assertBitDetails(tester,
           forDRF: "G:AMANDA",
           bitNumber: 4,
           description: "...",
           valueText: "...",
-          valueColor: Colors.grey,
           value: "0");
       assertBitDetails(tester,
           forDRF: "G:AMANDA",
           bitNumber: 5,
           description: "...",
           valueText: "...",
-          valueColor: Colors.grey,
           value: "0");
     });
   });

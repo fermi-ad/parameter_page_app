@@ -1,15 +1,28 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:parameter_page/services/settings_permission/settings_permission_service.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
-import 'package:parameter_page/main.dart' as app;
 import 'package:parameter_page/widgets/parameter_page_scaffold_widget.dart';
 
-Future<void> startParameterPageApp(WidgetTester tester) async {
-  app.main();
-  await tester.pumpAndSettle();
-  await pumpUntilFound(tester, find.text("Hello!"));
+Future<void> pumpUntilGone(
+  WidgetTester tester,
+  Finder finder, {
+  Duration timeout = const Duration(seconds: 3),
+}) async {
+  bool timerDone = false;
+  final timer = Timer(timeout, () => timerDone = true);
+  while (timerDone != true) {
+    await tester.pumpAndSettle();
+
+    final found = tester.any(finder);
+    if (!found) {
+      timerDone = true;
+    }
+  }
+  timer.cancel();
 }
 
 Future<void> pumpUntilFound(
@@ -20,7 +33,7 @@ Future<void> pumpUntilFound(
   bool timerDone = false;
   final timer = Timer(timeout, () => timerDone = true);
   while (timerDone != true) {
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     final found = tester.any(finder);
     if (found) {
@@ -40,6 +53,9 @@ Future<void> waitForDataToLoadFor(tester, parameter) async {
 
   final settingFinder = find.byKey(Key("parameter_setting_$parameter"));
   await pumpUntilFound(tester, settingFinder);
+
+  final analogAlarmFinder = find.byKey(Key("parameter_analogalarm_$parameter"));
+  await pumpUntilFound(tester, analogAlarmFinder);
 }
 
 Future<void> waitForExtendedStatusDataToLoadFor(tester, parameter) async {
@@ -71,6 +87,63 @@ Future<void> waitForPageToBeSaved(tester) async {
 
 Future<void> waitForPageSaveToFail(tester) async {
   final indicatorFinder = find.byKey(const Key("page_save_failed_indicator"));
+  await pumpUntilFound(tester, indicatorFinder);
+}
+
+Future<void> waitForAlarmToGoAway(WidgetTester tester,
+    {required String forDRF}) async {
+  final parameterFinder = find.byKey(Key("parameter_analogalarm_$forDRF"));
+  final alarmIndicatorFinder = find.descendant(
+      of: parameterFinder, matching: find.byIcon(Icons.notifications_active));
+  await pumpUntilGone(tester, alarmIndicatorFinder);
+}
+
+Future<void> waitForDigitalAlarmToGoAway(WidgetTester tester,
+    {required String forDRF}) async {
+  final parameterFinder = find.byKey(Key("parameter_digitalalarm_$forDRF"));
+  final alarmIndicatorFinder = find.descendant(
+      of: parameterFinder, matching: find.byIcon(Icons.notifications_active));
+  await pumpUntilGone(tester, alarmIndicatorFinder);
+}
+
+Future<void> waitForDeviceToAlarm(WidgetTester tester,
+    {required String forDRF}) async {
+  final parameterFinder = find.byKey(Key("parameter_analogalarm_$forDRF"));
+  final alarmIndicatorFinder = find.descendant(
+      of: parameterFinder, matching: find.byIcon(Icons.notifications_active));
+  await pumpUntilFound(tester, alarmIndicatorFinder);
+}
+
+Future<void> waitForDeviceToAlarmDigital(WidgetTester tester,
+    {required String forDRF}) async {
+  final parameterFinder = find.byKey(Key("parameter_digitalalarm_$forDRF"));
+  final alarmIndicatorFinder = find.descendant(
+      of: parameterFinder, matching: find.byIcon(Icons.notifications_active));
+  await pumpUntilFound(tester, alarmIndicatorFinder);
+}
+
+Future<void> waitForDeviceAlarmByPassed(WidgetTester tester,
+    {required String forDRF}) async {
+  final parameterFinder = find.byKey(Key("parameter_analogalarm_$forDRF"));
+  final alarmIndicatorFinder = find.descendant(
+      of: parameterFinder, matching: find.byIcon(Icons.notifications_off));
+  await pumpUntilFound(tester, alarmIndicatorFinder);
+}
+
+Future<void> waitForDeviceAlarmByPassedDigital(WidgetTester tester,
+    {required String forDRF}) async {
+  final parameterFinder = find.byKey(Key("parameter_digitalalarm_$forDRF"));
+  final alarmIndicatorFinder = find.descendant(
+      of: parameterFinder, matching: find.byIcon(Icons.notifications_off));
+  await pumpUntilFound(tester, alarmIndicatorFinder);
+}
+
+Future<void> waitForDigitalBeamInhibitIndicator(WidgetTester tester,
+    {required String forDRF}) async {
+  final containerFinder =
+      find.byKey(Key("parameter_digitalalarm_beaminhibit_$forDRF"));
+  final indicatorFinder = find.descendant(
+      of: containerFinder, matching: find.byIcon(Icons.stop_circle));
   await pumpUntilFound(tester, indicatorFinder);
 }
 
@@ -228,7 +301,7 @@ Future<void> closeMainMenu(tester) async {
 }
 
 Future<void> tapSetting(tester, {required String forDRF}) async {
-  await tester.tap(find.byKey(Key("parameter_setting_$forDRF")));
+  await tester.tap(find.byKey(Key("parameter_settingdisplay_$forDRF")));
   await tester.pumpAndSettle();
 }
 
@@ -386,7 +459,9 @@ Future<void> navigateDirectlyToSubpage(WidgetTester tester,
 }
 
 Future<void> openSubPageDirectory(WidgetTester tester) async {
-  await tester.tap(find.byIcon(Icons.expand_more));
+  final parentWidgetFinder = find.byKey(const Key("subpagenavigation"));
+  await tester.tap(find.descendant(
+      of: parentWidgetFinder, matching: find.byIcon(Icons.expand_more)));
   await tester.pumpAndSettle();
 }
 
@@ -478,4 +553,54 @@ Future<void> deleteSubSystem(WidgetTester tester, {bool? confirm}) async {
   }
 
   await tester.pumpAndSettle();
+}
+
+Future<void> waitForSettingsPermissionRequest(WidgetTester tester) async {
+  await pumpUntilGone(tester, find.text("Request pending..."));
+}
+
+Future<void> requestSettingsPermissionBeDisabled(WidgetTester tester) async {
+  await requestSettingsPermission(tester,
+      forDuration: SettingsRequestDuration.disabled);
+}
+
+Future<void> requestSettingsPermission(WidgetTester tester,
+    {required SettingsRequestDuration forDuration}) async {
+  await openSettingsPermissionMenu(tester);
+  await tester.tap(find.text(forDuration.text));
+  await tester.pump();
+}
+
+Future<void> openSettingsPermissionMenu(WidgetTester tester) async {
+  final widgetFinder = find.byKey(const Key("settings-permission"));
+
+  await tester.tap(find.descendant(
+      of: widgetFinder, matching: find.byIcon(Icons.expand_more)));
+  await tester.pumpAndSettle();
+}
+
+Future<void> toggleAnalogAlarm(WidgetTester tester,
+    {required String forDRF}) async {
+  await tester.tap(find.byKey(Key("parameter_analogalarm_$forDRF")));
+  await tester.pumpAndSettle();
+}
+
+Future<void> toggleDigitalAlarm(WidgetTester tester,
+    {required String forDRF}) async {
+  await tester.tap(find.byKey(Key("parameter_digitalalarm_$forDRF")));
+  await tester.pumpAndSettle();
+}
+
+Future<void> knobUp(WidgetTester tester, {required int steps}) async {
+  for (int i = 0; i != steps; i++) {
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.f5);
+    await tester.pumpAndSettle();
+  }
+}
+
+Future<void> knobDown(WidgetTester tester, {required int steps}) async {
+  for (int i = 0; i != steps; i++) {
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.f4);
+    await tester.pumpAndSettle();
+  }
 }

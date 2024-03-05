@@ -179,9 +179,15 @@ class ParameterPage {
   }
 
   List<PageEntry> entriesAsListFrom(
-      {required String tab, required int subPage}) {
-    final tabIndex = _findTabIndex(forTab: tab);
-    return _pageData[0].tabs[tabIndex].subPages[subPage - 1].entries;
+      {String? subSystem, required String tab, required int subPage}) {
+    final subSystemIndex = subSystem != null
+        ? _findSubSystemIndex(forTitle: subSystem)
+        : _currentSubSystemIndex;
+    final tabIndex = _findTabIndex(forSubSystem: subSystem, forTab: tab);
+    return _pageData[subSystemIndex]
+        .tabs[tabIndex]
+        .subPages[subPage - 1]
+        .entries;
   }
 
   int numberOfEntriesForSubSystem(String subSystem) {
@@ -341,9 +347,13 @@ class ParameterPage {
         _findTabIndex(forTab: to);
   }
 
-  int subPageCount({required String forTab}) {
-    return _pageData[_currentSubSystemIndex]
-        .tabs[_findTabIndex(forTab: forTab)]
+  int subPageCount({required String forTab, String? forSubSystem}) {
+    final subSystemIndex = forSubSystem != null
+        ? _findSubSystemIndex(forTitle: forSubSystem)
+        : _currentSubSystemIndex;
+
+    return _pageData[subSystemIndex]
+        .tabs[_findTabIndex(forSubSystem: forSubSystem, forTab: forTab)]
         .subPages
         .length;
   }
@@ -403,11 +413,22 @@ class ParameterPage {
     }
   }
 
-  String subPageTitleFor({required String tab, required int subPageIndex}) {
-    return _pageData[_currentSubSystemIndex]
-        .tabs[_findTabIndex(forTab: tab)]
+  String subPageTitleFor(
+      {required String tab, required int subPageIndex, String? forSubSystem}) {
+    final subSystemIndex = forSubSystem != null
+        ? _findSubSystemIndex(forTitle: forSubSystem)
+        : _currentSubSystemIndex;
+    return _pageData[subSystemIndex]
+        .tabs[_findTabIndex(forSubSystem: forSubSystem, forTab: tab)]
         .subPages[subPageIndex - 1]
         .title;
+  }
+
+  List<String> tabTitlesFor({required String subSystem}) {
+    return _pageData[_findSubSystemIndex(forTitle: subSystem)]
+        .tabs
+        .map((tabData) => tabData.title)
+        .toList();
   }
 
   void _enforceEditMode() {
@@ -449,8 +470,11 @@ class ParameterPage {
     return index;
   }
 
-  int _findTabIndex({required String forTab}) {
-    final index = tabTitles.indexOf(forTab);
+  int _findTabIndex({required String forTab, String? forSubSystem}) {
+    final titles = forSubSystem != null
+        ? tabTitlesFor(subSystem: forSubSystem)
+        : tabTitles;
+    final index = titles.indexOf(forTab);
 
     if (index == -1) {
       throw Exception("Invalid tab");

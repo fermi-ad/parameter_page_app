@@ -90,11 +90,11 @@ class _OpenPageWidgetState extends State<OpenPageWidget> {
                     ),
                     _fetchData()
                   },
-                  child: const Text('<Refresh>',
+                  child: Text('<Refresh>',
                       style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
-                          color: Colors.blue)),
+                          color: Theme.of(context).colorScheme.primary)),
                 ),
               ],
             )),

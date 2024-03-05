@@ -22,15 +22,38 @@ class MockDpmService implements ACSysServiceAPI {
               name: drf,
               description: "device description",
               reading: null,
-              setting: const DeviceInfoProperty(
-                  commonUnits: "cUS", primaryUnits: "pUS"));
+              setting: (
+                const DeviceInfoProperty(
+                    commonUnits: "cUS",
+                    primaryUnits: "pUS",
+                    minVal: -double.infinity,
+                    maxVal: double.infinity,
+                    commonIndex: 0,
+                    commonCoeff: [],
+                    primaryIndex: 0,
+                    isContrSetting: false,
+                    isDestructiveRead: false,
+                    isFeScaling: false,
+                    isStepMotor: false),
+                null
+              ));
         case "Z:NO_SET":
           return DeviceInfo(
               di: 0,
               name: drf,
               description: "device description",
               reading: const DeviceInfoProperty(
-                  commonUnits: "cUR", primaryUnits: "pUR"),
+                  commonUnits: "cUR",
+                  primaryUnits: "pUR",
+                  minVal: -double.infinity,
+                  maxVal: double.infinity,
+                  commonIndex: 0,
+                  commonCoeff: [],
+                  primaryIndex: 0,
+                  isContrSetting: false,
+                  isDestructiveRead: false,
+                  isFeScaling: false,
+                  isStepMotor: false),
               setting: null);
         case "Z:NO_ALARMS":
           return DeviceInfo(
@@ -38,25 +61,75 @@ class MockDpmService implements ACSysServiceAPI {
               name: drf,
               description: "device description",
               reading: const DeviceInfoProperty(
-                  commonUnits: "cUR", primaryUnits: "pUR"),
-              setting: const DeviceInfoProperty(
-                  commonUnits: "cUS", primaryUnits: "pUS"));
+                  commonUnits: "cUR",
+                  primaryUnits: "pUR",
+                  minVal: -double.infinity,
+                  maxVal: double.infinity,
+                  commonIndex: 0,
+                  commonCoeff: [],
+                  primaryIndex: 0,
+                  isContrSetting: false,
+                  isDestructiveRead: false,
+                  isFeScaling: false,
+                  isStepMotor: false),
+              setting: (
+                const DeviceInfoProperty(
+                    commonUnits: "cUS",
+                    primaryUnits: "pUS",
+                    minVal: -double.infinity,
+                    maxVal: double.infinity,
+                    commonIndex: 0,
+                    commonCoeff: [],
+                    primaryIndex: 0,
+                    isContrSetting: false,
+                    isDestructiveRead: false,
+                    isFeScaling: false,
+                    isStepMotor: false),
+                const KnobbingInfo(minVal: 0, maxVal: 0, step: 0.005)
+              ));
         case "Z:BTE200_TEMP":
           return DeviceInfo(
               di: 0,
               name: drf,
               description: "device description",
               reading: const DeviceInfoProperty(
-                  commonUnits: "cUR", primaryUnits: "pUR"),
-              setting: const DeviceInfoProperty(
-                  commonUnits: "cUS", primaryUnits: "pUS"),
+                  commonUnits: "cUR",
+                  primaryUnits: "pUR",
+                  minVal: -double.infinity,
+                  maxVal: double.infinity,
+                  commonIndex: 0,
+                  commonCoeff: [],
+                  primaryIndex: 0,
+                  isContrSetting: false,
+                  isDestructiveRead: false,
+                  isFeScaling: false,
+                  isStepMotor: false),
+              setting: (
+                const DeviceInfoProperty(
+                    commonUnits: "cUS",
+                    primaryUnits: "pUS",
+                    minVal: -double.infinity,
+                    maxVal: double.infinity,
+                    commonIndex: 0,
+                    commonCoeff: [],
+                    primaryIndex: 0,
+                    isContrSetting: false,
+                    isDestructiveRead: false,
+                    isFeScaling: false,
+                    isStepMotor: false),
+                const KnobbingInfo(minVal: 0, maxVal: 0, step: 1.0)
+              ),
               alarm: const DeviceInfoAnalogAlarm(
                   nominal: "72.00",
                   tolerance: "10.00",
                   min: "62.00",
                   max: "82.00"),
+              digitalAlarm: DeviceInfoDigitalAlarm(abort: false),
               basicStatus: const DeviceInfoBasicStatus(
                   onOffProperty: BasicStatusProperty(
+                      invert: false,
+                      maskVal: 1,
+                      matchVal: 1,
                       character0: ".",
                       color0: StatusColor.green,
                       character1: "*",
@@ -77,31 +150,67 @@ class MockDpmService implements ACSysServiceAPI {
               name: drf,
               description: "device description",
               reading: const DeviceInfoProperty(
-                  commonUnits: "cUR", primaryUnits: "pUR"),
-              setting: const DeviceInfoProperty(
-                  commonUnits: "cUS", primaryUnits: "pUS"),
+                  commonUnits: "cUR",
+                  primaryUnits: "pUR",
+                  minVal: -double.infinity,
+                  maxVal: double.infinity,
+                  commonIndex: 0,
+                  commonCoeff: [],
+                  primaryIndex: 0,
+                  isContrSetting: false,
+                  isDestructiveRead: false,
+                  isFeScaling: false,
+                  isStepMotor: false),
+              setting: (
+                const DeviceInfoProperty(
+                    commonUnits: "cUS",
+                    primaryUnits: "pUS",
+                    minVal: -double.infinity,
+                    maxVal: double.infinity,
+                    commonIndex: 0,
+                    commonCoeff: [],
+                    primaryIndex: 0,
+                    isContrSetting: false,
+                    isDestructiveRead: false,
+                    isFeScaling: false,
+                    isStepMotor: false),
+                const KnobbingInfo(minVal: 0, maxVal: 0, step: 1.0)
+              ),
               alarm: const DeviceInfoAnalogAlarm(
                   nominal: "72.00",
                   tolerance: "10.00",
                   min: "62.00",
                   max: "82.00"),
+              digitalAlarm: DeviceInfoDigitalAlarm(abort: true),
               basicStatus: const DeviceInfoBasicStatus(
                   onOffProperty: BasicStatusProperty(
+                      invert: false,
+                      maskVal: 1,
+                      matchVal: 1,
                       character0: ".",
                       color0: StatusColor.green,
                       character1: "*",
                       color1: StatusColor.red),
                   readyTrippedProperty: BasicStatusProperty(
+                      invert: false,
+                      maskVal: 1,
+                      matchVal: 1,
                       character0: ".",
                       color0: StatusColor.green,
                       character1: "T",
                       color1: StatusColor.red),
                   remoteLocalProperty: BasicStatusProperty(
+                      invert: false,
+                      maskVal: 1,
+                      matchVal: 1,
                       character0: ".",
                       color0: StatusColor.blue,
                       character1: "L",
                       color1: StatusColor.blue),
                   positiveNegativeProperty: BasicStatusProperty(
+                      invert: false,
+                      maskVal: 1,
+                      matchVal: 1,
                       character0: "*",
                       color0: StatusColor.blue,
                       character1: "T",
@@ -124,9 +233,32 @@ class MockDpmService implements ACSysServiceAPI {
               name: drf,
               description: "device description",
               reading: const DeviceInfoProperty(
-                  commonUnits: "cUR", primaryUnits: "pUR"),
-              setting: const DeviceInfoProperty(
-                  commonUnits: "cUS", primaryUnits: "pUS"),
+                  commonUnits: "cUR",
+                  primaryUnits: "pUR",
+                  minVal: -double.infinity,
+                  maxVal: double.infinity,
+                  commonIndex: 0,
+                  commonCoeff: [],
+                  primaryIndex: 0,
+                  isContrSetting: false,
+                  isDestructiveRead: false,
+                  isFeScaling: false,
+                  isStepMotor: false),
+              setting: (
+                const DeviceInfoProperty(
+                    commonUnits: "cUS",
+                    primaryUnits: "pUS",
+                    minVal: -double.infinity,
+                    maxVal: double.infinity,
+                    commonIndex: 0,
+                    commonCoeff: [],
+                    primaryIndex: 0,
+                    isContrSetting: false,
+                    isDestructiveRead: false,
+                    isFeScaling: false,
+                    isStepMotor: false),
+                const KnobbingInfo(minVal: 0, maxVal: 0, step: 0.005)
+              ),
               alarm: const DeviceInfoAnalogAlarm(
                   nominal: "72.00",
                   tolerance: "10.00",
@@ -141,18 +273,33 @@ class MockDpmService implements ACSysServiceAPI {
     if (useEmptyStream) {
       return const Stream<Reading>.empty();
     } else {
-      return Stream<Reading>.periodic(
-        const Duration(seconds: 1),
-        (count) {
-          return Reading(
-              refId: 0,
-              cycle: 0,
-              timestamp: DateTime(2023),
-              value: 100.0,
-              rawValue: "FFFF",
-              primaryValue: 10.0); //  + count * 0.1);
-        },
-      ).asBroadcastStream();
+      if (drfs[0] == "G:AMANDA.DIGITAL.ABORT_INHIBIT") {
+        return Stream<Reading>.periodic(
+          const Duration(seconds: 1),
+          (count) {
+            return Reading(
+                refId: 0,
+                cycle: 0,
+                timestamp: DateTime(2023),
+                value: _beamAbortByPassed ? 1 : 0,
+                rawValue: "0000",
+                primaryValue: 0.0); //  + count * 0.1);
+          },
+        ).asBroadcastStream();
+      } else {
+        return Stream<Reading>.periodic(
+          const Duration(seconds: 1),
+          (count) {
+            return Reading(
+                refId: 0,
+                cycle: 0,
+                timestamp: DateTime(2023),
+                value: 100.0,
+                rawValue: "FFFF",
+                primaryValue: 10.0); //  + count * 0.1);
+          },
+        ).asBroadcastStream();
+      }
     }
   }
 
@@ -175,7 +322,7 @@ class MockDpmService implements ACSysServiceAPI {
       return Stream<DigitalStatus>.periodic(
         const Duration(seconds: 1),
         (count) {
-          const emptyBit = ExtendedStatusAttribute(value: "0");
+          const emptyBit = ExtendedStatusAttribute(value: 0);
           return DigitalStatus(
               refId: 0,
               cycle: 0,
@@ -185,12 +332,12 @@ class MockDpmService implements ACSysServiceAPI {
               extendedStatus: [
                 const ExtendedStatusAttribute(
                     description: "On/Off",
-                    value: "1",
+                    value: 1,
                     valueText: "On",
                     color: StatusColor.green),
                 const ExtendedStatusAttribute(
                     description: "Cool/Heat",
-                    value: "1",
+                    value: 1,
                     valueText: "Cooling",
                     color: StatusColor.blue),
                 emptyBit,
@@ -214,7 +361,7 @@ class MockDpmService implements ACSysServiceAPI {
       return Stream<DigitalStatus>.periodic(
         const Duration(seconds: 1),
         (count) {
-          const emptyBit = ExtendedStatusAttribute(value: "0");
+          const emptyBit = ExtendedStatusAttribute(value: 0);
           return DigitalStatus(
               refId: 0,
               cycle: 0,
@@ -230,32 +377,32 @@ class MockDpmService implements ACSysServiceAPI {
               extendedStatus: [
                 const ExtendedStatusAttribute(
                     description: "Henk On/Off",
-                    value: "1",
+                    value: 1,
                     valueText: "On",
                     color: StatusColor.green),
                 const ExtendedStatusAttribute(
                     description: "Ready???",
-                    value: "1",
+                    value: 1,
                     valueText: "Always",
                     color: StatusColor.green),
                 const ExtendedStatusAttribute(
                     description: "Remote Henk",
-                    value: "0",
+                    value: 0,
                     valueText: "L",
                     color: StatusColor.blue),
                 const ExtendedStatusAttribute(
                     description: "Polarity",
-                    value: "0",
+                    value: 0,
                     valueText: "Mono",
                     color: StatusColor.red),
                 const ExtendedStatusAttribute(
                     description: " test 2",
-                    value: "0",
+                    value: 0,
                     valueText: " good",
                     color: StatusColor.green),
                 const ExtendedStatusAttribute(
                     description: "testtest",
-                    value: "0",
+                    value: 0,
                     valueText: "GOOD",
                     color: StatusColor.green),
                 emptyBit,
@@ -274,6 +421,92 @@ class MockDpmService implements ACSysServiceAPI {
     } else {
       return const Stream<DigitalStatus>.empty();
     }
+  }
+
+  @override
+  Stream<AlarmStatus> monitorAnalogAlarmProperty(List<String> drfs) {
+    if (useEmptyStream) {
+      return const Stream<AlarmStatus>.empty();
+    }
+
+    if (!_analogAlarmStreams.containsKey(drfs[0])) {
+      final AlarmState initialState;
+      if (drfs[0] == "Z:BTE200_TEMP") {
+        initialState = AlarmState.alarming;
+      } else if (drfs[0] == "Z:NO_SET") {
+        initialState = AlarmState.bypassed;
+      } else {
+        initialState = AlarmState.notAlarming;
+      }
+
+      _analogAlarmStreams[drfs[0]] = MockAlarmStream(
+          currentState: initialState,
+          controller: StreamController<AlarmStatus>.broadcast(),
+          timer: Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+            _analogAlarmStreams[drfs[0]]!.controller.add(AlarmStatus(
+                refId: 0,
+                cycle: 0,
+                timestamp: DateTime.now(),
+                state: _analogAlarmStreams[drfs[0]]!.currentState));
+          }));
+    }
+
+    return _analogAlarmStreams[drfs[0]]!.controller.stream;
+  }
+
+  @override
+  Stream<AlarmStatus> monitorDigitalAlarmProperty(List<String> drfs) {
+    if (useEmptyStream) {
+      return const Stream<AlarmStatus>.empty();
+    }
+
+    if (!_digitalAlarmStreams.containsKey(drfs[0])) {
+      final AlarmState initialState;
+      if (drfs[0] == "Z:BTE200_TEMP") {
+        initialState = AlarmState.alarming;
+      } else if (drfs[0] == "G:AMANDA") {
+        initialState = AlarmState.notAlarming;
+      } else {
+        initialState = AlarmState.notAlarming;
+      }
+
+      _digitalAlarmStreams[drfs[0]] = MockAlarmStream(
+          currentState: initialState,
+          controller: StreamController<AlarmStatus>.broadcast(),
+          timer: Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+            _digitalAlarmStreams[drfs[0]]!.controller.add(AlarmStatus(
+                refId: 0,
+                cycle: 0,
+                timestamp: DateTime.now(),
+                state: _digitalAlarmStreams[drfs[0]]!.currentState));
+          }));
+    }
+
+    return _digitalAlarmStreams[drfs[0]]!.controller.stream;
+  }
+
+  void raiseAlarm({required String forDRF, bool isByPassed = false}) {
+    _analogAlarmStreams[forDRF]!.currentState =
+        isByPassed ? AlarmState.bypassed : AlarmState.alarming;
+  }
+
+  void raiseDigitalAlarm({required String forDRF, bool isByPassed = false}) {
+    _digitalAlarmStreams[forDRF]!.currentState =
+        isByPassed ? AlarmState.bypassed : AlarmState.alarming;
+  }
+
+  void noAlarm({required String forDRF, bool isByPassed = false}) {
+    _analogAlarmStreams[forDRF]!.currentState =
+        isByPassed ? AlarmState.bypassed : AlarmState.notAlarming;
+  }
+
+  void noAlarmDigital({required String forDRF, bool isByPassed = false}) {
+    _digitalAlarmStreams[forDRF]!.currentState =
+        isByPassed ? AlarmState.bypassed : AlarmState.notAlarming;
+  }
+
+  void byPassDigitalAlarmBeamAbort(String drf) {
+    _beamAbortByPassed = true;
   }
 
   void succeedAllPendingSettings() {
@@ -299,6 +532,28 @@ class MockDpmService implements ACSysServiceAPI {
   @override
   Future<SettingStatus> submit(
       {required String forDRF, required DeviceValue newSetting}) async {
+    if (forDRF.contains(".ANALOG.ENABLE")) {
+      final base = forDRF.split(".")[0];
+      final scalar = newSetting as DevScalar;
+      if (scalar.value == 0) {
+        _analogAlarmStreams[base]!.currentState = AlarmState.bypassed;
+      } else if (scalar.value == 1) {
+        _analogAlarmStreams[base]!.currentState = base == "Z:BTE200_TEMP"
+            ? AlarmState.alarming
+            : AlarmState.notAlarming;
+      }
+    } else if (forDRF.contains(".DIGITAL.ENABLE")) {
+      final base = forDRF.split(".")[0];
+      final scalar = newSetting as DevScalar;
+      if (scalar.value == 0) {
+        _digitalAlarmStreams[base]!.currentState = AlarmState.bypassed;
+      } else if (scalar.value == 1) {
+        _digitalAlarmStreams[base]!.currentState = base == "Z:BTE200_TEMP"
+            ? AlarmState.alarming
+            : AlarmState.notAlarming;
+      }
+    }
+
     if (useEmptyStream) {
       return const SettingStatus(facilityCode: 0, errorCode: 0);
     } else {
@@ -384,9 +639,26 @@ class MockDpmService implements ACSysServiceAPI {
   final StreamController<Reading> _incSettings =
       StreamController<Reading>.broadcast();
 
+  final Map<String, MockAlarmStream> _analogAlarmStreams = {};
+
+  final Map<String, MockAlarmStream> _digitalAlarmStreams = {};
+
   DevScalar _settingValue = const DevScalar(0.0);
 
   double _incrementingSettingValue = 0.0;
 
   DevScalar? pendingSettingValue;
+
+  bool _beamAbortByPassed = false;
+}
+
+class MockAlarmStream {
+  StreamController<AlarmStatus> controller;
+  AlarmState currentState;
+  Timer timer;
+
+  MockAlarmStream(
+      {required this.controller,
+      required this.currentState,
+      required this.timer});
 }

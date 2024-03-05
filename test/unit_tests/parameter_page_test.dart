@@ -1653,5 +1653,42 @@ void main() {
       // ... and the number of entries for sub-system 2 is...
       expect(page.numberOfEntriesForSubSystem('Sub-system 2'), 3);
     });
+
+    test(
+        'tabTitlesFor(subSystem), returns the tab titles for the given sub-system',
+        () {
+      // Given a ParameterPage with 3 sub-systems that each have 3 tabs...
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.renameTab(withTitle: "Tab 1", to: "Sys 1 / Tab 1");
+      page.createTab(title: "Sys 1 / Tab 2");
+      page.createTab(title: "Sys 1 / Tab 3");
+      page.createSubSystem();
+      page.renameTab(withTitle: "Tab 1", to: "Sys 2 / Tab 1");
+      page.createTab(title: "Sys 2 / Tab 2");
+      page.createTab(title: "Sys 2 / Tab 3");
+      page.createSubSystem();
+      page.renameTab(withTitle: "Tab 1", to: "Sys 3 / Tab 1");
+      page.createTab(title: "Sys 3 / Tab 2");
+      page.createTab(title: "Sys 3 / Tab 3");
+
+      // When I call tabTitlesFor(..) for each sub-system
+      final sys1Tabs = page.tabTitlesFor(subSystem: "Sub-system 1");
+      final sys2Tabs = page.tabTitlesFor(subSystem: "Sub-system 2");
+      final sys3Tabs = page.tabTitlesFor(subSystem: "Sub-system 3");
+
+      // Then the tab title list matches the correct sub-system
+      expect(sys1Tabs[0], "Sys 1 / Tab 1");
+      expect(sys1Tabs[1], "Sys 1 / Tab 2");
+      expect(sys1Tabs[2], "Sys 1 / Tab 3");
+
+      expect(sys2Tabs[0], "Sys 2 / Tab 1");
+      expect(sys2Tabs[1], "Sys 2 / Tab 2");
+      expect(sys2Tabs[2], "Sys 2 / Tab 3");
+
+      expect(sys3Tabs[0], "Sys 3 / Tab 1");
+      expect(sys3Tabs[1], "Sys 3 / Tab 2");
+      expect(sys3Tabs[2], "Sys 3 / Tab 3");
+    });
   });
 }

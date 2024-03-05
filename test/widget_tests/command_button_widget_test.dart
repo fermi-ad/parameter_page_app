@@ -48,7 +48,10 @@ void main() {
     testWidgets('Tap, displays pending icon', (WidgetTester tester) async {
       // Given a command button
       MaterialApp app = initialize(const CommandButtonWidget(
-          drf: "G:AMANDA", value: "RESET", longName: "Reset"));
+          drf: "G:AMANDA",
+          value: "RESET",
+          longName: "Reset",
+          settingsAllowed: true));
       await tester.pumpWidget(app);
 
       // When I tap the button
@@ -63,7 +66,10 @@ void main() {
         (WidgetTester tester) async {
       // Given a command button that is in the pending state
       MaterialApp app = initialize(const CommandButtonWidget(
-          drf: "G:AMANDA", value: "RESET", longName: "Reset"));
+          drf: "G:AMANDA",
+          value: "RESET",
+          longName: "Reset",
+          settingsAllowed: true));
       await tester.pumpWidget(app);
       await tap(tester, buttonWithText: "Reset");
       assertButton(tester, isEnabled: false);
@@ -82,7 +88,10 @@ void main() {
         (WidgetTester tester) async {
       // Given a command button that is in the pending state
       MaterialApp app = initialize(const CommandButtonWidget(
-          drf: "G:AMANDA", value: "RESET", longName: "Reset"));
+          drf: "G:AMANDA",
+          value: "RESET",
+          longName: "Reset",
+          settingsAllowed: true));
       await tester.pumpWidget(app);
       await tap(tester, buttonWithText: "Reset");
       assertButton(tester, isEnabled: false);

@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_controls_core/flutter_controls_core.dart';
 import 'package:parameter_page/widgets/command_menu_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
+import 'package:parameter_page/widgets/parameter_alarm_status_widget.dart';
 import 'package:parameter_page/widgets/parameter_basic_status_widget.dart';
+import 'package:parameter_page/widgets/parameter_beam_inhibit_status_widget.dart';
 import 'package:parameter_page/widgets/parameter_extended_status_widget.dart';
 import 'package:parameter_page/widgets/setting_control_widget.dart';
 
@@ -19,11 +22,13 @@ class ParameterWidget extends StatelessWidget {
   final bool displayAlarmDetails;
   final DisplayUnits displayUnits;
   final bool displayExtendedStatus;
+  final bool settingsAllowed;
 
   const ParameterWidget(
       {required this.drf,
       required this.editMode,
       required this.wide,
+      required this.settingsAllowed,
       this.label,
       super.key,
       this.displayUnits = DisplayUnits.commonUnits,
@@ -47,7 +52,9 @@ class ParameterWidget extends StatelessWidget {
                 wide: wide,
                 dpm: DataAcquisitionWidget.of(context),
                 displayAlarmDetails: displayAlarmDetails,
-                displayExtendedStatus: displayExtendedStatus));
+                displayExtendedStatus: displayExtendedStatus,
+                settingsAllowed: settingsAllowed,
+              ));
   }
 }
 
@@ -58,6 +65,7 @@ class _ActiveParamWidget extends StatefulWidget {
   final DisplayUnits displayUnits;
   final bool displayAlarmDetails;
   final bool displayExtendedStatus;
+  final bool settingsAllowed;
 
   const _ActiveParamWidget(
       {required this.drf,
@@ -65,7 +73,8 @@ class _ActiveParamWidget extends StatefulWidget {
       required this.wide,
       required this.displayUnits,
       required this.displayAlarmDetails,
-      required this.displayExtendedStatus});
+      required this.displayExtendedStatus,
+      required this.settingsAllowed});
 
   @override
   _ActiveParamState createState() => _ActiveParamState();
@@ -88,6 +97,10 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     return deviceInfo?.basicStatus != null;
   }
 
+  bool get hasDigitalAlarmProperty {
+    return deviceInfo?.digitalAlarm != null;
+  }
+
   String? get readingUnits {
     switch (widget.displayUnits) {
       case DisplayUnits.commonUnits:
@@ -102,9 +115,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   String? get settingUnits {
     switch (widget.displayUnits) {
       case DisplayUnits.commonUnits:
-        return deviceInfo?.setting?.commonUnits;
+        return deviceInfo?.setting?.$1.commonUnits;
       case DisplayUnits.primaryUnits:
-        return deviceInfo?.setting?.primaryUnits;
+        return deviceInfo?.setting?.$1.primaryUnits;
       case DisplayUnits.raw:
         return null;
     }
@@ -218,20 +231,19 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
               : Theme.of(context)
                   .textTheme
                   .bodySmall!
-                  .copyWith(fontStyle: FontStyle.italic, color: Colors.grey));
+                  .copyWith(fontStyle: FontStyle.italic));
     }
   }
 
   Widget _buildDeviceInfoFailureError(BuildContext context) {
     return Row(key: Key("parameter_infoerror_${widget.drf}"), children: [
-      const Padding(
-          padding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
-          child: Icon(Icons.error, color: Colors.red)),
+      Padding(
+          padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+          child: Icon(Icons.error, color: Theme.of(context).colorScheme.error)),
       Text("Failed to get this parameter",
-          style: Theme.of(context)
-              .textTheme
-              .bodyLarge!
-              .copyWith(fontStyle: FontStyle.italic, color: Colors.grey))
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+              fontStyle: FontStyle.italic,
+              color: Theme.of(context).colorScheme.error))
     ]);
   }
 
@@ -240,17 +252,23 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   Widget _layoutPropertiesWide() {
+    final knobbingInfo = deviceInfo?.setting?.$2;
+
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(children: [
         SizedBox(
-            width: 300,
+            width: 330,
             child: Visibility(
                 visible: hasSettingProperty,
                 child: SettingControlWidget(
                     key: Key("parameter_setting_${widget.drf}"),
+                    settingsAllowed: widget.settingsAllowed,
                     drf: widget.drf,
                     displayUnits: widget.displayUnits,
                     units: settingUnits,
+                    knobbingEnabled: knobbingInfo != null,
+                    knobbingStepSize:
+                        knobbingInfo != null ? knobbingInfo.step : 0,
                     wide: true))),
         const SizedBox(width: 8.0),
         SizedBox(
@@ -260,6 +278,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                 child: StreamBuilder(
                     stream: widget.dpm.monitorDevices([widget.drf]),
                     builder: _readingBuilder))),
+        StreamBuilder(
+            stream: widget.dpm.monitorAnalogAlarmDevices([widget.drf]),
+            builder: _analogAlarmBuilder),
         const SizedBox(width: 8.0),
         SizedBox(
             width: 128.0,
@@ -268,13 +289,21 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                 child: StreamBuilder(
                     stream:
                         widget.dpm.monitorDigitalStatusDevices([widget.drf]),
-                    builder: _basicStatusBuilder)))
+                    builder: _basicStatusBuilder))),
+        StreamBuilder(
+            stream: widget.dpm.monitorDigitalAlarmDevices([widget.drf]),
+            builder: _digitalAlarmBuilder),
+        StreamBuilder(
+            stream: widget.dpm.monitorDigitalAlarmBeamAbortInhibit(widget.drf),
+            builder: _digitalAlarmBeamInhibitBuilder),
       ]),
       Visibility(
           visible: widget.displayAlarmDetails,
           child: (deviceInfo != null && deviceInfo!.alarm != null)
-              ? ParameterAlarmDetailsWidget(
-                  drf: widget.drf, alarmBlock: deviceInfo!.alarm!)
+              ? Padding(
+                  padding: const EdgeInsets.fromLTRB(308, 8, 0, 0),
+                  child: ParameterAlarmDetailsWidget(
+                      drf: widget.drf, alarmBlock: deviceInfo!.alarm!))
               : Container()),
     ]);
   }
@@ -287,6 +316,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
             visible: hasSettingProperty,
             child: SettingControlWidget(
                 key: Key("parameter_setting_${widget.drf}"),
+                settingsAllowed: widget.settingsAllowed,
                 drf: widget.drf,
                 displayUnits: widget.displayUnits,
                 units: settingUnits,
@@ -362,7 +392,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
           ? SizedBox(
               width: 400,
               child: CommandButtonMenuWidget(
-                  drf: widget.drf, deviceInfo: deviceInfo!))
+                  drf: widget.drf,
+                  deviceInfo: deviceInfo!,
+                  settingsAllowed: widget.settingsAllowed))
           : Container(),
       const Spacer()
     ]);
@@ -374,7 +406,10 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
           stream: widget.dpm.monitorDigitalStatusDevices([widget.drf]),
           builder: _extendedStatusBuilder),
       deviceInfo != null
-          ? CommandButtonMenuWidget(drf: widget.drf, deviceInfo: deviceInfo!)
+          ? CommandButtonMenuWidget(
+              drf: widget.drf,
+              deviceInfo: deviceInfo!,
+              settingsAllowed: widget.settingsAllowed)
           : Container()
     ]);
   }
@@ -385,10 +420,13 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
 
   Widget _readingBuilder(context, snapshot) {
     if (snapshot.connectionState == ConnectionState.active) {
-      return _buildParam(_extractValueString(from: snapshot), readingUnits,
-          key: Key("parameter_reading_${widget.drf}"));
+      return _buildParam(
+          context, _extractValueString(from: snapshot), readingUnits,
+          key: Key("parameter_reading_${widget.drf}"),
+          isAlarming: _lastAlarmStatus != null &&
+              _lastAlarmStatus!.state == AlarmState.alarming);
     } else {
-      return _buildParam(null, readingUnits,
+      return _buildParam(context, null, readingUnits,
           key: Key("parameter_nullreading_${widget.drf}"));
     }
   }
@@ -411,15 +449,95 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     }
   }
 
-  Widget _buildParam(String? value, String? units, {required Key key}) {
+  Widget _analogAlarmBuilder(context, snapshot) {
+    if (_deviceHasAnalogAlarmBlock &&
+        snapshot.connectionState == ConnectionState.active) {
+      final newAlarmStatus = snapshot!.data as AlarmStatus;
+
+      if (_lastAlarmStatus == null ||
+          newAlarmStatus.state != _lastAlarmStatus!.state) {
+        SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {
+              _lastAlarmStatus = newAlarmStatus;
+            }));
+      }
+
+      return Container(
+          key: Key("parameter_analogalarm_${widget.drf}"),
+          child: ParameterAlarmStatusWidget(
+              isDigital: false,
+              settingsAllowed: widget.settingsAllowed,
+              alarmState: newAlarmStatus.state,
+              drf: widget.drf));
+    } else {
+      return const Padding(
+          padding: EdgeInsets.fromLTRB(8, 0, 0, 0), child: SizedBox(width: 40));
+    }
+  }
+
+  Widget _digitalAlarmBuilder(BuildContext context, AsyncSnapshot snapshot) {
+    if (_deviceHasDigitalAlarmBlock &&
+        snapshot.connectionState == ConnectionState.active) {
+      final newAlarmStatus = snapshot.data as AlarmStatus;
+
+      return Container(
+          key: Key("parameter_digitalalarm_${widget.drf}"),
+          child: ParameterAlarmStatusWidget(
+              isDigital: true,
+              settingsAllowed: widget.settingsAllowed,
+              alarmState: newAlarmStatus.state,
+              drf: widget.drf));
+    } else {
+      return const Padding(
+          padding: EdgeInsets.fromLTRB(8, 0, 0, 0), child: SizedBox(width: 40));
+    }
+  }
+
+  Widget _digitalAlarmBeamInhibitBuilder(
+      BuildContext context, AsyncSnapshot snapshot) {
+    if (_deviceHasDigitalAlarmBlock &&
+        snapshot.connectionState == ConnectionState.active) {
+      final isByPassed = snapshot.data as bool;
+
+      return ParameterBeamInhibitStatusWidget(
+          state: _beamInhibitState(
+              abort: deviceInfo!.digitalAlarm!.abort, byPassed: isByPassed),
+          drf: widget.drf);
+    } else {
+      return const SizedBox(width: 16);
+    }
+  }
+
+  BeamInhibitState _beamInhibitState(
+      {required bool abort, required bool byPassed}) {
+    return abort
+        ? (byPassed ? BeamInhibitState.byPassed : BeamInhibitState.willInhibit)
+        : BeamInhibitState.wontInhibit;
+  }
+
+  Widget _buildParam(BuildContext context, String? value, String? units,
+      {required Key key, bool isAlarming = false}) {
     return value == null
         ? Container()
         : (units == null
-            ? Text(key: key, textAlign: TextAlign.end, value)
+            ? Text(value,
+                key: key,
+                textAlign: TextAlign.end,
+                style: TextStyle(
+                    color: isAlarming
+                        ? Theme.of(context).colorScheme.error
+                        : Theme.of(context).colorScheme.primary))
             : Row(key: key, children: [
-                Expanded(child: Text(textAlign: TextAlign.end, value)),
+                Expanded(
+                    child: Text(value,
+                        textAlign: TextAlign.end,
+                        style: TextStyle(
+                            color: isAlarming
+                                ? Theme.of(context).colorScheme.error
+                                : Theme.of(context).colorScheme.primary))),
                 const SizedBox(width: 6.0),
-                Text(units, style: const TextStyle(color: Colors.grey))
+                Text(units,
+                    style:
+                        TextStyle(color: Theme.of(context).colorScheme.outline))
               ]));
   }
 
@@ -434,5 +552,15 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
     }
   }
 
+  bool get _deviceHasAnalogAlarmBlock {
+    return deviceInfo != null && deviceInfo!.alarm != null;
+  }
+
+  bool get _deviceHasDigitalAlarmBlock {
+    return deviceInfo != null && deviceInfo!.digitalAlarm != null;
+  }
+
   bool _deviceInfoFailure = false;
+
+  AlarmStatus? _lastAlarmStatus;
 }

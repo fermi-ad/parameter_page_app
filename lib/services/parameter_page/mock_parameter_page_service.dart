@@ -44,28 +44,20 @@ class MockParameterPageService extends ParameterPageService {
   }
 
   @override
-  Future<void> deletePage(
-      {required String withPageId,
-      required Function(String errorMessage) onFailure,
-      required Function() onSuccess}) async {
+  Future<void> deletePage({required String withPageId}) async {
     for (var page in _testPages) {
       if (page["pageid"] == withPageId) {
         _testPages.remove(page);
-
-        onSuccess.call();
-
         return;
       }
     }
 
-    onFailure.call("page could not be deleted (pageid not found)");
+    return Future.error("page could not be deleted (pageid not found)");
   }
 
   @override
   Future<void> savePage(
-      {required String id,
-      required ParameterPage page,
-      required Function() onSuccess}) async {
+      {required String id, required ParameterPage page}) async {
     if (savePageShouldFail) {
       return Future.error("Fake savePage failure.");
     }
@@ -105,7 +97,7 @@ class MockParameterPageService extends ParameterPageService {
           .add({"title": tabTitle, "sub_pages": newSubPages});
     }
 
-    Timer(const Duration(seconds: 1), () => onSuccess.call());
+    return Future<void>.delayed(const Duration(seconds: 1), () {});
   }
 
   @override

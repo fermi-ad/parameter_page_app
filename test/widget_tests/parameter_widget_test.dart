@@ -74,11 +74,16 @@ void main() {
         (WidgetTester tester) async {
       // Given nothing...
       // When I instantiate and display a ParameterEntry with showAlarmDetails = false
+      await tester.binding.setSurfaceSize(const Size(2560, 1440));
       Scaffold scaffold = Scaffold(
           body: DataAcquisitionWidget(
               service: MockDpmService(useEmptyStream: true),
               child: const ParameterWidget(
-                  drf: "M:OUTTMP", editMode: false, wide: true)));
+                drf: "M:OUTTMP",
+                editMode: false,
+                wide: true,
+                settingsAllowed: true,
+              )));
       MaterialApp app = MaterialApp(home: scaffold);
       await tester.pumpWidget(app);
 
@@ -91,16 +96,17 @@ void main() {
         (WidgetTester tester) async {
       // Given a parameter with no alarms block (Z:NO_ALARMS)
       // When I instantiate and display a ParameterWidget with showAlarmDetails = true
+      await tester.binding.setSurfaceSize(const Size(2560, 1440));
       MaterialApp app = MaterialApp(
           home: Scaffold(
               body: DataAcquisitionWidget(
                   service: MockDpmService(useEmptyStream: true),
                   child: const ParameterWidget(
-                    drf: "Z:NO_ALARMS",
-                    editMode: false,
-                    wide: true,
-                    displayAlarmDetails: true,
-                  ))));
+                      drf: "Z:NO_ALARMS",
+                      editMode: false,
+                      wide: true,
+                      displayAlarmDetails: true,
+                      settingsAllowed: true))));
       await tester.pumpWidget(app);
       await waitForParameterToLoad(tester, drf: "Z:NO_ALARMS");
 
@@ -112,16 +118,17 @@ void main() {
         (WidgetTester tester) async {
       // Given nothing...
       // When I instantiate and display a ParameterEntry with showAlarmDetails = true
+      await tester.binding.setSurfaceSize(const Size(2560, 1440));
       MaterialApp app = MaterialApp(
           home: Scaffold(
               body: DataAcquisitionWidget(
                   service: MockDpmService(useEmptyStream: true),
                   child: const ParameterWidget(
-                    drf: "M:OUTTMP",
-                    editMode: false,
-                    wide: true,
-                    displayAlarmDetails: true,
-                  ))));
+                      drf: "M:OUTTMP",
+                      editMode: false,
+                      wide: true,
+                      displayAlarmDetails: true,
+                      settingsAllowed: true))));
       await tester.pumpWidget(app);
       await waitForParameterToLoad(tester, drf: "M:OUTTMP");
 
@@ -141,11 +148,11 @@ void main() {
               body: DataAcquisitionWidget(
                   service: MockDpmService(useEmptyStream: true),
                   child: const ParameterWidget(
-                    drf: "M:OUTTMP",
-                    editMode: false,
-                    wide: false,
-                    displayAlarmDetails: true,
-                  ))));
+                      drf: "M:OUTTMP",
+                      editMode: false,
+                      wide: false,
+                      displayAlarmDetails: true,
+                      settingsAllowed: true))));
       await tester.pumpWidget(app);
       await waitForParameterToLoad(tester, drf: "M:OUTTMP");
 

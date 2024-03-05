@@ -110,8 +110,9 @@ const addSubPage = r"""
 
 ///********************************************************************
 /// name: merge_entries
-///      (use to merge(insert, update or mix of both) those new/updated entries only,
-///      IF transaction deletion is included, run delete_entries first)
+///      (used to merge(insert, update or mix of both) those new/updated entries only,
+///      IF transaction deletion is included, run delete_entries first.
+///       should call merge_entryValues after if entry type is Parameter or Multivice)
 /// input: list of entries(one or more) to merge, format of
 ///        [
 ///            {
@@ -228,4 +229,39 @@ const deleteSubjects = r"""
                   message
                 }
               }
+""";
+
+///********************************************************************
+/// name: merge_entryValues
+///       (used to merge(insert, update or mix of both) those new/updated entry values only
+///       for entry type Parameter and Multivice. It should be called aftr merge_entries or
+///       be called standalone, whenever Parameter or Multivice is involved in the merge entry )
+/// input: list of entry values in the format of
+///       [{tabpageid, position, typeattrid, entryvalue},{...}]
+///       e.g.
+///        [
+///          {
+///            "tabpageid": 1,
+///            "position": 11,
+///            "typeattrid": "MROWS",
+///            "ext_value": "2"
+///         },
+///         {
+///            "tabpageid": 1,
+///            "position": 12,
+///            "typeattrid": "PSCAL",
+///            "ext_value": "1.4"
+///         } 
+///       ]
+///       acceptable typeattrid: MROWS (number of rows in a Mult), PSCAL (parameter scale factor)   
+/// output: transaction return code and message.
+///          (return code, 1: succeed, -1: failed)
+///**********************************************************************
+const mergeEntryValues = r"""
+            mutation mergeEntryValues($mrgEntryVals: [ValueInput]!) {
+              mergeEntryValues(mrgEntryVals: $mrgEntryVals) {
+                code
+                message
+              }
+            }
 """;

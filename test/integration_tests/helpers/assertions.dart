@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_controls_core/flutter_controls_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/widgets/comment_entry_widget.dart';
+import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
 import 'package:parameter_page/widgets/sub_page_navigation_widget.dart';
 
@@ -367,19 +370,50 @@ void assertSettingError(
 
 void assertSettingTextInput({required String forDRF, required bool isVisible}) {
   expect(find.byKey(Key("parameter_settinginput_$forDRF")),
-      isVisible ? findsOneWidget : findsNothing);
+      isVisible ? findsOneWidget : findsNothing,
+      reason: isVisible
+          ? "(assertSettingTextInput) Expected the setting text input field for $forDRF to be visible"
+          : "(assertSettingTextInput) Expected the setting text input field for $forDRF to NOT be visible");
+}
+
+void assertSettingTextInputValue(
+    {required String forDRF, required String isSetTo}) {
+  assertSettingTextInput(forDRF: forDRF, isVisible: true);
+
+  final textField = find
+      .descendant(
+          of: find.byKey(Key("parameter_settinginput_$forDRF")),
+          matching: find.byType(TextField))
+      .evaluate()
+      .first
+      .widget as TextField;
+
+  expect(textField.controller!.text, equals(isSetTo),
+      reason:
+          "(assertSettingTextInputValue) Expected the setting input field for $forDRF to read $isSetTo");
 }
 
 void assertCommandButtons(
     {required bool areVisible,
     required String forDRF,
-    required List<String> withText}) {
+    required List<String> withText,
+    bool? areInhibited}) {
   for (String commandText in withText) {
-    expect(
-        find.descendant(
-            of: find.byKey(Key("parameter_commands_$forDRF")),
-            matching: find.text(commandText)),
-        areVisible ? findsOneWidget : findsNothing);
+    final buttonTextFinder = find.descendant(
+        of: find.byKey(Key("parameter_commands_$forDRF")),
+        matching: find.text(commandText));
+
+    expect(buttonTextFinder, areVisible ? findsOneWidget : findsNothing);
+  }
+}
+
+void assertCommandButtonsAreDisabled(WidgetTester tester,
+    {required String forDRF, required List<String> withText}) {
+  for (String commandText in withText) {
+    final buttonFinder = find.ancestor(
+        of: find.text(commandText), matching: find.byType(ElevatedButton));
+
+    expect((tester.widget(buttonFinder) as ElevatedButton).onPressed, isNull);
   }
 }
 
@@ -603,4 +637,168 @@ void assertSubSystemDirectory({required List<String> contains}) {
 void assertSubSystemDeleteDialog({required bool isVisible}) {
   expect(find.byKey(const Key("subsystem-confirm-delete-dialog")),
       isVisible ? findsOneWidget : findsNothing);
+}
+
+void assertSettings({required bool areAllowed}) {
+  final widgetFinder = find.byKey(const Key("settings-permission"));
+
+  final disabledTextFinder = find.text("Settings disabled");
+
+  final disabledIndicatorFinder =
+      find.byKey(const Key("settings-permission-indicator-disabled"));
+
+  expect(find.descendant(of: widgetFinder, matching: disabledTextFinder),
+      areAllowed ? findsNothing : findsOneWidget);
+
+  expect(find.descendant(of: widgetFinder, matching: disabledIndicatorFinder),
+      areAllowed ? findsNothing : findsOneWidget);
+}
+
+void assertSettingsPermissionTimer(
+    {required bool isVisible, String? isShowing}) {
+  final widgetFinder = find.byKey(const Key("settings-permission-timer"));
+  expect(widgetFinder, isVisible ? findsOneWidget : findsNothing);
+
+  if (isShowing != null) {
+    expect(find.descendant(of: widgetFinder, matching: find.text(isShowing)),
+        findsOneWidget);
+  }
+}
+
+void assertAnalogAlarmStatus(WidgetTester tester,
+    {required String forDRF, required bool isInAlarm}) {
+  final analogAlarmFinder = find.byKey(Key("parameter_analogalarm_$forDRF"));
+
+  final alarmIndicatorFinder = find.descendant(
+      of: analogAlarmFinder, matching: find.byIcon(Icons.notifications_active));
+  expect(alarmIndicatorFinder, isInAlarm ? findsOneWidget : findsNothing);
+
+  final ThemeData currentTheme = _getCurrentTheme(tester);
+
+  final parameterReadingFinder = find.byKey(Key("parameter_reading_$forDRF"));
+  final readingTextFinder = find
+      .descendant(of: parameterReadingFinder, matching: find.byType(Text))
+      .first;
+  final textStyle = tester.widget<Text>(readingTextFinder).style;
+  if (isInAlarm) {
+    expect(textStyle!.color, equals(currentTheme.colorScheme.error));
+  } else {
+    expect(textStyle!.color, equals(currentTheme.colorScheme.primary));
+  }
+}
+
+void assertDigitalAlarmStatus(WidgetTester tester,
+    {required String forDRF, required AlarmState isInState}) {
+  final digitalAlarmFinder = find.byKey(Key("parameter_digitalalarm_$forDRF"));
+
+  switch (isInState) {
+    case AlarmState.alarming:
+      final inAlarmIndicatorFinder = find.descendant(
+          of: digitalAlarmFinder,
+          matching: find.byIcon(Icons.notifications_active));
+      expect(inAlarmIndicatorFinder, findsOneWidget);
+
+    case AlarmState.notAlarming:
+      final noAlarmIndicatorFinder = find.descendant(
+          of: digitalAlarmFinder, matching: find.byIcon(Icons.notifications));
+      expect(noAlarmIndicatorFinder, findsOneWidget);
+
+    case AlarmState.bypassed:
+      final byPassedAlarmIndicatorFinder = find.descendant(
+          of: digitalAlarmFinder,
+          matching: find.byIcon(Icons.notifications_off));
+      expect(byPassedAlarmIndicatorFinder, findsOneWidget);
+  }
+}
+
+void assertByPassedAlarmStatus(
+    {required String forDRF, required bool isVisible}) {
+  final parameterFinder = find.byKey(Key("parameter_row_$forDRF"));
+  final alarmIndicatorFinder = find.descendant(
+      of: parameterFinder, matching: find.byIcon(Icons.notifications_off));
+  expect(alarmIndicatorFinder, isVisible ? findsOneWidget : findsNothing);
+}
+
+void assertAnalogAlarmIndicator(
+    {required String forDRF, required bool isVisible}) {
+  final analogAlarmFinder = find.byKey(Key("parameter_analogalarm_$forDRF"));
+  expect(analogAlarmFinder, isVisible ? findsOneWidget : findsNothing);
+}
+
+void assertDigitalAlarmIndicator(
+    {required String forDRF, required bool isVisible}) {
+  final digitalAlarmFinder = find.byKey(Key("parameter_digitalalarm_$forDRF"));
+  expect(digitalAlarmFinder, isVisible ? findsOneWidget : findsNothing);
+}
+
+void assertAnalogAlarmToggle(WidgetTester tester,
+    {required String forDRF, required bool isEnabled}) {
+  final button = tester.widget<IconButton>(find.descendant(
+      of: find.byKey(Key("parameter_analogalarm_$forDRF")),
+      matching: find.byType(IconButton)));
+  expect(button.onPressed, isEnabled ? isNotNull : isNull);
+}
+
+void assertDigitalAlarmBeamInhibitStatus(WidgetTester tester,
+    {required String forDRF, required BeamInhibitState isInState}) {
+  final alarmInhbitFinder =
+      find.byKey(Key("parameter_digitalalarm_beaminhibit_$forDRF"));
+  final iconFinder = find.descendant(
+      of: alarmInhbitFinder,
+      matching: isInState == BeamInhibitState.byPassed
+          ? find.byIcon(Icons.do_not_touch)
+          : find.byIcon(Icons.pan_tool));
+
+  expect(alarmInhbitFinder, findsOneWidget);
+
+  final icon = tester.widget<Icon>(iconFinder);
+  switch (isInState) {
+    case BeamInhibitState.wontInhibit:
+      expect(
+          icon.color, equals(_getCurrentTheme(tester).colorScheme.background));
+
+    case BeamInhibitState.willInhibit:
+      expect(icon.color, equals(_getCurrentTheme(tester).colorScheme.primary));
+
+    case BeamInhibitState.byPassed:
+      expect(icon.color, equals(_getCurrentTheme(tester).colorScheme.primary));
+  }
+}
+
+ThemeData _getCurrentTheme(WidgetTester tester) {
+  var brightness =
+      SchedulerBinding.instance.platformDispatcher.platformBrightness;
+
+  bool isDarkMode = brightness == Brightness.dark;
+
+  return isDarkMode
+      ? tester.widget<MaterialApp>(find.byType(MaterialApp)).darkTheme!
+      : tester.widget<MaterialApp>(find.byType(MaterialApp)).theme!;
+}
+
+void assertDigitalAlarmBeamInhibitIndicator(
+    {required String forDRF, required bool isVisible}) {
+  final alarmInhbitFinder =
+      find.byKey(Key("parameter_digitalalarm_beaminhibit_$forDRF"));
+
+  expect(alarmInhbitFinder, isVisible ? findsOneWidget : findsNothing);
+}
+
+void assertKnobbingControls(
+    {required bool areVisible, required String forDRF}) {
+  expect(find.byKey(Key("parameter_settingknobbing_$forDRF")),
+      areVisible ? findsOneWidget : findsNothing,
+      reason: areVisible
+          ? "(assertKnobbingControls) Expected to see knobbing controls for $forDRF"
+          : "(assertKnobbingControls) Expected not to see knobbing controls for $forDRF");
+}
+
+void assertKnobbing({required String stepSizeIs, required String forDRF}) {
+  expect(
+      find.descendant(
+          of: find.byKey(Key("parameter_settingknobbing_$forDRF")),
+          matching: find.text(stepSizeIs)),
+      findsOneWidget,
+      reason:
+          "(assertKnobbing) Expected the knobbing step size to be $stepSizeIs for $forDRF");
 }

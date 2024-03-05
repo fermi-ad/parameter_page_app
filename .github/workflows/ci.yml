@@ -36,6 +36,9 @@ jobs:
           - display_sub_page_test
           - extract_parameters_from_text_paste_test
           - display_sub_system_test
+          - enable_disable_settings_test
+          - display_bypass_alarm_test
+          - knob_parameter_test
 
     steps:
       - name: Checkout code

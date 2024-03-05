@@ -16,8 +16,8 @@ abstract class PageEntry {
 
   PageEntry({Key? key, this.id}) : key = key ?? UniqueKey();
 
-  Widget buildEntry(
-      BuildContext context, bool editMode, bool wide, DisplaySettings settings);
+  Widget buildEntry(BuildContext context, bool editMode, bool wide,
+      DisplaySettings settings, bool settingsAllowed);
 
   @override
   bool operator ==(other) {
@@ -39,7 +39,7 @@ class CommentEntry extends PageEntry {
 
   @override
   Widget buildEntry(BuildContext context, bool editMode, bool wide,
-      DisplaySettings settings) {
+      DisplaySettings settings, bool settingsAllowed) {
     return CommentEntryWidget(text);
   }
 
@@ -58,9 +58,10 @@ class ParameterEntry extends PageEntry {
 
   @override
   Widget buildEntry(BuildContext context, bool editMode, bool wide,
-      DisplaySettings settings) {
+      DisplaySettings settings, bool settingsAllowed) {
     return ParameterWidget(
         drf: drf,
+        settingsAllowed: settingsAllowed,
         editMode: editMode,
         wide: wide,
         displayUnits: settings.units,

@@ -1,3 +1,6 @@
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_controls_core/flutter_controls_core.dart';
@@ -5,6 +8,8 @@ import 'package:parameter_page/routes.dart';
 import 'package:parameter_page/services/parameter_page/gql_param/graphql_parameter_page_service.dart';
 import 'package:parameter_page/services/parameter_page/mock_parameter_page_service.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
+import 'package:parameter_page/services/settings_permission/mock_settings_permission_service.dart';
+import 'package:parameter_page/services/settings_permission/settings_permission_service.dart';
 import 'package:parameter_page/services/user_device/mock_user_device_service.dart';
 import 'package:parameter_page/services/user_device/system_user_device_service.dart';
 import 'package:parameter_page/services/user_device/user_device_service.dart';
@@ -15,20 +20,29 @@ import 'services/dpm/mock_dpm_service.dart';
 MockDpmService? mockDPMService;
 MockParameterPageService? mockParameterPageService;
 MockUserDeviceService? mockUserDeviceService;
+MockSettingsPermissionService? mockSettingsPermissionService;
 
 void main() async {
   await dotenv.load(fileName: ".env");
 
-  var (dpmService, pageService, deviceService) = _configureServices();
+  var (dpmService, pageService, deviceService, settingsPermissionService) =
+      _configureServices();
+
+  _inhibitF5KeyBrowserReload();
 
   runApp(ControlsRouterApp(
       title: "Parameter Page",
       router: GoRouter(
-          routes: configureRoutes(dpmService, pageService, deviceService))));
+          routes: configureRoutes(dpmService, pageService, deviceService,
+              settingsPermissionService))));
 }
 
-(ACSysServiceAPI, ParameterPageService, UserDeviceService)
-    _configureServices() {
+(
+  ACSysServiceAPI,
+  ParameterPageService,
+  UserDeviceService,
+  SettingsPermissionService
+) _configureServices() {
   const useMockServices =
       String.fromEnvironment("USE_MOCK_SERVICES", defaultValue: "false") !=
           "false";
@@ -38,8 +52,12 @@ void main() async {
       : _configureGraphQLServices();
 }
 
-(ACSysServiceAPI, ParameterPageService, UserDeviceService)
-    _configureMockServices() {
+(
+  ACSysServiceAPI,
+  ParameterPageService,
+  UserDeviceService,
+  SettingsPermissionService
+) _configureMockServices() {
   mockDPMService = MockDpmService();
   mockDPMService!.enablePeriodSettingStream();
 
@@ -47,14 +65,36 @@ void main() async {
 
   mockUserDeviceService = MockUserDeviceService();
 
-  return (mockDPMService!, mockParameterPageService!, mockUserDeviceService!);
+  mockSettingsPermissionService = MockSettingsPermissionService();
+
+  return (
+    mockDPMService!,
+    mockParameterPageService!,
+    mockUserDeviceService!,
+    mockSettingsPermissionService!
+  );
 }
 
-(ACSysServiceAPI, ParameterPageService, UserDeviceService)
-    _configureGraphQLServices() {
+(
+  ACSysServiceAPI,
+  ParameterPageService,
+  UserDeviceService,
+  SettingsPermissionService
+) _configureGraphQLServices() {
   return (
     ACSysService(),
     GraphQLParameterPageService(),
-    SystemUserDeviceService()
+    SystemUserDeviceService(),
+    MockSettingsPermissionService()
   );
+}
+
+void _inhibitF5KeyBrowserReload() {
+  html.document.body?.onKeyDown.listen((html.KeyboardEvent event) {
+    // Check if the pressed key is F5 (keyCode 116)
+    if (event.keyCode == 116) {
+      // Prevent default browser behavior
+      event.preventDefault();
+    }
+  });
 }

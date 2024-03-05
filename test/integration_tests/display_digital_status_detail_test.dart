@@ -4,6 +4,7 @@ import 'package:integration_test/integration_test.dart';
 
 import 'helpers/assertions.dart';
 import 'helpers/actions.dart';
+import 'helpers/setup.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -117,7 +118,6 @@ void main() {
             "Polarity",
             " test 2",
             "testtest",
-            "..."
           ],
           hasDisplayValues: [
             "On",
@@ -126,7 +126,6 @@ void main() {
             "Mono",
             " good",
             "GOOD",
-            "..."
           ],
           hasBinaryValues: [
             "1",
@@ -135,7 +134,6 @@ void main() {
             "0",
             "0",
             "0",
-            "0"
           ],
           hasColors: [
             Colors.green,
@@ -144,7 +142,6 @@ void main() {
             Colors.red,
             Colors.green,
             Colors.green,
-            Colors.grey
           ]);
     });
 

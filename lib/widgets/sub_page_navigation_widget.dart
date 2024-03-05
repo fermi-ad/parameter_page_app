@@ -32,7 +32,7 @@ class SubPageNavigationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(children: [
+    return Row(key: const Key("subpagenavigation"), children: [
       _buildNavigationControls(),
       Padding(
           padding: const EdgeInsets.fromLTRB(10.0, 0, 0, 0),
