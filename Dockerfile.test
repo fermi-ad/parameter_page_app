@@ -1,0 +1,31 @@
+FROM ubuntu:latest as builder
+
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -y \
+    git \
+    unzip \
+    xz-utils \
+    curl \
+    libgl1-mesa-glx
+
+RUN useradd -ms /bin/bash test
+USER test
+WORKDIR /home/test
+
+# Install Flutter
+RUN git clone https://github.com/flutter/flutter.git
+ENV PATH="/home/test/flutter/bin:${PATH}"
+
+RUN flutter precache  \
+    && flutter channel stable \
+    && flutter upgrade
+
+# Copy the Flutter app source code
+COPY --chown=test . /home/test/app
+WORKDIR /home/test/app
+
+RUN flutter pub get
+
+# Run integration tests
+CMD ["flutter", "test", "test/service_tests"]

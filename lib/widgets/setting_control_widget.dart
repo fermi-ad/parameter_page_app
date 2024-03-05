@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 import 'package:parameter_page/widgets/display_settings_widget.dart';
 
@@ -18,6 +19,10 @@ class SettingControlWidget extends StatefulWidget {
 
   final bool settingsAllowed;
 
+  final bool knobbingEnabled;
+
+  final double knobbingStepSize;
+
   const SettingControlWidget(
       {super.key,
       required this.drf,
@@ -25,7 +30,9 @@ class SettingControlWidget extends StatefulWidget {
       this.units,
       required this.displayUnits,
       this.wide = true,
-      this.settingsAllowed = true});
+      this.settingsAllowed = true,
+      this.knobbingEnabled = false,
+      this.knobbingStepSize = 1.0});
 
   @override
   State<StatefulWidget> createState() {
@@ -54,14 +61,20 @@ class _SettingControlState extends State<SettingControlWidget> {
   }
 
   Widget _buildWide(BuildContext context) {
-    return Row(children: [
-      _buildUndo(context),
-      const SizedBox(width: 4.0),
-      SizedBox(width: 128.0, child: _buildStates(context)),
-      SizedBox(width: 56.0, child: _buildUnits()),
-      SizedBox(width: 32.0, child: _buildSubmitButton(context)),
-      SizedBox(width: 32.0, child: _buildCancelButton())
-    ]);
+    return SizedBox(
+        height: 64,
+        child: Column(children: [
+          Flexible(
+              child: Row(children: [
+            _buildUndo(context),
+            const SizedBox(width: 4.0),
+            SizedBox(width: 128.0, child: _buildStates(context)),
+            SizedBox(width: 56.0, child: _buildUnits()),
+            SizedBox(width: 32.0, child: _buildSubmitButton(context)),
+            SizedBox(width: 32.0, child: _buildCancelButton())
+          ])),
+          Flexible(child: _buildKnobbingControls())
+        ]));
   }
 
   Widget _buildNarrow(BuildContext context) {
@@ -131,6 +144,27 @@ class _SettingControlState extends State<SettingControlWidget> {
         : Container();
   }
 
+  Widget _buildKnobbingControls() {
+    final f = NumberFormat("######0.0#####", "en_US");
+    final stepSize = f.format(widget.knobbingStepSize);
+
+    return Visibility(
+        visible: _showKnobbingControls,
+        child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+            child: Row(
+                key: Key("parameter_settingknobbing_${widget.drf}"),
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Knob +/- (F5/F4): ",
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.outline)),
+                  Text(stepSize,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.outline))
+                ])));
+  }
+
   Widget _buildDisplayingState() {
     return GestureDetector(
         onTap: _handleDisplayTap,
@@ -156,13 +190,9 @@ class _SettingControlState extends State<SettingControlWidget> {
 
     return Container(
         key: Key("parameter_settinginput_${widget.drf}"),
-        child: RawKeyboardListener(
+        child: KeyboardListener(
           focusNode: FocusNode(),
-          onKey: (key) {
-            if (key.isKeyPressed(LogicalKeyboardKey.escape)) {
-              _handleAbort();
-            }
-          },
+          onKeyEvent: _handleEditingKey,
           child: TextFormField(
               key: Key("parameter_settingtextfield_${widget.drf}"),
               autofocus: true,
@@ -213,12 +243,13 @@ class _SettingControlState extends State<SettingControlWidget> {
 
   Widget _settingDisplayBuilder(context, snapshot) {
     if (snapshot.connectionState == ConnectionState.active) {
-      _lastSettingValue = _extractValueString(from: snapshot);
+      _lastSetting =
+          (snapshot.data!.value, _extractValueString(from: snapshot));
       return Container(
           key: Key("parameter_settingdisplay_${widget.drf}"),
           child: Text(
               textAlign: TextAlign.end,
-              _lastSettingValue!,
+              _lastSetting!.$2,
               style: TextStyle(color: Theme.of(context).colorScheme.primary)));
     } else {
       return Container(
@@ -258,6 +289,20 @@ class _SettingControlState extends State<SettingControlWidget> {
     });
   }
 
+  void _handleEditingKey(KeyEvent event) {
+    if (event is KeyUpEvent) {
+      return;
+    }
+
+    if (event.logicalKey == LogicalKeyboardKey.escape) {
+      _handleAbort();
+    } else if (event.logicalKey == LogicalKeyboardKey.f5) {
+      _handleKnob(withStep: widget.knobbingStepSize);
+    } else if (event.logicalKey == LogicalKeyboardKey.f4) {
+      _handleKnob(withStep: -widget.knobbingStepSize);
+    }
+  }
+
   void _handleUndoTap() {
     if (!widget.settingsAllowed) {
       return;
@@ -272,7 +317,18 @@ class _SettingControlState extends State<SettingControlWidget> {
     }
     setState(() {
       _state = _SettingControlInternalState.editing;
-      _textFieldController.text = _lastSettingValue!;
+      _textFieldController.text = _lastSetting!.$2;
+    });
+  }
+
+  void _handleKnob({required double withStep}) {
+    final newValue = _lastSetting!.$1 + withStep;
+
+    _submitKnobbedSetting(newValue.toString());
+
+    setState(() {
+      _lastSetting = (newValue, newValue.toStringAsPrecision(4));
+      _textFieldController.text = _lastSetting!.$2;
     });
   }
 
@@ -284,6 +340,11 @@ class _SettingControlState extends State<SettingControlWidget> {
     setState(() {
       _state = _SettingControlInternalState.displaying;
     });
+  }
+
+  void _submitKnobbedSetting(String newValue) {
+    final DataAcquisitionWidget daqWidget = DataAcquisitionWidget.of(context);
+    daqWidget.submit(forDRF: widget.drf, newSetting: newValue);
   }
 
   void _submitSetting(String newValue) {
@@ -317,6 +378,11 @@ class _SettingControlState extends State<SettingControlWidget> {
     });
   }
 
+  bool get _showKnobbingControls {
+    return widget.knobbingEnabled &&
+        _state == _SettingControlInternalState.editing;
+  }
+
   _SettingControlInternalState _state = _SettingControlInternalState.displaying;
 
   String? _pendingSettingValue;
@@ -333,5 +399,5 @@ class _SettingControlState extends State<SettingControlWidget> {
 
   String? _initialSettingValue;
 
-  String? _lastSettingValue;
+  (double, String)? _lastSetting;
 }

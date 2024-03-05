@@ -13,6 +13,10 @@ void main() {
       await dotenv.load(fileName: ".env");
       final service = GraphQLParameterPageService();
 
+      // ... and there are at least two pages persisted
+      await service.createPage(withTitle: "***SERVICE TEST*** fetchPages 1");
+      await service.createPage(withTitle: "***SERVICE TEST*** fetchPages 2");
+
       // When I request a list of parameter pages
       List<dynamic> pageTitles = await service.fetchPages();
 
@@ -27,37 +31,43 @@ void main() {
       await dotenv.load(fileName: ".env");
       final service = GraphQLParameterPageService();
 
-      // When I fetch a test page
-      ParameterPage page = await service.fetchPage(id: "1");
+      // ... and a complicated test page has been persisted
+      final testPage =
+          _createAComplicatedTestPage(withTitle: "East Booster Towers");
+      final id = await service.createPage(withTitle: testPage.title);
+      await service.savePage(id: id, page: testPage);
+
+      // When I fetch the test page
+      ParameterPage page = await service.fetchPage(id: testPage.id!);
 
       // Then the page title is...
       expect(page.title, "East Booster Towers");
 
       // ... and the page has 2 sub-systems
-      expect(page.subSystemTitles.length, 2);
-      expect(page.subSystemTitles[0], "P1 Line M1");
-      expect(page.subSystemTitles[1], "P2 Line M2");
+      expect(page.subSystemTitles.length, 3);
+      expect(page.subSystemTitles[0], "First subsys");
+      expect(page.subSystemTitles[1], "Second subsys");
+      expect(page.subSystemTitles[1], "Third subsys");
 
       // ... and the first sub-system has 3 tabs
       expect(page.tabTitles.length, 3);
-      expect(page.tabTitles[0], "P1 tab #1");
-      expect(page.tabTitles[1], "P2 tab #1");
-      expect(page.tabTitles[2], "new dev tab");
+      expect(page.tabTitles[0], "Sub 1 Tab 1");
+      expect(page.tabTitles[1], "Sub 1 Tab 2");
+      expect(page.tabTitles[2], "Sub 1 Tab 3");
 
       // ... and the first tab has 3 sub-pages
       expect(page.subPageDirectory.length, 3);
-      expect(page.subPageDirectory[0], "P1 subpage #1");
-      expect(page.subPageDirectory[1], "P2 subpage #1");
-      expect(page.subPageDirectory[2], "3");
-
-      // ... and Tab 2 has 2 sub-pages
-      page.switchTab(to: "P2 tab #1");
-      expect(page.subPageDirectory.length, 2);
       expect(page.subPageDirectory[0], "");
       expect(page.subPageDirectory[1], "");
+      expect(page.subPageDirectory[2], "");
+
+      // ... and Tab 2 has 1 sub-pages
+      page.switchTab(to: "Sub 1 Tab 2");
+      expect(page.subPageDirectory.length, 1);
+      expect(page.subPageDirectory[0], "");
 
       // ... and Tab 3 has 1 sub-page
-      page.switchTab(to: "new dev tab");
+      page.switchTab(to: "Sub 1 Tab 3");
       expect(page.subPageDirectory.length, 1);
       expect(page.subPageDirectory[0], "");
     });
@@ -85,7 +95,7 @@ void main() {
       List<String> newTitles = await service.fetchPages().then(
           (List<dynamic> pages) =>
               pages.map((page) => page['title'] as String).toList());
-      expect(newTitles, contains("createPage test 1"));
+      expect(newTitles, contains("createPage test"));
 
       // Clean-up
     });

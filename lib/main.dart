@@ -1,3 +1,6 @@
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_controls_core/flutter_controls_core.dart';
@@ -24,6 +27,8 @@ void main() async {
 
   var (dpmService, pageService, deviceService, settingsPermissionService) =
       _configureServices();
+
+  _inhibitF5KeyBrowserReload();
 
   runApp(ControlsRouterApp(
       title: "Parameter Page",
@@ -82,4 +87,14 @@ void main() async {
     SystemUserDeviceService(),
     MockSettingsPermissionService()
   );
+}
+
+void _inhibitF5KeyBrowserReload() {
+  html.document.body?.onKeyDown.listen((html.KeyboardEvent event) {
+    // Check if the pressed key is F5 (keyCode 116)
+    if (event.keyCode == 116) {
+      // Prevent default browser behavior
+      event.preventDefault();
+    }
+  });
 }

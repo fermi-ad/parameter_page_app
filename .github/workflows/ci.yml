@@ -38,6 +38,7 @@ jobs:
           - display_sub_system_test
           - enable_disable_settings_test
           - display_bypass_alarm_test
+          - knob_parameter_test
 
     steps:
       - name: Checkout code
@@ -57,7 +58,7 @@ jobs:
       - name: Installing chromedriver (needed for Integration tests)
         uses: nanasess/setup-chromedriver@v2
         with:
-          chromedriver-version: "121.0.6129.0"
+          chromedriver-version: "123.0.6312.22"
 
       - name: Starting chromedriver and executing integration test
         run: |

@@ -40,6 +40,7 @@ const queryOnePageTree = r"""
                         position
                         text
                         type
+                        entry_value
                       }
                     }
                   }

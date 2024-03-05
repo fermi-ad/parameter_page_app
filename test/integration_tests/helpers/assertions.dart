@@ -4,6 +4,7 @@ import 'package:flutter_controls_core/flutter_controls_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/widgets/comment_entry_widget.dart';
 import 'package:parameter_page/widgets/data_acquisition_widget.dart';
+import 'package:parameter_page/widgets/mult_entry_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
 import 'package:parameter_page/widgets/sub_page_navigation_widget.dart';
 
@@ -370,7 +371,27 @@ void assertSettingError(
 
 void assertSettingTextInput({required String forDRF, required bool isVisible}) {
   expect(find.byKey(Key("parameter_settinginput_$forDRF")),
-      isVisible ? findsOneWidget : findsNothing);
+      isVisible ? findsOneWidget : findsNothing,
+      reason: isVisible
+          ? "(assertSettingTextInput) Expected the setting text input field for $forDRF to be visible"
+          : "(assertSettingTextInput) Expected the setting text input field for $forDRF to NOT be visible");
+}
+
+void assertSettingTextInputValue(
+    {required String forDRF, required String isSetTo}) {
+  assertSettingTextInput(forDRF: forDRF, isVisible: true);
+
+  final textField = find
+      .descendant(
+          of: find.byKey(Key("parameter_settinginput_$forDRF")),
+          matching: find.byType(TextField))
+      .evaluate()
+      .first
+      .widget as TextField;
+
+  expect(textField.controller!.text, equals(isSetTo),
+      reason:
+          "(assertSettingTextInputValue) Expected the setting input field for $forDRF to read $isSetTo");
 }
 
 void assertCommandButtons(
@@ -762,4 +783,49 @@ void assertDigitalAlarmBeamInhibitIndicator(
       find.byKey(Key("parameter_digitalalarm_beaminhibit_$forDRF"));
 
   expect(alarmInhbitFinder, isVisible ? findsOneWidget : findsNothing);
+}
+
+void assertKnobbingControls(
+    {required bool areVisible, required String forDRF}) {
+  expect(find.byKey(Key("parameter_settingknobbing_$forDRF")),
+      areVisible ? findsOneWidget : findsNothing,
+      reason: areVisible
+          ? "(assertKnobbingControls) Expected to see knobbing controls for $forDRF"
+          : "(assertKnobbingControls) Expected not to see knobbing controls for $forDRF");
+}
+
+void assertKnobbing({required String stepSizeIs, required String forDRF}) {
+  expect(
+      find.descendant(
+          of: find.byKey(Key("parameter_settingknobbing_$forDRF")),
+          matching: find.text(stepSizeIs)),
+      findsOneWidget,
+      reason:
+          "(assertKnobbing) Expected the knobbing step size to be $stepSizeIs for $forDRF");
+}
+
+void assertMult(
+    {required int isInRow, required int hasN, required String hasDescription}) {
+  final rowFinder = find.byType(PageEntryWidget);
+  final row = rowFinder.evaluate().isEmpty ? null : rowFinder.at(isInRow);
+
+  if (row == null) {
+    fail("No mult found at row #$isInRow");
+  }
+
+  expect(
+      find.descendant(
+          of: row, matching: find.text("mult:$hasN $hasDescription")),
+      findsOneWidget,
+      reason:
+          "expected mult:$hasN in row $isInRow with description '$hasDescription' but something else was there.");
+}
+
+void assertMultContains(
+    {required int atIndex, required List<String> parameters}) {
+  final finder = find.descendant(
+      of: find.byType(MultEntryWidget), matching: find.byType(PageEntryWidget));
+  int foundHowMany = finder.found.length;
+
+  expect(foundHowMany, parameters.length);
 }

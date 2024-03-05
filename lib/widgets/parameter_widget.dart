@@ -115,9 +115,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   String? get settingUnits {
     switch (widget.displayUnits) {
       case DisplayUnits.commonUnits:
-        return deviceInfo?.setting?.commonUnits;
+        return deviceInfo?.setting?.$1.commonUnits;
       case DisplayUnits.primaryUnits:
-        return deviceInfo?.setting?.primaryUnits;
+        return deviceInfo?.setting?.$1.primaryUnits;
       case DisplayUnits.raw:
         return null;
     }
@@ -252,10 +252,12 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   Widget _layoutPropertiesWide() {
+    final knobbingInfo = deviceInfo?.setting?.$2;
+
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(children: [
         SizedBox(
-            width: 300,
+            width: 330,
             child: Visibility(
                 visible: hasSettingProperty,
                 child: SettingControlWidget(
@@ -264,6 +266,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                     drf: widget.drf,
                     displayUnits: widget.displayUnits,
                     units: settingUnits,
+                    knobbingEnabled: knobbingInfo != null,
+                    knobbingStepSize:
+                        knobbingInfo != null ? knobbingInfo.step : 0,
                     wide: true))),
         const SizedBox(width: 8.0),
         SizedBox(

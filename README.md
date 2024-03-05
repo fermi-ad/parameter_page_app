@@ -55,3 +55,15 @@ Note: each test file needs to be invoked manually. Replace display_parameter_pag
 -   In browser: `flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/display_parameter_page_test.dart -d chrome`
 
 -   Or headless: `flutter drive --driver=test_driver/integration_test.dart --target=test/integration_tests/display_parameter_page_test -d web-server`
+
+## Integration tests (Service Tests)
+
+This set of integration tests is designed to ensure compatibility with external services, including APIs and gRPC. Before running the tests, make sure to deploy the required services that you intend to test against and change .env file to point to the testing API instance.
+
+Run tests:
+
+```
+flutter test test/service_tests
+```
+
+Note:  For Kubernetes environments, the integration testing is encapsulated within `Dockerfile.test`. This Dockerfile can be leveraged to facilitate integration testing seamlessly within a Kubernetes cluster.
