@@ -4,6 +4,7 @@ import 'package:flutter_controls_core/flutter_controls_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/widgets/comment_entry_widget.dart';
 import 'package:parameter_page/widgets/data_acquisition_widget.dart';
+import 'package:parameter_page/widgets/mult_entry_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
 import 'package:parameter_page/widgets/sub_page_navigation_widget.dart';
 
@@ -801,4 +802,30 @@ void assertKnobbing({required String stepSizeIs, required String forDRF}) {
       findsOneWidget,
       reason:
           "(assertKnobbing) Expected the knobbing step size to be $stepSizeIs for $forDRF");
+}
+
+void assertMult(
+    {required int isInRow, required int hasN, required String hasDescription}) {
+  final rowFinder = find.byType(PageEntryWidget);
+  final row = rowFinder.evaluate().isEmpty ? null : rowFinder.at(isInRow);
+
+  if (row == null) {
+    fail("No mult found at row #$isInRow");
+  }
+
+  expect(
+      find.descendant(
+          of: row, matching: find.text("mult:$hasN $hasDescription")),
+      findsOneWidget,
+      reason:
+          "expected mult:$hasN in row $isInRow with description '$hasDescription' but something else was there.");
+}
+
+void assertMultContains(
+    {required int atIndex, required List<String> parameters}) {
+  final finder = find.descendant(
+      of: find.byType(MultEntryWidget), matching: find.byType(PageEntryWidget));
+  int foundHowMany = finder.found.length;
+
+  expect(foundHowMany, parameters.length);
 }
