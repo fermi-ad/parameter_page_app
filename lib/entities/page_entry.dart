@@ -95,7 +95,7 @@ class ParameterEntry extends PageEntry {
         displayUnits: settings.units,
         displayAlarmDetails: settings.showAlarmDetails,
         label: label,
-        key: key);
+        key: Key("parameter_row_$drf"));
   }
 
   @override

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:parameter_page/entities/page_entry.dart';
 
 class PageEntryFactory {
@@ -23,8 +22,7 @@ class PageEntryFactory {
 
     for (String textElement in textArr) {
       if (_isACNETDRF(textElement) || _isProcessVariable(textElement)) {
-        ret.add(ParameterEntry(textElement,
-            label: "", key: Key("parameter_row_$textElement")));
+        ret.add(ParameterEntry(textElement, label: ""));
       }
     }
 
