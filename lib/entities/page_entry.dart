@@ -34,18 +34,25 @@ abstract class PageEntry {
 }
 
 class MultEntry extends PageEntry {
-  final String text;
+  final int numberOfEntries;
 
-  MultEntry(this.text, {super.key, super.id});
+  final String description;
+
+  MultEntry(
+      {super.key,
+      super.id,
+      required this.numberOfEntries,
+      this.description = ""});
 
   @override
   Widget buildEntry(BuildContext context, bool editMode, bool wide,
       DisplaySettings settings, bool settingsAllowed) {
-    return const MultEntryWidget(numberOfEntries: 0, description: "test mult");
+    return MultEntryWidget(
+        numberOfEntries: numberOfEntries, description: description);
   }
 
   @override
-  String entryText() => text;
+  String entryText() => "mult:$numberOfEntries $description";
 
   @override
   String get typeAsString => "Mult";

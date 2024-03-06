@@ -52,7 +52,7 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
     if (_isHardComment(textInput)) {
       return [CommentEntry(_stripBang(textInput))];
     } else if (_isMult(textInput)) {
-      return [MultEntry(textInput)];
+      return [_generateMultEntry(from: textInput)];
     } else {
       final entries = _findAllTheParameterEntries(inside: textInput);
       if (entries.isEmpty && textInput.length > 1) {
@@ -79,8 +79,7 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
   }
 
   bool _isMult(String val) {
-    RegExp multRegExp = RegExp(r"^mult:\d", caseSensitive: false);
-    return multRegExp.hasMatch(val);
+    return _multRegExp.hasMatch(val);
   }
 
   bool _isHardComment(String val) {
@@ -90,4 +89,15 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
   String _stripBang(String textInput) {
     return textInput.substring(1);
   }
+
+  MultEntry _generateMultEntry({required String from}) {
+    final match = _multRegExp.firstMatch(from)!;
+    int numberOfEntries = int.parse(match.group(1)!.toString());
+    String description = match.groupCount > 2 ? match.group(2)!.toString() : "";
+
+    return MultEntry(
+        numberOfEntries: numberOfEntries, description: description);
+  }
+
+  final _multRegExp = RegExp(r"^mult:(\d)( .*)?", caseSensitive: false);
 }
