@@ -36,9 +36,7 @@ class PageEntryFactory {
   }
 
   bool _isProcessVariable(String val) {
-    var pvRegEx = RegExp(r"^([A-Za-z0-9:_]{1,255}):([A-Za-z0-9:_]{1,255})$");
-
-    return pvRegEx.hasMatch(val);
+    return _pvRegEx.hasMatch(val);
   }
 
   bool _isMult(String val) {
@@ -64,6 +62,8 @@ class PageEntryFactory {
   }
 
   final _drfRegEx = RegExp(r"^[A-Za-z][:_|][A-Za-z0-9@,]{1,255}$");
+
+  final _pvRegEx = RegExp(r"^([A-Za-z0-9:_]{1,255}):([A-Za-z0-9:_]{1,255})$");
 
   final _multRegExp = RegExp(
       r"^mult:(?<numberOfEntries>\d)\s?(?<description>.*)?",
