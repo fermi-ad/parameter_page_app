@@ -37,7 +37,9 @@ void main() {
     Future<void> createNewEntryAndExpectMultEntry(
         tester, String newEntryInputText) async {
       await createNewEntry(tester, newEntryInputText);
+
       expect(newEntries[0].typeAsString, "Mult");
+      expect(newEntries[0].entryText(), newEntryInputText);
     }
 
     testWidgets('Submit comment, get comment entry',

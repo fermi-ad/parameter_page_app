@@ -92,12 +92,15 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
 
   MultEntry _generateMultEntry({required String from}) {
     final match = _multRegExp.firstMatch(from)!;
-    int numberOfEntries = int.parse(match.group(1)!.toString());
-    String description = match.groupCount > 2 ? match.group(2)!.toString() : "";
+    int numberOfEntries =
+        int.parse(match.namedGroup("numberOfEntries")!.toString());
+    String description = match.namedGroup("description") ?? "";
 
     return MultEntry(
         numberOfEntries: numberOfEntries, description: description);
   }
 
-  final _multRegExp = RegExp(r"^mult:(\d)( .*)?", caseSensitive: false);
+  final _multRegExp = RegExp(
+      r"^mult:(?<numberOfEntries>\d)\s?(?<description>.*)?",
+      caseSensitive: false);
 }

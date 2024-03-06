@@ -52,7 +52,9 @@ class MultEntry extends PageEntry {
   }
 
   @override
-  String entryText() => "mult:$numberOfEntries $description";
+  String entryText() => description.isNotEmpty
+      ? "mult:$numberOfEntries $description"
+      : "mult:$numberOfEntries";
 
   @override
   String get typeAsString => "Mult";
