@@ -32,9 +32,7 @@ class PageEntryFactory {
   }
 
   bool _isACNETDRF(String val) {
-    var drfRegEx = RegExp(r"^[A-Za-z][:_|][A-Za-z0-9@,]{1,255}$");
-
-    return drfRegEx.hasMatch(val);
+    return _drfRegEx.hasMatch(val);
   }
 
   bool _isProcessVariable(String val) {
@@ -64,6 +62,8 @@ class PageEntryFactory {
     return MultEntry(
         numberOfEntries: numberOfEntries, description: description);
   }
+
+  final _drfRegEx = RegExp(r"^[A-Za-z][:_|][A-Za-z0-9@,]{1,255}$");
 
   final _multRegExp = RegExp(
       r"^mult:(?<numberOfEntries>\d)\s?(?<description>.*)?",
