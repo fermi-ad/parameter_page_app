@@ -40,6 +40,12 @@ void main() {
           find.descendant(
               of: find.byType(MultEntryWidget), matching: find.byType(Card)),
           findsNothing);
+
+      // .. and no InkWell
+      expect(
+          find.descendant(
+              of: find.byType(MultEntryWidget), matching: find.byType(InkWell)),
+          findsNothing);
     });
 
     testWidgets(
