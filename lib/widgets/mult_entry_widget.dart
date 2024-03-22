@@ -18,7 +18,6 @@ class MultEntryWidget extends StatefulWidget {
 class _MultEntryWidgetState extends State<MultEntryWidget> {
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     return PageEntryWidget(
         child: InkWell(
             onTap: () => setState(() => _active = !_active),
@@ -26,8 +25,8 @@ class _MultEntryWidgetState extends State<MultEntryWidget> {
                 shape: RoundedRectangleBorder(
                     side: BorderSide(
                         color: _active
-                            ? colorScheme.secondaryContainer
-                            : colorScheme.surface,
+                            ? _colorScheme.secondaryContainer
+                            : _colorScheme.surface,
                         width: 2.0),
                     borderRadius: BorderRadius.circular(4.0)),
                 child: ConstrainedBox(
@@ -35,11 +34,15 @@ class _MultEntryWidgetState extends State<MultEntryWidget> {
                     child: Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 40.0),
-                        child: Text(
-                            "mult:${widget.numberOfEntries} ${widget.description}",
-                            style:
-                                TextStyle(color: colorScheme.secondary)))))));
+                        child: _buildEntryText())))));
   }
+
+  Widget _buildEntryText() {
+    return Text("mult:${widget.numberOfEntries} ${widget.description}",
+        style: TextStyle(color: _colorScheme.secondary));
+  }
+
+  ColorScheme get _colorScheme => Theme.of(context).colorScheme;
 
   bool _active = false;
 }
