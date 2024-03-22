@@ -30,9 +30,15 @@ class _MultEntryWidgetState extends State<MultEntryWidget> {
                             : colorScheme.surface,
                         width: 2.0),
                     borderRadius: BorderRadius.circular(4.0)),
-                child: Text(
-                    "mult:${widget.numberOfEntries} ${widget.description}",
-                    style: TextStyle(color: colorScheme.secondary)))));
+                child: ConstrainedBox(
+                    constraints: const BoxConstraints(minHeight: 34.0),
+                    child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 40.0),
+                        child: Text(
+                            "mult:${widget.numberOfEntries} ${widget.description}",
+                            style:
+                                TextStyle(color: colorScheme.secondary)))))));
   }
 
   bool _active = false;
