@@ -24,9 +24,7 @@ class _MultEntryWidgetState extends State<MultEntryWidget> {
   @override
   Widget build(BuildContext context) {
     return PageEntryWidget(
-        child: InkWell(
-            onTap: _handleTap,
-            child: widget.editMode ? _buildEditMode() : _buildDisplayMode()));
+        child: widget.editMode ? _buildEditMode() : _buildDisplayMode());
   }
 
   Widget _buildEditMode() {
@@ -36,20 +34,22 @@ class _MultEntryWidgetState extends State<MultEntryWidget> {
   }
 
   Widget _buildDisplayMode() {
-    return Card(
-        shape: RoundedRectangleBorder(
-            side: BorderSide(
-                color: _active
-                    ? _colorScheme.secondaryContainer
-                    : _colorScheme.surface,
-                width: 2.0),
-            borderRadius: BorderRadius.circular(4.0)),
-        child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 34.0),
-            child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 40.0),
-                child: _buildEntryText())));
+    return InkWell(
+        onTap: _handleTap,
+        child: Card(
+            shape: RoundedRectangleBorder(
+                side: BorderSide(
+                    color: _active
+                        ? _colorScheme.secondaryContainer
+                        : _colorScheme.surface,
+                    width: 2.0),
+                borderRadius: BorderRadius.circular(4.0)),
+            child: ConstrainedBox(
+                constraints: const BoxConstraints(minHeight: 34.0),
+                child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 40.0),
+                    child: _buildEntryText()))));
   }
 
   Widget _buildEntryText() {
