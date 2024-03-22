@@ -48,7 +48,9 @@ class MultEntry extends PageEntry {
   Widget buildEntry(BuildContext context, bool editMode, bool wide,
       DisplaySettings settings, bool settingsAllowed) {
     return MultEntryWidget(
-        numberOfEntries: numberOfEntries, description: description);
+        numberOfEntries: numberOfEntries,
+        description: description,
+        editMode: editMode);
   }
 
   @override
