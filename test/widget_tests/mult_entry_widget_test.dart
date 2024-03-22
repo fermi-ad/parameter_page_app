@@ -20,6 +20,31 @@ void main() {
     });
 
     testWidgets(
+        'Create mult entry, border color matches background color to indicate mult is disabled',
+        (WidgetTester tester) async {
+      // Given nothing
+      await tester.binding.setSurfaceSize(const Size(2560, 1440));
+
+      // When I create a MultEntryWidget
+      Scaffold scaffold = const Scaffold(
+          body: MultEntryWidget(
+              description: "test enable mult", numberOfEntries: 1));
+      MaterialApp app = MaterialApp(
+          home: scaffold,
+          theme: ThemeData(
+              useMaterial3: true,
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue)));
+      await tester.pumpWidget(app);
+
+      // Then the border color matches the background color
+      final ThemeData currentTheme = _getCurrentTheme(tester);
+      final borderShape = (tester.firstWidget(find.byType(Card)) as Card).shape!
+          as RoundedRectangleBorder;
+      final borderColor = borderShape.side.color;
+      expect(borderColor, currentTheme.colorScheme.surface);
+    });
+
+    testWidgets(
         'Tap mult entry, background color changes to indicate that the mult is accepting input',
         (WidgetTester tester) async {
       // Given a MultEntryWidget with n = 1
