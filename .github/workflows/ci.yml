@@ -39,6 +39,7 @@ jobs:
           - enable_disable_settings_test
           - display_bypass_alarm_test
           - knob_parameter_test
+          - knob_parameters_in_unison_test
 
     steps:
       - name: Checkout code

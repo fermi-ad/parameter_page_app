@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:parameter_page/widgets/mult_entry_widget.dart';
 
 import '../widgets/comment_entry_widget.dart';
 import '../widgets/display_settings_widget.dart';
@@ -30,6 +31,35 @@ abstract class PageEntry {
   String entryText();
 
   String get typeAsString => "PageEntry";
+}
+
+class MultEntry extends PageEntry {
+  final int numberOfEntries;
+
+  final String description;
+
+  MultEntry(
+      {super.key,
+      super.id,
+      required this.numberOfEntries,
+      this.description = ""});
+
+  @override
+  Widget buildEntry(BuildContext context, bool editMode, bool wide,
+      DisplaySettings settings, bool settingsAllowed) {
+    return MultEntryWidget(
+        numberOfEntries: numberOfEntries,
+        description: description,
+        editMode: editMode);
+  }
+
+  @override
+  String entryText() => description.isNotEmpty
+      ? "mult:$numberOfEntries $description"
+      : "mult:$numberOfEntries";
+
+  @override
+  String get typeAsString => "Mult";
 }
 
 class CommentEntry extends PageEntry {
@@ -67,7 +97,7 @@ class ParameterEntry extends PageEntry {
         displayUnits: settings.units,
         displayAlarmDetails: settings.showAlarmDetails,
         label: label,
-        key: key);
+        key: Key("parameter_row_$drf"));
   }
 
   @override

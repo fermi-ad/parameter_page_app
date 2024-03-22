@@ -34,6 +34,14 @@ void main() {
       expect(newEntries[0].typeAsString, "Parameter");
     }
 
+    Future<void> createNewEntryAndExpectMultEntry(
+        tester, String newEntryInputText) async {
+      await createNewEntry(tester, newEntryInputText);
+
+      expect(newEntries[0].typeAsString, "Mult");
+      expect(newEntries[0].entryText(), newEntryInputText);
+    }
+
     testWidgets('Submit comment, get comment entry',
         (WidgetTester tester) async {
       // Given a new NewEntryEditorWidget
@@ -79,6 +87,17 @@ void main() {
       // when I enter a new EPICS PV...
       // Then the returned entry should be a ParameterEntry
       await createNewEntryAndExpectParameterEntry(tester, "EXAMPLE:EPICS:PV");
+    });
+
+    testWidgets('Submit Mult, get MultEntry', (WidgetTester tester) async {
+      // Given a new NewEntryEditorWidget
+      await tester.pumpWidget(editor);
+
+      // when I create a mult entry with mult:n
+      // Then the returned entry should be a MultEntry
+      await createNewEntryAndExpectMultEntry(tester, "mult:0");
+      await createNewEntryAndExpectMultEntry(tester, "mult:0 test mult");
+      await createNewEntryAndExpectMultEntry(tester, "mult:2");
     });
   });
 }

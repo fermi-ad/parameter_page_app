@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:parameter_page/entities/page_entry_factory.dart';
 
-import 'data_acquisition_widget.dart';
 import '../entities/page_entry.dart';
 
 class NewEntryEditorWidget extends StatefulWidget {
@@ -16,9 +16,6 @@ class NewEntryEditorWidget extends StatefulWidget {
 
 class _NewEntryEditorState extends State<NewEntryEditorWidget> {
   TextEditingController controller = TextEditingController();
-
-  late DataAcquisitionWidget _daqWidget;
-
   late FocusNode _focusNode;
 
   @override
@@ -30,7 +27,6 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
 
   @override
   Widget build(BuildContext context) {
-    _daqWidget = DataAcquisitionWidget.of(context);
     return TextField(
         focusNode: _focusNode,
         key: const Key("new_entry_textfield"),
@@ -44,43 +40,9 @@ class _NewEntryEditorState extends State<NewEntryEditorWidget> {
             _focusNode.requestFocus();
           });
 
-          widget.onSubmitted(_extractPageEntriesFrom(textInput: value));
+          widget.onSubmitted(_pageEntryFactory.createEntries(fromInput: value));
         });
   }
 
-  List<PageEntry> _extractPageEntriesFrom({required final String textInput}) {
-    if (_isHardComment(textInput)) {
-      return [CommentEntry(_stripBang(textInput))];
-    } else {
-      final entries = _findAllTheParameterEntries(inside: textInput);
-      if (entries.isEmpty && textInput.length > 1) {
-        return [CommentEntry(textInput)];
-      } else {
-        return entries;
-      }
-    }
-  }
-
-  List<PageEntry> _findAllTheParameterEntries({required String inside}) {
-    List<String> textArr = inside.split(" ");
-    List<PageEntry> ret = [];
-
-    for (String textElement in textArr) {
-      if (_daqWidget.isACNETDRF(textElement) ||
-          _daqWidget.isProcessVariable(textElement)) {
-        ret.add(ParameterEntry(textElement,
-            label: "", key: Key("parameter_row_$textElement")));
-      }
-    }
-
-    return ret;
-  }
-
-  bool _isHardComment(String val) {
-    return "!" == val[0];
-  }
-
-  String _stripBang(String textInput) {
-    return textInput.substring(1);
-  }
+  final _pageEntryFactory = PageEntryFactory();
 }
