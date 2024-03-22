@@ -833,8 +833,10 @@ void assertMultContains(
 
 void assertMultState(WidgetTester tester, {required bool isEnabled}) {
   final ThemeData currentTheme = _getCurrentTheme(tester);
-  final borderShape = (tester.firstWidget(find.byType(Card)) as Card).shape!
-      as RoundedRectangleBorder;
+  final borderShape = (tester.firstWidget(find.descendant(
+          of: find.byType(MultEntryWidget),
+          matching: find.byType(Card))) as Card)
+      .shape! as RoundedRectangleBorder;
   final borderColor = borderShape.side.color;
   expect(
       borderColor,
