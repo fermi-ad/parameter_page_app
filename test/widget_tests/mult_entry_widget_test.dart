@@ -21,6 +21,28 @@ void main() {
     });
 
     testWidgets(
+        'Create mult entry with editMode = true, only text is displayed',
+        (WidgetTester tester) async {
+      // Given nothing...
+      // When I instantiate and display a MultEntryWidget with editMode: true
+      await tester.binding.setSurfaceSize(const Size(2560, 1440));
+      Scaffold scaffold = const Scaffold(
+          body: MultEntryWidget(
+              description: "test mult", numberOfEntries: 0, editMode: true));
+      MaterialApp app = MaterialApp(home: scaffold);
+      await tester.pumpWidget(app);
+
+      // Then the text displayed is "mult:0 test mult"
+      expect(find.text("mult:0 test mult"), findsOneWidget);
+
+      // ... but there is no Card (only used in display mode)
+      expect(
+          find.descendant(
+              of: find.byType(MultEntryWidget), matching: find.byType(Card)),
+          findsNothing);
+    });
+
+    testWidgets(
         'Create mult entry, border color matches background color to indicate mult is disabled',
         (WidgetTester tester) async {
       // Given nothing
