@@ -24,7 +24,15 @@ class _MultEntryWidgetState extends State<MultEntryWidget> {
   @override
   Widget build(BuildContext context) {
     return PageEntryWidget(
-        child: InkWell(onTap: _handleTap, child: _buildDisplayMode()));
+        child: InkWell(
+            onTap: _handleTap,
+            child: widget.editMode ? _buildEditMode() : _buildDisplayMode()));
+  }
+
+  Widget _buildEditMode() {
+    return ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 36.0),
+        child: _buildEntryText());
   }
 
   Widget _buildDisplayMode() {
@@ -46,6 +54,7 @@ class _MultEntryWidgetState extends State<MultEntryWidget> {
 
   Widget _buildEntryText() {
     return Text("mult:${widget.numberOfEntries} ${widget.description}",
+        overflow: TextOverflow.ellipsis,
         style: TextStyle(color: _colorScheme.secondary));
   }
 
