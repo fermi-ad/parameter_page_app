@@ -66,14 +66,3 @@ void main() {
     });
   });
 }
-
-ThemeData _getCurrentTheme(WidgetTester tester) {
-  var brightness =
-      SchedulerBinding.instance.platformDispatcher.platformBrightness;
-
-  bool isDarkMode = brightness == Brightness.dark;
-
-  return isDarkMode
-      ? tester.widget<MaterialApp>(find.byType(MaterialApp)).darkTheme!
-      : tester.widget<MaterialApp>(find.byType(MaterialApp)).theme!;
-}
