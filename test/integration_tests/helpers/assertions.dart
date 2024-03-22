@@ -830,3 +830,15 @@ void assertMultContains(
 
   expect(foundHowMany, parameters.length);
 }
+
+void assertMultState(WidgetTester tester, {required bool isEnabled}) {
+  final ThemeData currentTheme = _getCurrentTheme(tester);
+  final borderShape = (tester.firstWidget(find.byType(Card)) as Card).shape!
+      as RoundedRectangleBorder;
+  final borderColor = borderShape.side.color;
+  expect(
+      borderColor,
+      isEnabled
+          ? currentTheme.colorScheme.secondaryContainer
+          : currentTheme.colorScheme.surface);
+}

@@ -3,6 +3,8 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/widgets/mult_entry_widget.dart';
 
+import '../integration_tests/helpers/assertions.dart';
+
 void main() {
   group("MultEntryWidget", () {
     testWidgets('Create mult entry, display parameters in entry text',
@@ -36,12 +38,8 @@ void main() {
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue)));
       await tester.pumpWidget(app);
 
-      // Then the border color matches the background color
-      final ThemeData currentTheme = _getCurrentTheme(tester);
-      final borderShape = (tester.firstWidget(find.byType(Card)) as Card).shape!
-          as RoundedRectangleBorder;
-      final borderColor = borderShape.side.color;
-      expect(borderColor, currentTheme.colorScheme.surface);
+      // Then the mult is in the disabled state
+      assertMultState(tester, isEnabled: false);
     });
 
     testWidgets(
@@ -63,12 +61,8 @@ void main() {
       await tester.tap(find.byType(MultEntryWidget));
       await tester.pumpAndSettle();
 
-      // Then the background changes to seconday container
-      final ThemeData currentTheme = _getCurrentTheme(tester);
-      final borderShape = (tester.firstWidget(find.byType(Card)) as Card).shape!
-          as RoundedRectangleBorder;
-      final borderColor = borderShape.side.color;
-      expect(borderColor, currentTheme.colorScheme.secondaryContainer);
+      // Then the mult is in the enabled state
+      assertMultState(tester, isEnabled: true);
     });
   });
 }
