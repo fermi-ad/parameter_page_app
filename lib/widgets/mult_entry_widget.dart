@@ -6,8 +6,13 @@ class MultEntryWidget extends StatefulWidget {
 
   final String description;
 
+  final bool editMode;
+
   const MultEntryWidget(
-      {super.key, required this.numberOfEntries, this.description = ""});
+      {super.key,
+      required this.numberOfEntries,
+      this.description = "",
+      this.editMode = false});
 
   @override
   State<StatefulWidget> createState() {
