@@ -10,8 +10,13 @@ class MultEntryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return PageEntryWidget(
-        child: Text("mult:$numberOfEntries $description",
-            style: TextStyle(color: Theme.of(context).colorScheme.secondary)));
+        child: Card(
+            shape: RoundedRectangleBorder(
+                side: BorderSide(color: colorScheme.surface, width: 2.0),
+                borderRadius: BorderRadius.circular(4.0)),
+            child: Text("mult:$numberOfEntries $description",
+                style: TextStyle(color: colorScheme.secondary))));
   }
 }
