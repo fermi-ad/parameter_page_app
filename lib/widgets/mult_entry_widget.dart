@@ -20,11 +20,20 @@ class _MultEntryWidgetState extends State<MultEntryWidget> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return PageEntryWidget(
-        child: Card(
-            shape: RoundedRectangleBorder(
-                side: BorderSide(color: colorScheme.surface, width: 2.0),
-                borderRadius: BorderRadius.circular(4.0)),
-            child: Text("mult:${widget.numberOfEntries} ${widget.description}",
-                style: TextStyle(color: colorScheme.secondary))));
+        child: InkWell(
+            onTap: () => setState(() => _active = !_active),
+            child: Card(
+                shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                        color: _active
+                            ? colorScheme.secondaryContainer
+                            : colorScheme.surface,
+                        width: 2.0),
+                    borderRadius: BorderRadius.circular(4.0)),
+                child: Text(
+                    "mult:${widget.numberOfEntries} ${widget.description}",
+                    style: TextStyle(color: colorScheme.secondary)))));
   }
+
+  bool _active = false;
 }
