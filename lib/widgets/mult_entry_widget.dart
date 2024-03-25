@@ -43,7 +43,7 @@ class _MultEntryWidgetState extends State<MultEntryWidget> {
                         ? _colorScheme.secondaryContainer
                         : _colorScheme.surface,
                     width: 2.0),
-                borderRadius: BorderRadius.circular(4.0)),
+                borderRadius: BorderRadius.circular(15.0)),
             child: ConstrainedBox(
                 constraints: const BoxConstraints(minHeight: 34.0),
                 child: Padding(
