@@ -48,7 +48,7 @@ class _MultEntryWidgetState extends State<MultEntryWidget> {
                 constraints: const BoxConstraints(minHeight: 34.0),
                 child: Padding(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 40.0),
+                        vertical: 10, horizontal: 20.0),
                     child: _buildEntryText()))));
   }
 
