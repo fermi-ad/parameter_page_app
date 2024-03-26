@@ -850,5 +850,7 @@ void assertMultState(WidgetTester tester,
       borderColor,
       isEnabled
           ? currentTheme.colorScheme.secondaryContainer
-          : currentTheme.colorScheme.surface);
+          : currentTheme.colorScheme.surface,
+      reason:
+          "Expected MultEntryWidget at position $atIndex to be ${isEnabled ? "enabled" : "disabled"}");
 }
