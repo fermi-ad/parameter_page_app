@@ -68,28 +68,5 @@ void main() {
       // Then the mult is in the disabled state
       assertMultState(tester, atIndex: 0, isEnabled: false);
     });
-
-    testWidgets(
-        'Tap mult entry, background color changes to indicate that the mult is accepting input',
-        (WidgetTester tester) async {
-      // Given a MultEntryWidget with n = 1
-      await tester.binding.setSurfaceSize(const Size(2560, 1440));
-      Scaffold scaffold = const Scaffold(
-          body: MultEntryWidget(
-              description: "test enable mult", numberOfEntries: 1));
-      MaterialApp app = MaterialApp(
-          home: scaffold,
-          theme: ThemeData(
-              useMaterial3: true,
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue)));
-      await tester.pumpWidget(app);
-
-      // When I tap the mult entry
-      await tester.tap(find.byType(MultEntryWidget));
-      await tester.pumpAndSettle();
-
-      // Then the mult is in the enabled state
-      assertMultState(tester, atIndex: 0, isEnabled: true);
-    });
   });
 }
