@@ -831,16 +831,26 @@ void assertMultContains(
   expect(foundHowMany, parameters.length);
 }
 
-void assertMultState(WidgetTester tester, {required bool isEnabled}) {
+void assertMultState(WidgetTester tester,
+    {required int atIndex, required bool isEnabled}) {
+  final rowFinder = find.byType(PageEntryWidget);
+  final row = rowFinder.evaluate().isEmpty ? null : rowFinder.at(atIndex);
+
+  if (row == null) {
+    fail("No mult found at row #$atIndex");
+  }
+
   final ThemeData currentTheme = _getCurrentTheme(tester);
-  final borderShape = (tester.firstWidget(find.descendant(
-          of: find.byType(MultEntryWidget),
-          matching: find.byType(Card))) as Card)
-      .shape! as RoundedRectangleBorder;
+  final borderShape =
+      (tester.firstWidget(find.descendant(of: row, matching: find.byType(Card)))
+              as Card)
+          .shape! as RoundedRectangleBorder;
   final borderColor = borderShape.side.color;
   expect(
       borderColor,
       isEnabled
           ? currentTheme.colorScheme.secondaryContainer
-          : currentTheme.colorScheme.surface);
+          : currentTheme.colorScheme.surface,
+      reason:
+          "Expected MultEntryWidget at position $atIndex to be ${isEnabled ? "enabled" : "disabled"}");
 }

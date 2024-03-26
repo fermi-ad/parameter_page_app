@@ -112,7 +112,7 @@ class PageWidgetState extends State<PageWidget> {
         ? Row(children: [
             Expanded(
                 child: entry.buildEntry(context, page.editing, wide, settings,
-                    widget.settingsAllowed)),
+                    widget.settingsAllowed, false, null)),
             const SizedBox(width: 8.0),
             GestureDetector(
                 onTap: () async {
@@ -126,7 +126,13 @@ class PageWidgetState extends State<PageWidget> {
                     icon: Icon(Icons.delete)))
           ])
         : entry.buildEntry(
-            context, page.editing, wide, settings, widget.settingsAllowed);
+            context,
+            page.editing,
+            wide,
+            settings,
+            widget.settingsAllowed,
+            _focusRowIndex == index,
+            () => _handlePageEntryTap(atIndex: index));
   }
 
   // Moves an entry from one location to another in the parameter list. It
@@ -203,4 +209,11 @@ class PageWidgetState extends State<PageWidget> {
   void updateSettings(DisplaySettings newSettings) {
     setState(() => settings = newSettings);
   }
+
+  void _handlePageEntryTap({required int atIndex}) {
+    setState(
+        () => _focusRowIndex = (_focusRowIndex == atIndex) ? null : atIndex);
+  }
+
+  int? _focusRowIndex;
 }
