@@ -39,7 +39,6 @@ void main() {
 
       // When I tap the mult
       await tapPageEntry(tester, atRowIndex: 0);
-      await tester.pumpAndSettle();
 
       // Then the tapped mult is enabled
       assertMultState(tester, atIndex: 0, isEnabled: true);
