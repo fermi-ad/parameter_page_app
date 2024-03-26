@@ -132,7 +132,8 @@ class PageWidgetState extends State<PageWidget> {
             settings,
             widget.settingsAllowed,
             _focusRowIndex == index,
-            () => setState(() => _focusRowIndex = index));
+            () => setState(() =>
+                _focusRowIndex = (_focusRowIndex == index) ? null : index));
   }
 
   // Moves an entry from one location to another in the parameter list. It
