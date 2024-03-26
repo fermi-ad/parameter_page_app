@@ -32,6 +32,11 @@ void main() {
       assertMultState(tester, atIndex: 0, isEnabled: false);
     });
 
+    testWidgets('Tap am enabled mult, mult is disabled',
+        (WidgetTester tester) async {
+      // This test might belong with Knob Parameter
+    });
+
     testWidgets(
         'Assign knobbing proportion to parameter, displayed below setting value',
         (WidgetTester tester) async {

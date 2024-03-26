@@ -17,8 +17,14 @@ abstract class PageEntry {
 
   PageEntry({Key? key, this.id}) : key = key ?? UniqueKey();
 
-  Widget buildEntry(BuildContext context, bool editMode, bool wide,
-      DisplaySettings settings, bool settingsAllowed, bool hasFocus);
+  Widget buildEntry(
+      BuildContext context,
+      bool editMode,
+      bool wide,
+      DisplaySettings settings,
+      bool settingsAllowed,
+      bool hasFocus,
+      VoidCallback? onTap);
 
   @override
   bool operator ==(other) {
@@ -45,12 +51,20 @@ class MultEntry extends PageEntry {
       this.description = ""});
 
   @override
-  Widget buildEntry(BuildContext context, bool editMode, bool wide,
-      DisplaySettings settings, bool settingsAllowed, bool hasFocus) {
+  Widget buildEntry(
+      BuildContext context,
+      bool editMode,
+      bool wide,
+      DisplaySettings settings,
+      bool settingsAllowed,
+      bool hasFocus,
+      VoidCallback? onTap) {
     return MultEntryWidget(
         numberOfEntries: numberOfEntries,
         description: description,
-        editMode: editMode);
+        editMode: editMode,
+        enabled: hasFocus,
+        onTap: onTap);
   }
 
   @override
@@ -68,8 +82,14 @@ class CommentEntry extends PageEntry {
   CommentEntry(this.text, {super.key, super.id});
 
   @override
-  Widget buildEntry(BuildContext context, bool editMode, bool wide,
-      DisplaySettings settings, bool settingsAllowed, bool hasFocus) {
+  Widget buildEntry(
+      BuildContext context,
+      bool editMode,
+      bool wide,
+      DisplaySettings settings,
+      bool settingsAllowed,
+      bool hasFocus,
+      VoidCallback? onTap) {
     return CommentEntryWidget(text);
   }
 
@@ -87,8 +107,14 @@ class ParameterEntry extends PageEntry {
   ParameterEntry(this.drf, {this.label, super.key, super.id});
 
   @override
-  Widget buildEntry(BuildContext context, bool editMode, bool wide,
-      DisplaySettings settings, bool settingsAllowed, bool hasFocus) {
+  Widget buildEntry(
+      BuildContext context,
+      bool editMode,
+      bool wide,
+      DisplaySettings settings,
+      bool settingsAllowed,
+      bool hasFocus,
+      VoidCallback? onTap) {
     return ParameterWidget(
         drf: drf,
         settingsAllowed: settingsAllowed,

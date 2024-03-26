@@ -10,10 +10,13 @@ class MultEntryWidget extends StatelessWidget {
 
   final bool enabled;
 
+  final VoidCallback? onTap;
+
   const MultEntryWidget(
       {super.key,
       required this.numberOfEntries,
       this.description = "",
+      this.onTap,
       this.enabled = false,
       this.editMode = false});
 
@@ -33,7 +36,7 @@ class MultEntryWidget extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return InkWell(
-        onTap: _handleTap,
+        onTap: onTap,
         child: Card(
             shape: RoundedRectangleBorder(
                 side: BorderSide(
@@ -57,6 +60,4 @@ class MultEntryWidget extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         style: TextStyle(color: colorScheme.secondary));
   }
-
-  void _handleTap() {}
 }
