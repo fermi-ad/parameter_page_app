@@ -112,7 +112,7 @@ class PageWidgetState extends State<PageWidget> {
         ? Row(children: [
             Expanded(
                 child: entry.buildEntry(context, page.editing, wide, settings,
-                    widget.settingsAllowed)),
+                    widget.settingsAllowed, false)),
             const SizedBox(width: 8.0),
             GestureDetector(
                 onTap: () async {
@@ -125,8 +125,8 @@ class PageWidgetState extends State<PageWidget> {
                     onPressed: null,
                     icon: Icon(Icons.delete)))
           ])
-        : entry.buildEntry(
-            context, page.editing, wide, settings, widget.settingsAllowed);
+        : entry.buildEntry(context, page.editing, wide, settings,
+            widget.settingsAllowed, false);
   }
 
   // Moves an entry from one location to another in the parameter list. It
