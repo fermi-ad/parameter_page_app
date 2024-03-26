@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:parameter_page/services/settings_permission/settings_permission_service.dart';
 
 import 'helpers/actions.dart';
 import 'helpers/assertions.dart';
@@ -37,6 +38,10 @@ void main() {
       await addANewEntry(tester, "mult:0 test mult");
       await exitEditMode(tester);
 
+      // ... and settings have been enabled
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.indefinitely);
+
       // When I tap the mult
       await tapPageEntry(tester, atRowIndex: 0);
 
@@ -53,6 +58,10 @@ void main() {
       await addANewEntry(tester, "mult:0 test mult #1");
       await addANewEntry(tester, "mult:0 test mult #2");
       await exitEditMode(tester);
+
+      // ... and settings have been enabled
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.indefinitely);
 
       // ... and test mult #1 is already enabled
       await tapPageEntry(tester, atRowIndex: 0);
@@ -74,6 +83,10 @@ void main() {
       await createNewParameterPage(tester);
       await addANewEntry(tester, "mult:0 test mult #1");
       await exitEditMode(tester);
+
+      // ... and settings have been enabled
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.indefinitely);
 
       // ... and test mult #1 is already enabled
       await tapPageEntry(tester, atRowIndex: 0);
