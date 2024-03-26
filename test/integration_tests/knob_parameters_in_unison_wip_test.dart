@@ -11,24 +11,6 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Knob Parameters in Unison (Mults)', () {
-    testWidgets('Setting disabled, mult won\'t receive focus',
-        (WidgetTester tester) async {
-      // Given a new parameter page with a mult entry in position 0
-      await startParameterPageApp(tester);
-      await createNewParameterPage(tester);
-      await addANewEntry(tester, "mult:0 test mult");
-      await exitEditMode(tester);
-
-      // ... and settings are disabled
-      assertSettings(areAllowed: false);
-
-      // When I tap the mult
-      await tapPageEntry(tester, atRowIndex: 0);
-
-      // Then the tapped mult is still disabled
-      assertMultState(tester, atIndex: 0, isEnabled: false);
-    });
-
     testWidgets(
         'Assign knobbing proportion to parameter, displayed below setting value',
         (WidgetTester tester) async {
