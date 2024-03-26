@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
@@ -9,7 +11,7 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Knob Parameters in Unison (Mults)', () {
-    testWidgets('Tap am enabled mult, mult is disabled',
+    testWidgets('Tap an enabled mult, mult is disabled',
         (WidgetTester tester) async {
       // This test might belong with Knob Parameter
     });
