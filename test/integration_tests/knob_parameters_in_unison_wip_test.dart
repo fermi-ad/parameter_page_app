@@ -11,7 +11,28 @@ void main() {
   group('Knob Parameters in Unison (Mults)', () {
     testWidgets(
         'Tap another mult while knobbing a different mult, tapped mult is enabled and previous mult is disabled',
-        (WidgetTester tester) async {});
+        (WidgetTester tester) async {
+      // Given a new parameter page with two mult entries
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+      await addANewEntry(tester, "mult:0 test mult #1");
+      await addANewEntry(tester, "mult:0 test mult #2");
+      await exitEditMode(tester);
+
+      // ... and test mult #1 is already enabled
+      await tapPageEntry(tester, atRowIndex: 0);
+      await tester.pumpAndSettle();
+
+      // When I tap test mult #2
+      await tapPageEntry(tester, atRowIndex: 1);
+      await tester.pumpAndSettle();
+
+      // Then test mult #2 is enabled
+      assertMultState(tester, atIndex: 1, isEnabled: true);
+
+      // ... and test mult #1 is disabled
+      assertMultState(tester, atIndex: 0, isEnabled: false);
+    });
 
     testWidgets(
         'Assign knobbing proportion to parameter, displayed below setting value',
