@@ -21,11 +21,9 @@ void main() {
 
       // ... and test mult #1 is already enabled
       await tapPageEntry(tester, atRowIndex: 0);
-      await tester.pumpAndSettle();
 
       // When I tap test mult #2
       await tapPageEntry(tester, atRowIndex: 1);
-      await tester.pumpAndSettle();
 
       // Then test mult #2 is enabled
       assertMultState(tester, atIndex: 1, isEnabled: true);

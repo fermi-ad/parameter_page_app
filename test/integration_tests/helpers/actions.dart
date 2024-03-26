@@ -272,6 +272,7 @@ Future<void> tapPageEntry(tester, {required int atRowIndex}) async {
       rowsFinder.evaluate().isEmpty ? null : rowsFinder.at(atRowIndex);
 
   await tester.tap(rowFinder);
+  await tester.pumpAndSettle();
 }
 
 Future<void> expandDigitalStatus(tester, {required String forDRF}) async {
