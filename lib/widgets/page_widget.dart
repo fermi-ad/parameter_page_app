@@ -132,8 +132,7 @@ class PageWidgetState extends State<PageWidget> {
             settings,
             widget.settingsAllowed,
             _focusRowIndex == index,
-            () => setState(() =>
-                _focusRowIndex = (_focusRowIndex == index) ? null : index));
+            () => _handlePageEntryTap(atIndex: index));
   }
 
   // Moves an entry from one location to another in the parameter list. It
@@ -209,6 +208,11 @@ class PageWidgetState extends State<PageWidget> {
 
   void updateSettings(DisplaySettings newSettings) {
     setState(() => settings = newSettings);
+  }
+
+  void _handlePageEntryTap({required int atIndex}) {
+    setState(
+        () => _focusRowIndex = (_focusRowIndex == atIndex) ? null : atIndex);
   }
 
   int? _focusRowIndex;
