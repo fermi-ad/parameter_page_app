@@ -5,6 +5,13 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Knob Parameters in Unison (Mults)', () {
+    testWidgets('Tap mult, mult is enabled for knobbing',
+        (WidgetTester tester) async {});
+
+    testWidgets(
+        'Tap another mult while knobbing a different mult, tapped mult is enabled and previous mult is disabled',
+        (WidgetTester tester) async {});
+
     testWidgets(
         'Assign knobbing proportion to parameter, displayed below setting value',
         (WidgetTester tester) async {
@@ -26,6 +33,7 @@ void main() {
     testWidgets(
         'Add entries to an empty mult, display entries inside of new mult',
         (WidgetTester tester) async {});
+
     testWidgets('Remove mult, parameters are ungrouped',
         (WidgetTester tester) async {});
 
