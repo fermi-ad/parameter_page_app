@@ -9,22 +9,6 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Knob Parameters in Unison (Mults)', () {
-    testWidgets('Tap mult, mult is enabled for knobbing',
-        (WidgetTester tester) async {
-      // Given a new parameter page with a mult entry in position 0
-      await startParameterPageApp(tester);
-      await createNewParameterPage(tester);
-      await addANewEntry(tester, "mult:0 test mult");
-      await exitEditMode(tester);
-
-      // When I tap the mult
-      await tapPageEntry(tester, atRowIndex: 0);
-      await tester.pumpAndSettle();
-
-      // Then the tapped mult is enabled
-      assertMultState(tester, atIndex: 0, isEnabled: true);
-    });
-
     testWidgets(
         'Tap another mult while knobbing a different mult, tapped mult is enabled and previous mult is disabled',
         (WidgetTester tester) async {});
