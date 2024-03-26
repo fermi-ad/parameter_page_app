@@ -1,12 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
+import 'helpers/assertions.dart';
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Knob Parameters in Unison (Mults)', () {
     testWidgets('Tap mult, mult is enabled for knobbing',
-        (WidgetTester tester) async {});
+        (WidgetTester tester) async {
+      // Then the tapped mult is enabled
+      assertMultState(tester, atIndex: 1, isEnabled: true);
+    });
 
     testWidgets(
         'Tap another mult while knobbing a different mult, tapped mult is enabled and previous mult is disabled',

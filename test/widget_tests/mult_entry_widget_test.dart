@@ -66,7 +66,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // Then the mult is in the disabled state
-      assertMultState(tester, isEnabled: false);
+      assertMultState(tester, atIndex: 0, isEnabled: false);
     });
 
     testWidgets(
@@ -89,7 +89,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Then the mult is in the enabled state
-      assertMultState(tester, isEnabled: true);
+      assertMultState(tester, atIndex: 0, isEnabled: true);
     });
   });
 }
