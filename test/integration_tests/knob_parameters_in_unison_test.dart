@@ -115,5 +115,28 @@ void main() {
       // Then the tapped mult is still disabled
       assertMultState(tester, atIndex: 0, isEnabled: false);
     });
+
+    testWidgets('Tap outside of enabled mult, disable mult',
+        (WidgetTester tester) async {
+      // Given a new parameter page with a mult entry
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+      await addANewEntry(tester, "mult:0 test mult #1");
+      await exitEditMode(tester);
+
+      // ... and settings have been enabled
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.indefinitely);
+
+      // ... and test mult #1 is already enabled
+      await tapPageEntry(tester, atRowIndex: 0);
+
+      // When I tap outside of the mult
+      await tester.tap(find.text("New Parameter Page"));
+      await tester.pumpAndSettle();
+
+      // Then the mult is in the disabled state
+      assertMultState(tester, atIndex: 0, isEnabled: false);
+    });
   });
 }
