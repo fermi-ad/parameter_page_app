@@ -125,14 +125,16 @@ class PageWidgetState extends State<PageWidget> {
                     onPressed: null,
                     icon: Icon(Icons.delete)))
           ])
-        : entry.buildEntry(
-            context,
-            page.editing,
-            wide,
-            settings,
-            widget.settingsAllowed,
-            _focusRowIndex == index,
-            () => _handlePageEntryTap(atIndex: index));
+        : TapRegion(
+            onTapOutside: (event) => _handleNonPageEntryTap(),
+            child: entry.buildEntry(
+                context,
+                page.editing,
+                wide,
+                settings,
+                widget.settingsAllowed,
+                _focusRowIndex == index,
+                () => _handlePageEntryTap(atIndex: index)));
   }
 
   // Moves an entry from one location to another in the parameter list. It
@@ -213,6 +215,12 @@ class PageWidgetState extends State<PageWidget> {
   void _handlePageEntryTap({required int atIndex}) {
     setState(
         () => _focusRowIndex = (_focusRowIndex == atIndex) ? null : atIndex);
+  }
+
+  void _handleNonPageEntryTap() {
+    if (_focusRowIndex != null) {
+      setState(() => _focusRowIndex = null);
+    }
   }
 
   int? _focusRowIndex;

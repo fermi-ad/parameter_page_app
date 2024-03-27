@@ -47,6 +47,7 @@ void main() {
 
       // When I tap outside of the mult
       await tester.tap(find.text("New Parameter Page"));
+      await tester.pumpAndSettle();
 
       // Then the mult is in the disabled state
       assertMultState(tester, atIndex: 0, isEnabled: false);
