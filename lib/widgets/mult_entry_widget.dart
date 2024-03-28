@@ -53,10 +53,12 @@ class MultEntryWidget extends StatelessWidget {
                 child: Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20.0),
-                    child: Column(children: [
-                      _buildEntryText(context),
-                      _buildParameters(context)
-                    ])))));
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildEntryText(context),
+                          _buildParameters(context)
+                        ])))));
   }
 
   Widget _buildEntryText(BuildContext context) {
@@ -68,6 +70,11 @@ class MultEntryWidget extends StatelessWidget {
   }
 
   Widget _buildParameters(BuildContext context) {
-    return const Text("Parameters will go here");
+    List<Widget> children = [];
+    for (int i = 0; i != numberOfEntries; i++) {
+      children.add(Text("Parameter #$i"));
+    }
+
+    return Column(children: children);
   }
 }
