@@ -53,7 +53,10 @@ class MultEntryWidget extends StatelessWidget {
                 child: Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20.0),
-                    child: _buildEntryText(context)))));
+                    child: Column(children: [
+                      _buildEntryText(context),
+                      _buildParameters(context)
+                    ])))));
   }
 
   Widget _buildEntryText(BuildContext context) {
@@ -62,5 +65,9 @@ class MultEntryWidget extends StatelessWidget {
     return Text("mult:$numberOfEntries $description",
         overflow: TextOverflow.ellipsis,
         style: TextStyle(color: colorScheme.secondary));
+  }
+
+  Widget _buildParameters(BuildContext context) {
+    return const Text("Parameters will go here");
   }
 }
