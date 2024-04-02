@@ -65,7 +65,8 @@ class MultEntry extends PageEntry {
         editMode: editMode,
         enabled: hasFocus,
         onTap: onTap,
-        settingsAllowed: settingsAllowed);
+        settingsAllowed: settingsAllowed,
+        displaySettings: settings);
   }
 
   @override

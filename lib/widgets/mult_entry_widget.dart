@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:parameter_page/widgets/display_settings_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
+
+import '../entities/page_entry.dart';
 
 class MultEntryWidget extends StatelessWidget {
   final int numberOfEntries;
@@ -14,14 +17,18 @@ class MultEntryWidget extends StatelessWidget {
 
   final bool settingsAllowed;
 
-  const MultEntryWidget(
-      {super.key,
-      required this.numberOfEntries,
-      this.description = "",
-      this.onTap,
-      this.enabled = false,
-      this.editMode = false,
-      this.settingsAllowed = false});
+  final DisplaySettings displaySettings;
+
+  const MultEntryWidget({
+    super.key,
+    required this.numberOfEntries,
+    this.description = "",
+    required this.displaySettings,
+    this.onTap,
+    this.enabled = false,
+    this.editMode = false,
+    this.settingsAllowed = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +79,8 @@ class MultEntryWidget extends StatelessWidget {
   Widget _buildParameters(BuildContext context) {
     List<Widget> children = [];
     for (int i = 0; i != numberOfEntries; i++) {
-      children.add(Text("Parameter #$i"));
+      children.add(ParameterEntry("G:MULT$i").buildEntry(
+          context, editMode, true, displaySettings, false, false, () {}));
     }
 
     return Column(children: children);

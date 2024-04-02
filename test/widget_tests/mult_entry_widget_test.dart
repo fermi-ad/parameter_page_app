@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:parameter_page/widgets/display_settings_widget.dart';
 import 'package:parameter_page/widgets/mult_entry_widget.dart';
 
 import '../integration_tests/helpers/assertions.dart';
@@ -11,8 +12,12 @@ void main() {
       // Given nothing...
       // When I instantiate and display a MultEntryWidget with n: 0 and description "test mult"
       await tester.binding.setSurfaceSize(const Size(2560, 1440));
-      Scaffold scaffold = const Scaffold(
-          body: MultEntryWidget(description: "test mult", numberOfEntries: 0));
+      Scaffold scaffold = Scaffold(
+          body: MultEntryWidget(
+        description: "test mult",
+        numberOfEntries: 0,
+        displaySettings: DisplaySettings(),
+      ));
       MaterialApp app = MaterialApp(home: scaffold);
       await tester.pumpWidget(app);
 
@@ -26,9 +31,12 @@ void main() {
       // Given nothing...
       // When I instantiate and display a MultEntryWidget with editMode: true
       await tester.binding.setSurfaceSize(const Size(2560, 1440));
-      Scaffold scaffold = const Scaffold(
+      Scaffold scaffold = Scaffold(
           body: MultEntryWidget(
-              description: "test mult", numberOfEntries: 0, editMode: true));
+              description: "test mult",
+              numberOfEntries: 0,
+              editMode: true,
+              displaySettings: DisplaySettings()));
       MaterialApp app = MaterialApp(home: scaffold);
       await tester.pumpWidget(app);
 
@@ -55,9 +63,11 @@ void main() {
       await tester.binding.setSurfaceSize(const Size(2560, 1440));
 
       // When I create a MultEntryWidget
-      Scaffold scaffold = const Scaffold(
+      Scaffold scaffold = Scaffold(
           body: MultEntryWidget(
-              description: "test enable mult", numberOfEntries: 1));
+              description: "test enable mult",
+              numberOfEntries: 1,
+              displaySettings: DisplaySettings()));
       MaterialApp app = MaterialApp(
           home: scaffold,
           theme: ThemeData(
@@ -76,11 +86,12 @@ void main() {
       await tester.binding.setSurfaceSize(const Size(2560, 1440));
 
       // When I create a MultEntryWidget with enabled: true
-      Scaffold scaffold = const Scaffold(
+      Scaffold scaffold = Scaffold(
           body: MultEntryWidget(
               description: "test enable mult",
               numberOfEntries: 1,
-              enabled: true));
+              enabled: true,
+              displaySettings: DisplaySettings()));
       MaterialApp app = MaterialApp(
           home: scaffold,
           theme: ThemeData(
