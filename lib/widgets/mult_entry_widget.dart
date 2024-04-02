@@ -19,11 +19,14 @@ class MultEntryWidget extends StatelessWidget {
 
   final DisplaySettings displaySettings;
 
+  final List<String> entries;
+
   const MultEntryWidget({
     super.key,
     required this.numberOfEntries,
     this.description = "",
     required this.displaySettings,
+    required this.entries,
     this.onTap,
     this.enabled = false,
     this.editMode = false,
@@ -78,8 +81,8 @@ class MultEntryWidget extends StatelessWidget {
 
   Widget _buildParameters(BuildContext context) {
     List<Widget> children = [];
-    for (int i = 0; i != numberOfEntries; i++) {
-      children.add(ParameterEntry("G:MULT$i").buildEntry(
+    for (final drf in entries) {
+      children.add(ParameterEntry(drf).buildEntry(
           context, editMode, true, displaySettings, false, false, () {}));
     }
 

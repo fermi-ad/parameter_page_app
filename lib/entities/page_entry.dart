@@ -65,6 +65,7 @@ class MultEntry extends PageEntry {
         editMode: editMode,
         enabled: hasFocus,
         onTap: onTap,
+        entries: const [],
         settingsAllowed: settingsAllowed,
         displaySettings: settings);
   }

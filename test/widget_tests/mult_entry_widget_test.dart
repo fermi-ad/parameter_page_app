@@ -18,6 +18,7 @@ void main() {
           child: MultEntryWidget(
         description: "test mult",
         numberOfEntries: 0,
+        entries: const [],
         displaySettings: DisplaySettings(),
       ));
       await tester.pumpWidget(app);
@@ -37,6 +38,7 @@ void main() {
               description: "test mult",
               numberOfEntries: 0,
               editMode: true,
+              entries: const [],
               displaySettings: DisplaySettings()));
       await tester.pumpWidget(app);
 
@@ -67,6 +69,7 @@ void main() {
           child: MultEntryWidget(
               description: "test enable mult",
               numberOfEntries: 1,
+              entries: const ["G:MULT1"],
               displaySettings: DisplaySettings()));
       await tester.pumpWidget(app);
 
@@ -85,12 +88,36 @@ void main() {
           child: MultEntryWidget(
               description: "test enable mult",
               numberOfEntries: 1,
+              entries: const ["G:MULT1"],
               enabled: true,
               displaySettings: DisplaySettings()));
       await tester.pumpWidget(app);
 
       // Then the mult is in the enabled state
       assertMultState(tester, atIndex: 0, isEnabled: true);
+    });
+
+    testWidgets(
+        'Create mult entry containing 3 parameters, three ParameterWidgets are rendered inside of a MultEntryWidget',
+        (WidgetTester tester) async {
+      // Given nothing
+      await tester.binding.setSurfaceSize(const Size(2560, 1440));
+
+      // When I create a MultEntryWidget containing three parameters...
+      MaterialApp app = _buildMaterialApp(
+          child: MultEntryWidget(
+              description: "Test Mult #1",
+              numberOfEntries: 3,
+              entries: const ["G:MULT0", "G:MULT1", "G:MULT2"],
+              enabled: false,
+              displaySettings: DisplaySettings()));
+      await tester.pumpWidget(app);
+
+      // Then a ParameterWidget is rendered for the 3 parameters inside of a MultEntryWidget
+      assertMult(isInRow: 0, hasN: 3, hasDescription: "Test Mult #1");
+      assertMultState(tester, atIndex: 0, isEnabled: false);
+      assertMultContains(
+          atIndex: 0, parameters: ["G:MULT0", "G:MULT1", "G:MULT2"]);
     });
   });
 }

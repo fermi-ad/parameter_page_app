@@ -807,7 +807,7 @@ void assertKnobbing({required String stepSizeIs, required String forDRF}) {
 
 void assertMult(
     {required int isInRow, required int hasN, required String hasDescription}) {
-  final rowFinder = find.byType(PageEntryWidget);
+  final rowFinder = find.byType(MultEntryWidget);
   final row = rowFinder.evaluate().isEmpty ? null : rowFinder.at(isInRow);
 
   if (row == null) {
