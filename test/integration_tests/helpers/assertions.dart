@@ -829,6 +829,15 @@ void assertMultContains(
   int foundHowMany = finder.evaluate().isEmpty ? 0 : finder.found.length;
 
   expect(foundHowMany, parameters.length);
+
+  for (final drf in parameters) {
+    expect(
+        find.descendant(
+            of: find.byType(MultEntryWidget),
+            matching: find.descendant(
+                of: find.byType(ParameterWidget), matching: find.text(drf))),
+        findsOneWidget);
+  }
 }
 
 void assertMultState(WidgetTester tester,
