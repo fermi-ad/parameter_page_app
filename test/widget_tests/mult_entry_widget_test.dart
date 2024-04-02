@@ -14,13 +14,12 @@ void main() {
       // Given nothing...
       // When I instantiate and display a MultEntryWidget with n: 0 and description "test mult"
       await tester.binding.setSurfaceSize(const Size(2560, 1440));
-      Scaffold scaffold = Scaffold(
-          body: MultEntryWidget(
+      MaterialApp app = _buildMaterialApp(
+          child: MultEntryWidget(
         description: "test mult",
         numberOfEntries: 0,
         displaySettings: DisplaySettings(),
       ));
-      MaterialApp app = MaterialApp(home: scaffold);
       await tester.pumpWidget(app);
 
       // Then the text displayed is "mult:0 test mult"
@@ -33,13 +32,12 @@ void main() {
       // Given nothing...
       // When I instantiate and display a MultEntryWidget with editMode: true
       await tester.binding.setSurfaceSize(const Size(2560, 1440));
-      Scaffold scaffold = Scaffold(
-          body: MultEntryWidget(
+      MaterialApp app = _buildMaterialApp(
+          child: MultEntryWidget(
               description: "test mult",
               numberOfEntries: 0,
               editMode: true,
               displaySettings: DisplaySettings()));
-      MaterialApp app = MaterialApp(home: scaffold);
       await tester.pumpWidget(app);
 
       // Then the text displayed is "mult:0 test mult"
@@ -65,18 +63,11 @@ void main() {
       await tester.binding.setSurfaceSize(const Size(2560, 1440));
 
       // When I create a MultEntryWidget
-      Scaffold scaffold = Scaffold(
-          body: DataAcquisitionWidget(
-              service: MockDpmService(useEmptyStream: true),
-              child: MultEntryWidget(
-                  description: "test enable mult",
-                  numberOfEntries: 1,
-                  displaySettings: DisplaySettings())));
-      MaterialApp app = MaterialApp(
-          home: scaffold,
-          theme: ThemeData(
-              useMaterial3: true,
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue)));
+      MaterialApp app = _buildMaterialApp(
+          child: MultEntryWidget(
+              description: "test enable mult",
+              numberOfEntries: 1,
+              displaySettings: DisplaySettings()));
       await tester.pumpWidget(app);
 
       // Then the mult is in the disabled state
@@ -90,23 +81,27 @@ void main() {
       await tester.binding.setSurfaceSize(const Size(2560, 1440));
 
       // When I create a MultEntryWidget with enabled: true
-      Scaffold scaffold = Scaffold(
-          body: DataAcquisitionWidget(
-              service: MockDpmService(useEmptyStream: true),
-              child: MultEntryWidget(
-                  description: "test enable mult",
-                  numberOfEntries: 1,
-                  enabled: true,
-                  displaySettings: DisplaySettings())));
-      MaterialApp app = MaterialApp(
-          home: scaffold,
-          theme: ThemeData(
-              useMaterial3: true,
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue)));
+      MaterialApp app = _buildMaterialApp(
+          child: MultEntryWidget(
+              description: "test enable mult",
+              numberOfEntries: 1,
+              enabled: true,
+              displaySettings: DisplaySettings()));
       await tester.pumpWidget(app);
 
       // Then the mult is in the enabled state
       assertMultState(tester, atIndex: 0, isEnabled: true);
     });
   });
+}
+
+MaterialApp _buildMaterialApp({required Widget child}) {
+  Scaffold scaffold = Scaffold(
+      body: DataAcquisitionWidget(
+          service: MockDpmService(useEmptyStream: true), child: child));
+  return MaterialApp(
+      home: scaffold,
+      theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue)));
 }
