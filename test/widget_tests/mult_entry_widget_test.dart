@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:parameter_page/services/dpm/mock_dpm_service.dart';
+import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 import 'package:parameter_page/widgets/display_settings_widget.dart';
 import 'package:parameter_page/widgets/mult_entry_widget.dart';
 
@@ -64,10 +66,12 @@ void main() {
 
       // When I create a MultEntryWidget
       Scaffold scaffold = Scaffold(
-          body: MultEntryWidget(
-              description: "test enable mult",
-              numberOfEntries: 1,
-              displaySettings: DisplaySettings()));
+          body: DataAcquisitionWidget(
+              service: MockDpmService(useEmptyStream: true),
+              child: MultEntryWidget(
+                  description: "test enable mult",
+                  numberOfEntries: 1,
+                  displaySettings: DisplaySettings())));
       MaterialApp app = MaterialApp(
           home: scaffold,
           theme: ThemeData(
@@ -87,11 +91,13 @@ void main() {
 
       // When I create a MultEntryWidget with enabled: true
       Scaffold scaffold = Scaffold(
-          body: MultEntryWidget(
-              description: "test enable mult",
-              numberOfEntries: 1,
-              enabled: true,
-              displaySettings: DisplaySettings()));
+          body: DataAcquisitionWidget(
+              service: MockDpmService(useEmptyStream: true),
+              child: MultEntryWidget(
+                  description: "test enable mult",
+                  numberOfEntries: 1,
+                  enabled: true,
+                  displaySettings: DisplaySettings())));
       MaterialApp app = MaterialApp(
           home: scaffold,
           theme: ThemeData(
