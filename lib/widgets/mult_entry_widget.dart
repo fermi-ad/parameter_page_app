@@ -67,7 +67,7 @@ class MultEntryWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           _buildEntryText(context),
-                          _buildParameters(context)
+                          _buildSubEntries(context)
                         ])))));
   }
 
@@ -79,7 +79,7 @@ class MultEntryWidget extends StatelessWidget {
         style: TextStyle(color: colorScheme.secondary));
   }
 
-  Widget _buildParameters(BuildContext context) {
+  Widget _buildSubEntries(BuildContext context) {
     List<Widget> children = [];
     for (final entry in entries) {
       children.add(entry.buildEntry(
