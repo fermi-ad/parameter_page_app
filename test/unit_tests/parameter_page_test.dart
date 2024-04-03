@@ -1690,5 +1690,25 @@ void main() {
       expect(sys3Tabs[1], "Sys 3 / Tab 2");
       expect(sys3Tabs[2], "Sys 3 / Tab 3");
     });
+
+    test(
+        'entriesAs2dList(), returns a 2-dimensional List with PageEntrys inside of MultEntrys',
+        () {
+      // Given a page with a mult:1 followed by G:AMANDA
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.add(MultEntry(numberOfEntries: 1, description: "Test Mult #1"));
+      page.add(ParameterEntry("G:AMANDA"));
+      page.toggleEditing();
+
+      // When I call entriesAsMap()
+      final List<List<PageEntry>> entries = page.entriesAs2dList();
+
+      // Then the map contains...
+      expect(entries.length, 1);
+      expect(entries[0].length, 1);
+      expect(entries[0][0].typeAsString, "ParameterEntry");
+      expect(entries[0][0].entryText(), "G:AMANDA");
+    });
   });
 }

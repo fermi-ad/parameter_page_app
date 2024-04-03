@@ -178,6 +178,10 @@ class ParameterPage {
         .entries;
   }
 
+  List<List<PageEntry>> entriesAs2dList() {
+    return [[]];
+  }
+
   List<PageEntry> entriesAsListFrom(
       {String? subSystem, required String tab, required int subPage}) {
     final subSystemIndex = subSystem != null
