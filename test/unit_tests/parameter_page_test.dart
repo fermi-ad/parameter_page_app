@@ -1717,6 +1717,26 @@ void main() {
     });
 
     test(
+        'entriesAs2dList() with a mult:0, returns a flat 2-dimensional List containing just the Mult',
+        () {
+      // Given a page with a comment followed by G:AMANDA
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.add(MultEntry(numberOfEntries: 0));
+      page.toggleEditing();
+
+      // When I call entriesAs2dList()...
+      final List<List<PageEntry>> entries = page.entriesAs2dList();
+
+      // Then the map contains...
+      expect(entries.length, 1);
+
+      expect(entries[0].length, 1);
+      expect(entries[0][0].typeAsString, "Mult");
+      expect(entries[0][0].entryText(), "mult:0");
+    });
+
+    test(
         'entriesAs2dList(), returns a 2-dimensional List with PageEntrys inside of MultEntrys',
         () {
       // Given a page with a mult:1 followed by G:AMANDA

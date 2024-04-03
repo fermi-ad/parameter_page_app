@@ -183,6 +183,7 @@ class ParameterPage {
 
     for (final entry in entriesAsList()) {
       if (entry.typeAsString == "Mult") {
+        ret.add([entry]);
       } else {
         ret.add([entry]);
       }
