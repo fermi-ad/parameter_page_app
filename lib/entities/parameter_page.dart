@@ -179,12 +179,16 @@ class ParameterPage {
   }
 
   List<List<PageEntry>> entriesAs2dList() {
-    return [
-      [
-        MultEntry(numberOfEntries: 1, description: "Test Mult #1"),
-        ParameterEntry("G:AMANDA")
-      ]
-    ];
+    List<List<PageEntry>> ret = [];
+
+    for (final entry in entriesAsList()) {
+      if (entry.typeAsString == "Mult") {
+      } else {
+        ret.add([entry]);
+      }
+    }
+
+    return ret;
   }
 
   List<PageEntry> entriesAsListFrom(
