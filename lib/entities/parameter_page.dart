@@ -179,7 +179,12 @@ class ParameterPage {
   }
 
   List<List<PageEntry>> entriesAs2dList() {
-    return [[]];
+    return [
+      [
+        MultEntry(numberOfEntries: 1, description: "Test Mult #1"),
+        ParameterEntry("G:AMANDA")
+      ]
+    ];
   }
 
   List<PageEntry> entriesAsListFrom(

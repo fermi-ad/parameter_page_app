@@ -1706,9 +1706,11 @@ void main() {
 
       // Then the map contains...
       expect(entries.length, 1);
-      expect(entries[0].length, 1);
-      expect(entries[0][0].typeAsString, "ParameterEntry");
-      expect(entries[0][0].entryText(), "G:AMANDA");
+      expect(entries[0].length, 2);
+      expect(entries[0][0].typeAsString, "Mult");
+      expect(entries[0][0].entryText(), "mult:1 Test Mult #1");
+      expect(entries[0][1].typeAsString, "Parameter");
+      expect(entries[0][1].entryText(), "G:AMANDA");
     });
   });
 }
