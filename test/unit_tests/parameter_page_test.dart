@@ -1739,7 +1739,7 @@ void main() {
     test(
         'entriesAs2dList() with a mult:0 and some parameters, returns a flat 2-dimensional List',
         () {
-      // Given a page with a comment followed by G:AMANDA
+      // Given a page with mult:0 followed by 2 parameters
       ParameterPage page = ParameterPage();
       page.enableEditing();
       page.add(MultEntry(numberOfEntries: 0));
@@ -1767,7 +1767,7 @@ void main() {
     });
 
     test(
-        'entriesAs2dList(), returns a 2-dimensional List with PageEntrys inside of MultEntrys',
+        'entriesAs2dList() with a mult:1, returns a 2-dimensional List with ParameterEntry inside of MultEntry',
         () {
       // Given a page with a mult:1 followed by G:AMANDA
       ParameterPage page = ParameterPage();
