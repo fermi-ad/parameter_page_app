@@ -1692,6 +1692,31 @@ void main() {
     });
 
     test(
+        'entriesAs2dList(), returns a flat 2-dimensional List containing just Comments and Parameters',
+        () {
+      // Given a page with a comment followed by G:AMANDA
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.add(CommentEntry("This is a test"));
+      page.add(ParameterEntry("G:AMANDA"));
+      page.toggleEditing();
+
+      // When I call entriesAs2dList()...
+      final List<List<PageEntry>> entries = page.entriesAs2dList();
+
+      // Then the map contains...
+      expect(entries.length, 2);
+
+      expect(entries[0].length, 1);
+      expect(entries[0][0].typeAsString, "Comments");
+      expect(entries[0][0].entryText(), "This is a test");
+
+      expect(entries[1].length, 1);
+      expect(entries[1][0].typeAsString, "Parameter");
+      expect(entries[1][0].entryText(), "G:AMANDA");
+    });
+
+    test(
         'entriesAs2dList(), returns a 2-dimensional List with PageEntrys inside of MultEntrys',
         () {
       // Given a page with a mult:1 followed by G:AMANDA
