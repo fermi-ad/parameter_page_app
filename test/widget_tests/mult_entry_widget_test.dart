@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:parameter_page/entities/page_entry.dart';
 import 'package:parameter_page/services/dpm/mock_dpm_service.dart';
 import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 import 'package:parameter_page/widgets/display_settings_widget.dart';
@@ -69,7 +70,7 @@ void main() {
           child: MultEntryWidget(
               description: "test enable mult",
               numberOfEntries: 1,
-              entries: const ["G:MULT1"],
+              entries: [ParameterEntry("G:MULT1")],
               displaySettings: DisplaySettings()));
       await tester.pumpWidget(app);
 
@@ -88,7 +89,7 @@ void main() {
           child: MultEntryWidget(
               description: "test enable mult",
               numberOfEntries: 1,
-              entries: const ["G:MULT1"],
+              entries: [ParameterEntry("G:MULT1")],
               enabled: true,
               displaySettings: DisplaySettings()));
       await tester.pumpWidget(app);
@@ -108,7 +109,11 @@ void main() {
           child: MultEntryWidget(
               description: "Test Mult #1",
               numberOfEntries: 3,
-              entries: const ["G:MULT0", "G:MULT1", "G:MULT2"],
+              entries: [
+                ParameterEntry("G:MULT0"),
+                ParameterEntry("G:MULT1"),
+                ParameterEntry("G:MULT2")
+              ],
               enabled: false,
               displaySettings: DisplaySettings()));
       await tester.pumpWidget(app);
