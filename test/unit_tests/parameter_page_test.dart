@@ -1787,5 +1787,65 @@ void main() {
       expect(entries[0][1].typeAsString, "Parameter");
       expect(entries[0][1].entryText(), "G:AMANDA");
     });
+
+    test(
+        'entriesAs2dList() with a mult:1 followed by more than 1 parameter, returns a 2-dimensional List with 1 ParameterEntry inside of MultEntry and the rest by themselves',
+        () {
+      // Given a page with a mult:1 followed by G:AMANDA
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.add(MultEntry(numberOfEntries: 1, description: "Test Mult #1"));
+      page.add(ParameterEntry("G:AMANDA"));
+      page.add(ParameterEntry("M:OUTTMP"));
+      page.toggleEditing();
+
+      // When I call entriesAsMap()
+      final List<List<PageEntry>> entries = page.entriesAs2dList();
+
+      // Then the map contains...
+      expect(entries.length, 2);
+      expect(entries[0].length, 2);
+      expect(entries[0][0].typeAsString, "Mult");
+      expect(entries[0][0].entryText(), "mult:1 Test Mult #1");
+
+      expect(entries[0][1].typeAsString, "Parameter");
+      expect(entries[0][1].entryText(), "G:AMANDA");
+
+      expect(entries[1].length, 1);
+      expect(entries[1][0].typeAsString, "Parameter");
+      expect(entries[1][0].entryText(), "M:OUTTMP");
+    });
+
+    test(
+        'entriesAs2dList() with a mult:2 followed by 1 comment and 2 parameters, returns a 2-dimensional List with 2 entries',
+        () {
+      // Given a page with a mult:1 followed by G:AMANDA
+      ParameterPage page = ParameterPage();
+      page.enableEditing();
+      page.add(MultEntry(numberOfEntries: 2, description: "Test Mult #1"));
+      page.add(CommentEntry("This is a comment inside of a mult"));
+      page.add(ParameterEntry("G:AMANDA"));
+      page.add(ParameterEntry("M:OUTTMP"));
+      page.toggleEditing();
+
+      // When I call entriesAsMap()
+      final List<List<PageEntry>> entries = page.entriesAs2dList();
+
+      // Then the map contains...
+      expect(entries.length, 2);
+      expect(entries[0].length, 3);
+      expect(entries[0][0].typeAsString, "Mult");
+      expect(entries[0][0].entryText(), "mult:2 Test Mult #1");
+
+      expect(entries[0][1].typeAsString, "Comments");
+      expect(entries[0][1].entryText(), "This is a comment inside of a mult");
+
+      expect(entries[0][2].typeAsString, "Parameter");
+      expect(entries[0][2].entryText(), "G:AMANDA");
+
+      expect(entries[1].length, 1);
+      expect(entries[1][0].typeAsString, "Parameter");
+      expect(entries[1][0].entryText(), "M:OUTTMP");
+    });
   });
 }
