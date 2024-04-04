@@ -67,8 +67,6 @@ class PageWidgetState extends State<PageWidget> {
   }
 
   Widget _buildPage(BuildContext context, bool wide, ParameterPage page) {
-    final bool movable = page.editing && page.numberOfEntries() > 1;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -87,7 +85,7 @@ class PageWidgetState extends State<PageWidget> {
               buildDefaultDragHandles: false,
               onReorder: (oldIndex, newIndex) =>
                   _reorderEntry(page, oldIndex, newIndex),
-              children: _buildRows(page, wide, movable)),
+              children: _buildRows(page, wide)),
         ),
         _buildEditModeFloatingActionBar(page),
         _buildFloatingActionBar(page)
@@ -95,16 +93,36 @@ class PageWidgetState extends State<PageWidget> {
     );
   }
 
-  List<Widget> _buildRows(ParameterPage page, bool wide, bool movable) {
+  List<Widget> _buildRows(ParameterPage page, bool wide) {
+    return page.editing
+        ? _buildRowsEditMode(page, wide)
+        : _buildRowsDisplayMode(page, wide);
+  }
+
+  List<Widget> _buildRowsEditMode(ParameterPage page, bool wide) {
+    final bool movable = page.numberOfEntries() > 1;
+
+    List<Widget> acc = [];
+    for (final entry in page.entriesAsList()) {
+      acc.add(Row(key: entry.key, children: [
+        Expanded(child: _buildRow(context, [entry], acc.length, wide, page)),
+        movable
+            ? ReorderableDragStartListener(
+                index: acc.length, child: const Icon(Icons.drag_handle))
+            : Container()
+      ]));
+    }
+
+    return acc;
+  }
+
+  List<Widget> _buildRowsDisplayMode(ParameterPage page, bool wide) {
     List<Widget> acc = [];
 
     for (List<PageEntry> entries in page.entriesAs2dList()) {
       acc.add(Row(key: entries[0].key, children: [
         Expanded(child: _buildRow(context, entries, acc.length, wide, page)),
-        movable
-            ? ReorderableDragStartListener(
-                index: acc.length, child: const Icon(Icons.drag_handle))
-            : Container()
+        Container()
       ]));
     }
 
