@@ -115,5 +115,59 @@ void main() {
       // Then the tapped mult is still disabled
       assertMultState(tester, atIndex: 0, isEnabled: false);
     });
+
+    testWidgets('Tap outside of enabled mult, disable mult',
+        (WidgetTester tester) async {
+      // Given a new parameter page with a mult entry
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+      await addANewEntry(tester, "mult:0 test mult #1");
+      await exitEditMode(tester);
+
+      // ... and settings have been enabled
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.indefinitely);
+
+      // ... and test mult #1 is already enabled
+      await tapPageEntry(tester, atRowIndex: 0);
+
+      // When I tap outside of the mult
+      await tester.tap(find.text("New Parameter Page"));
+      await tester.pumpAndSettle();
+
+      // Then the mult is in the disabled state
+      assertMultState(tester, atIndex: 0, isEnabled: false);
+    });
+
+    testWidgets(
+        'Add entries to an empty mult, display entries inside of new mult',
+        (WidgetTester tester) async {
+      // Given an empty parameter page
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+
+      // When I create a page with a mult:1 containing G:AMANDA
+      await addANewEntry(tester, "mult:1 Test Mult #1");
+      await addANewEntry(tester, "G:AMANDA");
+      await exitEditMode(tester);
+
+      // Then G:AMANDA is shown as part of Test Mult #1
+      assertMultContains(atIndex: 0, parameters: ["G:AMANDA"]);
+    });
+
+    testWidgets('Add mult:1 and a parameter, both are shown in edit mode list',
+        (WidgetTester tester) async {
+      // Given an empty parameter page
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+
+      // When I create a page with a mult:1 containing G:AMANDA
+      await addANewEntry(tester, "mult:1 Test Mult #1");
+      await addANewEntry(tester, "G:AMANDA");
+
+      // Then there should be two entires on the page
+      assertMult(isInRow: 0, hasN: 1, hasDescription: "Test Mult #1");
+      assertParameterIsInRow("G:AMANDA", 1);
+    });
   });
 }

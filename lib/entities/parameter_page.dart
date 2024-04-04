@@ -178,6 +178,35 @@ class ParameterPage {
         .entries;
   }
 
+  List<List<PageEntry>> entriesAs2dList() {
+    List<List<PageEntry>> ret = [];
+
+    List<PageEntry>? workingMultEntry;
+    int entriesToGrabForMult = 0;
+
+    for (final entry in entriesAsList()) {
+      if (entry.typeAsString == "Mult") {
+        final multEntry = entry as MultEntry;
+        entriesToGrabForMult = multEntry.numberOfEntries;
+        workingMultEntry = [entry];
+      } else {
+        if (entriesToGrabForMult == 0) {
+          ret.add([entry]);
+          workingMultEntry = null;
+        } else {
+          workingMultEntry!.add(entry);
+          entriesToGrabForMult -= 1;
+        }
+      }
+
+      if (workingMultEntry != null && entriesToGrabForMult == 0) {
+        ret.add(workingMultEntry);
+      }
+    }
+
+    return ret;
+  }
+
   List<PageEntry> entriesAsListFrom(
       {String? subSystem, required String tab, required int subPage}) {
     final subSystemIndex = subSystem != null

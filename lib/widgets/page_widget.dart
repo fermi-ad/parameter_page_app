@@ -67,8 +67,6 @@ class PageWidgetState extends State<PageWidget> {
   }
 
   Widget _buildPage(BuildContext context, bool wide, ParameterPage page) {
-    final bool movable = page.editing && page.numberOfEntries() > 1;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -87,18 +85,7 @@ class PageWidgetState extends State<PageWidget> {
               buildDefaultDragHandles: false,
               onReorder: (oldIndex, newIndex) =>
                   _reorderEntry(page, oldIndex, newIndex),
-              children: page.entriesAsList().fold([], (acc, entry) {
-                acc.add(Row(key: entry.key, children: [
-                  Expanded(
-                      child: _buildRow(context, entry, acc.length, wide, page)),
-                  movable
-                      ? ReorderableDragStartListener(
-                          index: acc.length,
-                          child: const Icon(Icons.drag_handle))
-                      : Container()
-                ]));
-                return acc;
-              })),
+              children: _buildRows(page, wide)),
         ),
         _buildEditModeFloatingActionBar(page),
         _buildFloatingActionBar(page)
@@ -106,33 +93,82 @@ class PageWidgetState extends State<PageWidget> {
     );
   }
 
-  Widget _buildRow(BuildContext context, PageEntry entry, int index, bool wide,
-      ParameterPage page) {
+  List<Widget> _buildRows(ParameterPage page, bool wide) {
     return page.editing
-        ? Row(children: [
-            Expanded(
-                child: entry.buildEntry(context, page.editing, wide, settings,
-                    widget.settingsAllowed, false, null)),
-            const SizedBox(width: 8.0),
-            GestureDetector(
-                onTap: () async {
-                  setState(() {
-                    page.removeEntry(at: index);
-                  });
-                },
-                child: const IconButton(
-                    visualDensity: VisualDensity.compact,
-                    onPressed: null,
-                    icon: Icon(Icons.delete)))
-          ])
-        : entry.buildEntry(
-            context,
-            page.editing,
-            wide,
-            settings,
-            widget.settingsAllowed,
-            _focusRowIndex == index,
-            () => _handlePageEntryTap(atIndex: index));
+        ? _buildRowsEditMode(page, wide)
+        : _buildRowsDisplayMode(page, wide);
+  }
+
+  List<Widget> _buildRowsEditMode(ParameterPage page, bool wide) {
+    final bool movable = page.numberOfEntries() > 1;
+
+    List<Widget> acc = [];
+    for (final entry in page.entriesAsList()) {
+      acc.add(Row(key: entry.key, children: [
+        Expanded(child: _buildEditRow([entry], wide, acc.length, page)),
+        movable
+            ? ReorderableDragStartListener(
+                index: acc.length, child: const Icon(Icons.drag_handle))
+            : Container()
+      ]));
+    }
+
+    return acc;
+  }
+
+  List<Widget> _buildRowsDisplayMode(ParameterPage page, bool wide) {
+    List<Widget> acc = [];
+
+    for (List<PageEntry> entries in page.entriesAs2dList()) {
+      acc.add(Row(key: entries[0].key, children: [
+        Expanded(child: _buildDisplayRow(entries, wide, acc.length)),
+        Container()
+      ]));
+    }
+
+    return acc;
+  }
+
+  Widget _buildEditRow(
+      List<PageEntry> entries, bool wide, int index, ParameterPage page) {
+    final entry = entries[0];
+    return Row(children: [
+      Expanded(
+          child: entry.buildEntry(context, true, wide, settings,
+              widget.settingsAllowed, false, null)),
+      const SizedBox(width: 8.0),
+      GestureDetector(
+          onTap: () async {
+            setState(() {
+              page.removeEntry(at: index);
+            });
+          },
+          child: const IconButton(
+              visualDensity: VisualDensity.compact,
+              onPressed: null,
+              icon: Icon(Icons.delete)))
+    ]);
+  }
+
+  Widget _buildDisplayRow(List<PageEntry> entries, bool wide, int index) {
+    final entry = entries[0];
+
+    if (entries.length > 1) {
+      final multEntry = entry as MultEntry;
+      multEntry.subEntries.addAll(entries.sublist(1));
+    }
+
+    final childWidget = entry.buildEntry(
+        context,
+        false,
+        wide,
+        settings,
+        widget.settingsAllowed,
+        _focusRowIndex == index,
+        () => _handlePageEntryTap(atIndex: index));
+
+    return TapRegion(
+        onTapOutside: (event) => _handleNonPageEntryTap(), child: childWidget);
   }
 
   // Moves an entry from one location to another in the parameter list. It
@@ -213,6 +249,12 @@ class PageWidgetState extends State<PageWidget> {
   void _handlePageEntryTap({required int atIndex}) {
     setState(
         () => _focusRowIndex = (_focusRowIndex == atIndex) ? null : atIndex);
+  }
+
+  void _handleNonPageEntryTap() {
+    if (_focusRowIndex != null) {
+      setState(() => _focusRowIndex = null);
+    }
   }
 
   int? _focusRowIndex;

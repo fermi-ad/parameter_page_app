@@ -807,7 +807,7 @@ void assertKnobbing({required String stepSizeIs, required String forDRF}) {
 
 void assertMult(
     {required int isInRow, required int hasN, required String hasDescription}) {
-  final rowFinder = find.byType(PageEntryWidget);
+  final rowFinder = find.byType(MultEntryWidget);
   final row = rowFinder.evaluate().isEmpty ? null : rowFinder.at(isInRow);
 
   if (row == null) {
@@ -829,6 +829,15 @@ void assertMultContains(
   int foundHowMany = finder.evaluate().isEmpty ? 0 : finder.found.length;
 
   expect(foundHowMany, parameters.length);
+
+  for (final drf in parameters) {
+    expect(
+        find.descendant(
+            of: find.byType(MultEntryWidget),
+            matching: find.descendant(
+                of: find.byType(ParameterWidget), matching: find.text(drf))),
+        findsOneWidget);
+  }
 }
 
 void assertMultState(WidgetTester tester,
