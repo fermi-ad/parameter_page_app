@@ -87,23 +87,25 @@ class PageWidgetState extends State<PageWidget> {
               buildDefaultDragHandles: false,
               onReorder: (oldIndex, newIndex) =>
                   _reorderEntry(page, oldIndex, newIndex),
-              children: page.entriesAsList().fold([], (acc, entry) {
-                acc.add(Row(key: entry.key, children: [
-                  Expanded(
-                      child: _buildRow(context, entry, acc.length, wide, page)),
-                  movable
-                      ? ReorderableDragStartListener(
-                          index: acc.length,
-                          child: const Icon(Icons.drag_handle))
-                      : Container()
-                ]));
-                return acc;
-              })),
+              children: _buildRows(page, wide, movable)),
         ),
         _buildEditModeFloatingActionBar(page),
         _buildFloatingActionBar(page)
       ],
     );
+  }
+
+  List<Widget> _buildRows(ParameterPage page, bool wide, bool movable) {
+    return page.entriesAsList().fold([], (acc, entry) {
+      acc.add(Row(key: entry.key, children: [
+        Expanded(child: _buildRow(context, entry, acc.length, wide, page)),
+        movable
+            ? ReorderableDragStartListener(
+                index: acc.length, child: const Icon(Icons.drag_handle))
+            : Container()
+      ]));
+      return acc;
+    });
   }
 
   Widget _buildRow(BuildContext context, PageEntry entry, int index, bool wide,
