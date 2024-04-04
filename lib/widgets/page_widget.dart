@@ -100,7 +100,7 @@ class PageWidgetState extends State<PageWidget> {
 
     for (List<PageEntry> entries in page.entriesAs2dList()) {
       acc.add(Row(key: entries[0].key, children: [
-        Expanded(child: _buildRow(context, entries[0], acc.length, wide, page)),
+        Expanded(child: _buildRow(context, entries, acc.length, wide, page)),
         movable
             ? ReorderableDragStartListener(
                 index: acc.length, child: const Icon(Icons.drag_handle))
@@ -111,8 +111,10 @@ class PageWidgetState extends State<PageWidget> {
     return acc;
   }
 
-  Widget _buildRow(BuildContext context, PageEntry entry, int index, bool wide,
-      ParameterPage page) {
+  Widget _buildRow(BuildContext context, List<PageEntry> entries, int index,
+      bool wide, ParameterPage page) {
+    final entry = entries[0];
+
     return page.editing
         ? Row(children: [
             Expanded(
