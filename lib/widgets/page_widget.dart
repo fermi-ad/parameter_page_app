@@ -113,37 +113,47 @@ class PageWidgetState extends State<PageWidget> {
 
   Widget _buildRow(BuildContext context, List<PageEntry> entries, int index,
       bool wide, ParameterPage page) {
+    if (page.editing) {
+      return _buildEditRow(entries, wide, index, page);
+    } else {
+      return _buildDisplayRow(entries, wide, index);
+    }
+  }
+
+  Widget _buildEditRow(
+      List<PageEntry> entries, bool wide, int index, ParameterPage page) {
+    final entry = entries[0];
+    return Row(children: [
+      Expanded(
+          child: entry.buildEntry(context, true, wide, settings,
+              widget.settingsAllowed, false, null)),
+      const SizedBox(width: 8.0),
+      GestureDetector(
+          onTap: () async {
+            setState(() {
+              page.removeEntry(at: index);
+            });
+          },
+          child: const IconButton(
+              visualDensity: VisualDensity.compact,
+              onPressed: null,
+              icon: Icon(Icons.delete)))
+    ]);
+  }
+
+  Widget _buildDisplayRow(List<PageEntry> entries, bool wide, int index) {
     final entry = entries[0];
 
-    if (page.editing) {
-      return Row(children: [
-        Expanded(
-            child: entry.buildEntry(context, page.editing, wide, settings,
-                widget.settingsAllowed, false, null)),
-        const SizedBox(width: 8.0),
-        GestureDetector(
-            onTap: () async {
-              setState(() {
-                page.removeEntry(at: index);
-              });
-            },
-            child: const IconButton(
-                visualDensity: VisualDensity.compact,
-                onPressed: null,
-                icon: Icon(Icons.delete)))
-      ]);
-    } else {
-      return TapRegion(
-          onTapOutside: (event) => _handleNonPageEntryTap(),
-          child: entry.buildEntry(
-              context,
-              page.editing,
-              wide,
-              settings,
-              widget.settingsAllowed,
-              _focusRowIndex == index,
-              () => _handlePageEntryTap(atIndex: index)));
-    }
+    return TapRegion(
+        onTapOutside: (event) => _handleNonPageEntryTap(),
+        child: entry.buildEntry(
+            context,
+            false,
+            wide,
+            settings,
+            widget.settingsAllowed,
+            _focusRowIndex == index,
+            () => _handlePageEntryTap(atIndex: index)));
   }
 
   // Moves an entry from one location to another in the parameter list. It
