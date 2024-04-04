@@ -59,7 +59,7 @@ jobs:
       - name: Installing chromedriver (needed for Integration tests)
         uses: nanasess/setup-chromedriver@v2
         with:
-          chromedriver-version: "123.0.6312.22"
+          chromedriver-version: "124.0.6367.29"
 
       - name: Starting chromedriver and executing integration test
         run: |
