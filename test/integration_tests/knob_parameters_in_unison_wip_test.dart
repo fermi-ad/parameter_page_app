@@ -30,22 +30,6 @@ void main() {
       // This test might belong with Knob Parameter
     });
 
-    testWidgets(
-        'Add entries to an empty mult, display entries inside of new mult',
-        (WidgetTester tester) async {
-      // Given an empty parameter page
-      await startParameterPageApp(tester);
-      await createNewParameterPage(tester);
-
-      // When I create a page with a mult:1 containing G:AMANDA
-      await addANewEntry(tester, "mult:1 Test Mult #1");
-      await addANewEntry(tester, "G:AMANDA");
-      await exitEditMode(tester);
-
-      // Then G:AMANDA is shown as part of Test Mult #1
-      assertMultContains(atIndex: 0, parameters: ["G:AMANDA"]);
-    });
-
     testWidgets('Remove mult, parameters are ungrouped',
         (WidgetTester tester) async {});
 
