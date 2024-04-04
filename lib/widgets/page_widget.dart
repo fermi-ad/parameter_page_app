@@ -99,9 +99,8 @@ class PageWidgetState extends State<PageWidget> {
     List<Widget> acc = [];
 
     for (List<PageEntry> entries in page.entriesAs2dList()) {
-      final entry = entries[0];
-      acc.add(Row(children: [
-        Expanded(child: _buildRow(context, entry, acc.length, wide, page)),
+      acc.add(Row(key: entries[0].key, children: [
+        Expanded(child: _buildRow(context, entries[0], acc.length, wide, page)),
         movable
             ? ReorderableDragStartListener(
                 index: acc.length, child: const Icon(Icons.drag_handle))
@@ -115,7 +114,7 @@ class PageWidgetState extends State<PageWidget> {
   Widget _buildRow(BuildContext context, PageEntry entry, int index, bool wide,
       ParameterPage page) {
     return page.editing
-        ? Row(key: entry.key, children: [
+        ? Row(children: [
             Expanded(
                 child: entry.buildEntry(context, page.editing, wide, settings,
                     widget.settingsAllowed, false, null)),
@@ -132,7 +131,6 @@ class PageWidgetState extends State<PageWidget> {
                     icon: Icon(Icons.delete)))
           ])
         : TapRegion(
-            key: entry.key,
             onTapOutside: (event) => _handleNonPageEntryTap(),
             child: entry.buildEntry(
                 context,
