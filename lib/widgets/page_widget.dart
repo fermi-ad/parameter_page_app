@@ -96,7 +96,7 @@ class PageWidgetState extends State<PageWidget> {
   }
 
   List<Widget> _buildRows(ParameterPage page, bool wide, bool movable) {
-    return page.entriesAsList().fold([], (acc, entry) {
+    return page.entriesAsList().fold([], (List<Widget> acc, PageEntry entry) {
       acc.add(Row(key: entry.key, children: [
         Expanded(child: _buildRow(context, entry, acc.length, wide, page)),
         movable
