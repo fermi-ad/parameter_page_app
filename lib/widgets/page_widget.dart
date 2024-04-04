@@ -144,16 +144,22 @@ class PageWidgetState extends State<PageWidget> {
   Widget _buildDisplayRow(List<PageEntry> entries, bool wide, int index) {
     final entry = entries[0];
 
+    if (entries.length > 1) {
+      final multEntry = entry as MultEntry;
+      multEntry.subEntries.addAll(entries.sublist(1));
+    }
+
+    final childWidget = entry.buildEntry(
+        context,
+        false,
+        wide,
+        settings,
+        widget.settingsAllowed,
+        _focusRowIndex == index,
+        () => _handlePageEntryTap(atIndex: index));
+
     return TapRegion(
-        onTapOutside: (event) => _handleNonPageEntryTap(),
-        child: entry.buildEntry(
-            context,
-            false,
-            wide,
-            settings,
-            widget.settingsAllowed,
-            _focusRowIndex == index,
-            () => _handlePageEntryTap(atIndex: index)));
+        onTapOutside: (event) => _handleNonPageEntryTap(), child: childWidget);
   }
 
   // Moves an entry from one location to another in the parameter list. It

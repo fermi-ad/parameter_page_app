@@ -44,6 +44,8 @@ class MultEntry extends PageEntry {
 
   final String description;
 
+  final List<PageEntry> subEntries = [];
+
   MultEntry(
       {super.key,
       super.id,
@@ -65,7 +67,7 @@ class MultEntry extends PageEntry {
         editMode: editMode,
         enabled: hasFocus,
         onTap: onTap,
-        entries: const [],
+        entries: subEntries,
         settingsAllowed: settingsAllowed,
         displaySettings: settings);
   }
