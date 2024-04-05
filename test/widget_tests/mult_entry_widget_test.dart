@@ -6,6 +6,7 @@ import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 import 'package:parameter_page/widgets/display_settings_widget.dart';
 import 'package:parameter_page/widgets/mult_entry_widget.dart';
 
+import '../integration_tests/helpers/actions.dart';
 import '../integration_tests/helpers/assertions.dart';
 
 void main() {
@@ -123,6 +124,33 @@ void main() {
       assertMultState(tester, atIndex: 0, isEnabled: false);
       assertMultContains(
           atIndex: 0, parameters: ["G:MULT0", "G:MULT1", "G:MULT2"]);
+    });
+
+    testWidgets('Enable mult entry and knob up, onKnobUp is called',
+        (WidgetTester tester) async {
+      bool wasKnobbedUp = false;
+
+      // Given a MultEntryWidget has been built with a onKnobUp handler
+      await tester.binding.setSurfaceSize(const Size(2560, 1440));
+      MaterialApp app = _buildMaterialApp(
+          child: MultEntryWidget(
+              onKnobUp: () => wasKnobbedUp = true,
+              description: "Test Mult #1",
+              numberOfEntries: 3,
+              entries: [
+                ParameterEntry("G:MULT0"),
+                ParameterEntry("G:MULT1"),
+                ParameterEntry("G:MULT2")
+              ],
+              enabled: false,
+              displaySettings: DisplaySettings()));
+      await tester.pumpWidget(app);
+
+      // When I knob up by 1
+      await knobUp(tester, steps: 1);
+
+      // Then the onKnobUp handler was called
+      expect(wasKnobbedUp, true, reason: "onKnobUp was not invoked");
     });
   });
 }

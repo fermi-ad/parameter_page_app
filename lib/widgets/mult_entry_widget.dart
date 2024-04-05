@@ -21,6 +21,8 @@ class MultEntryWidget extends StatelessWidget {
 
   final List<PageEntry> entries;
 
+  final Function? onKnobUp;
+
   const MultEntryWidget({
     super.key,
     required this.numberOfEntries,
@@ -28,6 +30,7 @@ class MultEntryWidget extends StatelessWidget {
     required this.displaySettings,
     required this.entries,
     this.onTap,
+    this.onKnobUp,
     this.enabled = false,
     this.editMode = false,
     this.settingsAllowed = false,
