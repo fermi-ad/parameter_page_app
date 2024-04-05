@@ -71,6 +71,10 @@ void main() {
         'Knob mult with proportions down multiple steps, parameters decrement in unison according according to proportions',
         (WidgetTester tester) async {});
 
+    testWidgets(
+        'Knob a single parameter inside of a mult, only that parameter changes',
+        (WidgetTester tester) async {});
+
     testWidgets('Save new page containing mults, mults are persisted',
         (WidgetTester tester) async {});
 
