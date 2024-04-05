@@ -92,13 +92,9 @@ class PageWidgetState extends State<PageWidget> {
         buildDefaultDragHandles: false,
         onReorder: (oldIndex, newIndex) =>
             _reorderEntry(page, oldIndex, newIndex),
-        children: _buildRows(page, wide));
-  }
-
-  List<Widget> _buildRows(ParameterPage page, bool wide) {
-    return page.editing
-        ? _buildRowsEditMode(page, wide)
-        : _buildRowsDisplayMode(page, wide);
+        children: page.editing
+            ? _buildRowsEditMode(page, wide)
+            : _buildRowsDisplayMode(page, wide));
   }
 
   List<Widget> _buildRowsEditMode(ParameterPage page, bool wide) {
