@@ -70,27 +70,29 @@ class PageWidgetState extends State<PageWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Expanded(
-          child: ReorderableListView(
-              padding: const EdgeInsets.fromLTRB(4.0, 4.0, 4.0, 4.0),
-              footer: page.editing
-                  ? NewEntryEditorWidget(
-                      key: const Key('add-entry-textfield'),
-                      onSubmitted: (List<PageEntry> newEntries) {
-                        setState(() {
-                          page.addAll(newEntries);
-                        });
-                      })
-                  : null,
-              buildDefaultDragHandles: false,
-              onReorder: (oldIndex, newIndex) =>
-                  _reorderEntry(page, oldIndex, newIndex),
-              children: _buildRows(page, wide)),
-        ),
+        Expanded(child: _buildParameterList(page, wide)),
         _buildEditModeFloatingActionBar(page),
         _buildFloatingActionBar(page)
       ],
     );
+  }
+
+  ReorderableListView _buildParameterList(ParameterPage page, bool wide) {
+    return ReorderableListView(
+        padding: const EdgeInsets.fromLTRB(4.0, 4.0, 4.0, 4.0),
+        footer: page.editing
+            ? NewEntryEditorWidget(
+                key: const Key('add-entry-textfield'),
+                onSubmitted: (List<PageEntry> newEntries) {
+                  setState(() {
+                    page.addAll(newEntries);
+                  });
+                })
+            : null,
+        buildDefaultDragHandles: false,
+        onReorder: (oldIndex, newIndex) =>
+            _reorderEntry(page, oldIndex, newIndex),
+        children: _buildRows(page, wide));
   }
 
   List<Widget> _buildRows(ParameterPage page, bool wide) {
