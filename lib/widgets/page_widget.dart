@@ -157,6 +157,7 @@ class PageWidgetState extends State<PageWidget> {
 
     if (entries.length > 1) {
       final multEntry = entry as MultEntry;
+      multEntry.subEntries.clear();
       multEntry.subEntries.addAll(entries.sublist(1));
     }
 
