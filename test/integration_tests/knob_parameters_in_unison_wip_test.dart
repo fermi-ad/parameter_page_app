@@ -61,7 +61,32 @@ void main() {
 
     testWidgets(
         'Knob mult without proportions down multiple steps, parameters decrement in unison',
-        (WidgetTester tester) async {});
+        (WidgetTester tester) async {
+      // Given a parameter page with a mult:3 followed by three parameters
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+      await addANewEntry(tester, "mult:3 Test Mult #1");
+      await addANewEntry(tester, "G:MULT1");
+      await addANewEntry(tester, "G:MULT2");
+      await addANewEntry(tester, "G:MULT3");
+      await exitEditMode(tester);
+
+      // ... and settings have been enabled
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.indefinitely);
+
+      // When I tap the mult and knob up 4 times
+      await tapPageEntry(tester, atRowIndex: 0);
+      await knobDown(tester, steps: 4);
+
+      // Then the settings for each parameter belonging to the mult have been increment in unison
+      await waitForSettingDataToLoad(tester, forDRF: "G:MULT1");
+      await waitForSettingDataToLoad(tester, forDRF: "G:MULT2");
+      await waitForSettingDataToLoad(tester, forDRF: "G:MULT3");
+      assertParameterHasDetails("G:MULT1", settingValue: "49.080");
+      assertParameterHasDetails("G:MULT2", settingValue: "49.080");
+      assertParameterHasDetails("G:MULT3", settingValue: "49.080");
+    });
 
     testWidgets(
         'Knob mult with proportions up multiple steps, parameters increment in unison according to proportions',
