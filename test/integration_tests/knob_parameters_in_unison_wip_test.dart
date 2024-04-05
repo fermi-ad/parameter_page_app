@@ -30,9 +30,6 @@ void main() {
       // This test might belong with Knob Parameter
     });
 
-    testWidgets('Remove mult, parameters are ungrouped',
-        (WidgetTester tester) async {});
-
     testWidgets(
         'Knob mult without proportions up multiple steps, parameters increment in unison',
         (WidgetTester tester) async {});
