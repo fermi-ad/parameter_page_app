@@ -187,5 +187,30 @@ void main() {
       assertMult(isInRow: 0, hasN: 1, hasDescription: "Test Mult #1");
       assertParameterIsInRow("G:AMANDA", 1);
     });
+
+    testWidgets('Remove mult, parameters are ungrouped',
+        (WidgetTester tester) async {
+      // Given a parameter page with a mult:3 followed by three parameters
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+      await addANewEntry(tester, "mult:3 Test Mult #1");
+      await addANewEntry(tester, "G:MULT1");
+      await addANewEntry(tester, "G:MULT2");
+      await addANewEntry(tester, "G:MULT3");
+      await exitEditMode(tester);
+      assertMult(isInRow: 0, hasN: 3, hasDescription: "Test Mult #1");
+      assertMultContains(
+          atIndex: 0, parameters: ["G:MULT1", "G:MULT2", "G:MULT3"]);
+
+      // When I remove the mult
+      await enterEditMode(tester);
+      await deleteRow(tester, index: 0);
+      await exitEditMode(tester);
+
+      // Then the mult has been removed
+      assertParameterIsInRow("G:MULT1", 0);
+      assertParameterIsInRow("G:MULT2", 1);
+      assertParameterIsInRow("G:MULT3", 2);
+    });
   });
 }
