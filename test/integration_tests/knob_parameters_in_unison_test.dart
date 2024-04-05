@@ -169,5 +169,23 @@ void main() {
       assertMult(isInRow: 0, hasN: 1, hasDescription: "Test Mult #1");
       assertParameterIsInRow("G:AMANDA", 1);
     });
+
+    testWidgets('Exit/re-enter/exit edit mode, no duplicate key errors',
+        (WidgetTester tester) async {
+      // Given I have created a new parameter page with a mult:1 and a parameter
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+      await addANewEntry(tester, "mult:1 Test Mult #1");
+      await addANewEntry(tester, "G:AMANDA");
+
+      // When I exit edit mode, re-enter and exit again
+      await exitEditMode(tester);
+      await enterEditMode(tester);
+      await exitEditMode(tester);
+
+      // Then there should be two entires on the page
+      assertMult(isInRow: 0, hasN: 1, hasDescription: "Test Mult #1");
+      assertParameterIsInRow("G:AMANDA", 1);
+    });
   });
 }
