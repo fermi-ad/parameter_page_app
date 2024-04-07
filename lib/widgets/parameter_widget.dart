@@ -35,17 +35,11 @@ class ParameterWidget extends StatelessWidget {
       this.displayAlarmDetails = false,
       this.displayExtendedStatus = false});
 
-  Widget buildEditor(BuildContext context) {
-    return ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: 36.0),
-        child: Text(overflow: TextOverflow.ellipsis, drf));
-  }
-
   @override
   Widget build(BuildContext context) {
     return PageEntryWidget(
         child: editMode
-            ? buildEditor(context)
+            ? _buildEditor(context)
             : _ActiveParamWidget(
                 displayUnits: displayUnits,
                 drf: drf,
@@ -55,6 +49,12 @@ class ParameterWidget extends StatelessWidget {
                 displayExtendedStatus: displayExtendedStatus,
                 settingsAllowed: settingsAllowed,
               ));
+  }
+
+  Widget _buildEditor(BuildContext context) {
+    return ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 36.0),
+        child: Text(overflow: TextOverflow.ellipsis, drf));
   }
 
   void knobUp() {}
