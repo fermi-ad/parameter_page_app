@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:parameter_page/widgets/display_settings_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
+import 'package:parameter_page/widgets/parameter_widget.dart';
+import 'package:parameter_page/widgets/setting_control_widget.dart';
 
 import '../entities/page_entry.dart';
 
@@ -94,9 +96,17 @@ class MultEntryWidget extends StatelessWidget {
 
   Widget _buildSubEntries(BuildContext context) {
     List<Widget> children = [];
+    _parameterWidgets.clear();
+
     for (final entry in entries) {
-      children.add(entry.buildEntry(
-          context, editMode, true, displaySettings, false, false, () {}));
+      final widget = entry.buildEntry(
+          context, editMode, true, displaySettings, false, false, () {});
+
+      if (widget is ParameterWidget) {
+        _parameterWidgets.add(widget);
+      }
+
+      children.add(widget);
     }
 
     return Column(children: children);
@@ -113,4 +123,6 @@ class MultEntryWidget extends StatelessWidget {
   }
 
   final FocusNode _focusNode = FocusNode();
+
+  final List<ParameterWidget> _parameterWidgets = [];
 }
