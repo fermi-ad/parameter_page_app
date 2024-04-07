@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:parameter_page/widgets/display_settings_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
 import 'package:parameter_page/widgets/parameter_widget.dart';
-import 'package:parameter_page/widgets/setting_control_widget.dart';
 
 import '../entities/page_entry.dart';
 
@@ -115,10 +114,24 @@ class MultEntryWidget extends StatelessWidget {
   void _onKey(KeyEvent event) {
     if (event is KeyDownEvent || event is KeyRepeatEvent) {
       if (event.logicalKey == LogicalKeyboardKey.f5) {
+        _knobParametersUp();
         onKnobUp?.call();
       } else if (event.logicalKey == LogicalKeyboardKey.f4) {
+        _knobParametersDown();
         onKnobDown?.call();
       }
+    }
+  }
+
+  void _knobParametersUp() {
+    for (final w in _parameterWidgets) {
+      w.knobUp();
+    }
+  }
+
+  void _knobParametersDown() {
+    for (final w in _parameterWidgets) {
+      w.knobDown();
     }
   }
 

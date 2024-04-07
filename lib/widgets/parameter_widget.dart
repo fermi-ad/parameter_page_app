@@ -56,6 +56,10 @@ class ParameterWidget extends StatelessWidget {
                 settingsAllowed: settingsAllowed,
               ));
   }
+
+  void knobUp() {}
+
+  void knobDown() {}
 }
 
 class _ActiveParamWidget extends StatefulWidget {
