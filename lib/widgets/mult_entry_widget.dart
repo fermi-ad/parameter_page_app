@@ -95,8 +95,8 @@ class MultEntryWidget extends StatelessWidget {
       final widget = entry.buildEntry(
           context, editMode, true, displaySettings, false, false, () {});
 
-      if (widget is ParameterWidget) {
-        _parameterWidgets.add(widget);
+      if (entry.typeAsString == "Parameter") {
+        _parameterWidgets.add(widget as ParameterWidget);
       }
 
       children.add(widget);
