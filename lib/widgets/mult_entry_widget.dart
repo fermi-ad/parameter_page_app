@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:parameter_page/widgets/display_settings_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
 
@@ -23,7 +24,7 @@ class MultEntryWidget extends StatelessWidget {
 
   final Function? onKnobUp;
 
-  const MultEntryWidget({
+  MultEntryWidget({
     super.key,
     required this.numberOfEntries,
     this.description = "",
@@ -38,8 +39,14 @@ class MultEntryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PageEntryWidget(
-        child: editMode ? _buildEditMode(context) : _buildDisplayMode(context));
+    return KeyboardListener(
+        autofocus: enabled,
+        focusNode: _focusNode,
+        onKeyEvent: enabled ? _onKey : null,
+        child: PageEntryWidget(
+            child: editMode
+                ? _buildEditMode(context)
+                : _buildDisplayMode(context)));
   }
 
   Widget _buildEditMode(BuildContext context) {
@@ -91,4 +98,14 @@ class MultEntryWidget extends StatelessWidget {
 
     return Column(children: children);
   }
+
+  void _onKey(KeyEvent event) {
+    if (event is KeyDownEvent || event is KeyRepeatEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.f5) {
+        onKnobUp?.call();
+      }
+    }
+  }
+
+  final FocusNode _focusNode = FocusNode();
 }

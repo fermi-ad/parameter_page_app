@@ -130,7 +130,7 @@ void main() {
         (WidgetTester tester) async {
       bool wasKnobbedUp = false;
 
-      // Given a MultEntryWidget has been built with a onKnobUp handler
+      // Given an enabled MultEntryWidget has been built with a onKnobUp handler
       await tester.binding.setSurfaceSize(const Size(2560, 1440));
       MaterialApp app = _buildMaterialApp(
           child: MultEntryWidget(
@@ -142,7 +142,7 @@ void main() {
                 ParameterEntry("G:MULT1"),
                 ParameterEntry("G:MULT2")
               ],
-              enabled: false,
+              enabled: true,
               displaySettings: DisplaySettings()));
       await tester.pumpWidget(app);
 
