@@ -152,6 +152,33 @@ void main() {
       // Then the onKnobUp handler was called
       expect(wasKnobbedUp, true, reason: "onKnobUp was not invoked");
     });
+
+    testWidgets('Enable mult entry and knob down, onKnobDown is called',
+        (WidgetTester tester) async {
+      bool wasKnobbedDown = false;
+
+      // Given an enabled MultEntryWidget has been built with a onKnobDown handler
+      await tester.binding.setSurfaceSize(const Size(2560, 1440));
+      MaterialApp app = _buildMaterialApp(
+          child: MultEntryWidget(
+              onKnobDown: () => wasKnobbedDown = true,
+              description: "Test Mult #1",
+              numberOfEntries: 3,
+              entries: [
+                ParameterEntry("G:MULT0"),
+                ParameterEntry("G:MULT1"),
+                ParameterEntry("G:MULT2")
+              ],
+              enabled: true,
+              displaySettings: DisplaySettings()));
+      await tester.pumpWidget(app);
+
+      // When I knob down by 1
+      await knobDown(tester, steps: 1);
+
+      // Then the onKnobDown handler was called
+      expect(wasKnobbedDown, true, reason: "onKnobDown was not invoked");
+    });
   });
 }
 

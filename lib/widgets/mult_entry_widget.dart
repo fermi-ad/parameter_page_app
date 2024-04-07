@@ -24,6 +24,8 @@ class MultEntryWidget extends StatelessWidget {
 
   final Function? onKnobUp;
 
+  final Function? onKnobDown;
+
   MultEntryWidget({
     super.key,
     required this.numberOfEntries,
@@ -32,6 +34,7 @@ class MultEntryWidget extends StatelessWidget {
     required this.entries,
     this.onTap,
     this.onKnobUp,
+    this.onKnobDown,
     this.enabled = false,
     this.editMode = false,
     this.settingsAllowed = false,
