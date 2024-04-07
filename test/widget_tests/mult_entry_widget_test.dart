@@ -6,7 +6,6 @@ import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 import 'package:parameter_page/widgets/display_settings_widget.dart';
 import 'package:parameter_page/widgets/mult_entry_widget.dart';
 
-import '../integration_tests/helpers/actions.dart';
 import '../integration_tests/helpers/assertions.dart';
 
 void main() {
@@ -124,60 +123,6 @@ void main() {
       assertMultState(tester, atIndex: 0, isEnabled: false);
       assertMultContains(
           atIndex: 0, parameters: ["G:MULT0", "G:MULT1", "G:MULT2"]);
-    });
-
-    testWidgets('Enable mult entry and knob up, onKnobUp is called',
-        (WidgetTester tester) async {
-      bool wasKnobbedUp = false;
-
-      // Given an enabled MultEntryWidget has been built with a onKnobUp handler
-      await tester.binding.setSurfaceSize(const Size(2560, 1440));
-      MaterialApp app = _buildMaterialApp(
-          child: MultEntryWidget(
-              onKnobUp: () => wasKnobbedUp = true,
-              description: "Test Mult #1",
-              numberOfEntries: 3,
-              entries: [
-                ParameterEntry("G:MULT0"),
-                ParameterEntry("G:MULT1"),
-                ParameterEntry("G:MULT2")
-              ],
-              enabled: true,
-              displaySettings: DisplaySettings()));
-      await tester.pumpWidget(app);
-
-      // When I knob up by 1
-      await knobUp(tester, steps: 1);
-
-      // Then the onKnobUp handler was called
-      expect(wasKnobbedUp, true, reason: "onKnobUp was not invoked");
-    });
-
-    testWidgets('Enable mult entry and knob down, onKnobDown is called',
-        (WidgetTester tester) async {
-      bool wasKnobbedDown = false;
-
-      // Given an enabled MultEntryWidget has been built with a onKnobDown handler
-      await tester.binding.setSurfaceSize(const Size(2560, 1440));
-      MaterialApp app = _buildMaterialApp(
-          child: MultEntryWidget(
-              onKnobDown: () => wasKnobbedDown = true,
-              description: "Test Mult #1",
-              numberOfEntries: 3,
-              entries: [
-                ParameterEntry("G:MULT0"),
-                ParameterEntry("G:MULT1"),
-                ParameterEntry("G:MULT2")
-              ],
-              enabled: true,
-              displaySettings: DisplaySettings()));
-      await tester.pumpWidget(app);
-
-      // When I knob down by 1
-      await knobDown(tester, steps: 1);
-
-      // Then the onKnobDown handler was called
-      expect(wasKnobbedDown, true, reason: "onKnobDown was not invoked");
     });
   });
 }

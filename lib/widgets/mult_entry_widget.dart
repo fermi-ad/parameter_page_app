@@ -23,10 +23,6 @@ class MultEntryWidget extends StatelessWidget {
 
   final List<PageEntry> entries;
 
-  final Function? onKnobUp;
-
-  final Function? onKnobDown;
-
   MultEntryWidget({
     super.key,
     required this.numberOfEntries,
@@ -34,8 +30,6 @@ class MultEntryWidget extends StatelessWidget {
     required this.displaySettings,
     required this.entries,
     this.onTap,
-    this.onKnobUp,
-    this.onKnobDown,
     this.enabled = false,
     this.editMode = false,
     this.settingsAllowed = false,
@@ -115,10 +109,8 @@ class MultEntryWidget extends StatelessWidget {
     if (event is KeyDownEvent || event is KeyRepeatEvent) {
       if (event.logicalKey == LogicalKeyboardKey.f5) {
         _knobParametersUp();
-        onKnobUp?.call();
       } else if (event.logicalKey == LogicalKeyboardKey.f4) {
         _knobParametersDown();
-        onKnobDown?.call();
       }
     }
   }
