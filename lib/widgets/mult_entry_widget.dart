@@ -106,6 +106,8 @@ class MultEntryWidget extends StatelessWidget {
     if (event is KeyDownEvent || event is KeyRepeatEvent) {
       if (event.logicalKey == LogicalKeyboardKey.f5) {
         onKnobUp?.call();
+      } else if (event.logicalKey == LogicalKeyboardKey.f4) {
+        onKnobDown?.call();
       }
     }
   }
