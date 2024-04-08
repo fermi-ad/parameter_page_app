@@ -61,8 +61,7 @@ class _SettingControlState extends State<SettingControlWidget> {
   @override
   Widget build(BuildContext context) {
     if (widget.knobbingStream != null) {
-      widget.knobbingStream!
-          .listen((double knobStepSize) => _handleKnob(withStep: knobStepSize));
+      widget.knobbingStream!.listen(_handleKnobStream);
     }
 
     return widget.wide ? _buildWide(context) : _buildNarrow(context);
@@ -328,6 +327,9 @@ class _SettingControlState extends State<SettingControlWidget> {
       _textFieldController.text = _lastSetting!.$2;
     });
   }
+
+  void _handleKnobStream(double knobStepSize) =>
+      _handleKnob(withStep: knobStepSize);
 
   void _handleKnob({required double withStep}) {
     final newValue = _lastSetting!.$1 + withStep;
