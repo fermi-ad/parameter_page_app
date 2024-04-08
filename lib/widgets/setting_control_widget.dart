@@ -61,7 +61,8 @@ class _SettingControlState extends State<SettingControlWidget> {
   @override
   Widget build(BuildContext context) {
     if (widget.knobbingStream != null) {
-      widget.knobbingStream!.listen((event) => _handleKnob(withStep: 1.0));
+      widget.knobbingStream!
+          .listen((double knobStepSize) => _handleKnob(withStep: knobStepSize));
     }
 
     return widget.wide ? _buildWide(context) : _buildNarrow(context);
