@@ -23,6 +23,7 @@ class ParameterWidget extends StatelessWidget {
   final DisplayUnits displayUnits;
   final bool displayExtendedStatus;
   final bool settingsAllowed;
+  final Stream<double>? knobbingStream;
 
   const ParameterWidget(
       {required this.drf,
@@ -33,7 +34,8 @@ class ParameterWidget extends StatelessWidget {
       super.key,
       this.displayUnits = DisplayUnits.commonUnits,
       this.displayAlarmDetails = false,
-      this.displayExtendedStatus = false});
+      this.displayExtendedStatus = false,
+      this.knobbingStream});
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +58,7 @@ class ParameterWidget extends StatelessWidget {
       displayAlarmDetails: displayAlarmDetails,
       displayExtendedStatus: displayExtendedStatus,
       settingsAllowed: settingsAllowed,
+      knobbingStream: knobbingStream,
     );
   }
 }
@@ -68,6 +71,7 @@ class _ActiveParamWidget extends StatefulWidget {
   final bool displayAlarmDetails;
   final bool displayExtendedStatus;
   final bool settingsAllowed;
+  final Stream<double>? knobbingStream;
 
   const _ActiveParamWidget(
       {required this.drf,
@@ -76,7 +80,8 @@ class _ActiveParamWidget extends StatefulWidget {
       required this.displayUnits,
       required this.displayAlarmDetails,
       required this.displayExtendedStatus,
-      required this.settingsAllowed});
+      required this.settingsAllowed,
+      required this.knobbingStream});
 
   @override
   _ActiveParamState createState() => _ActiveParamState();
@@ -273,6 +278,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                     displayUnits: widget.displayUnits,
                     units: settingUnits,
                     knobbingEnabled: knobbingInfo != null,
+                    knobbingStream: widget.knobbingStream,
                     knobbingStepSize:
                         knobbingInfo != null ? knobbingInfo.step : 0,
                     wide: true))),
