@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -683,6 +685,33 @@ void main() {
         expect(testDPM.pendingSettingValue!.value, equals(expected),
             reason: "The new value ($expected) was not submitted to DPM");
       }
+    });
+
+    testWidgets('Provide knobbingStream, responds to knob up events',
+        (WidgetTester tester) async {
+      // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP with an initial value of "72.0"
+      // ... and settingsAllowed is set to true
+      // ... and the step size is 1.0
+      // ... and a knobbingStream is provided
+      final sc = StreamController<double>.broadcast();
+      MaterialApp app = initialize(SettingControlWidget(
+          drf: "Z:BTE200_TEMP",
+          displayUnits: DisplayUnits.commonUnits,
+          settingsAllowed: true,
+          knobbingEnabled: true,
+          knobbingStepSize: 1.0,
+          knobbingStream: sc.stream));
+      await tester.pumpWidget(app);
+      await sendSettingTestData(tester, settingValue: 72.0);
+      await tester.pumpAndSettle();
+
+      // When I send a knob up by 1.0 to the stream
+      sc.add(1.0);
+      await tester.pumpAndSettle();
+
+      // Then a new setting is sent
+      expect(testDPM.pendingSettingValue!.value, equals(73.00),
+          reason: "The new value (73.0) was not submitted to DPM");
     });
   });
 }

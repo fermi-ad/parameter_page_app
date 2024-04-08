@@ -23,6 +23,8 @@ class SettingControlWidget extends StatefulWidget {
 
   final double knobbingStepSize;
 
+  final Stream<double>? knobbingStream;
+
   const SettingControlWidget(
       {super.key,
       required this.drf,
@@ -32,7 +34,8 @@ class SettingControlWidget extends StatefulWidget {
       this.wide = true,
       this.settingsAllowed = true,
       this.knobbingEnabled = false,
-      this.knobbingStepSize = 1.0});
+      this.knobbingStepSize = 1.0,
+      this.knobbingStream});
 
   @override
   State<StatefulWidget> createState() {
