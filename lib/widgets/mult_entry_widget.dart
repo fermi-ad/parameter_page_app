@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:parameter_page/widgets/display_settings_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
-import 'package:parameter_page/widgets/parameter_widget.dart';
 
 import '../entities/page_entry.dart';
 
@@ -89,15 +88,10 @@ class MultEntryWidget extends StatelessWidget {
 
   Widget _buildSubEntries(BuildContext context) {
     List<Widget> children = [];
-    _parameterWidgets.clear();
 
     for (final entry in entries) {
       final widget = entry.buildEntry(
           context, editMode, true, displaySettings, false, false, () {});
-
-      if (entry.typeAsString == "Parameter") {
-        _parameterWidgets.add(widget as ParameterWidget);
-      }
 
       children.add(widget);
     }
@@ -115,19 +109,9 @@ class MultEntryWidget extends StatelessWidget {
     }
   }
 
-  void _knobParametersUp() {
-    for (final w in _parameterWidgets) {
-      w.knobUp();
-    }
-  }
+  void _knobParametersUp() {}
 
-  void _knobParametersDown() {
-    for (final w in _parameterWidgets) {
-      w.knobDown();
-    }
-  }
+  void _knobParametersDown() {}
 
   final FocusNode _focusNode = FocusNode();
-
-  final List<ParameterWidget> _parameterWidgets = [];
 }

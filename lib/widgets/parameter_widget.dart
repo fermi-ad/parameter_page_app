@@ -38,17 +38,7 @@ class ParameterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PageEntryWidget(
-        child: editMode
-            ? _buildEditor(context)
-            : _ActiveParamWidget(
-                displayUnits: displayUnits,
-                drf: drf,
-                wide: wide,
-                dpm: DataAcquisitionWidget.of(context),
-                displayAlarmDetails: displayAlarmDetails,
-                displayExtendedStatus: displayExtendedStatus,
-                settingsAllowed: settingsAllowed,
-              ));
+        child: editMode ? _buildEditor(context) : _buildActiveParam(context));
   }
 
   Widget _buildEditor(BuildContext context) {
@@ -57,9 +47,17 @@ class ParameterWidget extends StatelessWidget {
         child: Text(overflow: TextOverflow.ellipsis, drf));
   }
 
-  void knobUp() {}
-
-  void knobDown() {}
+  _ActiveParamWidget _buildActiveParam(BuildContext context) {
+    return _ActiveParamWidget(
+      displayUnits: displayUnits,
+      drf: drf,
+      wide: wide,
+      dpm: DataAcquisitionWidget.of(context),
+      displayAlarmDetails: displayAlarmDetails,
+      displayExtendedStatus: displayExtendedStatus,
+      settingsAllowed: settingsAllowed,
+    );
+  }
 }
 
 class _ActiveParamWidget extends StatefulWidget {
@@ -82,6 +80,10 @@ class _ActiveParamWidget extends StatefulWidget {
 
   @override
   _ActiveParamState createState() => _ActiveParamState();
+
+  void knobUp() {}
+
+  void knobDown() {}
 }
 
 class _ActiveParamState extends State<_ActiveParamWidget> {
