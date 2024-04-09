@@ -24,7 +24,8 @@ abstract class PageEntry {
       DisplaySettings settings,
       bool settingsAllowed,
       bool hasFocus,
-      VoidCallback? onTap);
+      VoidCallback? onTap,
+      Stream<double>? knobbingStream);
 
   @override
   bool operator ==(other) {
@@ -60,7 +61,8 @@ class MultEntry extends PageEntry {
       DisplaySettings settings,
       bool settingsAllowed,
       bool hasFocus,
-      VoidCallback? onTap) {
+      VoidCallback? onTap,
+      Stream<double>? knobbingStream) {
     return MultEntryWidget(
         numberOfEntries: numberOfEntries,
         description: description,
@@ -94,7 +96,8 @@ class CommentEntry extends PageEntry {
       DisplaySettings settings,
       bool settingsAllowed,
       bool hasFocus,
-      VoidCallback? onTap) {
+      VoidCallback? onTap,
+      Stream<double>? knobbingStream) {
     return CommentEntryWidget(text);
   }
 
@@ -119,7 +122,8 @@ class ParameterEntry extends PageEntry {
       DisplaySettings settings,
       bool settingsAllowed,
       bool hasFocus,
-      VoidCallback? onTap) {
+      VoidCallback? onTap,
+      Stream<double>? knobbingStream) {
     return ParameterWidget(
         drf: drf,
         settingsAllowed: settingsAllowed,
@@ -128,6 +132,7 @@ class ParameterEntry extends PageEntry {
         displayUnits: settings.units,
         displayAlarmDetails: settings.showAlarmDetails,
         label: label,
+        knobbingStream: knobbingStream,
         key: Key("parameter_row_$drf"));
   }
 

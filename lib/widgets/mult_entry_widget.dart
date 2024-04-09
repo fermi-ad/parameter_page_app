@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:parameter_page/widgets/display_settings_widget.dart';
@@ -90,8 +92,8 @@ class MultEntryWidget extends StatelessWidget {
     List<Widget> children = [];
 
     for (final entry in entries) {
-      final widget = entry.buildEntry(
-          context, editMode, true, displaySettings, false, false, () {});
+      final widget = entry.buildEntry(context, editMode, true, displaySettings,
+          false, false, () {}, _knobbingStreamController.stream);
 
       children.add(widget);
     }
@@ -109,9 +111,15 @@ class MultEntryWidget extends StatelessWidget {
     }
   }
 
-  void _knobParametersUp() {}
+  void _knobParametersUp() {
+    _knobbingStreamController.add(1.0);
+  }
 
-  void _knobParametersDown() {}
+  void _knobParametersDown() {
+    _knobbingStreamController.add(-1.0);
+  }
 
   final FocusNode _focusNode = FocusNode();
+
+  final _knobbingStreamController = StreamController<double>.broadcast();
 }

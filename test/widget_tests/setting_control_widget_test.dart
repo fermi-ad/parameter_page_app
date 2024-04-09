@@ -712,6 +712,9 @@ void main() {
       // Then a new setting is sent
       expect(testDPM.pendingSettingValue!.value, equals(73.00),
           reason: "The new value (73.0) was not submitted to DPM");
+
+      // ... and the display updates immediately
+      expect(find.text("73.00"), findsOneWidget);
     });
 
     testWidgets('Provide knobbingStream, responds to knob down events',
@@ -739,6 +742,9 @@ void main() {
       // Then a new setting is sent
       expect(testDPM.pendingSettingValue!.value, equals(71.00),
           reason: "The new value (71.0) was not submitted to DPM");
+
+      // ... and the display updates immediately
+      expect(find.text("71.00"), findsOneWidget);
     });
   });
 }
