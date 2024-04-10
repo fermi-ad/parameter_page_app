@@ -730,6 +730,9 @@ void main() {
       // ... and the display updates immediately
       assertSettingDisplay(tester,
           isVisible: true, isOptimistic: true, value: "73.00");
+
+      // clean-up
+      tester.pumpAndSettle(const Duration(seconds: 1, microseconds: 10));
     });
 
     testWidgets('Provide knobbingStream, responds to knob down events',
@@ -761,6 +764,9 @@ void main() {
       // ... and the display updates immediately
       assertSettingDisplay(tester,
           isVisible: true, isOptimistic: true, value: "71.00");
+
+      // clean-up
+      tester.pumpAndSettle(const Duration(seconds: 1, microseconds: 10));
     });
 
     testWidgets(
@@ -795,6 +801,9 @@ void main() {
       // Then the text display changes back to the displaying state
       assertSettingDisplay(tester,
           isVisible: true, isOptimistic: false, value: "73.00");
+
+      // clean-up
+      tester.pumpAndSettle(const Duration(seconds: 1, microseconds: 10));
     });
   });
 }
