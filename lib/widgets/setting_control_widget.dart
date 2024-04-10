@@ -193,7 +193,7 @@ class _SettingControlState extends State<SettingControlWidget> {
                 textAlign: TextAlign.end,
                 _lastSetting!.$2,
                 style:
-                    TextStyle(color: Theme.of(context).colorScheme.primary))));
+                    TextStyle(color: Theme.of(context).colorScheme.outline))));
   }
 
   Widget _buildDisplayingErrorState() {

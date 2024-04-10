@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/services/dpm/mock_dpm_service.dart';
@@ -18,17 +19,23 @@ void main() {
     return MaterialApp(
         home: Scaffold(
             body: Column(children: [
-      SizedBox(
-          key: const Key("parameter_setting_Z:BTE200_TEMP"),
-          width: 330.0,
-          height: 34.0,
-          child: DataAcquisitionWidget(service: testDPM, child: child)),
-      const SizedBox(
-          key: Key("test_empty_box"),
-          height: 100.0,
-          width: 330.0,
-          child: Text("Abort"))
-    ])));
+          SizedBox(
+              key: const Key("parameter_setting_Z:BTE200_TEMP"),
+              width: 330.0,
+              height: 34.0,
+              child: DataAcquisitionWidget(service: testDPM, child: child)),
+          const SizedBox(
+              key: Key("test_empty_box"),
+              height: 100.0,
+              width: 330.0,
+              child: Text("Abort"))
+        ])),
+        theme: ThemeData(
+            useMaterial3: true,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.blue,
+              brightness: Brightness.dark,
+            )));
   }
 
   Future<void> sendSettingTestData(WidgetTester tester,
@@ -735,7 +742,7 @@ void main() {
       await sendSettingTestData(tester, settingValue: 72.0);
       await tester.pumpAndSettle();
 
-      // When I send a knob up by 1.0 to the stream
+      // When I send a knob down by 1.0 to the stream
       sc.add(-1.0);
       await tester.pumpAndSettle();
 
@@ -746,5 +753,52 @@ void main() {
       // ... and the display updates immediately
       expect(find.text("71.00"), findsOneWidget);
     });
+
+    testWidgets(
+        'Respond to knob stream and wait 1 second, transition back to displaying state',
+        (WidgetTester tester) async {
+      // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP with an initial value of "72.0"
+      // ... and settingsAllowed is set to true
+      // ... and the step size is 1.0
+      // ... and a knobbingStream is provided
+      final sc = StreamController<double>.broadcast();
+      MaterialApp app = initialize(SettingControlWidget(
+          drf: "Z:BTE200_TEMP",
+          displayUnits: DisplayUnits.commonUnits,
+          settingsAllowed: true,
+          knobbingEnabled: true,
+          knobbingStepSize: 1.0,
+          knobbingStream: sc.stream));
+      await tester.pumpWidget(app);
+      await sendSettingTestData(tester, settingValue: 72.0);
+      await tester.pumpAndSettle();
+
+      // When I send a knob up by 1.0 to the stream
+      sc.add(1.0);
+      await tester.pumpAndSettle();
+      expect(find.text("73.00"), findsOneWidget);
+
+      // ... and then wait 1 second
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      // Then the text display changes back to the displaying state
+      final settingValueDisplayFinder = find.text("73.00");
+      expect(settingValueDisplayFinder, findsOneWidget);
+      final ThemeData currentTheme = _getCurrentTheme(tester);
+      final textStyle =
+          tester.widget<Text>(settingValueDisplayFinder.first).style;
+      expect(textStyle!.color, equals(currentTheme.colorScheme.primary));
+    });
   });
+}
+
+ThemeData _getCurrentTheme(WidgetTester tester) {
+  var brightness =
+      SchedulerBinding.instance.platformDispatcher.platformBrightness;
+
+  bool isDarkMode = brightness == Brightness.dark;
+
+  return isDarkMode
+      ? tester.widget<MaterialApp>(find.byType(MaterialApp)).darkTheme!
+      : tester.widget<MaterialApp>(find.byType(MaterialApp)).theme!;
 }
