@@ -354,10 +354,7 @@ class _SettingControlState extends State<SettingControlWidget> {
       _state = _SettingControlInternalState.displayingOptimistic;
     });
 
-    _optimisticDisplayTimer?.cancel();
-    _optimisticDisplayTimer = Timer(const Duration(seconds: 1), () {
-      setState(() => _state = _SettingControlInternalState.displaying);
-    });
+    _startOptimisticDisplayTimeout();
   }
 
   void _handleKnob({required double withStep}) {
@@ -378,6 +375,13 @@ class _SettingControlState extends State<SettingControlWidget> {
   void _handleAbort() {
     setState(() {
       _state = _SettingControlInternalState.displaying;
+    });
+  }
+
+  void _startOptimisticDisplayTimeout() {
+    _optimisticDisplayTimer?.cancel();
+    _optimisticDisplayTimer = Timer(const Duration(seconds: 1), () {
+      setState(() => _state = _SettingControlInternalState.displaying);
     });
   }
 
