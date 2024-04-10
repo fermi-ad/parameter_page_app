@@ -353,6 +353,11 @@ class _SettingControlState extends State<SettingControlWidget> {
       _lastSetting = (newValue, newValue.toStringAsPrecision(4));
       _state = _SettingControlInternalState.displayingOptimistic;
     });
+
+    _optimisticDisplayTimer?.cancel();
+    _optimisticDisplayTimer = Timer(const Duration(seconds: 1), () {
+      setState(() => _state = _SettingControlInternalState.displaying);
+    });
   }
 
   void _handleKnob({required double withStep}) {
@@ -436,4 +441,6 @@ class _SettingControlState extends State<SettingControlWidget> {
   (double, String)? _lastSetting;
 
   StreamSubscription<double>? _knobbingStreamSubscription;
+
+  Timer? _optimisticDisplayTimer;
 }

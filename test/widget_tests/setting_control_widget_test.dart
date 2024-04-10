@@ -788,7 +788,9 @@ void main() {
       expect(find.text("73.00"), findsOneWidget);
 
       // ... and wait 1 second
-      await tester.pumpAndSettle(const Duration(seconds: 1));
+      await tester.pumpAndSettle(const Duration(seconds: 1, milliseconds: 10));
+      await sendSettingTestData(tester, settingValue: 73.0);
+      await tester.pumpAndSettle();
 
       // Then the text display changes back to the displaying state
       assertSettingDisplay(tester,
