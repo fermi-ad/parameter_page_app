@@ -721,7 +721,7 @@ void main() {
           reason: "The new value (73.0) was not submitted to DPM");
 
       // ... and the display updates immediately
-      expect(find.text("73.00"), findsOneWidget);
+      assertSettingDisplay(isVisible: true, value: "73.00");
     });
 
     testWidgets('Provide knobbingStream, responds to knob down events',
@@ -751,7 +751,7 @@ void main() {
           reason: "The new value (71.0) was not submitted to DPM");
 
       // ... and the display updates immediately
-      expect(find.text("71.00"), findsOneWidget);
+      assertSettingDisplay(isVisible: true, value: "71.00");
     });
 
     testWidgets(
@@ -778,7 +778,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text("73.00"), findsOneWidget);
 
-      // ... and then wait 1 second
+      // ... and wait 1 second
       await tester.pumpAndSettle(const Duration(seconds: 1));
 
       // Then the text display changes back to the displaying state
