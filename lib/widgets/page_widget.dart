@@ -133,7 +133,7 @@ class PageWidgetState extends State<PageWidget> {
     return Row(children: [
       Expanded(
           child: entry.buildEntry(context, true, wide, settings,
-              widget.settingsAllowed, false, null)),
+              widget.settingsAllowed, false, null, null)),
       const SizedBox(width: 8.0),
       GestureDetector(
           onTap: () async {
@@ -166,7 +166,8 @@ class PageWidgetState extends State<PageWidget> {
             settings,
             widget.settingsAllowed,
             _focusRowIndex == index,
-            () => _handlePageEntryTap(atIndex: index)));
+            () => _handlePageEntryTap(atIndex: index),
+            null));
   }
 
   // Moves an entry from one location to another in the parameter list. It

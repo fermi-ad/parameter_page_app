@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:parameter_page/widgets/display_settings_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
 
@@ -21,7 +24,7 @@ class MultEntryWidget extends StatelessWidget {
 
   final List<PageEntry> entries;
 
-  const MultEntryWidget({
+  MultEntryWidget({
     super.key,
     required this.numberOfEntries,
     this.description = "",
@@ -35,8 +38,14 @@ class MultEntryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PageEntryWidget(
-        child: editMode ? _buildEditMode(context) : _buildDisplayMode(context));
+    return KeyboardListener(
+        autofocus: enabled,
+        focusNode: _focusNode,
+        onKeyEvent: enabled ? _onKey : null,
+        child: PageEntryWidget(
+            child: editMode
+                ? _buildEditMode(context)
+                : _buildDisplayMode(context)));
   }
 
   Widget _buildEditMode(BuildContext context) {
@@ -81,11 +90,36 @@ class MultEntryWidget extends StatelessWidget {
 
   Widget _buildSubEntries(BuildContext context) {
     List<Widget> children = [];
+
     for (final entry in entries) {
-      children.add(entry.buildEntry(
-          context, editMode, true, displaySettings, false, false, () {}));
+      final widget = entry.buildEntry(context, editMode, true, displaySettings,
+          false, false, () {}, _knobbingStreamController.stream);
+
+      children.add(widget);
     }
 
     return Column(children: children);
   }
+
+  void _onKey(KeyEvent event) {
+    if (event is KeyDownEvent || event is KeyRepeatEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.f5) {
+        _knobParametersUp();
+      } else if (event.logicalKey == LogicalKeyboardKey.f4) {
+        _knobParametersDown();
+      }
+    }
+  }
+
+  void _knobParametersUp() {
+    _knobbingStreamController.add(1.0);
+  }
+
+  void _knobParametersDown() {
+    _knobbingStreamController.add(-1.0);
+  }
+
+  final FocusNode _focusNode = FocusNode();
+
+  final _knobbingStreamController = StreamController<double>.broadcast();
 }

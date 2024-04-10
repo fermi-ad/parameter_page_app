@@ -23,6 +23,7 @@ class ParameterWidget extends StatelessWidget {
   final DisplayUnits displayUnits;
   final bool displayExtendedStatus;
   final bool settingsAllowed;
+  final Stream<double>? knobbingStream;
 
   const ParameterWidget(
       {required this.drf,
@@ -33,28 +34,32 @@ class ParameterWidget extends StatelessWidget {
       super.key,
       this.displayUnits = DisplayUnits.commonUnits,
       this.displayAlarmDetails = false,
-      this.displayExtendedStatus = false});
+      this.displayExtendedStatus = false,
+      this.knobbingStream});
 
-  Widget buildEditor(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
+    return PageEntryWidget(
+        child: editMode ? _buildEditor(context) : _buildActiveParam(context));
+  }
+
+  Widget _buildEditor(BuildContext context) {
     return ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 36.0),
         child: Text(overflow: TextOverflow.ellipsis, drf));
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return PageEntryWidget(
-        child: editMode
-            ? buildEditor(context)
-            : _ActiveParamWidget(
-                displayUnits: displayUnits,
-                drf: drf,
-                wide: wide,
-                dpm: DataAcquisitionWidget.of(context),
-                displayAlarmDetails: displayAlarmDetails,
-                displayExtendedStatus: displayExtendedStatus,
-                settingsAllowed: settingsAllowed,
-              ));
+  _ActiveParamWidget _buildActiveParam(BuildContext context) {
+    return _ActiveParamWidget(
+      displayUnits: displayUnits,
+      drf: drf,
+      wide: wide,
+      dpm: DataAcquisitionWidget.of(context),
+      displayAlarmDetails: displayAlarmDetails,
+      displayExtendedStatus: displayExtendedStatus,
+      settingsAllowed: settingsAllowed,
+      knobbingStream: knobbingStream,
+    );
   }
 }
 
@@ -66,6 +71,7 @@ class _ActiveParamWidget extends StatefulWidget {
   final bool displayAlarmDetails;
   final bool displayExtendedStatus;
   final bool settingsAllowed;
+  final Stream<double>? knobbingStream;
 
   const _ActiveParamWidget(
       {required this.drf,
@@ -74,10 +80,15 @@ class _ActiveParamWidget extends StatefulWidget {
       required this.displayUnits,
       required this.displayAlarmDetails,
       required this.displayExtendedStatus,
-      required this.settingsAllowed});
+      required this.settingsAllowed,
+      required this.knobbingStream});
 
   @override
   _ActiveParamState createState() => _ActiveParamState();
+
+  void knobUp() {}
+
+  void knobDown() {}
 }
 
 class _ActiveParamState extends State<_ActiveParamWidget> {
@@ -267,6 +278,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                     displayUnits: widget.displayUnits,
                     units: settingUnits,
                     knobbingEnabled: knobbingInfo != null,
+                    knobbingStream: widget.knobbingStream,
                     knobbingStepSize:
                         knobbingInfo != null ? knobbingInfo.step : 0,
                     wide: true))),
