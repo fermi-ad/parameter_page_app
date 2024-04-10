@@ -48,17 +48,24 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  void assertSettingDisplay({required bool isVisible, String? value}) {
+  void assertSettingDisplay(WidgetTester tester,
+      {required bool isVisible, bool isOptimistic = false, String? value}) {
     expect(find.byKey(const Key("parameter_settingdisplay_Z:BTE200_TEMP")),
         isVisible ? findsOneWidget : findsNothing);
 
     if (isVisible && value != null) {
+      final textFinder = find.descendant(
+          of: find.byKey(const Key("parameter_settingdisplay_Z:BTE200_TEMP")),
+          matching: find.text(value));
+      expect(textFinder, findsOneWidget);
+
+      final ThemeData currentTheme = _getCurrentTheme(tester);
+      final textStyle = tester.widget<Text>(textFinder.first).style;
       expect(
-          find.descendant(
-              of: find
-                  .byKey(const Key("parameter_settingdisplay_Z:BTE200_TEMP")),
-              matching: find.text(value)),
-          findsOneWidget);
+          textStyle!.color,
+          equals(isOptimistic
+              ? currentTheme.colorScheme.outline
+              : currentTheme.colorScheme.primary));
     }
   }
 
@@ -127,7 +134,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // Then 0.0 is displayed
-      assertSettingDisplay(isVisible: false);
+      assertSettingDisplay(tester, isVisible: false);
       assertSettingLoading(isVisible: true);
     });
 
@@ -142,7 +149,7 @@ void main() {
       await sendSettingTestData(tester, settingValue: 72.0);
 
       // Then 72.0 is displayed
-      assertSettingDisplay(isVisible: true, value: "72.00");
+      assertSettingDisplay(tester, isVisible: true, value: "72.00");
     });
 
     testWidgets('Tap, change to text input', (WidgetTester tester) async {
@@ -179,7 +186,7 @@ void main() {
 
       // Then the text field changes back to a text display
       await sendSettingTestData(tester, settingValue: 72.0);
-      assertSettingDisplay(isVisible: true, value: "72.00");
+      assertSettingDisplay(tester, isVisible: true, value: "72.00");
     });
 
     testWidgets('Tap cancel while editing, return to text display',
@@ -201,7 +208,7 @@ void main() {
 
       // Then after recieving an update the text field changes back to a text display
       await sendSettingTestData(tester, settingValue: 72.0);
-      assertSettingDisplay(isVisible: true, value: "72.00");
+      assertSettingDisplay(tester, isVisible: true, value: "72.00");
     });
 
     testWidgets(
@@ -330,7 +337,7 @@ void main() {
 
       // ... and the original setting is displayed again
       await sendSettingTestData(tester, settingValue: 72.0);
-      assertSettingDisplay(isVisible: true, value: "72.00");
+      assertSettingDisplay(tester, isVisible: true, value: "72.00");
     });
 
     testWidgets(
@@ -349,7 +356,7 @@ void main() {
 
       // Then the setting is cancelled and the setting display returns
       await sendSettingTestData(tester, settingValue: 72.0);
-      assertSettingDisplay(isVisible: true, value: "72.00");
+      assertSettingDisplay(tester, isVisible: true, value: "72.00");
     });
 
     testWidgets('On new setting, undo display shows the original setting',
@@ -380,7 +387,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Then the primary value is displayed
-      assertSettingDisplay(isVisible: true, value: "5.000");
+      assertSettingDisplay(tester, isVisible: true, value: "5.000");
     });
 
     testWidgets('Set displayUnits to raw, see Settings data in raw units',
@@ -395,7 +402,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Then the primary value is displayed
-      assertSettingDisplay(isVisible: true, value: "7777");
+      assertSettingDisplay(tester, isVisible: true, value: "7777");
     });
 
     testWidgets('Tap undo, submits setting', (WidgetTester tester) async {
@@ -721,7 +728,8 @@ void main() {
           reason: "The new value (73.0) was not submitted to DPM");
 
       // ... and the display updates immediately
-      assertSettingDisplay(isVisible: true, value: "73.00");
+      assertSettingDisplay(tester,
+          isVisible: true, isOptimistic: true, value: "73.00");
     });
 
     testWidgets('Provide knobbingStream, responds to knob down events',
@@ -751,7 +759,8 @@ void main() {
           reason: "The new value (71.0) was not submitted to DPM");
 
       // ... and the display updates immediately
-      assertSettingDisplay(isVisible: true, value: "71.00");
+      assertSettingDisplay(tester,
+          isVisible: true, isOptimistic: true, value: "71.00");
     });
 
     testWidgets(
@@ -782,12 +791,8 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 1));
 
       // Then the text display changes back to the displaying state
-      final settingValueDisplayFinder = find.text("73.00");
-      expect(settingValueDisplayFinder, findsOneWidget);
-      final ThemeData currentTheme = _getCurrentTheme(tester);
-      final textStyle =
-          tester.widget<Text>(settingValueDisplayFinder.first).style;
-      expect(textStyle!.color, equals(currentTheme.colorScheme.primary));
+      assertSettingDisplay(tester,
+          isVisible: true, isOptimistic: false, value: "73.00");
     });
   });
 }
