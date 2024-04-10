@@ -187,9 +187,7 @@ class _SettingControlState extends State<SettingControlWidget> {
   Widget _buildDisplayingOptimisticState() {
     return GestureDetector(
         onTap: _handleDisplayTap,
-        child: Container(
-            key: Key("parameter_settingdisplay_${widget.drf}"),
-            child: _buildSettingDisplayText(_lastSetting!.$2)));
+        child: _buildSettingDisplayText(_lastSetting!.$2));
   }
 
   Widget _buildDisplayingErrorState() {
@@ -264,27 +262,32 @@ class _SettingControlState extends State<SettingControlWidget> {
       _lastSetting =
           (snapshot.data!.value, _extractValueString(from: snapshot));
 
-      return Container(
-          key: Key("parameter_settingdisplay_${widget.drf}"),
-          child: _buildSettingDisplayText(_lastSetting!.$2));
+      return _buildSettingDisplayText(_lastSetting!.$2);
     } else {
-      return Container(
-          key: Key("parameter_settingloading_${widget.drf}"),
-          child: Text(
-              textAlign: TextAlign.end,
-              style: TextStyle(color: Theme.of(context).colorScheme.outline),
-              "Loading..."));
+      return _buildLoadingText();
     }
   }
 
-  Text _buildSettingDisplayText(String text) {
-    return Text(
-        textAlign: TextAlign.end,
-        text,
-        style: TextStyle(
-            color: _state == _SettingControlInternalState.displayingOptimistic
-                ? Theme.of(context).colorScheme.outline
-                : Theme.of(context).colorScheme.primary));
+  Widget _buildSettingDisplayText(String text) {
+    return Container(
+        key: Key("parameter_settingdisplay_${widget.drf}"),
+        child: Text(
+            textAlign: TextAlign.end,
+            text,
+            style: TextStyle(
+                color:
+                    _state == _SettingControlInternalState.displayingOptimistic
+                        ? Theme.of(context).colorScheme.outline
+                        : Theme.of(context).colorScheme.primary)));
+  }
+
+  Widget _buildLoadingText() {
+    return Container(
+        key: Key("parameter_settingloading_${widget.drf}"),
+        child: Text(
+            textAlign: TextAlign.end,
+            style: TextStyle(color: Theme.of(context).colorScheme.outline),
+            "Loading..."));
   }
 
   String _extractValueString({required from}) {
