@@ -187,13 +187,7 @@ class _SettingControlState extends State<SettingControlWidget> {
   Widget _buildDisplayingOptimisticState() {
     return GestureDetector(
         onTap: _handleDisplayTap,
-        child: Container(
-            key: Key("parameter_settingdisplay_${widget.drf}"),
-            child: Text(
-                textAlign: TextAlign.end,
-                _lastSetting!.$2,
-                style:
-                    TextStyle(color: Theme.of(context).colorScheme.primary))));
+        child: _buildSettingDisplayText(_lastSetting!.$2));
   }
 
   Widget _buildDisplayingErrorState() {
@@ -268,20 +262,32 @@ class _SettingControlState extends State<SettingControlWidget> {
       _lastSetting =
           (snapshot.data!.value, _extractValueString(from: snapshot));
 
-      return Container(
-          key: Key("parameter_settingdisplay_${widget.drf}"),
-          child: Text(
-              textAlign: TextAlign.end,
-              _lastSetting!.$2,
-              style: TextStyle(color: Theme.of(context).colorScheme.primary)));
+      return _buildSettingDisplayText(_lastSetting!.$2);
     } else {
-      return Container(
-          key: Key("parameter_settingloading_${widget.drf}"),
-          child: Text(
-              textAlign: TextAlign.end,
-              style: TextStyle(color: Theme.of(context).colorScheme.outline),
-              "Loading..."));
+      return _buildLoadingText();
     }
+  }
+
+  Widget _buildSettingDisplayText(String text) {
+    return Container(
+        key: Key("parameter_settingdisplay_${widget.drf}"),
+        child: Text(
+            textAlign: TextAlign.end,
+            text,
+            style: TextStyle(
+                color:
+                    _state == _SettingControlInternalState.displayingOptimistic
+                        ? Theme.of(context).colorScheme.outline
+                        : Theme.of(context).colorScheme.primary)));
+  }
+
+  Widget _buildLoadingText() {
+    return Container(
+        key: Key("parameter_settingloading_${widget.drf}"),
+        child: Text(
+            textAlign: TextAlign.end,
+            style: TextStyle(color: Theme.of(context).colorScheme.outline),
+            "Loading..."));
   }
 
   String _extractValueString({required from}) {
@@ -353,6 +359,8 @@ class _SettingControlState extends State<SettingControlWidget> {
       _lastSetting = (newValue, newValue.toStringAsPrecision(4));
       _state = _SettingControlInternalState.displayingOptimistic;
     });
+
+    _startOptimisticDisplayTimeout();
   }
 
   void _handleKnob({required double withStep}) {
@@ -373,6 +381,13 @@ class _SettingControlState extends State<SettingControlWidget> {
   void _handleAbort() {
     setState(() {
       _state = _SettingControlInternalState.displaying;
+    });
+  }
+
+  void _startOptimisticDisplayTimeout() {
+    _optimisticDisplayTimer?.cancel();
+    _optimisticDisplayTimer = Timer(const Duration(seconds: 1), () {
+      setState(() => _state = _SettingControlInternalState.displaying);
     });
   }
 
@@ -436,4 +451,6 @@ class _SettingControlState extends State<SettingControlWidget> {
   (double, String)? _lastSetting;
 
   StreamSubscription<double>? _knobbingStreamSubscription;
+
+  Timer? _optimisticDisplayTimer;
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/services/dpm/mock_dpm_service.dart';
@@ -18,17 +19,23 @@ void main() {
     return MaterialApp(
         home: Scaffold(
             body: Column(children: [
-      SizedBox(
-          key: const Key("parameter_setting_Z:BTE200_TEMP"),
-          width: 330.0,
-          height: 34.0,
-          child: DataAcquisitionWidget(service: testDPM, child: child)),
-      const SizedBox(
-          key: Key("test_empty_box"),
-          height: 100.0,
-          width: 330.0,
-          child: Text("Abort"))
-    ])));
+          SizedBox(
+              key: const Key("parameter_setting_Z:BTE200_TEMP"),
+              width: 330.0,
+              height: 34.0,
+              child: DataAcquisitionWidget(service: testDPM, child: child)),
+          const SizedBox(
+              key: Key("test_empty_box"),
+              height: 100.0,
+              width: 330.0,
+              child: Text("Abort"))
+        ])),
+        theme: ThemeData(
+            useMaterial3: true,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.blue,
+              brightness: Brightness.dark,
+            )));
   }
 
   Future<void> sendSettingTestData(WidgetTester tester,
@@ -41,17 +48,24 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  void assertSettingDisplay({required bool isVisible, String? value}) {
+  void assertSettingDisplay(WidgetTester tester,
+      {required bool isVisible, bool isOptimistic = false, String? value}) {
     expect(find.byKey(const Key("parameter_settingdisplay_Z:BTE200_TEMP")),
         isVisible ? findsOneWidget : findsNothing);
 
     if (isVisible && value != null) {
+      final textFinder = find.descendant(
+          of: find.byKey(const Key("parameter_settingdisplay_Z:BTE200_TEMP")),
+          matching: find.text(value));
+      expect(textFinder, findsOneWidget);
+
+      final ThemeData currentTheme = _getCurrentTheme(tester);
+      final textStyle = tester.widget<Text>(textFinder.first).style;
       expect(
-          find.descendant(
-              of: find
-                  .byKey(const Key("parameter_settingdisplay_Z:BTE200_TEMP")),
-              matching: find.text(value)),
-          findsOneWidget);
+          textStyle!.color,
+          equals(isOptimistic
+              ? currentTheme.colorScheme.outline
+              : currentTheme.colorScheme.primary));
     }
   }
 
@@ -120,7 +134,7 @@ void main() {
       await tester.pumpWidget(app);
 
       // Then 0.0 is displayed
-      assertSettingDisplay(isVisible: false);
+      assertSettingDisplay(tester, isVisible: false);
       assertSettingLoading(isVisible: true);
     });
 
@@ -135,7 +149,7 @@ void main() {
       await sendSettingTestData(tester, settingValue: 72.0);
 
       // Then 72.0 is displayed
-      assertSettingDisplay(isVisible: true, value: "72.00");
+      assertSettingDisplay(tester, isVisible: true, value: "72.00");
     });
 
     testWidgets('Tap, change to text input', (WidgetTester tester) async {
@@ -172,7 +186,7 @@ void main() {
 
       // Then the text field changes back to a text display
       await sendSettingTestData(tester, settingValue: 72.0);
-      assertSettingDisplay(isVisible: true, value: "72.00");
+      assertSettingDisplay(tester, isVisible: true, value: "72.00");
     });
 
     testWidgets('Tap cancel while editing, return to text display',
@@ -194,7 +208,7 @@ void main() {
 
       // Then after recieving an update the text field changes back to a text display
       await sendSettingTestData(tester, settingValue: 72.0);
-      assertSettingDisplay(isVisible: true, value: "72.00");
+      assertSettingDisplay(tester, isVisible: true, value: "72.00");
     });
 
     testWidgets(
@@ -323,7 +337,7 @@ void main() {
 
       // ... and the original setting is displayed again
       await sendSettingTestData(tester, settingValue: 72.0);
-      assertSettingDisplay(isVisible: true, value: "72.00");
+      assertSettingDisplay(tester, isVisible: true, value: "72.00");
     });
 
     testWidgets(
@@ -342,7 +356,7 @@ void main() {
 
       // Then the setting is cancelled and the setting display returns
       await sendSettingTestData(tester, settingValue: 72.0);
-      assertSettingDisplay(isVisible: true, value: "72.00");
+      assertSettingDisplay(tester, isVisible: true, value: "72.00");
     });
 
     testWidgets('On new setting, undo display shows the original setting',
@@ -373,7 +387,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Then the primary value is displayed
-      assertSettingDisplay(isVisible: true, value: "5.000");
+      assertSettingDisplay(tester, isVisible: true, value: "5.000");
     });
 
     testWidgets('Set displayUnits to raw, see Settings data in raw units',
@@ -388,7 +402,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Then the primary value is displayed
-      assertSettingDisplay(isVisible: true, value: "7777");
+      assertSettingDisplay(tester, isVisible: true, value: "7777");
     });
 
     testWidgets('Tap undo, submits setting', (WidgetTester tester) async {
@@ -714,7 +728,11 @@ void main() {
           reason: "The new value (73.0) was not submitted to DPM");
 
       // ... and the display updates immediately
-      expect(find.text("73.00"), findsOneWidget);
+      assertSettingDisplay(tester,
+          isVisible: true, isOptimistic: true, value: "73.00");
+
+      // clean-up
+      tester.pumpAndSettle(const Duration(seconds: 1, microseconds: 10));
     });
 
     testWidgets('Provide knobbingStream, responds to knob down events',
@@ -735,7 +753,7 @@ void main() {
       await sendSettingTestData(tester, settingValue: 72.0);
       await tester.pumpAndSettle();
 
-      // When I send a knob up by 1.0 to the stream
+      // When I send a knob down by 1.0 to the stream
       sc.add(-1.0);
       await tester.pumpAndSettle();
 
@@ -744,7 +762,59 @@ void main() {
           reason: "The new value (71.0) was not submitted to DPM");
 
       // ... and the display updates immediately
-      expect(find.text("71.00"), findsOneWidget);
+      assertSettingDisplay(tester,
+          isVisible: true, isOptimistic: true, value: "71.00");
+
+      // clean-up
+      tester.pumpAndSettle(const Duration(seconds: 1, microseconds: 10));
+    });
+
+    testWidgets(
+        'Respond to knob stream and wait 1 second, transition back to displaying state',
+        (WidgetTester tester) async {
+      // Given a SettingControlWidget instantiated for a device called Z:BTE200_TEMP with an initial value of "72.0"
+      // ... and settingsAllowed is set to true
+      // ... and the step size is 1.0
+      // ... and a knobbingStream is provided
+      final sc = StreamController<double>.broadcast();
+      MaterialApp app = initialize(SettingControlWidget(
+          drf: "Z:BTE200_TEMP",
+          displayUnits: DisplayUnits.commonUnits,
+          settingsAllowed: true,
+          knobbingEnabled: true,
+          knobbingStepSize: 1.0,
+          knobbingStream: sc.stream));
+      await tester.pumpWidget(app);
+      await sendSettingTestData(tester, settingValue: 72.0);
+      await tester.pumpAndSettle();
+
+      // When I send a knob up by 1.0 to the stream
+      sc.add(1.0);
+      await tester.pumpAndSettle();
+      expect(find.text("73.00"), findsOneWidget);
+
+      // ... and wait 1 second
+      await tester.pumpAndSettle(const Duration(seconds: 1, milliseconds: 10));
+      await sendSettingTestData(tester, settingValue: 73.0);
+      await tester.pumpAndSettle();
+
+      // Then the text display changes back to the displaying state
+      assertSettingDisplay(tester,
+          isVisible: true, isOptimistic: false, value: "73.00");
+
+      // clean-up
+      tester.pumpAndSettle(const Duration(seconds: 1, microseconds: 10));
     });
   });
+}
+
+ThemeData _getCurrentTheme(WidgetTester tester) {
+  var brightness =
+      SchedulerBinding.instance.platformDispatcher.platformBrightness;
+
+  bool isDarkMode = brightness == Brightness.dark;
+
+  return isDarkMode
+      ? tester.widget<MaterialApp>(find.byType(MaterialApp)).darkTheme!
+      : tester.widget<MaterialApp>(find.byType(MaterialApp)).theme!;
 }
