@@ -189,11 +189,7 @@ class _SettingControlState extends State<SettingControlWidget> {
         onTap: _handleDisplayTap,
         child: Container(
             key: Key("parameter_settingdisplay_${widget.drf}"),
-            child: Text(
-                textAlign: TextAlign.end,
-                _lastSetting!.$2,
-                style:
-                    TextStyle(color: Theme.of(context).colorScheme.outline))));
+            child: _buildSettingDisplayText(_lastSetting!.$2)));
   }
 
   Widget _buildDisplayingErrorState() {
@@ -270,10 +266,7 @@ class _SettingControlState extends State<SettingControlWidget> {
 
       return Container(
           key: Key("parameter_settingdisplay_${widget.drf}"),
-          child: Text(
-              textAlign: TextAlign.end,
-              _lastSetting!.$2,
-              style: TextStyle(color: Theme.of(context).colorScheme.primary)));
+          child: _buildSettingDisplayText(_lastSetting!.$2));
     } else {
       return Container(
           key: Key("parameter_settingloading_${widget.drf}"),
@@ -282,6 +275,16 @@ class _SettingControlState extends State<SettingControlWidget> {
               style: TextStyle(color: Theme.of(context).colorScheme.outline),
               "Loading..."));
     }
+  }
+
+  Text _buildSettingDisplayText(String text) {
+    return Text(
+        textAlign: TextAlign.end,
+        text,
+        style: TextStyle(
+            color: _state == _SettingControlInternalState.displayingOptimistic
+                ? Theme.of(context).colorScheme.outline
+                : Theme.of(context).colorScheme.primary));
   }
 
   String _extractValueString({required from}) {
