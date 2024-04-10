@@ -45,6 +45,7 @@ class SettingControlWidget extends StatefulWidget {
 
 enum _SettingControlInternalState {
   displaying,
+  displayingOptimistic,
   displayingError,
   editing,
   settingPending
@@ -60,8 +61,9 @@ class _SettingControlState extends State<SettingControlWidget> {
 
   @override
   Widget build(BuildContext context) {
-    widget.knobbingStream?.listen(_handleKnobStream);
-
+    _knobbingStreamSubscription?.cancel();
+    _knobbingStreamSubscription =
+        widget.knobbingStream?.listen(_handleKnobStream);
     return widget.wide ? _buildWide(context) : _buildNarrow(context);
   }
 
@@ -105,6 +107,9 @@ class _SettingControlState extends State<SettingControlWidget> {
     switch (_state) {
       case _SettingControlInternalState.displaying:
         return _buildDisplayingState();
+
+      case _SettingControlInternalState.displayingOptimistic:
+        return _buildDisplayingOptimisticState();
 
       case _SettingControlInternalState.displayingError:
         return _buildDisplayingErrorState();
@@ -179,6 +184,18 @@ class _SettingControlState extends State<SettingControlWidget> {
                 .monitorSettingProperty([widget.drf])));
   }
 
+  Widget _buildDisplayingOptimisticState() {
+    return GestureDetector(
+        onTap: _handleDisplayTap,
+        child: Container(
+            key: Key("parameter_settingdisplay_${widget.drf}"),
+            child: Text(
+                textAlign: TextAlign.end,
+                _lastSetting!.$2,
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.primary))));
+  }
+
   Widget _buildDisplayingErrorState() {
     _startErrorDisplayTimer();
 
@@ -250,6 +267,7 @@ class _SettingControlState extends State<SettingControlWidget> {
     if (snapshot.connectionState == ConnectionState.active) {
       _lastSetting =
           (snapshot.data!.value, _extractValueString(from: snapshot));
+
       return Container(
           key: Key("parameter_settingdisplay_${widget.drf}"),
           child: Text(
@@ -326,8 +344,16 @@ class _SettingControlState extends State<SettingControlWidget> {
     });
   }
 
-  void _handleKnobStream(double knobV) =>
-      _handleKnob(withStep: knobV * widget.knobbingStepSize);
+  void _handleKnobStream(double knobV) {
+    final newValue = _lastSetting!.$1 + knobV * widget.knobbingStepSize;
+
+    _submitKnobbedSetting(newValue.toString());
+
+    setState(() {
+      _lastSetting = (newValue, newValue.toStringAsPrecision(4));
+      _state = _SettingControlInternalState.displayingOptimistic;
+    });
+  }
 
   void _handleKnob({required double withStep}) {
     final newValue = _lastSetting!.$1 + withStep;
@@ -408,4 +434,6 @@ class _SettingControlState extends State<SettingControlWidget> {
   String? _initialSettingValue;
 
   (double, String)? _lastSetting;
+
+  StreamSubscription<double>? _knobbingStreamSubscription;
 }

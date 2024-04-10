@@ -46,6 +46,11 @@ void main() {
       await requestSettingsPermission(tester,
           forDuration: SettingsRequestDuration.indefinitely);
 
+      // .. and the settings data has loaded
+      await waitForSettingDataToLoad(tester, forDRF: "G:MULT1");
+      await waitForSettingDataToLoad(tester, forDRF: "G:MULT2");
+      await waitForSettingDataToLoad(tester, forDRF: "G:MULT3");
+
       // When I tap the mult and knob up 4 times
       await tapPageEntry(tester, atRowIndex: 0);
       await knobUp(tester, steps: 4);
@@ -54,9 +59,9 @@ void main() {
       await waitForSettingDataToLoad(tester, forDRF: "G:MULT1");
       await waitForSettingDataToLoad(tester, forDRF: "G:MULT2");
       await waitForSettingDataToLoad(tester, forDRF: "G:MULT3");
-      assertParameterHasDetails("G:MULT1", settingValue: "50.020");
-      assertParameterHasDetails("G:MULT2", settingValue: "50.020");
-      assertParameterHasDetails("G:MULT3", settingValue: "50.020");
+      assertParameterHasDetails("G:MULT1", settingValue: "50.02");
+      assertParameterHasDetails("G:MULT2", settingValue: "50.02");
+      assertParameterHasDetails("G:MULT3", settingValue: "50.02");
     });
 
     testWidgets(
@@ -75,6 +80,11 @@ void main() {
       await requestSettingsPermission(tester,
           forDuration: SettingsRequestDuration.indefinitely);
 
+      // .. and the settings data has loaded
+      await waitForSettingDataToLoad(tester, forDRF: "G:MULT1");
+      await waitForSettingDataToLoad(tester, forDRF: "G:MULT2");
+      await waitForSettingDataToLoad(tester, forDRF: "G:MULT3");
+
       // When I tap the mult and knob up 4 times
       await tapPageEntry(tester, atRowIndex: 0);
       await knobDown(tester, steps: 4);
@@ -83,9 +93,9 @@ void main() {
       await waitForSettingDataToLoad(tester, forDRF: "G:MULT1");
       await waitForSettingDataToLoad(tester, forDRF: "G:MULT2");
       await waitForSettingDataToLoad(tester, forDRF: "G:MULT3");
-      assertParameterHasDetails("G:MULT1", settingValue: "49.080");
-      assertParameterHasDetails("G:MULT2", settingValue: "49.080");
-      assertParameterHasDetails("G:MULT3", settingValue: "49.080");
+      assertParameterHasDetails("G:MULT1", settingValue: "49.98");
+      assertParameterHasDetails("G:MULT2", settingValue: "49.98");
+      assertParameterHasDetails("G:MULT3", settingValue: "49.98");
     });
 
     testWidgets(
