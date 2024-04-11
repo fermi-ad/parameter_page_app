@@ -4,6 +4,9 @@ import 'dart:html' as html;
 import 'package:go_router/go_router.dart';
 import 'package:flutter_controls_core/flutter_controls_core.dart';
 import 'package:parameter_page/routes.dart';
+import 'package:parameter_page/services/authorization/acsys_authorization_service.dart';
+import 'package:parameter_page/services/authorization/authorization_service.dart';
+import 'package:parameter_page/services/authorization/mock_authorization_service.dart';
 import 'package:parameter_page/services/parameter_page/gql_param/graphql_parameter_page_service.dart';
 import 'package:parameter_page/services/parameter_page/mock_parameter_page_service.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
@@ -20,21 +23,23 @@ MockDpmService? mockDPMService;
 MockParameterPageService? mockParameterPageService;
 MockUserDeviceService? mockUserDeviceService;
 MockSettingsPermissionService? mockSettingsPermissionService;
+MockAuthorizationService? mockAuthorizationService;
 
 void main() async {
   await dotenv.load(fileName: ".env");
 
-  var (dpmService, pageService, deviceService, settingsPermissionService) =
-      _configureServices();
+  var (
+    dpmService,
+    pageService,
+    deviceService,
+    settingsPermissionService,
+    authService
+  ) = _configureServices();
 
   _inhibitF5KeyBrowserReload();
 
   runFermiApp(
-      authInfo: AuthInfo(
-          realm: dotenv.env['AUTH_INFO_REALM']!,
-          scopes: [],
-          clientId: dotenv.env['AUTH_INFO_CLIENT_ID']!,
-          clientSecret: dotenv.env['AUTH_INFO_CLIENT_SECRET']!),
+      authInfo: authService.authInfo,
       appWidget: ControlsRouterApp(
           title: "Parameter Page",
           router: GoRouter(
@@ -46,7 +51,8 @@ void main() async {
   ACSysServiceAPI,
   ParameterPageService,
   UserDeviceService,
-  SettingsPermissionService
+  SettingsPermissionService,
+  AuthorizationService
 ) _configureServices() {
   const useMockServices =
       String.fromEnvironment("USE_MOCK_SERVICES", defaultValue: "false") !=
@@ -61,7 +67,8 @@ void main() async {
   ACSysServiceAPI,
   ParameterPageService,
   UserDeviceService,
-  SettingsPermissionService
+  SettingsPermissionService,
+  AuthorizationService
 ) _configureMockServices() {
   mockDPMService = MockDpmService();
   mockDPMService!.enablePeriodSettingStream();
@@ -72,11 +79,14 @@ void main() async {
 
   mockSettingsPermissionService = MockSettingsPermissionService();
 
+  mockAuthorizationService = MockAuthorizationService();
+
   return (
     mockDPMService!,
     mockParameterPageService!,
     mockUserDeviceService!,
-    mockSettingsPermissionService!
+    mockSettingsPermissionService!,
+    mockAuthorizationService!
   );
 }
 
@@ -84,13 +94,15 @@ void main() async {
   ACSysServiceAPI,
   ParameterPageService,
   UserDeviceService,
-  SettingsPermissionService
+  SettingsPermissionService,
+  AuthorizationService
 ) _configureGraphQLServices() {
   return (
     ACSysService(),
     GraphQLParameterPageService(),
     SystemUserDeviceService(),
-    MockSettingsPermissionService()
+    MockSettingsPermissionService(),
+    ACSysAuthorizationService()
   );
 }
 
