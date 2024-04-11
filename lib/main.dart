@@ -1,7 +1,6 @@
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_controls_core/flutter_controls_core.dart';
 import 'package:parameter_page/routes.dart';
@@ -30,11 +29,17 @@ void main() async {
 
   _inhibitF5KeyBrowserReload();
 
-  runApp(ControlsRouterApp(
-      title: "Parameter Page",
-      router: GoRouter(
-          routes: configureRoutes(dpmService, pageService, deviceService,
-              settingsPermissionService))));
+  runFermiApp(
+      authInfo: AuthInfo(
+          realm: dotenv.env['AUTH_INFO_REALM']!,
+          scopes: [],
+          clientId: dotenv.env['AUTH_INFO_CLIENT_ID']!,
+          clientSecret: dotenv.env['AUTH_INFO_CLIENT_SECRET']!),
+      appWidget: ControlsRouterApp(
+          title: "Parameter Page",
+          router: GoRouter(
+              routes: configureRoutes(dpmService, pageService, deviceService,
+                  settingsPermissionService))));
 }
 
 (
