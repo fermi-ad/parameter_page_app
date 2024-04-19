@@ -10,9 +10,8 @@ void main() {
   group('Login tests (work in progress)', () {
     testWidgets('Open main menu, logged in as should display the username',
         (WidgetTester tester) async {
-      // Given test page 1 has been loaded
+      // Given the application has been launched and the user is already logged in
       await startParameterPageApp(tester);
-      await navigateToTestPage1(tester);
 
       // When I open the main menu
       await openMainMenu(tester);

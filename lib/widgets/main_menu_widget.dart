@@ -30,10 +30,10 @@ class MainMenuWidget extends StatelessWidget {
             key: const Key("main_menu"),
             padding: EdgeInsets.zero,
             children: [
-              const DrawerHeader(
+              DrawerHeader(
                   child: Column(children: [
-                Text("Parameter Page Menu"),
-                Text("Logged in as testuser")
+                const Text("Parameter Page Menu"),
+                Text("Logged in as $_username")
               ])),
               ListTile(title: const Text("New Page"), onTap: onNewPage),
               ListTile(
@@ -51,5 +51,9 @@ class MainMenuWidget extends StatelessWidget {
                   enabled: copyLinkEnabled,
                   onTap: onCopyLink)
             ]));
+  }
+
+  String get _username {
+    return "testuser";
   }
 }
