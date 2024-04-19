@@ -29,28 +29,34 @@ List<GoRoute> configureRoutes(
     GoRoute(
         name: "OpenParameterPage",
         path: "/open",
-        builder: (context, state) => OpenPageWidget(
-            key: const Key("open_page_route"),
-            onOpen: (id, title) {
-              context.go("/page/$id");
-            },
-            service: pageService)),
+        builder: (context, state) => AuthAdapterWidget(
+            service: authService,
+            child: OpenPageWidget(
+                key: const Key("open_page_route"),
+                onOpen: (id, title) {
+                  context.go("/page/$id");
+                },
+                service: pageService))),
     GoRoute(
         name: "NewParameterPage",
         path: "/page",
-        builder: (context, state) => ParameterPageScaffoldWidget(
-            acsysService: dpmService,
-            pageService: pageService,
-            deviceService: deviceService,
-            settingsPermissionService: permissionsService)),
+        builder: (context, state) => AuthAdapterWidget(
+            service: authService,
+            child: ParameterPageScaffoldWidget(
+                acsysService: dpmService,
+                pageService: pageService,
+                deviceService: deviceService,
+                settingsPermissionService: permissionsService))),
     GoRoute(
         name: "DisplayParameterPage",
         path: "/page/:id",
-        builder: (context, state) => ParameterPageScaffoldWidget(
-            acsysService: dpmService,
-            pageService: pageService,
-            deviceService: deviceService,
-            settingsPermissionService: permissionsService,
-            openPageId: state.pathParameters['id']))
+        builder: (context, state) => AuthAdapterWidget(
+            service: authService,
+            child: ParameterPageScaffoldWidget(
+                acsysService: dpmService,
+                pageService: pageService,
+                deviceService: deviceService,
+                settingsPermissionService: permissionsService,
+                openPageId: state.pathParameters['id'])))
   ];
 }
