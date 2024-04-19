@@ -1,6 +1,7 @@
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_controls_core/flutter_controls_core.dart';
 import 'package:parameter_page/routes.dart';
@@ -43,6 +44,12 @@ void main() async {
       appWidget: ControlsRouterApp(
           title: "Parameter Page",
           router: GoRouter(
+              redirect: (BuildContext context, GoRouterState state) {
+                return null;
+              },
+              errorBuilder: (context, state) {
+                return Text(state.error!.message);
+              },
               routes: configureRoutes(dpmService, pageService, deviceService,
                   settingsPermissionService))));
 }
