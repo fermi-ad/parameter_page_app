@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:parameter_page/widgets/auth_adapter_widget.dart';
 
 class MainMenuWidget extends StatelessWidget {
   final Function() onNewPage;
@@ -33,7 +34,7 @@ class MainMenuWidget extends StatelessWidget {
               DrawerHeader(
                   child: Column(children: [
                 const Text("Parameter Page Menu"),
-                Text("Logged in as $_username")
+                Text("Logged in as ${_getUsername(context)}")
               ])),
               ListTile(title: const Text("New Page"), onTap: onNewPage),
               ListTile(
@@ -53,7 +54,7 @@ class MainMenuWidget extends StatelessWidget {
             ]));
   }
 
-  String get _username {
-    return "testuser";
+  String _getUsername(BuildContext context) {
+    return AuthAdapterWidget.of(context)!.username!;
   }
 }

@@ -51,7 +51,7 @@ void main() async {
                 return Text(state.error!.message);
               },
               routes: configureRoutes(dpmService, pageService, deviceService,
-                  settingsPermissionService))));
+                  settingsPermissionService, authService))));
 }
 
 (
