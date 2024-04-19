@@ -21,7 +21,8 @@ List<GoRoute> configureRoutes(
         name: "LandingPage",
         path: "/",
         builder: (context, state) => AuthAdapterWidget(
-                child: LandingPageWidget(
+            service: authService,
+            child: LandingPageWidget(
               onOpenPage: () => context.go("/open"),
               onCreateNewPage: () => context.go("/page"),
             ))),
