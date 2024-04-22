@@ -14,6 +14,8 @@ class MainMenuWidget extends StatelessWidget {
 
   final Function() onCopyLink;
 
+  final Function()? onLogout;
+
   const MainMenuWidget(
       {super.key,
       required this.onNewPage,
@@ -21,7 +23,8 @@ class MainMenuWidget extends StatelessWidget {
       required this.saveEnabled,
       required this.onSave,
       required this.copyLinkEnabled,
-      required this.onCopyLink});
+      required this.onCopyLink,
+      required this.onLogout});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +37,11 @@ class MainMenuWidget extends StatelessWidget {
               DrawerHeader(
                   child: Column(children: [
                 const Text("Parameter Page Menu"),
-                Text("Logged in as ${_getUsername(context)}")
+                Text("Logged in as ${_getUsername(context)}"),
+                TextButton(
+                  onPressed: () => onLogout?.call(),
+                  child: const Text("Logout"),
+                )
               ])),
               ListTile(title: const Text("New Page"), onTap: onNewPage),
               ListTile(

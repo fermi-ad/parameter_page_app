@@ -112,6 +112,7 @@ class _ParameterPageScaffoldWidgetState
       onSave: _handleSavePage,
       saveEnabled: _saveMenuShouldBeEnabled(),
       onCopyLink: _handleCopyLink,
+      onLogout: null,
       copyLinkEnabled: _page?.id != null,
     );
   }
