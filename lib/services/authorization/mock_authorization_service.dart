@@ -7,5 +7,15 @@ class MockAuthorizationService extends AuthorizationService {
   AuthInfo? get authInfo => null;
 
   @override
+  String? get username => _username;
+
+  @override
   Widget buildWidget(Widget child) => Container(child: child);
+
+  @override
+  void requestLogout() {
+    _username = null;
+  }
+
+  String? _username = "testuser";
 }

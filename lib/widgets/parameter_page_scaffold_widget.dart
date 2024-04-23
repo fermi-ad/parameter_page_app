@@ -7,6 +7,7 @@ import 'package:parameter_page/entities/parameter_page.dart';
 import 'package:parameter_page/services/parameter_page/parameter_page_service.dart';
 import 'package:parameter_page/services/settings_permission/settings_permission_service.dart';
 import 'package:parameter_page/services/user_device/user_device_service.dart';
+import 'package:parameter_page/widgets/auth_adapter_widget.dart';
 import 'package:parameter_page/widgets/display_settings_button_widget.dart';
 import 'package:parameter_page/widgets/fermi_controls_common/error_display_widget.dart';
 import 'package:parameter_page/widgets/main_menu_widget.dart';
@@ -111,8 +112,9 @@ class _ParameterPageScaffoldWidgetState
       onOpenPage: (BuildContext context) => context.go("/open"),
       onSave: _handleSavePage,
       saveEnabled: _saveMenuShouldBeEnabled(),
+      loggedInAs: AuthAdapterData.of(context)!.username,
       onCopyLink: _handleCopyLink,
-      onLogout: null,
+      onLogout: _handleLogout,
       copyLinkEnabled: _page?.id != null,
     );
   }
@@ -269,6 +271,10 @@ class _ParameterPageScaffoldWidgetState
     _scaffoldKey.currentState?.closeDrawer();
     ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Page URL copied to clipboard!")));
+  }
+
+  void _handleLogout() {
+    AuthAdapterState.of(context)!.requestLogout();
   }
 
   void _handleTitleUpdate(String newTitle) {

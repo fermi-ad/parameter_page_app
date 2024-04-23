@@ -9,22 +9,48 @@ class AuthAdapterWidget extends StatefulWidget {
   const AuthAdapterWidget(
       {super.key, required this.child, required this.service});
 
-  String? get username {
-    return "testuser";
-  }
-
   @override
-  State<AuthAdapterWidget> createState() {
-    return _AuthAdapterState();
+  State<StatefulWidget> createState() {
+    return AuthAdapterState();
   }
-
-  static AuthAdapterWidget? of(BuildContext context) =>
-      context.findAncestorWidgetOfExactType<AuthAdapterWidget>();
 }
 
-class _AuthAdapterState extends State<AuthAdapterWidget> {
+class AuthAdapterState extends State<AuthAdapterWidget> {
+  @override
+  initState() {
+    super.initState();
+    _username = widget.service.username;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return widget.service.buildWidget(widget.child);
+    return AuthAdapterData(
+        username: _username, child: widget.service.buildWidget(widget.child));
+  }
+
+  static AuthAdapterState? of(BuildContext context) =>
+      context.findAncestorStateOfType<AuthAdapterState>();
+
+  void requestLogout() {
+    widget.service.requestLogout();
+    setState(() => _username = null);
+  }
+
+  String? _username;
+}
+
+class AuthAdapterData extends InheritedWidget {
+  final String? username;
+
+  const AuthAdapterData(
+      {super.key, required super.child, required this.username});
+
+  static AuthAdapterData? of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<AuthAdapterData>();
+  }
+
+  @override
+  bool updateShouldNotify(AuthAdapterData oldWidget) {
+    return oldWidget.username != username;
   }
 }

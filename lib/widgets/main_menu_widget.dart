@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:parameter_page/widgets/auth_adapter_widget.dart';
 
 class MainMenuWidget extends StatelessWidget {
   final Function() onNewPage;
@@ -12,6 +11,8 @@ class MainMenuWidget extends StatelessWidget {
 
   final bool copyLinkEnabled;
 
+  final String? loggedInAs;
+
   final Function() onCopyLink;
 
   final Function()? onLogout;
@@ -23,6 +24,7 @@ class MainMenuWidget extends StatelessWidget {
       required this.saveEnabled,
       required this.onSave,
       required this.copyLinkEnabled,
+      required this.loggedInAs,
       required this.onCopyLink,
       required this.onLogout});
 
@@ -34,15 +36,7 @@ class MainMenuWidget extends StatelessWidget {
             key: const Key("main_menu"),
             padding: EdgeInsets.zero,
             children: [
-              DrawerHeader(
-                  child: Column(children: [
-                const Text("Parameter Page Menu"),
-                Text("Logged in as ${_getUsername(context)}"),
-                TextButton(
-                  onPressed: () => onLogout?.call(),
-                  child: const Text("Logout"),
-                )
-              ])),
+              _buildHeader(),
               ListTile(title: const Text("New Page"), onTap: onNewPage),
               ListTile(
                   title: const Text("Open Page"),
@@ -61,7 +55,19 @@ class MainMenuWidget extends StatelessWidget {
             ]));
   }
 
-  String _getUsername(BuildContext context) {
-    return AuthAdapterWidget.of(context)!.username!;
+  DrawerHeader _buildHeader() {
+    return DrawerHeader(
+        child: Column(children: [
+      const Text("Parameter Page Menu"),
+      loggedInAs == null
+          ? const Text("You are not logged in")
+          : Text("Logged in as $loggedInAs"),
+      loggedInAs == null
+          ? Container()
+          : TextButton(
+              onPressed: () => onLogout?.call(),
+              child: const Text("Logout"),
+            )
+    ]));
   }
 }
