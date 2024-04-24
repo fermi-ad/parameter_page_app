@@ -51,19 +51,29 @@ class MainMenuWidget extends StatelessWidget {
   }
 
   DrawerHeader _buildHeader(BuildContext context) {
-    final loggedInAs = AuthAdapterData.of(context)!.username;
     return DrawerHeader(
-        child: Column(children: [
-      const Text("Parameter Page Menu"),
-      loggedInAs == null
-          ? const Text("You are not logged in")
-          : Text("Logged in as $loggedInAs"),
-      loggedInAs == null
-          ? Container()
-          : TextButton(
-              onPressed: () => AuthAdapterState.of(context)!.requestLogout(),
-              child: const Text("Logout"),
-            )
-    ]));
+        child: Column(children: [_buildBanner(), _buildLoginStatus(context)]));
   }
+
+  Widget _buildBanner() => const Text("Parameter Page Menu");
+
+  Widget _buildLoginStatus(BuildContext context) => _getIsLoggedIn(context)
+      ? _buildLoggedInStatus(context)
+      : _buildLoggedOutStatus(context);
+
+  bool _getIsLoggedIn(BuildContext context) => _getUsername(context) != null;
+
+  String? _getUsername(BuildContext context) =>
+      AuthAdapterData.of(context)!.username;
+
+  Widget _buildLoggedInStatus(BuildContext context) => Column(children: [
+        Text("Logged in as ${_getUsername(context)}"),
+        TextButton(
+          onPressed: () => AuthAdapterState.of(context)!.requestLogout(),
+          child: const Text("Logout"),
+        )
+      ]);
+
+  Widget _buildLoggedOutStatus(BuildContext context) =>
+      const Column(children: [Text("You are not logged in")]);
 }
