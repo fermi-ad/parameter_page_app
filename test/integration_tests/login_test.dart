@@ -32,5 +32,19 @@ void main() {
       await openMainMenu(tester);
       assertIsNotLoggedIn();
     });
+
+    testWidgets('Tap Login, user is authenticated',
+        (WidgetTester tester) async {
+      // Given the application has been launched and the user is not logged in
+      await startParameterPageApp(tester);
+      await logout(tester);
+
+      // When I login
+      await login(tester);
+
+      // Then the username changes to "testuser"
+      await openMainMenu(tester);
+      assertIsLoggedIn(withUsername: "testuser");
+    });
   });
 }
