@@ -24,12 +24,11 @@ void main() {
       // Given the application has been launched and the user is already logged in
       await startParameterPageApp(tester);
 
-      // When I open the main menu and tap "Logout"
-      await openMainMenu(tester);
-      await tester.tap(find.text("Logout"));
-      await tester.pumpAndSettle();
+      // When I logout
+      await logout(tester);
 
       // Then the username changes to "not logged in"
+      await openMainMenu(tester);
       expect(find.text("Logged in as testuser"), findsNothing);
       expect(find.text("You are not logged in"), findsOneWidget);
     });
