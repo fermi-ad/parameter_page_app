@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:parameter_page/widgets/auth_adapter_widget.dart';
 import 'package:parameter_page/widgets/main_menu_widget.dart';
 
 class LandingPageWidget extends StatelessWidget {
@@ -19,11 +18,9 @@ class LandingPageWidget extends StatelessWidget {
             onNewPage: onCreateNewPage,
             onOpenPage: (context) => onOpenPage.call(),
             onSave: () {},
-            loggedInAs: AuthAdapterData.of(context)?.username,
             saveEnabled: false,
             copyLinkEnabled: false,
-            onCopyLink: () {},
-            onLogout: () => AuthAdapterState.of(context)!.requestLogout()));
+            onCopyLink: () {}));
   }
 
   AppBar _buildAppBar() {

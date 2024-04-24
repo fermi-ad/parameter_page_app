@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:parameter_page/widgets/auth_adapter_widget.dart';
 
 class MainMenuWidget extends StatelessWidget {
   final Function() onNewPage;
@@ -11,11 +12,7 @@ class MainMenuWidget extends StatelessWidget {
 
   final bool copyLinkEnabled;
 
-  final String? loggedInAs;
-
   final Function() onCopyLink;
-
-  final Function()? onLogout;
 
   const MainMenuWidget(
       {super.key,
@@ -24,9 +21,7 @@ class MainMenuWidget extends StatelessWidget {
       required this.saveEnabled,
       required this.onSave,
       required this.copyLinkEnabled,
-      required this.loggedInAs,
-      required this.onCopyLink,
-      required this.onLogout});
+      required this.onCopyLink});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +31,7 @@ class MainMenuWidget extends StatelessWidget {
             key: const Key("main_menu"),
             padding: EdgeInsets.zero,
             children: [
-              _buildHeader(),
+              _buildHeader(context),
               ListTile(title: const Text("New Page"), onTap: onNewPage),
               ListTile(
                   title: const Text("Open Page"),
@@ -55,7 +50,8 @@ class MainMenuWidget extends StatelessWidget {
             ]));
   }
 
-  DrawerHeader _buildHeader() {
+  DrawerHeader _buildHeader(BuildContext context) {
+    final loggedInAs = AuthAdapterData.of(context)!.username;
     return DrawerHeader(
         child: Column(children: [
       const Text("Parameter Page Menu"),
@@ -65,7 +61,7 @@ class MainMenuWidget extends StatelessWidget {
       loggedInAs == null
           ? Container()
           : TextButton(
-              onPressed: () => onLogout?.call(),
+              onPressed: () => AuthAdapterState.of(context)!.requestLogout(),
               child: const Text("Logout"),
             )
     ]));
