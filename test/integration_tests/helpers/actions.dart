@@ -298,7 +298,11 @@ Future<void> openMainMenu(tester) async {
 }
 
 Future<void> closeMainMenu(tester) async {
-  await tester.tap(find.byType(ParameterPageScaffoldWidget));
+  if (find.byType(LandingPageWidget).evaluate().isNotEmpty) {
+    await tester.tap(find.byType(LandingPageWidget));
+  } else {
+    await tester.tap(find.byType(ParameterPageScaffoldWidget));
+  }
   await tester.pumpAndSettle();
 }
 
@@ -613,12 +617,7 @@ Future<void> logout(WidgetTester tester) async {
   await tester.tap(find.text("Logout"));
   await tester.pumpAndSettle();
 
-  if (find.byType(LandingPageWidget).evaluate().isNotEmpty) {
-    await tester.tap(find.byType(LandingPageWidget));
-  } else {
-    await tester.tap(find.byType(ParameterPageScaffoldWidget));
-  }
-  await tester.pumpAndSettle();
+  await closeMainMenu(tester);
 }
 
 Future<void> login(WidgetTester tester) async {
