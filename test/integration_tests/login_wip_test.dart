@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
 import 'helpers/actions.dart';
+import 'helpers/assertions.dart';
 import 'helpers/setup.dart';
 
 void main() {
@@ -18,8 +19,8 @@ void main() {
       await login(tester);
 
       // Then the username changes to "testuser"
-      expect(find.text("You are not logged in"), findsNothing);
-      expect(find.text("testuser"), findsOneWidget);
+      await openMainMenu(tester);
+      assertIsLoggedIn(withUsername: "testuser");
     });
   });
 }

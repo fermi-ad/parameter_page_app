@@ -863,3 +863,12 @@ void assertMultState(WidgetTester tester,
       reason:
           "Expected MultEntryWidget at position $atIndex to be ${isEnabled ? "enabled" : "disabled"}");
 }
+
+void assertIsLoggedIn({required String withUsername}) {
+  expect(find.text("You are not logged in"), findsNothing);
+  expect(find.text("Logged in as $withUsername"), findsOneWidget);
+}
+
+void assertIsNotLoggedIn() {
+  expect(find.text("You are not logged in"), findsOneWidget);
+}

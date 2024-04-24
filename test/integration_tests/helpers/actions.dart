@@ -622,6 +622,9 @@ Future<void> logout(WidgetTester tester) async {
 
 Future<void> login(WidgetTester tester) async {
   await openMainMenu(tester);
+
   await tester.tap(find.text("Login"));
   await tester.pumpAndSettle();
+
+  await closeMainMenu(tester);
 }
