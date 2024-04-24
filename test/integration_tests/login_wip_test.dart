@@ -14,10 +14,8 @@ void main() {
       await startParameterPageApp(tester);
       await logout(tester);
 
-      // When I open the main menu and tap "Login"
-      await openMainMenu(tester);
-      await tester.tap(find.text("Login"));
-      await tester.pumpAndSettle();
+      // When I login
+      await login(tester);
 
       // Then the username changes to "testuser"
       expect(find.text("You are not logged in"), findsNothing);

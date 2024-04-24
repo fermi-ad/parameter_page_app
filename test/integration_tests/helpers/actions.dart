@@ -609,13 +609,20 @@ Future<void> knobDown(WidgetTester tester, {required int steps}) async {
 
 Future<void> logout(WidgetTester tester) async {
   await openMainMenu(tester);
+
   await tester.tap(find.text("Logout"));
   await tester.pumpAndSettle();
 
-  if (find.byType(LandingPageWidget).hasFound) {
+  if (find.byType(LandingPageWidget).evaluate().isNotEmpty) {
     await tester.tap(find.byType(LandingPageWidget));
   } else {
     await tester.tap(find.byType(ParameterPageScaffoldWidget));
   }
+  await tester.pumpAndSettle();
+}
+
+Future<void> login(WidgetTester tester) async {
+  await openMainMenu(tester);
+  await tester.tap(find.text("Login"));
   await tester.pumpAndSettle();
 }
