@@ -9,4 +9,6 @@ abstract class AuthorizationService {
   Widget buildWidget(Widget child);
 
   void requestLogout();
+
+  void requestLogin();
 }

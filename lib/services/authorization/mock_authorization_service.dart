@@ -17,5 +17,10 @@ class MockAuthorizationService extends AuthorizationService {
     _username = null;
   }
 
+  @override
+  void requestLogin() {
+    _username = "testuser";
+  }
+
   String? _username = "testuser";
 }

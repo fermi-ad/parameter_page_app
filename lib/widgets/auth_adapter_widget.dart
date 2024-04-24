@@ -36,6 +36,11 @@ class AuthAdapterState extends State<AuthAdapterWidget> {
     setState(() => _username = null);
   }
 
+  void requestLogin() {
+    widget.service.requestLogin();
+    setState(() => _username = widget.service.username);
+  }
+
   String? _username;
 }
 

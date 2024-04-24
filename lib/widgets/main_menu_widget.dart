@@ -74,6 +74,10 @@ class MainMenuWidget extends StatelessWidget {
         )
       ]);
 
-  Widget _buildLoggedOutStatus(BuildContext context) =>
-      const Column(children: [Text("You are not logged in")]);
+  Widget _buildLoggedOutStatus(BuildContext context) => Column(children: [
+        const Text("You are not logged in"),
+        TextButton(
+            onPressed: () => AuthAdapterState.of(context)!.requestLogin(),
+            child: const Text("Login"))
+      ]);
 }
