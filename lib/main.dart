@@ -41,7 +41,7 @@ void main() async {
 
   runFermiApp(
       authInfo: authService.authInfo,
-      appWidget: ControlsRouterApp(
+      appWidget: NonAuthRouterApp(
           title: "Parameter Page",
           router: GoRouter(
               redirect: (BuildContext context, GoRouterState state) {

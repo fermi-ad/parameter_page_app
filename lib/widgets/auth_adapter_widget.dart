@@ -31,13 +31,13 @@ class AuthAdapterState extends State<AuthAdapterWidget> {
   static AuthAdapterState? of(BuildContext context) =>
       context.findAncestorStateOfType<AuthAdapterState>();
 
-  void requestLogout() {
-    widget.service.requestLogout();
+  void requestLogout(BuildContext context) {
+    widget.service.requestLogout(context);
     setState(() => _username = null);
   }
 
-  void requestLogin() {
-    widget.service.requestLogin();
+  Future<void> requestLogin(BuildContext context) async {
+    widget.service.requestLogin(context);
     setState(() => _username = widget.service.username);
   }
 

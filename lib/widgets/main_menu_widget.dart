@@ -69,7 +69,7 @@ class MainMenuWidget extends StatelessWidget {
   Widget _buildLoggedInStatus(BuildContext context) => Column(children: [
         Text("Logged in as ${_getUsername(context)}"),
         TextButton(
-          onPressed: () => AuthAdapterState.of(context)!.requestLogout(),
+          onPressed: () => AuthAdapterState.of(context)!.requestLogout(context),
           child: const Text("Logout"),
         )
       ]);
@@ -77,7 +77,8 @@ class MainMenuWidget extends StatelessWidget {
   Widget _buildLoggedOutStatus(BuildContext context) => Column(children: [
         const Text("You are not logged in"),
         TextButton(
-            onPressed: () => AuthAdapterState.of(context)!.requestLogin(),
+            onPressed: () =>
+                AuthAdapterState.of(context)!.requestLogin(context),
             child: const Text("Login"))
       ]);
 }

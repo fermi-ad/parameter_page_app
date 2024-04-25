@@ -15,19 +15,19 @@ class ACSysAuthorizationService extends AuthorizationService {
 
   @override
   String? get username {
-    return "unimplemented!";
+    return null;
   }
 
   @override
-  Widget buildWidget(Widget child) => Container(child: child);
+  Widget buildWidget(Widget child) => AuthService(child: child);
 
   @override
-  void requestLogout() {
+  void requestLogout(BuildContext context) {
     throw UnimplementedError("ACSysAuthorizationService.requestLogout()");
   }
 
   @override
-  void requestLogin() {
-    throw UnimplementedError("ACSysAuthorizationService.requestLogin()");
+  void requestLogin(BuildContext context) {
+    AuthService.requestLogin(context);
   }
 }

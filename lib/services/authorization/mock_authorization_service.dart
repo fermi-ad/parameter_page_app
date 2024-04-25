@@ -13,12 +13,12 @@ class MockAuthorizationService extends AuthorizationService {
   Widget buildWidget(Widget child) => Container(child: child);
 
   @override
-  void requestLogout() {
+  void requestLogout(BuildContext context) {
     _username = null;
   }
 
   @override
-  void requestLogin() {
+  Future<void> requestLogin(BuildContext context) async {
     _username = "testuser";
   }
 
