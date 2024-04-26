@@ -18,7 +18,7 @@ class ACSysAuthorizationService extends AuthorizationService {
 
   @override
   void requestLogout(BuildContext context) {
-    throw UnimplementedError("ACSysAuthorizationService.requestLogout()");
+    AuthService.requestLogout(context);
   }
 
   @override
