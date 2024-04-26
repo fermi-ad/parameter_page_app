@@ -7,9 +7,6 @@ class MockAuthorizationService extends AuthorizationService {
   AuthInfo? get authInfo => null;
 
   @override
-  String? get username => _username;
-
-  @override
   Widget buildWidget(Widget child) => Container(child: child);
 
   @override
@@ -23,4 +20,9 @@ class MockAuthorizationService extends AuthorizationService {
   }
 
   String? _username = "testuser";
+
+  @override
+  String? getUsername(BuildContext context) {
+    return _username;
+  }
 }

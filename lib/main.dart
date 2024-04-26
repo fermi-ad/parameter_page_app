@@ -41,17 +41,21 @@ void main() async {
 
   runFermiApp(
       authInfo: authService.authInfo,
-      appWidget: NonAuthRouterApp(
-          title: "Parameter Page",
-          router: GoRouter(
-              redirect: (BuildContext context, GoRouterState state) {
-                return null;
-              },
-              errorBuilder: (context, state) {
-                return Text(state.error!.message);
-              },
-              routes: configureRoutes(dpmService, pageService, deviceService,
-                  settingsPermissionService, authService))));
+      appWidget: AuthRouterApp(
+        title: "Parameter Page",
+        router: GoRouter(
+            redirect: (BuildContext context, GoRouterState state) {
+              return "/";
+            },
+            errorBuilder: (context, state) {
+              return Text(state.error!.message);
+            },
+            routes: configureRoutes(dpmService, pageService, deviceService,
+                settingsPermissionService, authService)),
+        realm: authService.authInfo!.realm,
+        clientId: authService.authInfo!.clientId,
+        clientSecret: authService.authInfo!.clientSecret,
+      ));
 }
 
 (

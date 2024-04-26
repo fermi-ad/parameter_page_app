@@ -19,11 +19,11 @@ class AuthAdapterState extends State<AuthAdapterWidget> {
   @override
   initState() {
     super.initState();
-    _username = widget.service.username;
   }
 
   @override
   Widget build(BuildContext context) {
+    _username = widget.service.getUsername(context);
     return AuthAdapterData(
         username: _username, child: widget.service.buildWidget(widget.child));
   }
@@ -38,7 +38,9 @@ class AuthAdapterState extends State<AuthAdapterWidget> {
 
   Future<void> requestLogin(BuildContext context) async {
     widget.service.requestLogin(context);
-    setState(() => _username = widget.service.username);
+    setState(() {
+      _username = widget.service.getUsername(context);
+    });
   }
 
   String? _username;

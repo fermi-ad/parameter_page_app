@@ -14,12 +14,7 @@ class ACSysAuthorizationService extends AuthorizationService {
   }
 
   @override
-  String? get username {
-    return null;
-  }
-
-  @override
-  Widget buildWidget(Widget child) => AuthService(child: child);
+  Widget buildWidget(Widget child) => Container(child: child);
 
   @override
   void requestLogout(BuildContext context) {
@@ -29,5 +24,11 @@ class ACSysAuthorizationService extends AuthorizationService {
   @override
   void requestLogin(BuildContext context) {
     AuthService.requestLogin(context);
+  }
+
+  @override
+  String? getUsername(BuildContext context) {
+    final creds = AuthService.getCreds(context)?.idToken.claims;
+    return creds?.preferredUsername;
   }
 }

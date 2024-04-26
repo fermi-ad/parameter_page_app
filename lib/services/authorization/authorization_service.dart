@@ -4,9 +4,9 @@ import 'package:flutter_controls_core/flutter_controls_core.dart';
 abstract class AuthorizationService {
   AuthInfo? get authInfo;
 
-  String? get username;
-
   Widget buildWidget(Widget child);
+
+  String? getUsername(BuildContext context);
 
   void requestLogout(BuildContext context);
 
