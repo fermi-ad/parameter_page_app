@@ -15,13 +15,12 @@ class LandingPageWidget extends StatelessWidget {
         appBar: _buildAppBar(),
         body: _buildBody(),
         drawer: MainMenuWidget(
-          onNewPage: onCreateNewPage,
-          onOpenPage: (context) => onOpenPage.call(),
-          onSave: () {},
-          saveEnabled: false,
-          copyLinkEnabled: false,
-          onCopyLink: () {},
-        ));
+            onNewPage: onCreateNewPage,
+            onOpenPage: (context) => onOpenPage.call(),
+            onSave: () {},
+            saveEnabled: false,
+            copyLinkEnabled: false,
+            onCopyLink: () {}));
   }
 
   AppBar _buildAppBar() {

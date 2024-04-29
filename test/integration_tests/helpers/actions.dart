@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parameter_page/services/settings_permission/settings_permission_service.dart';
+import 'package:parameter_page/widgets/landing_page_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
 import 'package:parameter_page/widgets/parameter_page_scaffold_widget.dart';
 
@@ -297,7 +298,11 @@ Future<void> openMainMenu(tester) async {
 }
 
 Future<void> closeMainMenu(tester) async {
-  await tester.tap(find.byType(ParameterPageScaffoldWidget));
+  if (find.byType(LandingPageWidget).evaluate().isNotEmpty) {
+    await tester.tap(find.byType(LandingPageWidget));
+  } else {
+    await tester.tap(find.byType(ParameterPageScaffoldWidget));
+  }
   await tester.pumpAndSettle();
 }
 
@@ -604,4 +609,22 @@ Future<void> knobDown(WidgetTester tester, {required int steps}) async {
     await tester.sendKeyDownEvent(LogicalKeyboardKey.f4);
     await tester.pumpAndSettle();
   }
+}
+
+Future<void> logout(WidgetTester tester) async {
+  await openMainMenu(tester);
+
+  await tester.tap(find.text("Logout"));
+  await tester.pumpAndSettle();
+
+  await closeMainMenu(tester);
+}
+
+Future<void> login(WidgetTester tester) async {
+  await openMainMenu(tester);
+
+  await tester.tap(find.text("Login"));
+  await tester.pumpAndSettle();
+
+  await closeMainMenu(tester);
 }

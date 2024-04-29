@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:parameter_page/widgets/auth_adapter_widget.dart';
 
 class MainMenuWidget extends StatelessWidget {
   final Function() onNewPage;
@@ -30,7 +31,7 @@ class MainMenuWidget extends StatelessWidget {
             key: const Key("main_menu"),
             padding: EdgeInsets.zero,
             children: [
-              const DrawerHeader(child: Text("Parameter Page Menu")),
+              _buildHeader(context),
               ListTile(title: const Text("New Page"), onTap: onNewPage),
               ListTile(
                   title: const Text("Open Page"),
@@ -48,4 +49,36 @@ class MainMenuWidget extends StatelessWidget {
                   onTap: onCopyLink)
             ]));
   }
+
+  DrawerHeader _buildHeader(BuildContext context) {
+    return DrawerHeader(
+        child: Column(children: [_buildBanner(), _buildLoginStatus(context)]));
+  }
+
+  Widget _buildBanner() => const Text("Parameter Page Menu");
+
+  Widget _buildLoginStatus(BuildContext context) => _getIsLoggedIn(context)
+      ? _buildLoggedInStatus(context)
+      : _buildLoggedOutStatus(context);
+
+  bool _getIsLoggedIn(BuildContext context) => _getUsername(context) != null;
+
+  String? _getUsername(BuildContext context) =>
+      AuthAdapterData.of(context)!.username;
+
+  Widget _buildLoggedInStatus(BuildContext context) => Column(children: [
+        Text("Logged in as ${_getUsername(context)}"),
+        TextButton(
+          onPressed: () => AuthAdapterState.of(context)!.requestLogout(context),
+          child: const Text("Logout"),
+        )
+      ]);
+
+  Widget _buildLoggedOutStatus(BuildContext context) => Column(children: [
+        const Text("You are not logged in"),
+        TextButton(
+            onPressed: () =>
+                AuthAdapterState.of(context)!.requestLogin(context),
+            child: const Text("Login"))
+      ]);
 }

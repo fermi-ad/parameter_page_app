@@ -6,7 +6,13 @@ This is the PIP-II Parameter Page web application.
 
 ## Development Environment
 
-TODO
+The application depends on configuration in a .env file.  This file contains secrets so it is not tracked in this repository.  An example .env-test file is used to generate a .env with default values for testing.  You will need to do this in your development environment:
+
+```
+cp .env-test .env
+```
+
+If you need the production configuration, ask another developer or devops engineer.
 
 ## Running
 
