@@ -45,7 +45,8 @@ void main() async {
           title: "Parameter Page",
           router: GoRouter(
               redirect: (BuildContext context, GoRouterState state) {
-                return "/";
+                // This is my hack to detect if we are returning from the authentication page
+                return state.fullPath == "" ? "/" : null;
               },
               errorBuilder: (context, state) {
                 return Text(state.error!.message);
