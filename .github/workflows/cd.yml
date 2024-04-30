@@ -18,6 +18,10 @@ jobs:
       - name: Checking out source code
         uses: actions/checkout@v3
 
+      - name: Generate test configuration
+        run: |
+          cp .env-test .env
+
       - uses: subosito/flutter-action@v2
         with:
           channel: "stable"
