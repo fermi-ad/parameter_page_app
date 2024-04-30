@@ -38,6 +38,8 @@ abstract class PageEntry {
   String entryText();
 
   String get typeAsString => "PageEntry";
+
+  double get proportion => 0;
 }
 
 class MultEntry extends PageEntry {
