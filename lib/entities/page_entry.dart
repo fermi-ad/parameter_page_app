@@ -114,7 +114,11 @@ class ParameterEntry extends PageEntry {
   final String drf;
   final String? label;
 
-  ParameterEntry(this.drf, {this.label, super.key, super.id});
+  @override
+  final double proportion;
+
+  ParameterEntry(this.drf,
+      {this.label, super.key, super.id, this.proportion = 1.0});
 
   @override
   Widget buildEntry(

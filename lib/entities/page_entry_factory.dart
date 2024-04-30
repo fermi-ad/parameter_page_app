@@ -22,7 +22,8 @@ class PageEntryFactory {
 
     for (String textElement in textArr) {
       if (_isACNETDRF(textElement) || _isProcessVariable(textElement)) {
-        ret.add(ParameterEntry(textElement, label: ""));
+        ret.add(ParameterEntry(_extractDeviceName(textElement),
+            label: "", proportion: _extractProportion(textElement)));
       }
     }
 
@@ -49,6 +50,15 @@ class PageEntryFactory {
     return textInput.substring(1);
   }
 
+  String _extractDeviceName(String from) {
+    final match = _deviceAndProportionRegEx.firstMatch(from);
+    return match!.namedGroup("name")!;
+  }
+
+  double _extractProportion(String from) {
+    return 0.5;
+  }
+
   MultEntry _generateMultEntry({required String from}) {
     final match = _multRegExp.firstMatch(from)!;
     int numberOfEntries =
@@ -59,7 +69,11 @@ class PageEntryFactory {
         numberOfEntries: numberOfEntries, description: description);
   }
 
-  final _drfRegEx = RegExp(r"^[A-Za-z][:_|][A-Za-z0-9@,]{1,255}$");
+  final _deviceAndProportionRegEx =
+      RegExp(r"^(?<name>[A-Za-z0-9:_|]{1,255})\*?(?<proportion>\d*\.?\d)?");
+
+  final _drfRegEx =
+      RegExp(r"^([A-Za-z][:_|][A-Za-z0-9@,]{1,255})(\*\d*\.?\d*)?$");
 
   final _pvRegEx = RegExp(r"^([A-Za-z0-9:_]{1,255}):([A-Za-z0-9:_]{1,255})$");
 
