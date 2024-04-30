@@ -13,9 +13,18 @@ void main() {
 
   group('Knob Parameters in Unison (Mults)', () {
     testWidgets(
-        'Assign knobbing proportion to parameter, displayed below setting value',
+        'Assign knobbing proportion to parameter, display proportion with parameter',
         (WidgetTester tester) async {
-      // This test might belong with Knob Parameter
+      // Given I am working on a new parameter page
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+
+      // When I add G:MULT1 with a proportion of 0.5
+      await addANewEntry(tester, "G:MULT1*0.5");
+      await exitEditMode(tester);
+
+      // Then the proportion is displayed with the parameter
+      assertParameterHasDetails("G:MULT1", proportion: "0.5");
     });
 
     testWidgets(
