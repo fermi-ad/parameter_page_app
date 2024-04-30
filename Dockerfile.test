@@ -6,8 +6,8 @@ RUN apt-get update && \
     git \
     unzip \
     xz-utils \
-    curl \
-    libgl1-mesa-glx
+    curl 
+
 
 RUN useradd -ms /bin/bash test
 USER test
