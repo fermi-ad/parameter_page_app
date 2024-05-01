@@ -77,7 +77,8 @@ class PageEntryFactory {
   final _drfRegEx =
       RegExp(r"^([A-Za-z][:_|][A-Za-z0-9@,]{1,255})(\*[+-]?\d*\.?\d*)?$");
 
-  final _pvRegEx = RegExp(r"^([A-Za-z0-9:_]{1,255}):([A-Za-z0-9:_]{1,255})$");
+  final _pvRegEx = RegExp(
+      r"^([A-Za-z0-9:_]{1,255}):([A-Za-z0-9:_]{1,255})(\*[+-]?\d*\.?\d*)?$");
 
   final _multRegExp = RegExp(
       r"^mult:(?<numberOfEntries>\d)\s?(?<description>.*)?",
