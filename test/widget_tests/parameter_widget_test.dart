@@ -185,5 +185,35 @@ void main() {
       // Then the proportion is displayed
       assertParameterHasDetails("G:MULT1", proportion: "0.555");
     });
+
+    testWidgets(
+        'Proportion = 1.0, proportion is not displayed with parameter name',
+        (WidgetTester tester) async {
+      // Given a ParameterWidget with proportion set to 1
+      // When I instantiate and display the widget
+      await tester.binding.setSurfaceSize(const Size(2560, 1440));
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: DataAcquisitionWidget(
+                  service: MockDpmService(useEmptyStream: true),
+                  child: const ParameterWidget(
+                      drf: "G:MULT1",
+                      editMode: false,
+                      wide: true,
+                      displayAlarmDetails: false,
+                      settingsAllowed: true,
+                      proportion: 1.0))));
+      await tester.pumpWidget(app);
+      await waitForParameterToLoad(tester, drf: "G:MULT1");
+
+      // Then the knobbing proportion is not displayed
+      assertKnobbingProportion(forDRF: "G:MULT1", isVisible: false);
+    });
   });
+}
+
+void assertKnobbingProportion(
+    {required String forDRF, required bool isVisible}) {
+  expect(find.byKey(Key("parameter_proportion_$forDRF")),
+      isVisible ? findsOneWidget : findsNothing);
 }

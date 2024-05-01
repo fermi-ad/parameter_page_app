@@ -229,11 +229,15 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
         message: widget.drf,
         child: Row(children: [
           Text(overflow: TextOverflow.ellipsis, widget.drf),
-          Text(" * ", style: proportionStyle),
-          Container(
-              key: Key("parameter_proportion_${widget.drf}"),
-              child: Text(f.format(widget.proportion),
-                  overflow: TextOverflow.visible, style: proportionStyle))
+          Visibility(
+              visible: widget.proportion != 1,
+              child: Text(" * ", style: proportionStyle)),
+          Visibility(
+              visible: widget.proportion != 1,
+              child: Container(
+                  key: Key("parameter_proportion_${widget.drf}"),
+                  child: Text(f.format(widget.proportion),
+                      overflow: TextOverflow.visible, style: proportionStyle)))
         ]));
   }
 
