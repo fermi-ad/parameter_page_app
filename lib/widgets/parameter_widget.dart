@@ -218,13 +218,17 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   Widget _buildName() {
+    final proportionStyle = TextStyle(
+        color: Theme.of(context).colorScheme.secondary, fontSize: 12.0);
+
     return Tooltip(
         message: widget.drf,
         child: Row(children: [
           Text(overflow: TextOverflow.ellipsis, widget.drf),
+          Text(" * ", style: proportionStyle),
           Container(
               key: Key("parameter_proportion_${widget.drf}"),
-              child: const Text("0.555"))
+              child: Text("0.555", style: proportionStyle))
         ]));
   }
 
