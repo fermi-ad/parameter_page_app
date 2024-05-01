@@ -55,6 +55,26 @@ void main() {
       _createEntryAndAssertProportion(
           fromInput: "G:MULT1*+2.5", parameterIs: "G:MULT1", proportionIs: 2.5);
     });
+
+    test(
+        "Input contains a PV followed by a proportion, produces a ParameterEntry with a positive proportion",
+        () {
+      // Given a PageEntryFactory
+      // When I createEntries(fromInput:) with a PV and a proportion
+      // Then the ParameterEntry has a proportion of...
+      _createEntryAndAssertProportion(
+          fromInput: "TEST:EPICS:PV",
+          parameterIs: "TEST:EPICS:PV",
+          proportionIs: 1.0);
+      _createEntryAndAssertProportion(
+          fromInput: "TEST:EPICS:PV*2",
+          parameterIs: "TEST:EPICS:PV",
+          proportionIs: 2.0);
+      _createEntryAndAssertProportion(
+          fromInput: "TEST:EPICS:PV*-1.0",
+          parameterIs: "TEST:EPICS:PV",
+          proportionIs: -1.0);
+    });
   });
 }
 
