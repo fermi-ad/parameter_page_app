@@ -17,6 +17,21 @@ void main() {
     });
 
     test(
+        "Input contains no *, produces a ParameterEntry with a proportion of 1",
+        () {
+      // Given a PageEntryFactory
+      final factory = PageEntryFactory();
+
+      // When I createEntries(fromInput:) with a proportion
+      final newEntry = factory.createEntries(fromInput: "G:MULT1")[0];
+
+      // Then the ParameterEntry has a proportion of 0.5
+      expect(newEntry.typeAsString, "Parameter");
+      expect(newEntry.entryText(), "G:MULT1");
+      expect(newEntry.proportion, 1);
+    });
+
+    test(
         "Input contains * followed by a number, produces a ParameterEntry with a proportion",
         () {
       // Given a PageEntryFactory
