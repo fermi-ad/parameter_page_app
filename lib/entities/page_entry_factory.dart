@@ -72,7 +72,7 @@ class PageEntryFactory {
   }
 
   final _deviceAndProportionRegEx = RegExp(
-      r"^(?<name>[A-Za-z0-9:_|]{1,255})\*?(?<proportion>[+-]?\d*\.?\d)?");
+      r"^(?<name>[A-Za-z0-9:_|]{1,255})\*?(?<proportion>[+-]?\d*\.?\d*)?");
 
   final _drfRegEx =
       RegExp(r"^([A-Za-z][:_|][A-Za-z0-9@,]{1,255})(\*[+-]?\d*\.?\d*)?$");
