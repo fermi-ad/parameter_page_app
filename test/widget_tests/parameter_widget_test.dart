@@ -210,6 +210,29 @@ void main() {
     });
 
     testWidgets(
+        'In edit mode with proportion = 1.0, proportion is NOT displayed with parameter name',
+        (WidgetTester tester) async {
+      // Given a ParameterWidget with proportion set to 0.555
+      // When I instantiate and display the widget
+      await tester.binding.setSurfaceSize(const Size(2560, 1440));
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: DataAcquisitionWidget(
+                  service: MockDpmService(useEmptyStream: true),
+                  child: const ParameterWidget(
+                      drf: "G:MULT1",
+                      editMode: true,
+                      wide: true,
+                      displayAlarmDetails: false,
+                      settingsAllowed: true,
+                      proportion: 1))));
+      await tester.pumpWidget(app);
+
+      // Then the proportion is displayed
+      expect(find.text("G:MULT1"), findsOneWidget);
+    });
+
+    testWidgets(
         'Proportion = 1.0, proportion is not displayed with parameter name',
         (WidgetTester tester) async {
       // Given a ParameterWidget with proportion set to 1
