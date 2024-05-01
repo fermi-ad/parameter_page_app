@@ -27,6 +27,11 @@ class ParameterWidget extends StatelessWidget {
   final Stream<double>? knobbingStream;
   final double proportion;
 
+  String get proportionFormatted {
+    final f = NumberFormat("##0.0##", "en_US");
+    return f.format(proportion);
+  }
+
   const ParameterWidget(
       {required this.drf,
       required this.editMode,
@@ -47,9 +52,11 @@ class ParameterWidget extends StatelessWidget {
   }
 
   Widget _buildEditor(BuildContext context) {
+    final entryText = proportion != 1 ? "$drf * $proportionFormatted" : drf;
+
     return ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 36.0),
-        child: Text(overflow: TextOverflow.ellipsis, drf));
+        child: Text(overflow: TextOverflow.ellipsis, entryText));
   }
 
   _ActiveParamWidget _buildActiveParam(BuildContext context) {
@@ -62,7 +69,8 @@ class ParameterWidget extends StatelessWidget {
         displayExtendedStatus: displayExtendedStatus,
         settingsAllowed: settingsAllowed,
         knobbingStream: knobbingStream,
-        proportion: proportion);
+        proportion: proportion,
+        proportionFormatted: proportionFormatted);
   }
 }
 
@@ -76,6 +84,7 @@ class _ActiveParamWidget extends StatefulWidget {
   final bool settingsAllowed;
   final Stream<double>? knobbingStream;
   final double proportion;
+  final String proportionFormatted;
 
   const _ActiveParamWidget(
       {required this.drf,
@@ -86,7 +95,8 @@ class _ActiveParamWidget extends StatefulWidget {
       required this.displayExtendedStatus,
       required this.settingsAllowed,
       required this.knobbingStream,
-      required this.proportion});
+      required this.proportion,
+      required this.proportionFormatted});
 
   @override
   _ActiveParamState createState() => _ActiveParamState();
@@ -221,7 +231,6 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   Widget _buildName() {
-    final f = NumberFormat("##0.0##", "en_US");
     final proportionStyle = TextStyle(
         color: Theme.of(context).colorScheme.secondary, fontSize: 12.0);
 
@@ -236,7 +245,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
               visible: widget.proportion != 1,
               child: Container(
                   key: Key("parameter_proportion_${widget.drf}"),
-                  child: Text(f.format(widget.proportion),
+                  child: Text(widget.proportionFormatted,
                       overflow: TextOverflow.visible, style: proportionStyle)))
         ]));
   }
