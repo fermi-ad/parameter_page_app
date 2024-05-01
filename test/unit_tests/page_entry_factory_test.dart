@@ -35,6 +35,10 @@ void main() {
       _createEntryAndAssertProportion(
           fromInput: "G:MULT1*0.5", parameterIs: "G:MULT1", proportionIs: 0.5);
       _createEntryAndAssertProportion(
+          fromInput: "G:MULT1*0.55",
+          parameterIs: "G:MULT1",
+          proportionIs: 0.55);
+      _createEntryAndAssertProportion(
           fromInput: "G:MULT1*0.555",
           parameterIs: "G:MULT1",
           proportionIs: 0.555);
