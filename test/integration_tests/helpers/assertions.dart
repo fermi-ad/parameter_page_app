@@ -37,7 +37,8 @@ void assertParameterHasDetails(String parameter,
     String? settingValue,
     String? settingUnits,
     String? readingValue,
-    String? readingUnits}) {
+    String? readingUnits,
+    String? proportion}) {
   final row = find.byKey(Key("parameter_row_$parameter"));
 
   final parameterFinder = find.text(parameter);
@@ -72,6 +73,13 @@ void assertParameterHasDetails(String parameter,
   if (settingUnits != null) {
     final setting = find.byKey(Key("parameter_setting_$parameter"));
     expect(find.descendant(of: setting, matching: find.text(settingUnits)),
+        findsOneWidget);
+  }
+
+  if (proportion != null) {
+    final proportionFinder = find.byKey(Key("parameter_proportion_$parameter"));
+    expect(
+        find.descendant(of: proportionFinder, matching: find.text(proportion)),
         findsOneWidget);
   }
 }
@@ -871,4 +879,10 @@ void assertIsLoggedIn({required String withUsername}) {
 
 void assertIsNotLoggedIn() {
   expect(find.text("You are not logged in"), findsOneWidget);
+}
+
+void assertKnobbingProportion(
+    {required String forDRF, required bool isVisible}) {
+  expect(find.byKey(Key("parameter_proportion_$forDRF")),
+      isVisible ? findsOneWidget : findsNothing);
 }

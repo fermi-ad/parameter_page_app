@@ -13,12 +13,6 @@ void main() {
 
   group('Knob Parameters in Unison (Mults)', () {
     testWidgets(
-        'Assign knobbing proportion to parameter, displayed below setting value',
-        (WidgetTester tester) async {
-      // This test might belong with Knob Parameter
-    });
-
-    testWidgets(
         'Knob parameter with proportion up multiple steps, proportion applied to each step',
         (WidgetTester tester) async {
       // This test might belong with Knob Parameter

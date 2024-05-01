@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_controls_core/flutter_controls_core.dart';
+import 'package:intl/intl.dart';
 import 'package:parameter_page/widgets/command_menu_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
 import 'package:parameter_page/widgets/parameter_alarm_status_widget.dart';
@@ -24,6 +25,12 @@ class ParameterWidget extends StatelessWidget {
   final bool displayExtendedStatus;
   final bool settingsAllowed;
   final Stream<double>? knobbingStream;
+  final double proportion;
+
+  String get proportionFormatted {
+    final f = NumberFormat("##0.0##", "en_US");
+    return f.format(proportion);
+  }
 
   const ParameterWidget(
       {required this.drf,
@@ -35,6 +42,7 @@ class ParameterWidget extends StatelessWidget {
       this.displayUnits = DisplayUnits.commonUnits,
       this.displayAlarmDetails = false,
       this.displayExtendedStatus = false,
+      this.proportion = 1.0,
       this.knobbingStream});
 
   @override
@@ -44,22 +52,25 @@ class ParameterWidget extends StatelessWidget {
   }
 
   Widget _buildEditor(BuildContext context) {
+    final entryText = proportion != 1 ? "$drf * $proportionFormatted" : drf;
+
     return ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 36.0),
-        child: Text(overflow: TextOverflow.ellipsis, drf));
+        child: Text(overflow: TextOverflow.ellipsis, entryText));
   }
 
   _ActiveParamWidget _buildActiveParam(BuildContext context) {
     return _ActiveParamWidget(
-      displayUnits: displayUnits,
-      drf: drf,
-      wide: wide,
-      dpm: DataAcquisitionWidget.of(context),
-      displayAlarmDetails: displayAlarmDetails,
-      displayExtendedStatus: displayExtendedStatus,
-      settingsAllowed: settingsAllowed,
-      knobbingStream: knobbingStream,
-    );
+        displayUnits: displayUnits,
+        drf: drf,
+        wide: wide,
+        dpm: DataAcquisitionWidget.of(context),
+        displayAlarmDetails: displayAlarmDetails,
+        displayExtendedStatus: displayExtendedStatus,
+        settingsAllowed: settingsAllowed,
+        knobbingStream: knobbingStream,
+        proportion: proportion,
+        proportionFormatted: proportionFormatted);
   }
 }
 
@@ -72,6 +83,8 @@ class _ActiveParamWidget extends StatefulWidget {
   final bool displayExtendedStatus;
   final bool settingsAllowed;
   final Stream<double>? knobbingStream;
+  final double proportion;
+  final String proportionFormatted;
 
   const _ActiveParamWidget(
       {required this.drf,
@@ -81,7 +94,9 @@ class _ActiveParamWidget extends StatefulWidget {
       required this.displayAlarmDetails,
       required this.displayExtendedStatus,
       required this.settingsAllowed,
-      required this.knobbingStream});
+      required this.knobbingStream,
+      required this.proportion,
+      required this.proportionFormatted});
 
   @override
   _ActiveParamState createState() => _ActiveParamState();
@@ -218,7 +233,25 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   Widget _buildName() {
     return Tooltip(
         message: widget.drf,
-        child: Text(overflow: TextOverflow.ellipsis, widget.drf));
+        child: Row(children: [
+          Text(overflow: TextOverflow.ellipsis, widget.drf),
+          _buildKnobbingProportion()
+        ]));
+  }
+
+  Widget _buildKnobbingProportion() {
+    final proportionStyle = TextStyle(
+        color: Theme.of(context).colorScheme.secondary, fontSize: 12.0);
+
+    return Visibility(
+        visible: _displayKnobbingProportion,
+        child: Row(children: [
+          Text(" * ", style: proportionStyle),
+          Container(
+              key: Key("parameter_proportion_${widget.drf}"),
+              child: Text(widget.proportionFormatted,
+                  overflow: TextOverflow.visible, style: proportionStyle))
+        ]));
   }
 
   Widget _buildDescription() {
@@ -570,6 +603,10 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
 
   bool get _deviceHasDigitalAlarmBlock {
     return deviceInfo != null && deviceInfo!.digitalAlarm != null;
+  }
+
+  bool get _displayKnobbingProportion {
+    return widget.proportion != 1;
   }
 
   bool _deviceInfoFailure = false;

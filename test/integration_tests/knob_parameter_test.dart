@@ -156,5 +156,20 @@ void main() {
             forDRF: "G:AMANDA", isSetTo: expected.toStringAsPrecision(4));
       }
     });
+
+    testWidgets(
+        'Assign knobbing proportion to parameter, display proportion with parameter',
+        (WidgetTester tester) async {
+      // Given I am working on a new parameter page
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+
+      // When I add G:MULT1 with a proportion of 0.5
+      await addANewEntry(tester, "G:MULT1*0.555");
+      await exitEditMode(tester);
+
+      // Then the proportion is displayed with the parameter
+      assertParameterHasDetails("G:MULT1", proportion: "0.555");
+    });
   });
 }
