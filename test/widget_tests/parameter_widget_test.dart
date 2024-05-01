@@ -6,6 +6,8 @@ import 'package:parameter_page/services/dpm/mock_dpm_service.dart';
 import 'package:parameter_page/widgets/data_acquisition_widget.dart';
 import 'package:parameter_page/widgets/parameter_widget.dart';
 
+import '../integration_tests/helpers/assertions.dart';
+
 void main() {
   group("ParameterWidget", () {
     Future<void> waitForParameterToLoad(
@@ -158,6 +160,30 @@ void main() {
 
       // Then the alarm details are displayed
       assertAlarmDetailsAreVisible(true);
+    });
+
+    testWidgets(
+        'Proportion != 1.0, proportion is displayed with parameter name',
+        (WidgetTester tester) async {
+      // Given a ParameterWidget with proportion set to 0.555
+      // When I instantiate and display the widget
+      await tester.binding.setSurfaceSize(const Size(2560, 1440));
+      MaterialApp app = MaterialApp(
+          home: Scaffold(
+              body: DataAcquisitionWidget(
+                  service: MockDpmService(useEmptyStream: true),
+                  child: const ParameterWidget(
+                      drf: "G:MULT1",
+                      editMode: false,
+                      wide: true,
+                      displayAlarmDetails: false,
+                      settingsAllowed: true,
+                      proportion: 0.555))));
+      await tester.pumpWidget(app);
+      await waitForParameterToLoad(tester, drf: "G:MULT1");
+
+      // Then the proportion is displayed
+      assertParameterHasDetails("G:MULT1", proportion: "0.555");
     });
   });
 }

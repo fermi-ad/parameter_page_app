@@ -24,6 +24,7 @@ class ParameterWidget extends StatelessWidget {
   final bool displayExtendedStatus;
   final bool settingsAllowed;
   final Stream<double>? knobbingStream;
+  final double proportion;
 
   const ParameterWidget(
       {required this.drf,
@@ -35,6 +36,7 @@ class ParameterWidget extends StatelessWidget {
       this.displayUnits = DisplayUnits.commonUnits,
       this.displayAlarmDetails = false,
       this.displayExtendedStatus = false,
+      this.proportion = 1.0,
       this.knobbingStream});
 
   @override
@@ -218,7 +220,12 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   Widget _buildName() {
     return Tooltip(
         message: widget.drf,
-        child: Text(overflow: TextOverflow.ellipsis, widget.drf));
+        child: Row(children: [
+          Text(overflow: TextOverflow.ellipsis, widget.drf),
+          Container(
+              key: Key("parameter_proportion_${widget.drf}"),
+              child: const Text("0.555"))
+        ]));
   }
 
   Widget _buildDescription() {
