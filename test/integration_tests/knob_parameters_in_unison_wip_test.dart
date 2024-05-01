@@ -20,11 +20,11 @@ void main() {
       await createNewParameterPage(tester);
 
       // When I add G:MULT1 with a proportion of 0.5
-      await addANewEntry(tester, "G:MULT1*0.5");
+      await addANewEntry(tester, "G:MULT1*0.555");
       await exitEditMode(tester);
 
       // Then the proportion is displayed with the parameter
-      assertParameterHasDetails("G:MULT1", proportion: "0.5");
+      assertParameterHasDetails("G:MULT1", proportion: "0.555");
     });
 
     testWidgets(

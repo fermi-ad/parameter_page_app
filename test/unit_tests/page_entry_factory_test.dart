@@ -34,6 +34,10 @@ void main() {
       // Then the ParameterEntry has a proportion of 0.5
       _createEntryAndAssertProportion(
           fromInput: "G:MULT1*0.5", parameterIs: "G:MULT1", proportionIs: 0.5);
+      _createEntryAndAssertProportion(
+          fromInput: "G:MULT1*0.555",
+          parameterIs: "G:MULT1",
+          proportionIs: 0.555);
     });
 
     test(

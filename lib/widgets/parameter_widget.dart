@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_controls_core/flutter_controls_core.dart';
+import 'package:intl/intl.dart';
 import 'package:parameter_page/widgets/command_menu_widget.dart';
 import 'package:parameter_page/widgets/page_entry_widget.dart';
 import 'package:parameter_page/widgets/parameter_alarm_status_widget.dart';
@@ -53,15 +54,15 @@ class ParameterWidget extends StatelessWidget {
 
   _ActiveParamWidget _buildActiveParam(BuildContext context) {
     return _ActiveParamWidget(
-      displayUnits: displayUnits,
-      drf: drf,
-      wide: wide,
-      dpm: DataAcquisitionWidget.of(context),
-      displayAlarmDetails: displayAlarmDetails,
-      displayExtendedStatus: displayExtendedStatus,
-      settingsAllowed: settingsAllowed,
-      knobbingStream: knobbingStream,
-    );
+        displayUnits: displayUnits,
+        drf: drf,
+        wide: wide,
+        dpm: DataAcquisitionWidget.of(context),
+        displayAlarmDetails: displayAlarmDetails,
+        displayExtendedStatus: displayExtendedStatus,
+        settingsAllowed: settingsAllowed,
+        knobbingStream: knobbingStream,
+        proportion: proportion);
   }
 }
 
@@ -74,6 +75,7 @@ class _ActiveParamWidget extends StatefulWidget {
   final bool displayExtendedStatus;
   final bool settingsAllowed;
   final Stream<double>? knobbingStream;
+  final double proportion;
 
   const _ActiveParamWidget(
       {required this.drf,
@@ -83,7 +85,8 @@ class _ActiveParamWidget extends StatefulWidget {
       required this.displayAlarmDetails,
       required this.displayExtendedStatus,
       required this.settingsAllowed,
-      required this.knobbingStream});
+      required this.knobbingStream,
+      required this.proportion});
 
   @override
   _ActiveParamState createState() => _ActiveParamState();
@@ -218,6 +221,7 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   Widget _buildName() {
+    final f = NumberFormat("##0.0##", "en_US");
     final proportionStyle = TextStyle(
         color: Theme.of(context).colorScheme.secondary, fontSize: 12.0);
 
@@ -228,7 +232,8 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
           Text(" * ", style: proportionStyle),
           Container(
               key: Key("parameter_proportion_${widget.drf}"),
-              child: Text("0.555", style: proportionStyle))
+              child: Text(f.format(widget.proportion),
+                  overflow: TextOverflow.visible, style: proportionStyle))
         ]));
   }
 

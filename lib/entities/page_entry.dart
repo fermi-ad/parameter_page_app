@@ -139,6 +139,7 @@ class ParameterEntry extends PageEntry {
         displayAlarmDetails: settings.showAlarmDetails,
         label: label,
         knobbingStream: knobbingStream,
+        proportion: proportion,
         key: Key("parameter_row_$drf"));
   }
 
