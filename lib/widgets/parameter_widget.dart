@@ -231,22 +231,26 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
   }
 
   Widget _buildName() {
-    final proportionStyle = TextStyle(
-        color: Theme.of(context).colorScheme.secondary, fontSize: 12.0);
-
     return Tooltip(
         message: widget.drf,
         child: Row(children: [
           Text(overflow: TextOverflow.ellipsis, widget.drf),
-          Visibility(
-              visible: widget.proportion != 1,
-              child: Text(" * ", style: proportionStyle)),
-          Visibility(
-              visible: widget.proportion != 1,
-              child: Container(
-                  key: Key("parameter_proportion_${widget.drf}"),
-                  child: Text(widget.proportionFormatted,
-                      overflow: TextOverflow.visible, style: proportionStyle)))
+          _buildKnobbingProportion()
+        ]));
+  }
+
+  Widget _buildKnobbingProportion() {
+    final proportionStyle = TextStyle(
+        color: Theme.of(context).colorScheme.secondary, fontSize: 12.0);
+
+    return Visibility(
+        visible: _displayKnobbingProportion,
+        child: Row(children: [
+          Text(" * ", style: proportionStyle),
+          Container(
+              key: Key("parameter_proportion_${widget.drf}"),
+              child: Text(widget.proportionFormatted,
+                  overflow: TextOverflow.visible, style: proportionStyle))
         ]));
   }
 
@@ -599,6 +603,10 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
 
   bool get _deviceHasDigitalAlarmBlock {
     return deviceInfo != null && deviceInfo!.digitalAlarm != null;
+  }
+
+  bool get _displayKnobbingProportion {
+    return widget.proportion != 1;
   }
 
   bool _deviceInfoFailure = false;
