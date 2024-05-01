@@ -30,5 +30,20 @@ void main() {
       expect(newEntry.entryText(), "G:MULT1");
       expect(newEntry.proportion, 0.5);
     });
+
+    test(
+        "Input contains * followed by a negative number, produces a ParameterEntry with a negative proportion",
+        () {
+      // Given a PageEntryFactory
+      final factory = PageEntryFactory();
+
+      // When I createEntries(fromInput:) with a proportion
+      final newEntry = factory.createEntries(fromInput: "G:MULT1*-1")[0];
+
+      // Then the ParameterEntry has a proportion of -1
+      expect(newEntry.typeAsString, "Parameter");
+      expect(newEntry.entryText(), "G:MULT1");
+      expect(newEntry.proportion, -1.0);
+    });
   });
 }
