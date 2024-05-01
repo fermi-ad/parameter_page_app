@@ -57,7 +57,8 @@ class PageEntryFactory {
 
   double _extractProportion(String from) {
     final match = _deviceAndProportionRegEx.firstMatch(from);
-    return double.parse(match!.namedGroup("proportion")!);
+    final proportionGroup = match!.namedGroup("proportion");
+    return double.parse(proportionGroup ?? "1.0");
   }
 
   MultEntry _generateMultEntry({required String from}) {
