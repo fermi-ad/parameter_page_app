@@ -880,3 +880,9 @@ void assertIsLoggedIn({required String withUsername}) {
 void assertIsNotLoggedIn() {
   expect(find.text("You are not logged in"), findsOneWidget);
 }
+
+void assertKnobbingProportion(
+    {required String forDRF, required bool isVisible}) {
+  expect(find.byKey(Key("parameter_proportion_$forDRF")),
+      isVisible ? findsOneWidget : findsNothing);
+}
