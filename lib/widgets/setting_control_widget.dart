@@ -56,6 +56,7 @@ class _SettingControlState extends State<SettingControlWidget> {
   void dispose() {
     _errorDisplayTimeoutTimer?.cancel();
     _editingTimeoutTimer?.cancel();
+    _optimisticDisplayTimer?.cancel();
     super.dispose();
   }
 
