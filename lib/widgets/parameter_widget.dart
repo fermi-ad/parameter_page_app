@@ -312,8 +312,9 @@ class _ActiveParamState extends State<_ActiveParamWidget> {
                     units: settingUnits,
                     knobbingEnabled: knobbingInfo != null,
                     knobbingStream: widget.knobbingStream,
-                    knobbingStepSize:
-                        knobbingInfo != null ? knobbingInfo.step : 0,
+                    knobbingStepSize: knobbingInfo != null
+                        ? widget.proportion * knobbingInfo.step
+                        : 0,
                     wide: true))),
         const SizedBox(width: 8.0),
         SizedBox(

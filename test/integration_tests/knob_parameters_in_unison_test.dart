@@ -280,5 +280,73 @@ void main() {
       assertParameterHasDetails("G:MULT2", settingValue: "49.98");
       assertParameterHasDetails("G:MULT3", settingValue: "49.98");
     });
+
+    testWidgets(
+        'Knob mult with proportions up multiple steps, parameters increment in unison according to proportions',
+        (WidgetTester tester) async {
+      // Given a new page
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+
+      // ... with a mult and three parameters assigned varying proportions
+      await addANewEntry(tester, "mult:3");
+      await addANewEntry(tester, "G:MULT1");
+      await addANewEntry(tester, "G:MULT2*200");
+      await addANewEntry(tester, "G:MULT3*-200");
+      await exitEditMode(tester);
+      await waitForDataToLoadFor(tester, "G:MULT1");
+      await waitForDataToLoadFor(tester, "G:MULT2");
+      await waitForDataToLoadFor(tester, "G:MULT3");
+
+      // ... and settings are enabled
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.indefinitely);
+
+      // When I tap the mult and knob up ten times
+      await tapPageEntry(tester, atRowIndex: 0);
+      await knobUp(tester, steps: 10);
+
+      // Then the values displayed are...
+      await waitForSettingDataToLoad(tester, forDRF: "G:MULT1");
+      await waitForSettingDataToLoad(tester, forDRF: "G:MULT2");
+      await waitForSettingDataToLoad(tester, forDRF: "G:MULT3");
+      assertParameterHasDetails("G:MULT1", settingValue: "50.05");
+      assertParameterHasDetails("G:MULT2", settingValue: "60.00");
+      assertParameterHasDetails("G:MULT3", settingValue: "40.00");
+    }, semanticsEnabled: false);
+
+    testWidgets(
+        'Knob mult with proportions down multiple steps, parameters decrement in unison according according to proportions',
+        (WidgetTester tester) async {
+      // Given a new page
+      await startParameterPageApp(tester);
+      await createNewParameterPage(tester);
+
+      // ... with a mult and three parameters assigned varying proportions
+      await addANewEntry(tester, "mult:3");
+      await addANewEntry(tester, "G:MULT1");
+      await addANewEntry(tester, "G:MULT2*200");
+      await addANewEntry(tester, "G:MULT3*-200");
+      await exitEditMode(tester);
+      await waitForDataToLoadFor(tester, "G:MULT1");
+      await waitForDataToLoadFor(tester, "G:MULT2");
+      await waitForDataToLoadFor(tester, "G:MULT3");
+
+      // ... and settings are enabled
+      await requestSettingsPermission(tester,
+          forDuration: SettingsRequestDuration.indefinitely);
+
+      // When I tap the mult and knob up ten times
+      await tapPageEntry(tester, atRowIndex: 0);
+      await knobDown(tester, steps: 10);
+
+      // Then the values displayed are...
+      await waitForSettingDataToLoad(tester, forDRF: "G:MULT1");
+      await waitForSettingDataToLoad(tester, forDRF: "G:MULT2");
+      await waitForSettingDataToLoad(tester, forDRF: "G:MULT3");
+      assertParameterHasDetails("G:MULT1", settingValue: "49.95");
+      assertParameterHasDetails("G:MULT2", settingValue: "40.00");
+      assertParameterHasDetails("G:MULT3", settingValue: "60.00");
+    }, semanticsEnabled: false);
   });
 }

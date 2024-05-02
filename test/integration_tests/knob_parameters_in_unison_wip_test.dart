@@ -13,33 +13,22 @@ void main() {
 
   group('Knob Parameters in Unison (Mults)', () {
     testWidgets(
-        'Knob parameter with proportion up multiple steps, proportion applied to each step',
-        (WidgetTester tester) async {
-      // This test might belong with Knob Parameter
-    });
-
-    testWidgets(
         'Assign knobbing proportion to parameters and save page, proportions are persisted',
         (WidgetTester tester) async {
       // This test might belong with Knob Parameter
-    });
-
-    testWidgets(
-        'Knob mult with proportions up multiple steps, parameters increment in unison according to proportions',
-        (WidgetTester tester) async {});
-
-    testWidgets(
-        'Knob mult with proportions down multiple steps, parameters decrement in unison according according to proportions',
-        (WidgetTester tester) async {});
+    }, semanticsEnabled: false);
 
     testWidgets(
         'Knob a single parameter inside of a mult, only that parameter changes',
-        (WidgetTester tester) async {});
+        (WidgetTester tester) async {},
+        semanticsEnabled: false);
 
     testWidgets('Save new page containing mults, mults are persisted',
-        (WidgetTester tester) async {});
+        (WidgetTester tester) async {},
+        semanticsEnabled: false);
 
     testWidgets('Add mults to existing page and save, mults are persisted',
-        (WidgetTester tester) async {});
+        (WidgetTester tester) async {},
+        semanticsEnabled: false);
   });
 }
