@@ -31,6 +31,7 @@ void main() {
       // When I save the page, start a new page and then reload it
       await openMainMenu(tester);
       await saveParameterPage(tester);
+      await waitForPageToBeSaved(tester);
       await newPage(tester);
       await navigateToOpenPage(tester);
       await openParameterPage(tester, withTitle: "Test Page 2");
@@ -38,8 +39,7 @@ void main() {
       // Then the knobbing proportions are still assigned
       assertKnobbingProportion(forDRF: "I:BEAM", isVisible: false);
       assertKnobbingProportion(forDRF: "R:BEAM", isVisible: false);
-      assertKnobbingProportion(forDRF: "G:MULT1", isVisible: true);
-      assertParameterHasDetails("G:MULT1", proportion: "1.0");
+      assertKnobbingProportion(forDRF: "G:MULT1", isVisible: false);
       assertKnobbingProportion(forDRF: "G:MULT2", isVisible: true);
       assertParameterHasDetails("G:MULT2", proportion: "-1.0");
       assertKnobbingProportion(forDRF: "G:MULT3", isVisible: true);

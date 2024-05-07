@@ -660,7 +660,7 @@ class ParameterPage {
     if (proportion == 1.0) {
       return ParameterEntry("${from["text"]}", id: from["entryid"]);
     } else {
-      return ParameterEntry("${from["text"]}*${from["proportion"]}",
+      return ParameterEntry("${from["text"]}",
           id: from["entryid"], proportion: proportion);
     }
   }

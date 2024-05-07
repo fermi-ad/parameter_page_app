@@ -201,7 +201,7 @@ void main() {
       expect(page.tabTitles[0], "Tab 1");
       expect(page.tabTitles[1], "Tab 2");
       expect(tab2Entries.length, 1);
-      expect(tab2Entries[0].entryText(), "R:BEAM*-0.25");
+      expect(tab2Entries[0].entryText(), "R:BEAM");
       expect(tab2Entries[0].proportion, -0.25);
       expect(tab3Entries.length, 0);
       expect(sys2tab1Entries[0].entryText(),
