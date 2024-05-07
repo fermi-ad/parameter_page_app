@@ -79,6 +79,7 @@ class MockParameterPageService extends ParameterPageService {
           newEntries.add({
             "pageid": id,
             "entryid": DateTime.now().microsecondsSinceEpoch.toString(),
+            "proportion": "${entry.proportion}",
             "position": "$position",
             "text": entry.entryText(),
             "type": entry is CommentEntry ? "Comment" : "Parameter"
@@ -160,6 +161,7 @@ class MockParameterPageService extends ParameterPageService {
                       "entryid": "1",
                       "pageid": "1",
                       "position": "0",
+                      "proportion": "1.0",
                       "text": "this is entry to east tower",
                       "type": "Comment"
                     },
@@ -167,6 +169,7 @@ class MockParameterPageService extends ParameterPageService {
                       "entryid": "2",
                       "pageid": "1",
                       "position": "1",
+                      "proportion": "1.0",
                       "text": "graph route",
                       "type": "Comment"
                     },
@@ -174,6 +177,7 @@ class MockParameterPageService extends ParameterPageService {
                       "entryid": "3",
                       "pageid": "1",
                       "position": "2",
+                      "proportion": "1.0",
                       "text": "graph route",
                       "type": "Comment"
                     }
@@ -201,6 +205,7 @@ class MockParameterPageService extends ParameterPageService {
                       "entryid": "4",
                       "pageid": "3",
                       "position": "0",
+                      "proportion": "1.0",
                       "text": "this is comment #1",
                       "type": "Comment"
                     },
@@ -208,6 +213,7 @@ class MockParameterPageService extends ParameterPageService {
                       "entryid": "5",
                       "pageid": "3",
                       "position": "1",
+                      "proportion": "1.0",
                       "text": "I:BEAM",
                       "type": "Parameter"
                     },
@@ -215,6 +221,7 @@ class MockParameterPageService extends ParameterPageService {
                       "entryid": "6",
                       "pageid": "3",
                       "position": "2",
+                      "proportion": "1.0",
                       "text": "R:BEAM",
                       "type": "Parameter"
                     },
@@ -222,6 +229,7 @@ class MockParameterPageService extends ParameterPageService {
                       "entryid": "5",
                       "pageid": "3",
                       "position": "1",
+                      "proportion": "1.0",
                       "text": "this is comment #2",
                       "type": "Comment"
                     }
@@ -235,6 +243,7 @@ class MockParameterPageService extends ParameterPageService {
                       "entryid": "7",
                       "pageid": "3",
                       "position": "1",
+                      "proportion": "1.0",
                       "text": "this is comment #3",
                       "type": "Comment"
                     }
@@ -247,6 +256,7 @@ class MockParameterPageService extends ParameterPageService {
                       "entryid": "17",
                       "pageid": "3",
                       "position": "1",
+                      "proportion": "1.0",
                       "text": "this sub-page has no title",
                       "type": "Comment"
                     }
@@ -265,6 +275,7 @@ class MockParameterPageService extends ParameterPageService {
                       "entryid": "16",
                       "pageid": "3",
                       "position": "0",
+                      "proportion": "1.0",
                       "text": "This is Tab 2",
                       "type": "Comment"
                     }
@@ -288,6 +299,7 @@ class MockParameterPageService extends ParameterPageService {
                       "entryid": "4",
                       "pageid": "3",
                       "position": "0",
+                      "proportion": "1.0",
                       "text": "this is Sub-system 2 / Tab 1 / Sub-page One",
                       "type": "Comment"
                     }
@@ -315,6 +327,7 @@ class MockParameterPageService extends ParameterPageService {
                       "entryid": "6",
                       "pageid": "4",
                       "position": "0",
+                      "proportion": "1.0",
                       "text": "M:OUTTMP@e,02",
                       "type": "Parameter"
                     },
@@ -322,6 +335,7 @@ class MockParameterPageService extends ParameterPageService {
                       "entryid": "7",
                       "pageid": "4",
                       "position": "1",
+                      "proportion": "1.0",
                       "text": "This is our first comment!",
                       "type": "Comment"
                     },
@@ -329,6 +343,7 @@ class MockParameterPageService extends ParameterPageService {
                       "entryid": "8",
                       "pageid": "4",
                       "position": "2",
+                      "proportion": "1.0",
                       "text": "G:AMANDA",
                       "type": "Parameter"
                     },
@@ -336,6 +351,7 @@ class MockParameterPageService extends ParameterPageService {
                       "entryid": "9",
                       "pageid": "4",
                       "position": "3",
+                      "proportion": "1.0",
                       "text": "Z:NO_ALARMS",
                       "type": "Parameter"
                     },
@@ -343,6 +359,7 @@ class MockParameterPageService extends ParameterPageService {
                       "entryid": "10",
                       "pageid": "4",
                       "position": "4",
+                      "proportion": "1.0",
                       "text": "PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:TEMPERATURE",
                       "type": "Parameter"
                     },
@@ -350,6 +367,7 @@ class MockParameterPageService extends ParameterPageService {
                       "entryid": "11",
                       "pageid": "4",
                       "position": "5",
+                      "proportion": "1.0",
                       "text": "PIP2:SSR1:SUBSYSTEMA:SUBSUBSYSTEM:HUMIDITY",
                       "type": "Parameter"
                     },
@@ -357,6 +375,7 @@ class MockParameterPageService extends ParameterPageService {
                       "entryid": "12",
                       "pageid": "4",
                       "position": "6",
+                      "proportion": "1.0",
                       "text": "Z:BTE200_TEMP",
                       "type": "Parameter"
                     },
@@ -364,6 +383,7 @@ class MockParameterPageService extends ParameterPageService {
                       "entryid": "13",
                       "pageid": "4",
                       "position": "7",
+                      "proportion": "1.0",
                       "text": "Z:INC_SETTING",
                       "type": "Parameter"
                     },
@@ -371,6 +391,7 @@ class MockParameterPageService extends ParameterPageService {
                       "entryid": "14",
                       "pageid": "4",
                       "position": "8",
+                      "proportion": "1.0",
                       "text": "Z:NO_SET",
                       "type": "Parameter"
                     },
@@ -378,6 +399,7 @@ class MockParameterPageService extends ParameterPageService {
                       "entryid": "15",
                       "pageid": "4",
                       "position": "9",
+                      "proportion": "1.0",
                       "text": "Z:NO_READ",
                       "type": "Parameter"
                     }
@@ -405,6 +427,7 @@ class MockParameterPageService extends ParameterPageService {
                       "entryid": "17",
                       "pageid": "5",
                       "position": "1",
+                      "proportion": "1.0",
                       "text": "This is Tab One",
                       "type": "Comment"
                     }

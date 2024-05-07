@@ -111,6 +111,7 @@ void main() {
                             "entryid": "6",
                             "pageid": "3",
                             "position": "2",
+                            "proportion": "1.0",
                             "text": "I:BEAM",
                             "type": "Parameter"
                           }
@@ -129,6 +130,7 @@ void main() {
                             "entryid": "7",
                             "pageid": "3",
                             "position": "0",
+                            "proportion": "-0.25",
                             "text": "R:BEAM",
                             "type": "Parameter"
                           }
@@ -160,6 +162,7 @@ void main() {
                             "entryid": "77",
                             "pageid": "3",
                             "position": "0",
+                            "proportion": "1.0",
                             "text":
                                 "Sub-system 2 / Tab 1 / Sub-page 1 / Entry 1",
                             "type": "Comment"
@@ -194,10 +197,12 @@ void main() {
       expect(entries[0], isA<CommentEntry>());
       expect(entries[1], isA<CommentEntry>());
       expect(entries[2], isA<ParameterEntry>());
+      expect(entries[2].proportion, 1.0);
       expect(page.tabTitles[0], "Tab 1");
       expect(page.tabTitles[1], "Tab 2");
       expect(tab2Entries.length, 1);
       expect(tab2Entries[0].entryText(), "R:BEAM");
+      expect(tab2Entries[0].proportion, -0.25);
       expect(tab3Entries.length, 0);
       expect(sys2tab1Entries[0].entryText(),
           "Sub-system 2 / Tab 1 / Sub-page 1 / Entry 1");
