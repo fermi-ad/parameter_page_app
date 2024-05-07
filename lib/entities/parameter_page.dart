@@ -644,13 +644,24 @@ class ParameterPage {
         return CommentEntry(from["text"]!, id: from["entryid"]);
 
       case "Parameter":
-        return ParameterEntry(from["text"], id: from["entryid"]);
+        return _hydrateParameterEntry(from: from);
 
       case "Expression":
         return CommentEntry(from["text"]!, id: from["entryid"]);
 
       default:
         throw UnimplementedError("Unexpected PageEntry type");
+    }
+  }
+
+  PageEntry _hydrateParameterEntry({required Map<String, dynamic> from}) {
+    final proportion = double.parse(from["proportion"]);
+
+    if (proportion == 1.0) {
+      return ParameterEntry("${from["text"]}", id: from["entryid"]);
+    } else {
+      return ParameterEntry("${from["text"]}*${from["proportion"]}",
+          id: from["entryid"], proportion: proportion);
     }
   }
 
