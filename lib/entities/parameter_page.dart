@@ -649,6 +649,10 @@ class ParameterPage {
       case "Expression":
         return CommentEntry(from["text"]!, id: from["entryid"]);
 
+      case "Mult":
+        return MultEntry(
+            numberOfEntries: 3, description: "mult with three devices");
+
       default:
         throw UnimplementedError("Unexpected PageEntry type");
     }
