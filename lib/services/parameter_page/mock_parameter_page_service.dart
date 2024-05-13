@@ -82,7 +82,10 @@ class MockParameterPageService extends ParameterPageService {
             "proportion": "${entry.proportion}",
             "position": "$position",
             "text": entry.entryText(),
-            "type": entry is CommentEntry ? "Comment" : "Parameter"
+            "type": entry.typeAsString,
+            "numberOfEntries":
+                entry is MultEntry ? "${entry.numberOfEntries}" : "0",
+            "description": entry is MultEntry ? entry.description : ""
           });
           position += 1;
         }
