@@ -651,7 +651,8 @@ class ParameterPage {
 
       case "Mult":
         return MultEntry(
-            numberOfEntries: 3, description: "mult with three devices");
+            numberOfEntries: int.parse(from["numberOfEntries"]!),
+            description: from["description"]);
 
       default:
         throw UnimplementedError("Unexpected PageEntry type");

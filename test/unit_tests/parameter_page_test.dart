@@ -149,8 +149,8 @@ void main() {
                             "entryid": "8",
                             "pageid": "3",
                             "position": "0",
-                            "proportion": "1",
-                            "text": "mult:3 mult with three devices",
+                            "numberOfEntries": "3",
+                            "description": "mult with three devices",
                             "type": "Mult"
                           },
                           {
