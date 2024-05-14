@@ -119,10 +119,9 @@ void main() {
       await tester.pumpWidget(app);
 
       // Then a ParameterWidget is rendered for the 3 parameters inside of a MultEntryWidget
-      assertMult(isInRow: 0, hasN: 3, hasDescription: "Test Mult #1");
+      assertMult(hasN: 3, hasDescription: "Test Mult #1");
       assertMultState(tester, atIndex: 0, isEnabled: false);
-      assertMultContains(
-          atIndex: 0, parameters: ["G:MULT0", "G:MULT1", "G:MULT2"]);
+      assertMultContains(parameters: ["G:MULT0", "G:MULT1", "G:MULT2"]);
     });
   });
 }

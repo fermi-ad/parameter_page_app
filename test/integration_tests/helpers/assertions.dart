@@ -812,13 +812,12 @@ void assertKnobbing({required String stepSizeIs, required String forDRF}) {
           "(assertKnobbing) Expected the knobbing step size to be $stepSizeIs for $forDRF");
 }
 
-void assertMult(
-    {required int isInRow, required int hasN, required String hasDescription}) {
+void assertMult({required int hasN, required String hasDescription}) {
   final rowFinder = find.byType(MultEntryWidget);
-  final row = rowFinder.evaluate().isEmpty ? null : rowFinder.at(isInRow);
+  final row = rowFinder.evaluate().isEmpty ? null : rowFinder.at(0);
 
   if (row == null) {
-    fail("No mult found at row #$isInRow");
+    fail("No mult found on page");
   }
 
   expect(
@@ -826,11 +825,10 @@ void assertMult(
           of: row, matching: find.text("mult:$hasN $hasDescription")),
       findsOneWidget,
       reason:
-          "expected mult:$hasN in row $isInRow with description '$hasDescription' but something else was there.");
+          "expected mult:$hasN with description '$hasDescription' but something else was there.");
 }
 
-void assertMultContains(
-    {required int atIndex, required List<String> parameters}) {
+void assertMultContains({required List<String> parameters}) {
   final finder = find.descendant(
       of: find.byType(MultEntryWidget), matching: find.byType(ParameterWidget));
   int foundHowMany = finder.evaluate().isEmpty ? 0 : finder.found.length;
