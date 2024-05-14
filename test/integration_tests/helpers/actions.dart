@@ -601,12 +601,16 @@ Future<void> knobUp(WidgetTester tester, {required int steps}) async {
   for (int i = 0; i != steps; i++) {
     await tester.sendKeyDownEvent(LogicalKeyboardKey.f5);
     await tester.pumpAndSettle();
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.f5);
+    await tester.pumpAndSettle();
   }
 }
 
 Future<void> knobDown(WidgetTester tester, {required int steps}) async {
   for (int i = 0; i != steps; i++) {
     await tester.sendKeyDownEvent(LogicalKeyboardKey.f4);
+    await tester.pumpAndSettle();
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.f4);
     await tester.pumpAndSettle();
   }
 }
