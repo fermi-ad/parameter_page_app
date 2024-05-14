@@ -53,8 +53,7 @@ class ParameterAlarmStatusWidget extends StatelessWidget {
                 ? "By-pass Alarm"
                 : "Not Alarming (enable settings to by-pass)",
             child: Icon(Icons.notifications,
-                size: iconSize,
-                color: Theme.of(context).colorScheme.background));
+                size: iconSize, color: Theme.of(context).colorScheme.surface));
     }
   }
 

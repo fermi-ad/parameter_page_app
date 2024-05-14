@@ -13,17 +13,7 @@ void main() {
 
   group('Knob Parameters in Unison (Mults)', () {
     testWidgets(
-        'Assign knobbing proportion to parameters and save page, proportions are persisted',
-        (WidgetTester tester) async {
-      // This test might belong with Knob Parameter
-    }, semanticsEnabled: false);
-
-    testWidgets(
         'Knob a single parameter inside of a mult, only that parameter changes',
-        (WidgetTester tester) async {},
-        semanticsEnabled: false);
-
-    testWidgets('Save new page containing mults, mults are persisted',
         (WidgetTester tester) async {},
         semanticsEnabled: false);
 

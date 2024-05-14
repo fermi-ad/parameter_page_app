@@ -90,10 +90,10 @@ class _DisplaySettingsState extends State<DisplaySettingsWidget> {
   SettingsThemeData _themeData(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return SettingsThemeData(
-        settingsListBackground: colorScheme.background,
-        titleTextColor: colorScheme.onBackground,
+        settingsListBackground: colorScheme.surface,
+        titleTextColor: colorScheme.onSurface,
         settingsTileTextColor: colorScheme.primary,
-        dividerColor: colorScheme.background,
+        dividerColor: colorScheme.surface,
         tileDescriptionTextColor: colorScheme.secondary,
         settingsSectionBackground: colorScheme.surface,
         leadingIconsColor: colorScheme.onSurface);

@@ -764,8 +764,7 @@ void assertDigitalAlarmBeamInhibitStatus(WidgetTester tester,
   final icon = tester.widget<Icon>(iconFinder);
   switch (isInState) {
     case BeamInhibitState.wontInhibit:
-      expect(
-          icon.color, equals(_getCurrentTheme(tester).colorScheme.background));
+      expect(icon.color, equals(_getCurrentTheme(tester).colorScheme.surface));
 
     case BeamInhibitState.willInhibit:
       expect(icon.color, equals(_getCurrentTheme(tester).colorScheme.primary));

@@ -111,6 +111,7 @@ void main() {
                             "entryid": "6",
                             "pageid": "3",
                             "position": "2",
+                            "proportion": "1.0",
                             "text": "I:BEAM",
                             "type": "Parameter"
                           }
@@ -129,6 +130,7 @@ void main() {
                             "entryid": "7",
                             "pageid": "3",
                             "position": "0",
+                            "proportion": "-0.25",
                             "text": "R:BEAM",
                             "type": "Parameter"
                           }
@@ -139,7 +141,44 @@ void main() {
                   {
                     "title": "Tab 3",
                     "sub_pages": [
-                      {"id": "1", "title": "", "entries": []}
+                      {
+                        "id": "1",
+                        "title": "",
+                        "entries": [
+                          {
+                            "entryid": "8",
+                            "pageid": "3",
+                            "position": "0",
+                            "numberOfEntries": "3",
+                            "description": "mult with three devices",
+                            "type": "Mult"
+                          },
+                          {
+                            "entryid": "9",
+                            "pageid": "3",
+                            "position": "1",
+                            "proportion": "1",
+                            "text": "G:MULT1",
+                            "type": "Parameter"
+                          },
+                          {
+                            "entryid": "10",
+                            "pageid": "3",
+                            "position": "2",
+                            "proportion": "1",
+                            "text": "G:MULT2",
+                            "type": "Parameter"
+                          },
+                          {
+                            "entryid": "11",
+                            "pageid": "3",
+                            "position": "3",
+                            "proportion": "1",
+                            "text": "G:MULT3",
+                            "type": "Parameter"
+                          }
+                        ]
+                      }
                     ]
                   }
                 ]
@@ -160,6 +199,7 @@ void main() {
                             "entryid": "77",
                             "pageid": "3",
                             "position": "0",
+                            "proportion": "1.0",
                             "text":
                                 "Sub-system 2 / Tab 1 / Sub-page 1 / Entry 1",
                             "type": "Comment"
@@ -194,11 +234,17 @@ void main() {
       expect(entries[0], isA<CommentEntry>());
       expect(entries[1], isA<CommentEntry>());
       expect(entries[2], isA<ParameterEntry>());
+      expect(entries[2].proportion, 1.0);
       expect(page.tabTitles[0], "Tab 1");
       expect(page.tabTitles[1], "Tab 2");
       expect(tab2Entries.length, 1);
       expect(tab2Entries[0].entryText(), "R:BEAM");
-      expect(tab3Entries.length, 0);
+      expect(tab2Entries[0].proportion, -0.25);
+      expect(tab3Entries.length, 4);
+      expect(tab3Entries[0].entryText(), "mult:3 mult with three devices");
+      expect(tab3Entries[1].entryText(), "G:MULT1");
+      expect(tab3Entries[2].entryText(), "G:MULT2");
+      expect(tab3Entries[3].entryText(), "G:MULT3");
       expect(sys2tab1Entries[0].entryText(),
           "Sub-system 2 / Tab 1 / Sub-page 1 / Entry 1");
     });
