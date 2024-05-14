@@ -19,7 +19,7 @@ void main() {
 
       // ... and settings are enabled
       await requestSettingsPermission(tester,
-          forDuration: SettingsRequestDuration.tenMinutes);
+          forDuration: SettingsRequestDuration.indefinitely);
       await waitForSettingsPermissionRequest(tester);
 
       // When I tap the setting property for M:OUTTMP
@@ -37,7 +37,7 @@ void main() {
       await startParameterPageApp(tester);
       await navigateToTestPage1(tester);
       await requestSettingsPermission(tester,
-          forDuration: SettingsRequestDuration.tenMinutes);
+          forDuration: SettingsRequestDuration.indefinitely);
       await waitForSettingsPermissionRequest(tester);
       await waitForDataToLoadFor(tester, "Z:BTE200_TEMP");
       await tapSetting(tester, forDRF: "Z:BTE200_TEMP");
@@ -60,7 +60,7 @@ void main() {
 
       // ... and settings are enabled
       await requestSettingsPermission(tester,
-          forDuration: SettingsRequestDuration.tenMinutes);
+          forDuration: SettingsRequestDuration.indefinitely);
       await waitForSettingsPermissionRequest(tester);
 
       // When I submit a new setting...
@@ -89,7 +89,7 @@ void main() {
 
       // ... and settings are enabled
       await requestSettingsPermission(tester,
-          forDuration: SettingsRequestDuration.tenMinutes);
+          forDuration: SettingsRequestDuration.indefinitely);
       await waitForSettingsPermissionRequest(tester);
 
       // When I attempt to set a device that will always fail
@@ -129,7 +129,7 @@ void main() {
       await navigateToTestPage1(tester);
       await waitForDataToLoadFor(tester, "G:AMANDA");
       await requestSettingsPermission(tester,
-          forDuration: SettingsRequestDuration.tenMinutes);
+          forDuration: SettingsRequestDuration.indefinitely);
       await waitForSettingsPermissionRequest(tester);
       await tapSetting(tester, forDRF: "G:AMANDA");
       await submitSetting(tester, forDRF: "G:AMANDA", newValue: "51.0");
