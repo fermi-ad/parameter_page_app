@@ -22,7 +22,7 @@ class ParameterBeamInhibitStatusWidget extends StatelessWidget {
         return Tooltip(
             message: "Does not inhibit beam",
             child: Icon(Icons.pan_tool,
-                size: 16, color: Theme.of(context).colorScheme.background));
+                size: 16, color: Theme.of(context).colorScheme.surface));
 
       case BeamInhibitState.willInhibit:
         return Tooltip(
