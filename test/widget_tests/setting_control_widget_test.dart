@@ -332,7 +332,8 @@ void main() {
       assertErrorCodeDisplay(isVisible: true, facilityCode: 57, errorCode: -30);
 
       // ... and after three seconds the error code goes away
-      await tester.pumpWidget(app, const Duration(seconds: 3, milliseconds: 1));
+      await tester.pumpWidget(app,
+          duration: const Duration(seconds: 3, milliseconds: 1));
       assertErrorCodeDisplay(isVisible: false);
 
       // ... and the original setting is displayed again
@@ -352,7 +353,8 @@ void main() {
       await tester.pumpAndSettle();
 
       // When I wait 3 seconds without making a change
-      await tester.pumpWidget(app, const Duration(seconds: 6, milliseconds: 1));
+      await tester.pumpWidget(app,
+          duration: const Duration(seconds: 6, milliseconds: 1));
 
       // Then the setting is cancelled and the setting display returns
       await sendSettingTestData(tester, settingValue: 72.0);
