@@ -40,7 +40,7 @@ class MultEntryWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return KeyboardListener(
         autofocus: enabled,
-        focusNode: _focusNode,
+        focusNode: FocusNode(),
         onKeyEvent: enabled ? _onKey : null,
         child: PageEntryWidget(
             child: editMode
@@ -125,8 +125,6 @@ class MultEntryWidget extends StatelessWidget {
   void _knobParametersDown() {
     _knobbingStreamController.add(-1.0);
   }
-
-  final FocusNode _focusNode = FocusNode();
 
   final _knobbingStreamController = StreamController<double>.broadcast();
 }
