@@ -38,14 +38,14 @@ class MultEntryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tree = PageEntryWidget(
+        child: editMode ? _buildEditMode(context) : _buildDisplayMode(context));
+
     return KeyboardListener(
         autofocus: enabled,
-        focusNode: _focusNode,
+        focusNode: FocusNode(),
         onKeyEvent: enabled ? _onKey : null,
-        child: PageEntryWidget(
-            child: editMode
-                ? _buildEditMode(context)
-                : _buildDisplayMode(context)));
+        child: tree);
   }
 
   Widget _buildEditMode(BuildContext context) {
@@ -92,8 +92,15 @@ class MultEntryWidget extends StatelessWidget {
     List<Widget> children = [];
 
     for (final entry in entries) {
-      final widget = entry.buildEntry(context, editMode, true, displaySettings,
-          false, false, () {}, _knobbingStreamController.stream);
+      final widget = entry.buildEntry(
+          context,
+          editMode,
+          true,
+          displaySettings,
+          enabled == false && settingsAllowed,
+          false,
+          () {},
+          _knobbingStreamController.stream);
 
       children.add(widget);
     }
@@ -118,8 +125,6 @@ class MultEntryWidget extends StatelessWidget {
   void _knobParametersDown() {
     _knobbingStreamController.add(-1.0);
   }
-
-  final FocusNode _focusNode = FocusNode();
 
   final _knobbingStreamController = StreamController<double>.broadcast();
 }

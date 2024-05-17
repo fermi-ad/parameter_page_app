@@ -24,10 +24,10 @@ void main() {
       await exitEditMode(tester);
 
       // Then the empty mult is displayed
-      assertMult(isInRow: 0, hasN: 0, hasDescription: "test mult");
+      assertMult(hasN: 0, hasDescription: "test mult");
 
       // ... and it contains no parameters
-      assertMultContains(atIndex: 1, parameters: []);
+      assertMultContains(parameters: []);
     });
 
     testWidgets('Tap mult, mult is enabled for knobbing',
@@ -152,7 +152,7 @@ void main() {
       await exitEditMode(tester);
 
       // Then G:AMANDA is shown as part of Test Mult #1
-      assertMultContains(atIndex: 0, parameters: ["G:AMANDA"]);
+      assertMultContains(parameters: ["G:AMANDA"]);
     });
 
     testWidgets('Add mult:1 and a parameter, both are shown in edit mode list',
@@ -166,7 +166,7 @@ void main() {
       await addANewEntry(tester, "G:AMANDA");
 
       // Then there should be two entires on the page
-      assertMult(isInRow: 0, hasN: 1, hasDescription: "Test Mult #1");
+      assertMult(hasN: 1, hasDescription: "Test Mult #1");
       assertParameterIsInRow("G:AMANDA", 1);
     });
 
@@ -184,7 +184,7 @@ void main() {
       await exitEditMode(tester);
 
       // Then there should be two entires on the page
-      assertMult(isInRow: 0, hasN: 1, hasDescription: "Test Mult #1");
+      assertMult(hasN: 1, hasDescription: "Test Mult #1");
       assertParameterIsInRow("G:AMANDA", 1);
     });
 
@@ -198,9 +198,8 @@ void main() {
       await addANewEntry(tester, "G:MULT2");
       await addANewEntry(tester, "G:MULT3");
       await exitEditMode(tester);
-      assertMult(isInRow: 0, hasN: 3, hasDescription: "Test Mult #1");
-      assertMultContains(
-          atIndex: 0, parameters: ["G:MULT1", "G:MULT2", "G:MULT3"]);
+      assertMult(hasN: 3, hasDescription: "Test Mult #1");
+      assertMultContains(parameters: ["G:MULT1", "G:MULT2", "G:MULT3"]);
 
       // When I remove the mult
       await enterEditMode(tester);
@@ -371,8 +370,67 @@ void main() {
     await openParameterPage(tester, withTitle: "New Page With Mult");
 
     // Then the page contains the mults and the three parameters that belong to it
-    assertMult(isInRow: 0, hasN: 3, hasDescription: "test mult");
-    assertMultContains(
-        atIndex: 0, parameters: ["G:MULT1", "G:MULT2", "G:MULT3"]);
+    assertMult(hasN: 3, hasDescription: "test mult");
+    assertMultContains(parameters: ["G:MULT1", "G:MULT2", "G:MULT3"]);
+  }, semanticsEnabled: false);
+
+  testWidgets('Add mults to existing page and save, mults are persisted',
+      (WidgetTester tester) async {
+    // Given "Test Page 2" has been loaded
+    await startParameterPageApp(tester);
+    await navigateToOpenPage(tester);
+    await openParameterPage(tester, withTitle: "Test Page 2");
+
+    // ... and a mult containing three parameters has been added
+    await enterEditMode(tester);
+    await addANewEntry(tester, "mult:3 test mult");
+    await addANewEntry(tester, "G:MULT1");
+    await addANewEntry(tester, "G:MULT2");
+    await addANewEntry(tester, "G:MULT3");
+    await exitEditMode(tester);
+
+    // When I save the new page, start a new page and then open the saved page again
+    await openMainMenu(tester);
+    await saveParameterPage(tester);
+    await waitForPageToBeSaved(tester);
+    await newPage(tester);
+    await navigateToOpenPage(tester);
+    await openParameterPage(tester, withTitle: "Test Page 2");
+
+    // Then the mult and the entries that belong to it have persisted
+    assertMult(hasN: 3, hasDescription: "test mult");
+    assertMultContains(parameters: ["G:MULT1", "G:MULT2", "G:MULT3"]);
+  }, semanticsEnabled: false);
+
+  testWidgets(
+      'Knob a single parameter inside of a mult, only that parameter changes',
+      (WidgetTester tester) async {
+    // Given a new parameter page
+    await startParameterPageApp(tester);
+    await createNewParameterPage(tester);
+
+    // ... and I have create a mult:3 with three parameters
+    await addANewEntry(tester, "mult:3 test mult");
+    await addANewEntry(tester, "G:MULT1");
+    await addANewEntry(tester, "G:MULT2");
+    await addANewEntry(tester, "G:AMANDA");
+    await exitEditMode(tester);
+
+    // ... and data for G:AMANDA has been loaded
+    await waitForDataToLoadFor(tester, "G:AMANDA");
+
+    // ... and settings are enabled
+    await requestSettingsPermission(tester,
+        forDuration: SettingsRequestDuration.indefinitely);
+
+    // When I tap the setting property
+    await tapSetting(tester, forDRF: "G:AMANDA");
+    assertSettingTextInputValue(forDRF: "G:AMANDA", isSetTo: "50.00");
+
+    // ... and then knob up by 1 step
+    await knobUp(tester, steps: 1);
+
+    // Then the value displayed in the setting control's text field is...
+    assertSettingTextInputValue(forDRF: "G:AMANDA", isSetTo: "51.00");
   }, semanticsEnabled: false);
 }
