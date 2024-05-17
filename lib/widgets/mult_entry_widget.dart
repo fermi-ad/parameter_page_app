@@ -40,15 +40,12 @@ class MultEntryWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final tree = PageEntryWidget(
         child: editMode ? _buildEditMode(context) : _buildDisplayMode(context));
-    if (enabled) {
-      return KeyboardListener(
-          autofocus: true,
-          focusNode: FocusNode(),
-          onKeyEvent: _onKey,
-          child: tree);
-    } else {
-      return tree;
-    }
+
+    return KeyboardListener(
+        autofocus: enabled,
+        focusNode: FocusNode(),
+        onKeyEvent: enabled ? _onKey : null,
+        child: tree);
   }
 
   Widget _buildEditMode(BuildContext context) {
