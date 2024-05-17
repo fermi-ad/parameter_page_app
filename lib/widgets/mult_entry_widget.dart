@@ -92,8 +92,15 @@ class MultEntryWidget extends StatelessWidget {
     List<Widget> children = [];
 
     for (final entry in entries) {
-      final widget = entry.buildEntry(context, editMode, true, displaySettings,
-          false, false, () {}, _knobbingStreamController.stream);
+      final widget = entry.buildEntry(
+          context,
+          editMode,
+          true,
+          displaySettings,
+          enabled == false && settingsAllowed,
+          false,
+          () {},
+          _knobbingStreamController.stream);
 
       children.add(widget);
     }
